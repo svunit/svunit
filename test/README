@@ -1,0 +1,10 @@
+-----------------
+Test descriptions
+-----------------
+test0: test one basic unit test
+test1: test one basic unit test for a class with a different name than the file name
+test2: test the comment parsing with one basic unit test that has a bunch of comments mixed in
+test3: test multiple classes (2) in the same file
+test4: test 2 basic unit tests in different dirs with classes that are in different dirs
+test5: test one basic unit test in a child dir but none in the parent
+test6: testrunner created from 3 levels of test hierarchy

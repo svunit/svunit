@@ -1,0 +1,26 @@
+echo ----------------------------------
+echo Running SVUNIT Regression Suite...
+echo ----------------------------------
+
+pass=1
+for test in `ls -d test*`; do
+  printf "Running %s... " $test
+  cd $test && ./run > /dev/null 2>&1
+  if [ "$?" != "0" ]; then
+    printf "FAILED\n"
+    pass=0
+  else
+    printf "PASSED\n"
+  fi
+  cd - > /dev/null 2>&1
+done
+
+if [ "$pass" == "1" ]; then
+  echo ----------------------------------
+  echo SVUNIT Regression Suite PASSED
+  echo ----------------------------------
+else
+  echo ----------------------------------
+  echo SVUNIT Regression Suite FAILED
+  echo ----------------------------------
+fi

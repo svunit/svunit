@@ -1,0 +1,29 @@
+import svunit_pkg::*;
+
+module THIS_TYPE;
+  string name = "THIS_INST";
+
+  //===================
+  // Test suite master
+  //===================
+  svunit_testsuite svunit_ts;
+
+  //===================================
+  // These are the unit tests that we
+  // want included in this testsuite
+  //===================================
+  test_unit_test test_ut();
+
+
+  //===================================
+  // Setup
+  //===================================
+  function void setup();
+    test_ut.setup();
+    svunit_ts = new(name);
+    svunit_ts.add_testcase(test_ut.unittest);
+  endfunction
+
+endmodule
+
+

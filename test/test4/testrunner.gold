@@ -1,0 +1,29 @@
+import svunit_pkg::*;
+
+module testrunner();
+  string name = "testrunner";
+  svunit_testrunner svunit_tr;
+
+  //===================================
+  // These are the tests suites that we
+  // want included in this testrunner
+  //===================================
+  TS_TYPE TS_INST();
+  ATS_TYPE ATS_INST();
+
+
+  //===================================
+  // Setup
+  //===================================
+  function void setup();
+    svunit_tr = new(name);
+    TS_INST.setup();
+    svunit_tr.add_testsuite(TS_INST.svunit_ts);
+    ATS_INST.setup();
+    svunit_tr.add_testsuite(ATS_INST.svunit_ts);
+  endfunction
+
+  task run();
+    svunit_tr.run();
+  endtask
+endmodule

@@ -1,0 +1,4 @@
+for test in `ls -d test*`; do
+  echo cleaning $test...
+  cd $test && ./clean && cd - > /dev/null 2>&1
+done

@@ -1,0 +1,29 @@
+import svunit_pkg::*;
+
+module SUB1_TYPE;
+  string name = "SUB1_INST";
+
+  //===================
+  // Test suite master
+  //===================
+  svunit_testsuite svunit_ts;
+
+  //===================================
+  // These are the unit tests that we
+  // want included in this testsuite
+  //===================================
+  subdir1_unit_test subdir1_ut();
+
+
+  //===================================
+  // Setup
+  //===================================
+  function void setup();
+    subdir1_ut.setup();
+    svunit_ts = new(name);
+    svunit_ts.add_testcase(subdir1_ut.unittest);
+  endfunction
+
+endmodule
+
+

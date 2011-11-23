@@ -1,0 +1,16 @@
+rm -rf .`pwd | sed -e 's/\//_/g'`_testsuite.sv \
+       .testrunner.gold \
+       .testrunner.gold.tmp \
+       .testrunner.sv \
+       .svunit_top.sv \
+       .testsuite.gold \
+       .testsuite.gold.tmp \
+       Makefile \
+       test_unit_test.sv
+
+
+cd another_test && \
+rm -rf .`pwd | sed -e 's/\//_/g'`_testsuite.sv \
+       .testsuite.gold \
+       Makefile \
+       test0_unit_test.sv

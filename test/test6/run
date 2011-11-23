@@ -1,0 +1,90 @@
+# remove and create the unit_test
+create_unit_test.pl -overwrite -out ./test_unit_test.sv test.sv
+create_unit_test.pl -overwrite -out ./subdir0/subdir0_unit_test.sv ./subdir0/subdir0.sv
+create_unit_test.pl -overwrite -out ./subdir1/subdir1_unit_test.sv ./subdir1/subdir1.sv
+create_unit_test.pl -overwrite -out ./subdir1/subdir1a/subdir1a_unit_test.sv ./subdir1/subdir1a/subdir1a.sv
+
+# create the Makefile
+create_svunit.pl
+
+# build the svunit_top
+make .svunit_top.sv
+
+# massage the testsuite golden reference
+THIS_TYPE=`pwd | sed -e "s/\//_/g"`_testsuite
+THIS_INST=`pwd | sed -e "s/\//_/g"`_ts
+SUB0_TYPE=`cd subdir0 && pwd | sed -e "s/\//_/g"`_testsuite
+SUB0_INST=`cd subdir0 && pwd | sed -e "s/\//_/g"`_ts
+SUB1_TYPE=`cd subdir1 && pwd | sed -e "s/\//_/g"`_testsuite
+SUB1_INST=`cd subdir1 && pwd | sed -e "s/\//_/g"`_ts
+SUB1A_TYPE=`cd subdir1/subdir1a && pwd | sed -e "s/\//_/g"`_testsuite
+SUB1A_INST=`cd subdir1/subdir1a && pwd | sed -e "s/\//_/g"`_ts
+
+sed -e "s/THIS_TYPE/$THIS_TYPE/g" testsuite.gold | sed -e "s/THIS_INST/$THIS_INST/g" |
+  sed -e "s/SUB0_TYPE/$SUB0_TYPE/g" | sed -e "s/SUB0_INST/$SUB0_INST/g" |
+  sed -e "s/SUB1_TYPE/$SUB1_TYPE/g" | sed -e "s/SUB1_INST/$SUB1_INST/g" |
+  sed -e "s/SUB1A_TYPE/$THIS_TYPE/g" | sed -e "s/SUB0_INST/$SUB0_INST/g" > .testsuite.gold
+
+sed -e "s/THIS_TYPE/$THIS_TYPE/g" testrunner.gold | sed -e "s/THIS_INST/$THIS_INST/g" |
+  sed -e "s/SUB0_TYPE/$SUB0_TYPE/g" | sed -e "s/SUB0_INST/$SUB0_INST/g" |
+  sed -e "s/SUB1_TYPE/$SUB1_TYPE/g" | sed -e "s/SUB1_INST/$SUB1_INST/g" |
+  sed -e "s/SUB1A_TYPE/$SUB1A_TYPE/g" | sed -e "s/SUB1A_INST/$SUB1A_INST/g" > .testrunner.gold
+
+cd subdir0 && \
+  sed -e "s/SUB0_TYPE/$SUB0_TYPE/g" testsuite.gold | sed -e "s/SUB0_INST/$SUB0_INST/g" > .testsuite.gold && \
+  cd -
+
+cd subdir1 && \
+  sed -e "s/SUB1_TYPE/$SUB1_TYPE/g" testsuite.gold | sed -e "s/SUB1_INST/$SUB1_INST/g" |
+  sed -e "s/SUB1A_TYPE/$SUB1A_TYPE/g" | sed -e "s/SUB1A_INST/$SUB1A_INST/g" > .testsuite.gold
+  cd -
+
+cd subdir1/subdir1a && \
+  sed -e "s/SUB1A_TYPE/$SUB1A_TYPE/g" testsuite.gold | sed -e "s/SUB1A_INST/$SUB1A_INST/g" > .testsuite.gold && \
+  cd -
+
+sed -e "s/THIS_TYPE/$THIS_TYPE/g" testrunner.gold | sed -e "s/THIS_INST/$THIS_INST/g" |
+  sed -e "s/SUB0_TYPE/$SUB0_TYPE/g" | sed -e "s/SUB0_INST/$SUB0_INST/g" |
+  sed -e "s/SUB1_TYPE/$SUB1_TYPE/g" | sed -e "s/SUB1_INST/$SUB1_INST/g" |
+  sed -e "s/SUB1A_TYPE/$SUB1A_TYPE/g" | sed -e "s/SUB1A_INST/$SUB1A_INST/g" > .testrunner.gold
+
+
+# do the checking
+gold=(  test_unit_test.gold .testsuite.gold .testrunner.gold svunit_top.gold )
+check=( test_unit_test.sv   .$THIS_TYPE.sv  .testrunner.sv   .svunit_top.sv  )
+for i in {0..3}; do
+  if [ "`diff -bB ${gold[$i]} ${check[$i]}`" != "" ]; then
+    echo ${check[$i]} failed;
+    exit 1;
+  fi
+done
+
+
+gold=(  ./subdir0/subdir0_unit_test.sv   ./subdir0/.$SUB0_TYPE.sv  )
+check=( ./subdir0/subdir0_unit_test.gold ./subdir0/.testsuite.gold )
+for i in {0..1}; do
+  if [ "`diff -bB ${gold[$i]} ${check[$i]}`" != "" ]; then
+    echo ${check[$i]} failed;
+    exit 1;
+  fi
+done
+
+
+gold=(  ./subdir1/subdir1_unit_test.sv   ./subdir1/.$SUB1_TYPE.sv  )
+check=( ./subdir1/subdir1_unit_test.gold ./subdir1/.testsuite.gold )
+for i in {0..1}; do
+  if [ "`diff -bB ${gold[$i]} ${check[$i]}`" != "" ]; then
+    echo ${check[$i]} failed;
+    exit 1;
+  fi
+done
+
+
+gold=(  ./subdir1/subdir1a/subdir1a_unit_test.sv   ./subdir1/subdir1a/.$SUB1A_TYPE.sv  )
+check=( ./subdir1/subdir1a/subdir1a_unit_test.gold ./subdir1/subdir1a/.testsuite.gold )
+for i in {0..1}; do
+  if [ "`diff -bB ${gold[$i]} ${check[$i]}`" != "" ]; then
+    echo ${check[$i]} failed;
+    exit 1;
+  fi
+done
