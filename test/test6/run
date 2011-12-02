@@ -11,14 +11,14 @@ create_svunit.pl
 make .svunit_top.sv
 
 # massage the testsuite golden reference
-THIS_TYPE=`pwd | sed -e "s/\//_/g"`_testsuite
-THIS_INST=`pwd | sed -e "s/\//_/g"`_ts
-SUB0_TYPE=`cd subdir0 && pwd | sed -e "s/\//_/g"`_testsuite
-SUB0_INST=`cd subdir0 && pwd | sed -e "s/\//_/g"`_ts
-SUB1_TYPE=`cd subdir1 && pwd | sed -e "s/\//_/g"`_testsuite
-SUB1_INST=`cd subdir1 && pwd | sed -e "s/\//_/g"`_ts
-SUB1A_TYPE=`cd subdir1/subdir1a && pwd | sed -e "s/\//_/g"`_testsuite
-SUB1A_INST=`cd subdir1/subdir1a && pwd | sed -e "s/\//_/g"`_ts
+THIS_TYPE=`pwd | sed -e "s/[\/-]/_/g"`_testsuite
+THIS_INST=`pwd | sed -e "s/[\/-]/_/g"`_ts
+SUB0_TYPE=`cd subdir0 && pwd | sed -e "s/[\/-]/_/g"`_testsuite
+SUB0_INST=`cd subdir0 && pwd | sed -e "s/[\/-]/_/g"`_ts
+SUB1_TYPE=`cd subdir1 && pwd | sed -e "s/[\/-]/_/g"`_testsuite
+SUB1_INST=`cd subdir1 && pwd | sed -e "s/[\/-]/_/g"`_ts
+SUB1A_TYPE=`cd subdir1/subdir1a && pwd | sed -e "s/[\/-]/_/g"`_testsuite
+SUB1A_INST=`cd subdir1/subdir1a && pwd | sed -e "s/[\/-]/_/g"`_ts
 
 sed -e "s/THIS_TYPE/$THIS_TYPE/g" testsuite.gold | sed -e "s/THIS_INST/$THIS_INST/g" |
   sed -e "s/SUB0_TYPE/$SUB0_TYPE/g" | sed -e "s/SUB0_INST/$SUB0_INST/g" |

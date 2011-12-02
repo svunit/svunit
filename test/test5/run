@@ -11,8 +11,8 @@ cd another_test
 make .svunit_top.sv
 
 # massage the testsuite golden reference
-TS_TYPE=`pwd | sed -e "s/\//_/g"`_testsuite
-TS_INST=`pwd | sed -e "s/\//_/g"`_ts
+TS_TYPE=`pwd | sed -e "s/[\/-]/_/g"`_testsuite
+TS_INST=`pwd | sed -e "s/[\/-]/_/g"`_ts
 sed -e "s/TS_TYPE/$TS_TYPE/g" testsuite.gold | sed -e "s/TS_INST/$TS_INST/g" > .testsuite.gold
 sed -e "s/TS_TYPE/$TS_TYPE/g" testrunner.gold | sed -e "s/TS_INST/$TS_INST/g" > .testrunner.gold
 

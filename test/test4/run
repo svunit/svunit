@@ -12,10 +12,10 @@ create_svunit.pl
 make .svunit_top.sv
 
 ## massage the testsuite golden reference
-TS_TYPE=`pwd | sed -e "s/\//_/g"`_testsuite
-TS_INST=`pwd | sed -e "s/\//_/g"`_ts
-ATS_TYPE=`pwd | sed -e "s/\//_/g"`_another_test_testsuite
-ATS_INST=`pwd | sed -e "s/\//_/g"`_another_test_ts
+TS_TYPE=`pwd | sed -e "s/[\/-]/_/g"`_testsuite
+TS_INST=`pwd | sed -e "s/[\/-]/_/g"`_ts
+ATS_TYPE=`pwd | sed -e "s/[\/-]/_/g"`_another_test_testsuite
+ATS_INST=`pwd | sed -e "s/[\/-]/_/g"`_another_test_ts
 
 sed -e "s/TS_TYPE/$TS_TYPE/g" testsuite.gold | sed -e "s/TS_INST/$TS_INST/g" > .testsuite.gold
 sed -e "s/ATS_TYPE/$ATS_TYPE/g" testrunner.gold | sed -e "s/ATS_INST/$ATS_INST/g" | sed -e "s/TS_TYPE/$TS_TYPE/g" | sed -e "s/TS_INST/$TS_INST/g" > .testrunner.gold

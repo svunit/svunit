@@ -1,4 +1,4 @@
-rm -rf .`pwd | sed -e 's/\//_/g'`_testsuite.sv \
+rm -rf .`pwd | sed -e 's/[\/-]/_/g'`_testsuite.sv \
        .testrunner.gold \
        .testrunner.gold.tmp \
        .testrunner.sv \
@@ -10,7 +10,7 @@ rm -rf .`pwd | sed -e 's/\//_/g'`_testsuite.sv \
 
 
 cd another_test && \
-rm -rf .`pwd | sed -e 's/\//_/g'`_testsuite.sv \
+rm -rf .`pwd | sed -e 's/[\/-]/_/g'`_testsuite.sv \
        .testsuite.gold \
        Makefile \
        test0_unit_test.sv

@@ -71,6 +71,9 @@ sub processDir($)
   my $dirID = "." . $dir;
   $dirID =~ s/\//_/g;
 
+  # convert any illegal verilog chars to a '_'
+  $dirID =~ s/-/_/g;
+
   print "Info: Writing $dir/Makefile\n";
   if ($fh->open(">$dir/Makefile"))
   {

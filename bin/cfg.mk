@@ -26,7 +26,9 @@ INCDIR   += $(SVUNIT_INSTALL)/svunit_base
 
 ALLPKGS  += $(SVUNIT_INSTALL)/svunit_base/svunit_pkg.sv $(TESTPKGS)
 
-SIM_EXE  := vcs
+ifeq ($(SIM_EXE),)
+	SIM_EXE  := vcs
+endif
 SIM_ARGS += -R -sverilog -ntb_opts dtm
 
 space :=
