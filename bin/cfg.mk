@@ -95,6 +95,6 @@ testsuites : $(TESTSUITES)
 
 
 clean :
-	rm -rf *testsuite.sv testrunner.sv svunit_top.sv csrc* simv* vc_hdrs.h
+	rm -rf .*testsuite.sv .*testrunner.sv .*svunit_top.sv csrc* simv* vc_hdrs.h
 
 FORCE :
