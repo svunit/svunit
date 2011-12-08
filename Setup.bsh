@@ -21,7 +21,10 @@
 #
 ################################################################
 
+# set the SVUNIT_INSTALL variable
 export SVUNIT_INSTALL=`pwd`
+
+# add SVUNIT_INSTALL/bin to PATH
 if [ "${PATH/$SVUNIT_INSTALL\/bin/}" == "$PATH" ]; then
   export PATH=$PATH:$SVUNIT_INSTALL"/bin"
 fi
