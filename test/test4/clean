@@ -12,5 +12,6 @@ rm -rf .`pwd | sed -e 's/[\/-]/_/g'`_testsuite.sv \
 cd another_test && \
 rm -rf .`pwd | sed -e 's/[\/-]/_/g'`_testsuite.sv \
        .testsuite.gold \
+       .testrunner.gold \
        Makefile \
        test0_unit_test.sv
