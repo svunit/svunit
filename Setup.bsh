@@ -1,4 +1,4 @@
-#/usr/bin/bash
+#!/bin/bash
 
 ################################################################
 #
@@ -20,6 +20,9 @@
 #  under the License.
 #
 ################################################################
+
+# you'll need to export the SVUNIT_INSTALL and add
+# SVUNIT_INSTALL to your path to run the svunit scripts
 
 export SVUNIT_INSTALL=`pwd`
 if [ "${PATH/$SVUNIT_INSTALL\/bin/}" == "$PATH" ]; then

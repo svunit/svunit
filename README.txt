@@ -23,8 +23,12 @@
 Step-by-step instructions to get a first unit test going...
 -----------------------------------------------------------
 
-1) setup the SVUNIT_INSTALL and PATH
->source Setup
+1) setup the SVUNIT_INSTALL and PATH environment variables
+>export SVUNIT_INSTALL=`pwd`
+>export PATH=$PATH:$SVUNIT_INSTALL"/bin"
+
+1a) or you can source the Setup.bsh
+>source Setup.bsh
 
 2) go somewhere and start a class-under-test
 ---
@@ -39,18 +43,17 @@ Step-by-step instructions to get a first unit test going...
 4) create the svunit makefiles
 >create_svunit.pl
 
-5a) add tests as methods (OR go to 7b)
+5a) add tests as methods (OR go to 5b)
 ---
   bogus_unit_test.sv:
     task run_test();
       super.run_test();
-      `INFO("Running Unit Tests for class: ppb_event_timer:");
 
       test_mytest(); // <-- add this line to invoke the test
     endtask
 
     task test_mytest(); // <-- add the actual test
-      `INFO("Running atm_cell::test_calculate_hec");
+      `INFO("Running bogus::test_mytest");
       /* Place Test Code Here */
     endtask
 ---
@@ -64,10 +67,17 @@ Step-by-step instructions to get a first unit test going...
     //===================================
     `SVTEST(test_mytest)
     `SVTEST_END(test_mytest)
+
+    `SVUNIT_TESTS_END
 ---
 
+6) include one of the the simulator specific make files in your svunit.mk
+>cat include $(SVUNIT_INSTALL)/bin/vcs.mk
+OR
+>cat include $(SVUNIT_INSTALL)/bin/questa.mk
+
 6a) run the unittests
->make sim
+>make
 
 6b) or if you only want to build the framework but not run it...
 >make .svunit_top.sv

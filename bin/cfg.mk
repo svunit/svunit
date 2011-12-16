@@ -24,16 +24,7 @@
 INCDIR   += .
 INCDIR   += $(SVUNIT_INSTALL)/svunit_base
 
-ALLPKGS  += $(SVUNIT_INSTALL)/svunit_base/svunit_pkg.sv $(TESTPKGS)
-
-ifeq ($(SIM_EXE),)
-	SIM_EXE  := vcs
-endif
-SIM_ARGS += -R -sverilog -ntb_opts dtm
-
-space :=
-space +=
-INCDIRS := +incdir$(subst $(space),,$(foreach DIR,$(INCDIR),+$(DIR)))
+ALLPKGS  += $(SVUNIT_INSTALL)/svunit_base/svunit_pkg.sv
 
 # compute the unittest list
 UT := $(filter %_UNITTESTS,$(.VARIABLES))
@@ -41,21 +32,23 @@ UNITTESTS := $(foreach u,$(UT),$($(u)))
 
 TESTRUNNER := testrunner.sv
 SVUNIT_TOP := svunit_top.sv
+TESTFILES  += $(UNITTESTS) \
+              $(TESTSUITES) \
+              .$(TESTRUNNER) \
+              .$(SVUNIT_TOP)
 
 
 ############## TARGETS ############## 
 
 
+# This file is simulator independant which
+# meand the command line (i.e. SVUNIT_SIM)
+# must be formed elsewhere
+ifeq ($(SVUNIT_SIM),)
+	SVUNIT_SIM=@echo "Error: SVUNIT_SIM command line not defined"
+endif
 sim : clean .$(SVUNIT_TOP)
-	$(SIM_EXE) \
-    $(SIM_ARGS) \
-    $(INCDIRS) \
-		$(ALLPKGS) \
-		$(TESTFILES) \
-    $(UNITTESTS) \
-    $(TESTSUITES) \
-    .$(TESTRUNNER) \
-    .$(SVUNIT_TOP)
+	$(SVUNIT_SIM)
 
 
 
@@ -95,6 +88,6 @@ testsuites : $(TESTSUITES)
 
 
 clean :
-	rm -rf .*testsuite.sv .*testrunner.sv .*svunit_top.sv csrc* simv* vc_hdrs.h
+	rm -rf .*testsuite.sv .*testrunner.sv .*svunit_top.sv
 
 FORCE :

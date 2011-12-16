@@ -28,7 +28,41 @@ use IO::Dir;
 
 
 my $homeDir = getcwd;
+my $svunit_simulator = "vcs";
 
+
+##########################################################################
+# PrintHelp(): Prints the script usage.
+##########################################################################
+sub PrintHelp() {
+  print "\n";
+  print "Usage:  create_svunit.pl [ -help -sim <simulator> ]\n\n";
+  print "Where -help               : prints this help screen\n";
+  print "      -sim <simulator>    : specifiy the simulator you're using (ie. vcs, qverilog)\n";
+  print "\n";
+  die;
+}
+
+
+sub CheckArgs() {
+  my $numargs = @ARGV;
+
+  for my $i (0..$numargs-1) {
+    if ( my $skip == 1 ) {
+      $skip = 0;
+    }
+    else {
+      if ( @ARGV[$i] =~ /(-help)|(-h)/ ) {
+        PrintHelp();
+      }
+      elsif ( @ARGV[$i] =~ /-sim/ ) {
+        $i++;
+        $skip = 1;
+        $svunit_simulator = $ARGV[$i];
+      }
+    }
+  }
+}
 
 #############################################
 # sub processDir($)
@@ -93,7 +127,8 @@ sub processDir($)
         push(@child, "$dir/$dirID\_testsuite.sv");
       }
     }
-    $fh->print("\n\n-include svunit.mk\n");
+    $fh->print("\n\nSVUNIT_SIMULATOR=$svunit_simulator\n");
+    $fh->print("\n-include svunit.mk\n");
     $fh->print("include \$(SVUNIT_INSTALL)/bin/cfg.mk\n");
     $fh->close;
   }
@@ -106,4 +141,5 @@ sub processDir($)
   return @child;
 }
 
+CheckArgs();
 processDir($homeDir);

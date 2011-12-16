@@ -273,7 +273,7 @@ sub CreateUnitTest() {
   print OUTFILE "  //===================================\n";
   print OUTFILE "  task run_test();\n";
   print OUTFILE "    super.run_test();\n";
-  print OUTFILE "    `INFO(\"Running Unit Tests for class: $class:\");\n";
+  print OUTFILE "\n";
 
   if ( $interactive == 1 ) {
     print "\n";
