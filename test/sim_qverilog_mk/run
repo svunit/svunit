@@ -1,12 +1,12 @@
 # create the Makefile
 create_svunit.pl
 
-which vcsi >/dev/null
+which qverilog >/dev/null
 if [ "$?" != "0" ]; then
   exit 1;
 fi
 
-# build and run svunit with vcsi
+# build and run svunit with qverilog
 make
 
 

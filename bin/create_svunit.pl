@@ -112,11 +112,11 @@ sub processDir($)
     }
     if (@unittest > 0)
     {
-      $fh->print("TESTSUITES = $dirID\_testsuite.sv\n");
+      $fh->print("TESTSUITES = $dir/$dirID\_testsuite.sv\n");
       $fh->print("$dirID\_UNITTESTS = ");
       foreach my $unittest (@unittest)
       {
-        $fh->print("$unittest ");
+        $fh->print("$dir/$unittest ");
         push(@child, "$dir/$dirID\_testsuite.sv");
       }
     }

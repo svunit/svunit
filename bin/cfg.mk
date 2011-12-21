@@ -21,7 +21,9 @@
 
 ############## VARIABLES ############## 
 
-INCDIR   += .
+TESTDIR    := $(shell echo `pwd`)
+
+INCDIR   += $(TESTDIR)
 INCDIR   += $(SVUNIT_INSTALL)/svunit_base
 
 ALLPKGS  += $(SVUNIT_INSTALL)/svunit_base/svunit_pkg.sv
@@ -34,8 +36,8 @@ TESTRUNNER := testrunner.sv
 SVUNIT_TOP := svunit_top.sv
 TESTFILES  += $(UNITTESTS) \
               $(TESTSUITES) \
-              .$(TESTRUNNER) \
-              .$(SVUNIT_TOP)
+              $(TESTDIR)/.$(TESTRUNNER) \
+              $(TESTDIR)/.$(SVUNIT_TOP)
 
 
 ############## TARGETS ############## 
@@ -48,7 +50,7 @@ ifeq ($(SVUNIT_SIM),)
 	SVUNIT_SIM=@echo "Error: SVUNIT_SIM command line not defined"
 endif
 sim : clean .$(SVUNIT_TOP)
-	$(SVUNIT_SIM)
+	@$(SVUNIT_SIM)
 
 
 
@@ -79,8 +81,8 @@ $(.TESTSUITES) :
 
 TESTSUITE_ARGS += -overwrite
 TESTSUITE_ARGS +=  $(foreach UNITTEST, $($*_UNITTESTS), -add $(UNITTEST))
-TESTSUITE_ARGS += -out $@
-%_testsuite.sv : $$($$*_UNITTESTS)
+TESTSUITE_ARGS += -out $(notdir $@)
+$(TESTDIR)/%_testsuite.sv : $$($$*_UNITTESTS)
 	create_testsuite.pl $(TESTSUITE_ARGS)
 
 testsuites : $(TESTSUITES)

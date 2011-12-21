@@ -1,0 +1,51 @@
+rm -rf not_pwd >/dev/null
+rm -rf subdir1/not_pwd >/dev/null
+
+# create the Makefile
+create_svunit.pl
+
+which qverilog >/dev/null
+if [ "$?" != "0" ]; then
+  exit 1;
+fi
+
+mkdir not_pwd
+mkdir subdir1/not_pwd
+
+test()
+{
+  cd $1
+
+  #---------------------
+  # run make in the pwd
+  #---------------------
+  # build and run svunit with qverilog
+  make
+
+  if [ "$2" == "0" ]; then
+    run_log=run.log
+  else
+    run_log=not_pwd/run.log
+  fi
+
+  # check the log output for a PASS from the testrunner
+  if [ ! -e $run_log ]; then
+    echo $run_log does not exist
+    exit 1;
+  fi
+
+  grep "# INFO:  \[0ns\]\[testrunner\]: Testrunner Results: PASS" $run_log >/dev/null
+  if [ "$?" != "0" ]; then
+    echo PASS not detected from Testrunner in $run_log
+    exit 1;
+  fi
+
+  cd - >/dev/null
+}
+
+test . 1
+test subdir0 0
+test subdir1 1
+test subdir1/subdir1a 0
+
+exit 0
