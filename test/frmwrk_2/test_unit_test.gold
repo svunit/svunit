@@ -44,7 +44,6 @@ class c_test_unit_test extends svunit_testcase;
   //===================================
   task run_test();
     super.run_test();
-    `INFO("Running Unit Tests for class: test:");
   endtask
 
 

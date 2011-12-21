@@ -1,24 +1,24 @@
 import svunit_pkg::*;
 
-`include "subdir1a.sv"
-typedef class c_subdir1a_unit_test;
+`include "test0.sv"
+typedef class c_test0_unit_test;
 
-module subdir1a_unit_test;
-  c_subdir1a_unit_test unittest;
-  string name = "subdir1a_ut";
+module test0_unit_test;
+  c_test0_unit_test unittest;
+  string name = "test0_ut";
 
   function void setup();
     unittest = new(name);
   endfunction
 endmodule
 
-class c_subdir1a_unit_test extends svunit_testcase;
+class c_test0_unit_test extends svunit_testcase;
 
   //===================================
   // This is the class that we're 
   // running the Unit Tests on
   //===================================
-  subdir1a my_subdir1a;
+  test0 my_test0;
 
 
   //===================================
@@ -33,7 +33,7 @@ class c_subdir1a_unit_test extends svunit_testcase;
   // Setup for running the Unit Tests
   //===================================
   task setup();
-    my_subdir1a = new(/* New arguments if needed */);
+    my_test0 = new(/* New arguments if needed */);
     /* Place Setup Code Here */
   endtask
 
@@ -44,7 +44,6 @@ class c_subdir1a_unit_test extends svunit_testcase;
   //===================================
   task run_test();
     super.run_test();
-    `INFO("Running Unit Tests for class: subdir1a:");
   endtask
 
 

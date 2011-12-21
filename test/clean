@@ -1,4 +1,6 @@
-for test in `ls -d test*`; do
-  echo cleaning $test...
-  cd $test && ./clean && cd - > /dev/null 2>&1
+for test in `ls`; do
+  if [ -d $test ]; then
+    echo cleaning $test...
+    cd $test && ./clean && cd - > /dev/null 2>&1
+  fi
 done
