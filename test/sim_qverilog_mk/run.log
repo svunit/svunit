@@ -1,0 +1,22 @@
+QuestaSim qverilog 6.6d Compiler 2010.11 Nov  1 2010
+/tools/model/qs6.6d/questasim/bin/../linux/qverilog -l run.log +incdir+.+incdir+/home/njohnson/work/svunit-code/svunit_base /home/njohnson/work/svunit-code/svunit_base/svunit_pkg.sv dut_unit_test.sv ._home_njohnson_work_svunit_code_test_sim_qverilog_mk_testsuite.sv .testrunner.sv .svunit_top.sv 
+-- Compiling package svunit_pkg
+-- Compiling package dut_unit_test_sv_unit
+-- Importing package svunit_pkg
+-- Compiling module dut_unit_test
+-- Compiling package __home_njohnson_work_svunit_code_test_sim_qverilog_mk_testsuite_sv_unit
+-- Importing package svunit_pkg
+-- Compiling module _home_njohnson_work_svunit_code_test_sim_qverilog_mk_testsuite
+-- Compiling package _testrunner_sv_unit
+-- Importing package svunit_pkg
+-- Compiling module testrunner
+-- Compiling module top
+
+Top level modules:
+	top
++ /tools/model/qs6.6d/questasim/linux/vsim -lib work top -c -do run -all; quit -f -appendlog -l run.log -vopt
+# vsim -appendlog -do {run -all; quit -f} -l run.log -lib work -c -vopt top 
+# ** Note: (vsim-3813) Design is being optimized due to module recompilation...
+# ** Error: .testrunner.sv(12): Module '_home_njohnson_work_svunit_code_test_sim_qverilog_mk_work_testsuite' is not defined.
+# Optimization failed
+# Error loading design

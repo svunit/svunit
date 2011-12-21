@@ -1,0 +1,2 @@
+class dut;
+endclass
