@@ -41,7 +41,7 @@ SIM_ARGS +=
 #----------------------------------------
 space :=
 space +=
-SIM_INC += +incdir$(subst $(space),,$(foreach DIR,$(INCDIR),+$(DIR)))
+SIM_INC += $(subst $(space),,$(foreach DIR,$(INCDIR),+incdir+$(DIR)))
 
 
 #--------------------------------------------------------------

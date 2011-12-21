@@ -16,5 +16,5 @@ frmwrk_6: testrunner created from 3 levels of test hierarchy
 ---------------------------------
 Tests for the simulator makefiles
 ---------------------------------
-sim_vcs_mk: run the framework for a single unit test with vcs
+sim_vcsi_mk: run the framework for a single unit test with vcs
 sim_questa_mk: run the framework for a single unit test with qverilog
