@@ -41,7 +41,7 @@ SIM_ARGS += -l run.log
 #----------------------------------------
 space :=
 space +=
-SIM_INC += $(subst $(space),,$(foreach DIR,$(INCDIR),+incdir+$(DIR)))
+SIM_INC += +incdir$(subst $(space),,$(foreach DIR,$(INCDIR),+$(DIR)))
 
 
 #--------------------------------------------------------------

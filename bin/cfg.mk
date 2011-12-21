@@ -28,14 +28,11 @@ INCDIR   += $(SVUNIT_INSTALL)/svunit_base
 
 ALLPKGS  += $(SVUNIT_INSTALL)/svunit_base/svunit_pkg.sv
 
-# compute the unittest list
-UT := $(filter %_UNITTESTS,$(.VARIABLES))
-UNITTESTS := $(foreach u,$(UT),$($(u)))
-
 TESTRUNNER := testrunner.sv
 SVUNIT_TOP := svunit_top.sv
 TESTFILES  += $(UNITTESTS) \
               $(TESTSUITES) \
+              $(.TESTSUITES) \
               $(TESTDIR)/.$(TESTRUNNER) \
               $(TESTDIR)/.$(SVUNIT_TOP)
 

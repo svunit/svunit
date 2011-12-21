@@ -28,6 +28,8 @@ use IO::Dir;
 
 
 my $homeDir = getcwd;
+my @incdir;
+my @unittest;
 
 
 ##########################################################################
@@ -69,7 +71,7 @@ sub processDir($)
   my $dir = shift;
   my $DIR;
   my $handle;
-  my @unittest;
+  my @local_unittest;
   my @child;
 
   $DIR = IO::Dir->new($dir);
@@ -83,12 +85,14 @@ sub processDir($)
     # if it's a unit test, push it to the list of tests for that dir
     elsif ($handle =~ /.*_unit_test.sv/)
     {
-      push(@unittest, $handle);
+      push(@unittest, "$dir/$handle");
+      push(@local_unittest, $handle);
     }
 
     # if it's a dir, process it
     elsif (-d "$dir/$handle")
     {
+      push(@incdir, "$dir/$handle");
       push(@child, processDir("$dir/$handle"));
     }
   }
@@ -104,23 +108,36 @@ sub processDir($)
   print "Info: Writing $dir/Makefile\n";
   if ($fh->open(">$dir/Makefile"))
   {
+    if (@unittest > 0) {
+      # collect all the unit tests
+      $fh->print("UNITTESTS +=");
+      foreach my $ut (@unittest) { $fh->print(" $ut"); }
+      $fh->print("\n\n");
+    }
+    if (@incdir > 0) {
+      # mangle the INCDIRS
+      $fh->print("INCDIR +=");
+      foreach my $d (@incdir) { $fh->print(" $d"); }
+      $fh->print("\n\n");
+    }
     if (@child > 0)
     {
+      # mangle the .TESTSUITES
       $fh->print(".TESTSUITES =");
       foreach my $c (@child) { $fh->print(" $c"); }
-      $fh->print("\n");
+      $fh->print("\n\n");
     }
-    if (@unittest > 0)
+    if (@local_unittest > 0)
     {
       $fh->print("TESTSUITES = $dir/$dirID\_testsuite.sv\n");
       $fh->print("$dirID\_UNITTESTS = ");
-      foreach my $unittest (@unittest)
+      foreach my $local_unittest (@local_unittest)
       {
-        $fh->print("$dir/$unittest ");
+        $fh->print("$dir/$local_unittest ");
         push(@child, "$dir/$dirID\_testsuite.sv");
       }
     }
-    $fh->print("\n-include svunit.mk\n");
+    $fh->print("\n\n-include svunit.mk\n");
     $fh->print("include \$(SVUNIT_INSTALL)/bin/cfg.mk\n");
     $fh->close;
   }
