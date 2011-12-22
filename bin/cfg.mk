@@ -86,7 +86,7 @@ testsuites : $(TESTSUITES)
 
 
 
-CLEANFILES=.*testsuite.sv .*testrunner.sv .*svunit_top.sv
+CLEANFILES += .*testsuite.sv .*testrunner.sv .*svunit_top.sv
 clean :
 	rm -rf $(CLEANFILES)
 
