@@ -1,0 +1,53 @@
+QuestaSim qverilog 6.6d Compiler 2010.11 Nov  1 2010
+/tools/model/qs6.6d/questasim/bin/../linux/qverilog -l run.log +incdir+/home/njohnson/work/svunit-code/test/svunit_base_0b+/home/njohnson/work/svunit-code/svunit_base /home/njohnson/work/svunit-code/svunit_base/svunit_pkg.sv /home/njohnson/work/svunit-code/test/svunit_base_0b/dut_unit_test.sv /home/njohnson/work/svunit-code/test/svunit_base_0b/._home_njohnson_work_svunit_code_test_svunit_base_0b_testsuite.sv /home/njohnson/work/svunit-code/test/svunit_base_0b/.testrunner.sv /home/njohnson/work/svunit-code/test/svunit_base_0b/.svunit_top.sv 
+-- Compiling package svunit_pkg
+-- Compiling package dut_unit_test_sv_unit
+-- Importing package svunit_pkg
+-- Compiling module dut_unit_test
+-- Compiling package __home_njohnson_work_svunit_code_test_svunit_base_0b_testsuite_sv_unit
+-- Importing package svunit_pkg
+-- Compiling module _home_njohnson_work_svunit_code_test_svunit_base_0b_testsuite
+-- Compiling package _testrunner_sv_unit
+-- Importing package svunit_pkg
+-- Compiling module testrunner
+-- Compiling module top
+
+Top level modules:
+	top
++ /tools/model/qs6.6d/questasim/linux/vsim -lib work top -c -do run -all; quit -f -appendlog -l run.log -vopt
+# vsim -appendlog -do {run -all; quit -f} -l run.log -lib work -c -vopt top 
+# ** Note: (vsim-3812) Design is being optimized...
+# //  QuestaSim 6.6d Nov  1 2010 Linux 2.6.32-5-amd64
+# //
+# //  Copyright 1991-2010 Mentor Graphics Corporation
+# //              All Rights Reserved.
+# //
+# //  THIS WORK CONTAINS TRADE SECRET AND 
+# //  PROPRIETARY INFORMATION WHICH IS THE PROPERTY
+# //  OF MENTOR GRAPHICS CORPORATION OR ITS LICENSORS
+# //  AND IS SUBJECT TO LICENSE TERMS.
+# //
+# Loading sv_std.std
+# Loading work.top(fast)
+# Loading work.svunit_pkg(fast)
+# Loading work._testrunner_sv_unit(fast)
+# Loading work.testrunner(fast)
+# Loading work.__home_njohnson_work_svunit_code_test_svunit_base_0b_testsuite_sv_unit(fast)
+# Loading work._home_njohnson_work_svunit_code_test_svunit_base_0b_testsuite(fast)
+# Loading work.dut_unit_test_sv_unit(fast)
+# Loading work.dut_unit_test(fast)
+# run -all 
+# INFO:  [0ns][dut_ut]: Use the INFO macro
+# ERROR: [0ns][dut_ut]: Use the ERROR macro
+# INFO:  [0ns][_home_njohnson_work_svunit_code_test_svunit_base_0b_ts]: Registering Unit Testcase dut_ut
+# INFO:  [0ns][testrunner]: Registering Test Suite _home_njohnson_work_svunit_code_test_svunit_base_0b_ts
+# 
+# INFO:  [0ns][_home_njohnson_work_svunit_code_test_svunit_base_0b_ts]: Running Suite: _home_njohnson_work_svunit_code_test_svunit_base_0b_ts
+# INFO:  [0ns][dut_ut]: Running Unit Tests for class dut_ut
+# 
+# INFO:  [0ns][_home_njohnson_work_svunit_code_test_svunit_base_0b_ts]: Results for Test Suite _home_njohnson_work_svunit_code_test_svunit_base_0b_ts
+# INFO:  [0ns][dut_ut]: Unit Test dut_ut: PASS
+# 
+# INFO:  [0ns][testrunner]: Test Suite _home_njohnson_work_svunit_code_test_svunit_base_0b_ts: PASS
+# 
+# INFO:  [0ns][testrunner]: Testrunner Results: PASS
