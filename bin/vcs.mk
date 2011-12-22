@@ -58,3 +58,13 @@ SVUNIT_SIM = $(SIM_EXE) \
              $(SIM_INC) \
              $(ALLPKGS) \
              $(TESTFILES)
+
+
+#-----------------------------------------------------------
+# Files created by the simulator that need to be cleaned up
+#-----------------------------------------------------------
+CLEANFILES += csrc \
+							run.log \
+							simv \
+							simv.daidir
+
