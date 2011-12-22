@@ -9,10 +9,13 @@ frmwrk_tests=`ls -d frmwrk_*`
 declare -a sim_tests
 sim_tests=`ls -d sim_*`
 
+declare -a svunit_base_tests
+svunit_base_tests=`ls -d svunit_base_*`
+
 
 # define the concatentated master list
 declare -a testlist
-testlist=( ${frmwrk_tests[@]} ${sim_tests[@]} )
+testlist=( ${frmwrk_tests[@]} ${sim_tests[@]} ${svunit_base_tests[@]} )
 
 
 # loop through the master testlist and invoke each test

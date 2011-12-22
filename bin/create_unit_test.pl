@@ -237,6 +237,7 @@ sub CreateUnitTest() {
 
   $in_list = 0;
 
+  print OUTFILE "`include \"svunit_defines.svh\"\n";
   print OUTFILE "`include \"" . basename($testname) . "\"\n";
   print OUTFILE "typedef class c_$class\_unit_test;\n";
   print OUTFILE "\n";

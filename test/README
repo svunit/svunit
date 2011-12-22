@@ -21,3 +21,9 @@ sim_qverilog_mk: run the framework for a single unit test with qverilog
 sim_not_from_pwd: verify make variables allow sims to be run from directories other than pwd
 sim_not_from_pwd_multi_testsuites: same as sim_not_from_pwd except with multiple levels of hierarchy (same hierarchy as frmwrk_6)
                                    make at every level to verify the entire hierarchy runs
+
+-------------------
+SVUnit base testing
+-------------------
+svunit_base_0a: test the use of the svunit logging macros with vcs
+svunit_base_0b: test the use of the svunit logging macros with questa

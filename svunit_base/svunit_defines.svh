@@ -19,24 +19,6 @@
 //
 //###############################################################
 
-`ifndef SVUNIT_DEFINE
-`define SVUNIT_DEFINE
-
-  /*
-    Enum: results_t
-    enumerated type containing PASS/FAIL
-  */
-  typedef enum {PASS, FAIL}  results_t;
-
-
-  /*
-    Enum: boolean_t
-    enumerated type containing TRUE/FALSE
-  */
-  typedef enum {TRUE, FALSE} boolean_t;
-
-`endif
-
 
 /*
   Macro: `FAIL_IF
@@ -106,7 +88,7 @@
         ovm_report_error(msg);
     `else
       `define ERROR(msg) \
-        $display("ERROR: [%0tns][%0s]: %s", $time, name, msg); 
+        $display("ERROR: [%0tns][%0s]: %s", $time, name, msg)
     `endif
   `endif
 `endif

@@ -1,5 +1,6 @@
 import svunit_pkg::*;
 
+`include "svunit_defines.svh"
 `include "subdir0.sv"
 typedef class c_subdir0_unit_test;
 
