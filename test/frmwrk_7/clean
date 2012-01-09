@@ -1,0 +1,5 @@
+for f in `ls`; do
+  if [ "$f" != "clean" -a "$f" != "run" ]; then
+    rm -rf $f
+  fi
+done

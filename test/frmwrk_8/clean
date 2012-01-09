@@ -1,0 +1,6 @@
+rm -rf Makefile
+
+
+cd another_test && \
+rm -rf Makefile \
+       test0_unit_test.sv
