@@ -1,0 +1,30 @@
+# remove and create the unit_test
+create_unit_test.pl -overwrite -out ./test_unit_test.sv test.sv
+create_unit_test.pl -overwrite -out ./subdir0/subdir0_unit_test.sv ./subdir0/subdir0.sv
+create_unit_test.pl -overwrite -out ./subdir1/subdir1a/subdir1a_unit_test.sv ./subdir1/subdir1a/subdir1a.sv
+
+# create the Makefile
+create_svunit.pl
+
+# confirm there's a makefile in both the test root and another_test
+if [ ! -e ./Makefile ]; then
+  echo ./Makefile not created
+  exit 1
+fi
+
+if [ ! -e ./subdir0/Makefile ]; then
+  echo ./subdir0/Makefile not created
+  exit 1
+fi
+
+if [ -e ./subdir1/Makefile ]; then
+  echo ./subdir1/Makefile should not exist
+  exit 1
+fi
+
+if [ ! -e ./subdir1/subdir1a/Makefile ]; then
+  echo ./subdir1/subdir1a/Makefile not created
+  exit 1
+fi
+
+exit 0

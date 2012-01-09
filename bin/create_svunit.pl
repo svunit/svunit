@@ -30,6 +30,7 @@ use IO::Dir;
 my $homeDir = getcwd;
 my @incdir;
 my @unittest;
+my $g_found_unit_test = 0;
 
 
 ##########################################################################
@@ -66,13 +67,15 @@ sub CheckArgs() {
 # collect all the unit tests and write the
 # Makefiles
 #############################################
-sub processDir($)
+sub processDir($$)
 {
   my $dir = shift;
+  my $root_test_dir = shift;
   my $DIR;
   my $handle;
   my @local_unittest;
   my @child;
+  my $l_found_unit_test = 0;
 
   $DIR = IO::Dir->new($dir);
 
@@ -83,72 +86,90 @@ sub processDir($)
     {}
 
     # if it's a unit test, push it to the list of tests for that dir
-    elsif ($handle =~ /.*_unit_test.sv/)
+    elsif ($handle =~ /.*_unit_test\.sv$/)
     {
       push(@unittest, "$dir/$handle");
       push(@local_unittest, $handle);
+      $g_found_unit_test = 1;
+      $l_found_unit_test = 1;
     }
 
     # if it's a dir, process it
     elsif (-d "$dir/$handle")
     {
       push(@incdir, "$dir/$handle");
-      push(@child, processDir("$dir/$handle"));
+      push(@child, processDir("$dir/$handle", 0));
     }
   }
 
-  # write the Makefile
-  my $fh = IO::File->new();
-  my $dirID = "." . $dir;
-  $dirID =~ s/\//_/g;
-
-  # convert any illegal verilog chars to a '_'
-  $dirID =~ s/-/_/g;
-
-  print "Info: Writing $dir/Makefile\n";
-  if ($fh->open(">$dir/Makefile"))
+  # write the Makefile if there are tests in the local dir
+  # or if this is the root dir and the g_found_unit_test has been set
+  if ($root_test_dir && $g_found_unit_test ||
+      $l_found_unit_test)
   {
-    if (@unittest > 0) {
-      # collect all the unit tests
-      $fh->print("UNITTESTS +=");
-      foreach my $ut (@unittest) { $fh->print(" $ut"); }
-      $fh->print("\n\n");
-    }
-    if (@incdir > 0) {
-      # mangle the INCDIRS
-      $fh->print("INCDIR +=");
-      foreach my $d (@incdir) { $fh->print(" $d"); }
-      $fh->print("\n\n");
-    }
-    if (@child > 0)
+    my $fh = IO::File->new();
+    my $dirID = "." . $dir;
+    $dirID =~ s/\//_/g;
+
+    # convert any illegal verilog chars to a '_'
+    $dirID =~ s/-/_/g;
+
+    print "Info: Writing $dir/Makefile\n";
+    if ($fh->open(">$dir/Makefile"))
     {
-      # mangle the .TESTSUITES
-      $fh->print(".TESTSUITES =");
-      foreach my $c (@child) { $fh->print(" $c"); }
-      $fh->print("\n\n");
-    }
-    if (@local_unittest > 0)
-    {
-      $fh->print("TESTSUITES = $dir/$dirID\_testsuite.sv\n");
-      $fh->print("$dirID\_UNITTESTS = ");
-      foreach my $local_unittest (@local_unittest)
-      {
-        $fh->print("$dir/$local_unittest ");
-        push(@child, "$dir/$dirID\_testsuite.sv");
+      if (@unittest > 0) {
+        # collect all the unit tests
+        $fh->print("UNITTESTS +=");
+        foreach my $ut (@unittest) { $fh->print(" $ut"); }
+        $fh->print("\n\n");
       }
+      if (@incdir > 0) {
+        # mangle the INCDIRS
+        $fh->print("INCDIR +=");
+        foreach my $d (@incdir) { $fh->print(" $d"); }
+        $fh->print("\n\n");
+      }
+      if (@child > 0)
+      {
+        # mangle the .TESTSUITES
+        $fh->print(".TESTSUITES =");
+        foreach my $c (@child) { $fh->print(" $c"); }
+        $fh->print("\n\n");
+      }
+      if (@local_unittest > 0)
+      {
+        $fh->print("TESTSUITES = $dir/$dirID\_testsuite.sv\n");
+        $fh->print("$dirID\_UNITTESTS = ");
+        foreach my $local_unittest (@local_unittest)
+        {
+          $fh->print("$dir/$local_unittest ");
+          push(@child, "$dir/$dirID\_testsuite.sv");
+        }
+      }
+      $fh->print("\n\n-include svunit.mk\n");
+      $fh->print("include \$(SVUNIT_INSTALL)/bin/cfg.mk\n");
+      $fh->close;
     }
-    $fh->print("\n\n-include svunit.mk\n");
-    $fh->print("include \$(SVUNIT_INSTALL)/bin/cfg.mk\n");
-    $fh->close;
-  }
 
-  else
-  {
-    dir $!;
+    else
+    {
+      dir $!;
+    }
   }
 
   return @child;
 }
 
 CheckArgs();
-processDir($homeDir);
+processDir($homeDir, 1);
+
+if ($g_found_unit_test)
+{
+  exit 0;
+}
+
+else
+{
+  print "Info: Found no unit tests. No SVUnit framework created.\n";
+  exit 1;
+}
