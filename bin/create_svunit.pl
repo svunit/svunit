@@ -108,11 +108,11 @@ sub processDir($$)
       $l_found_unit_test)
   {
     my $fh = IO::File->new();
-    my $dirID = "." . $dir;
-    $dirID =~ s/\//_/g;
+    my $dirID = $dir;
 
     # convert any illegal verilog chars to a '_'
-    $dirID =~ s/-/_/g;
+    $dirID =~ s/[\/\.-]/_/g;
+    $dirID = "." . $dirID;
 
     print "Info: Writing $dir/Makefile\n";
     if ($fh->open(">$dir/Makefile"))

@@ -119,9 +119,9 @@
   START an svunit test within an SVUNIT_TEST_BEGIN/END block
 */
 `define SVTEST(_NAME_) \
-begin : _NAME_ \
-  `INFO($psprintf("Running %s::_NAME_", name)); \
-  begin
+  begin : _NAME_ \
+    `INFO($psprintf(`"Running %s::_NAME_`", name)); \
+    begin
 
 /*
   Macro: `SVTEST_END
