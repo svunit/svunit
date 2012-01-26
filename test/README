@@ -20,7 +20,9 @@ frmwrk_10: generate a basic unit test for a module
 ---------------------------------
 Tests for the simulator makefiles
 ---------------------------------
-sim_vcsi_mk: run the framework for a single class unit test with vcs
+sim_vcsi_mk_0: run the framework for a single class unit test with vcsi
+sim_vcsi_mk_1: run the framework for a single module unit test with vcsi
+sim_vcsi_mk_2: verify virtual interface connectivity between a single module unit test and dut with vcsi
 sim_qverilog_mk: run the framework for a single unit class test with qverilog
 sim_not_from_pwd: verify make variables allow sims to be run from directories other than pwd
 sim_not_from_pwd_multi_testsuites: same as sim_not_from_pwd except with multiple levels of hierarchy (same hierarchy as frmwrk_6)

@@ -1,36 +1,36 @@
 import svunit_pkg::*;
 
 `include "svunit_defines.svh"
-`include "test.sv"
-typedef class c_test_unit_test;
+`include "dut.sv"
+typedef class c_dut_unit_test;
 
-interface test_unit_test_if;
+interface dut_unit_test_if;
 endinterface
 
-module test_unit_test;
-  c_test_unit_test unittest;
-  string name = "test_ut";
+module dut_unit_test;
+  c_dut_unit_test unittest;
+  string name = "dut_ut";
 
-  test my_test();
-  test_unit_test_if my_test_if();
+  dut my_dut();
+  dut_unit_test_if my_dut_if();
 
   function void setup();
-    unittest = new(name, my_test_if);
+    unittest = new(name, my_dut_if);
   endfunction
 endmodule
 
-class c_test_unit_test extends svunit_testcase;
+class c_dut_unit_test extends svunit_testcase;
 
-  virtual test_unit_test_if my_test_if;
+  virtual dut_unit_test_if my_dut_if;
 
   //===================================
   // Constructor
   //===================================
   function new(string name,
-               virtual test_unit_test_if my_test_if);
+               virtual dut_unit_test_if my_dut_if);
     super.new(name);
 
-    this.my_test_if = my_test_if;
+    this.my_dut_if = my_dut_if;
   endfunction
 
 
@@ -48,6 +48,7 @@ class c_test_unit_test extends svunit_testcase;
   //===================================
   task run_test();
     super.run_test();
+
   endtask
 
 
