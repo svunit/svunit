@@ -28,7 +28,6 @@ use IO::Dir;
 
 
 my $homeDir = getcwd;
-my @unittest;
 my $g_found_unit_test = 0;
 
 
@@ -66,16 +65,19 @@ sub CheckArgs() {
 # collect all the unit tests and write the
 # Makefiles
 #############################################
-sub processDir($$)
+sub processDir
 {
   my $dir = shift;
   my $root_test_dir = shift;
+  my $r_parent_testsuites = shift;
+  my $r_parent_incdir = shift;
+  my $r_parent_unittest = shift;
   my $DIR;
   my @incdir;
+  my @unittest;
   my $handle;
-  my @local_unittest;
-  my @child;
-  my $l_found_unit_test = 0;
+  my @child_unittest;
+  my @child_testsuites;
 
   $DIR = IO::Dir->new($dir);
 
@@ -88,10 +90,8 @@ sub processDir($$)
     # if it's a unit test, push it to the list of tests for that dir
     elsif ($handle =~ /.*_unit_test\.sv$/)
     {
-      push(@unittest, "$dir/$handle");
-      push(@local_unittest, $handle);
+      push(@unittest, $handle);
       $g_found_unit_test = 1;
-      $l_found_unit_test = 1;
 
       # add this dir to the incdir list if it hasn't already
       if (join(@incdir, ":") !~ "$dir")
@@ -103,14 +103,21 @@ sub processDir($$)
     # if it's a dir, process it
     elsif (-d "$dir/$handle")
     {
-      push(@child, processDir("$dir/$handle", 0));
+      processDir("$dir/$handle", 0, \@child_testsuites, \@incdir, \@child_unittest);
     }
   }
 
-  # write the Makefile if there are tests in the local dir
-  # or if this is the root dir and the g_found_unit_test has been set
-  if ($root_test_dir && $g_found_unit_test ||
-      $l_found_unit_test)
+
+  # pass my incdirs back to the parent
+  push(@{$r_parent_incdir}, @incdir);
+  push(@{$r_parent_unittest}, @child_unittest);
+  push(@{$r_parent_testsuites}, @child_testsuites);
+
+
+  # write the Makefile if there are tests in the local dir or
+  # if there are child_testsuites
+  if (@child_testsuites > 0 ||
+      @unittest > 0)
   {
     my $fh = IO::File->new();
     my $dirID = $dir;
@@ -122,10 +129,10 @@ sub processDir($$)
     print "Info: Writing $dir/Makefile\n";
     if ($fh->open(">$dir/Makefile"))
     {
-      if (@unittest > 0) {
+      if (@child_unittest > 0) {
         # collect all the unit tests
-        $fh->print("UNITTESTS +=");
-        foreach my $ut (@unittest) { $fh->print(" $ut"); }
+        $fh->print("CHILD_UNITTESTS +=");
+        foreach my $ut (@child_unittest) { $fh->print(" $ut"); }
         $fh->print("\n\n");
       }
       if (@incdir > 0) {
@@ -134,22 +141,24 @@ sub processDir($$)
         foreach my $d (@incdir) { $fh->print(" $d"); }
         $fh->print("\n\n");
       }
-      if (@child > 0)
+      if (@child_testsuites > 0)
       {
-        # mangle the .TESTSUITES
-        $fh->print(".TESTSUITES =");
-        foreach my $c (@child) { $fh->print(" $c"); }
+        # mangle the CHILD_TESTSUITES
+        $fh->print("CHILD_TESTSUITES =");
+        foreach my $c (@child_testsuites) { $fh->print(" $c"); }
         $fh->print("\n\n");
       }
-      if (@local_unittest > 0)
+      if (@unittest > 0)
       {
         $fh->print("TESTSUITES = $dir/$dirID\_testsuite.sv\n");
-        $fh->print("$dirID\_UNITTESTS = ");
-        foreach my $local_unittest (@local_unittest)
+        #$fh->print("$dirID\_UNITTESTS = ");
+        $fh->print("UNITTESTS = ");
+        foreach my $unittest (@unittest)
         {
-          $fh->print("$dir/$local_unittest ");
-          push(@child, "$dir/$dirID\_testsuite.sv");
+          $fh->print("$dir/$unittest ");
+          push(@{$r_parent_unittest}, "$dir/$unittest");
         }
+        push(@{$r_parent_testsuites}, "$dir/$dirID\_testsuite.sv");
       }
       $fh->print("\n\n-include svunit.mk\n");
       $fh->print("include \$(SVUNIT_INSTALL)/bin/cfg.mk\n");
@@ -161,8 +170,6 @@ sub processDir($$)
       dir $!;
     }
   }
-
-  return @child;
 }
 
 CheckArgs();

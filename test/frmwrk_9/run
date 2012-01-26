@@ -17,8 +17,8 @@ if [ ! -e ./subdir0/Makefile ]; then
   exit 1
 fi
 
-if [ -e ./subdir1/Makefile ]; then
-  echo ./subdir1/Makefile should not exist
+if [ ! -e ./subdir1/Makefile ]; then
+  echo ./subdir1/Makefile not created
   exit 1
 fi
 

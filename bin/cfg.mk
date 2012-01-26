@@ -30,9 +30,10 @@ ALLPKGS  += $(SVUNIT_INSTALL)/svunit_base/svunit_pkg.sv
 
 TESTRUNNER := testrunner.sv
 SVUNIT_TOP := svunit_top.sv
-TESTFILES  += $(UNITTESTS) \
+TESTFILES  += $(CHILD_UNITTESTS) \
+              $(UNITTESTS) \
+              $(CHILD_TESTSUITES) \
               $(TESTSUITES) \
-              $(.TESTSUITES) \
               $(TESTDIR)/.$(TESTRUNNER) \
               $(TESTDIR)/.$(SVUNIT_TOP)
 
@@ -64,27 +65,25 @@ svunit : FORCE
 
 TEST_RUNNER_ARGS += -overwrite
 TEST_RUNNER_ARGS += $(foreach TESTSUITE, $(TESTSUITES), -add $(TESTSUITE))
-TEST_RUNNER_ARGS += $(foreach TESTSUITE, $(.TESTSUITES), -add $(TESTSUITE))
+TEST_RUNNER_ARGS += $(foreach TESTSUITE, $(CHILD_TESTSUITES), -add $(TESTSUITE))
 TEST_RUNNER_ARGS += -out $(TESTRUNNER)
-.$(TESTRUNNER) : $(TESTSUITES) $(.TESTSUITES)
+.$(TESTRUNNER) : $(TESTSUITES) $(CHILD_TESTSUITES)
 	@create_testrunner.pl $(TEST_RUNNER_ARGS)
 	@mv $(TESTRUNNER) .$(TESTRUNNER)
 
 
-$(.TESTSUITES) :
+$(CHILD_TESTSUITES) :
 	@cd `echo $@ | sed -e 's/[^/]*$$//'` && make testsuites && cd -
 
 .SECONDEXPANSION :
 
 TESTSUITE_ARGS += -overwrite
-TESTSUITE_ARGS +=  $(foreach UNITTEST, $($*_UNITTESTS), -add $(UNITTEST))
+TESTSUITE_ARGS +=  $(foreach UNITTEST, $(UNITTESTS), -add $(UNITTEST))
 TESTSUITE_ARGS += -out $(notdir $@)
-$(TESTDIR)/%_testsuite.sv : $$($$*_UNITTESTS)
+$(TESTDIR)/%_testsuite.sv : $(UNITTESTS)
 	create_testsuite.pl $(TESTSUITE_ARGS)
 
 testsuites : $(TESTSUITES)
-
-
 
 CLEANFILES += .*testsuite.sv .*testrunner.sv .*svunit_top.sv
 clean :
