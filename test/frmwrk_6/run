@@ -7,6 +7,31 @@ create_unit_test.pl -overwrite -out ./subdir1/subdir1a/subdir1a_unit_test.sv ./s
 # create the Makefile
 create_svunit.pl
 
+# verify that the Makefiles in each dir have only the UNITTESTS and INCDIRS that are required
+grep subdir1 subdir0/Makefile >/dev/null
+if [ "$?" == "0" ]; then
+  echo subdir0/Makefile includes references to subdir1*
+  exit 1;
+fi
+
+grep subdir0 subdir1/Makefile >/dev/null
+if [ "$?" == "0" ]; then
+  echo subdir1/Makefile includes references to subdir0
+  exit 1;
+fi
+
+grep subdir0 subdir1/subdir1a/Makefile >/dev/null
+if [ "$?" == "0" ]; then
+  echo subdir1/subdir1a/Makefile includes references to subdir0
+  exit 1;
+fi
+
+grep "subdir1 " subdir1/subdir1a/Makefile >/dev/null
+if [ "$?" == "0" ]; then
+  echo subdir1/subdir1a/Makefile includes references to subdir1
+  exit 1;
+fi
+
 # build the svunit_top
 make .svunit_top.sv
 

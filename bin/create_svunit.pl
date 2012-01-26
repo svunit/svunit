@@ -28,7 +28,6 @@ use IO::Dir;
 
 
 my $homeDir = getcwd;
-my @incdir;
 my @unittest;
 my $g_found_unit_test = 0;
 
@@ -72,6 +71,7 @@ sub processDir($$)
   my $dir = shift;
   my $root_test_dir = shift;
   my $DIR;
+  my @incdir;
   my $handle;
   my @local_unittest;
   my @child;
@@ -92,12 +92,17 @@ sub processDir($$)
       push(@local_unittest, $handle);
       $g_found_unit_test = 1;
       $l_found_unit_test = 1;
+
+      # add this dir to the incdir list if it hasn't already
+      if (join(@incdir, ":") !~ "$dir")
+      {
+        push(@incdir, "$dir");
+      }
     }
 
     # if it's a dir, process it
     elsif (-d "$dir/$handle")
     {
-      push(@incdir, "$dir/$handle");
       push(@child, processDir("$dir/$handle", 0));
     }
   }

@@ -4,6 +4,13 @@ create_unit_test.pl -overwrite -out ./another_test/test0_unit_test.sv ./another_
 # create the Makefile
 create_svunit.pl
 
+# verify that nothing from another_test/empty_dir gets into the Makefil
+grep empty_dir Makefile
+if [ "$?" == "0" ]; then
+  echo found reference to another_test/empty_dir in Makefile
+  exit 1;
+fi
+
 # cd to the child dir
 cd another_test
 
