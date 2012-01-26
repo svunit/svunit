@@ -31,7 +31,6 @@ use File::Basename;
 ##########################################################################
 $num_tests   = 0;
 $total_tests = 0;
-$interactive = 0;
 
 
 ##########################################################################
@@ -42,7 +41,6 @@ sub PrintHelp() {
   print "Usage:  create_unit_test.pl [ -help | -out <file> | -i | -author \"Author\" | -overwrite | <testname> ]\n\n";
   print "Where -help          : prints this help screen\n";
   print "      -out <file>    : specifies a new default output file\n";
-  print "      -i             : runs in interactive mode\n";
   print "      -author \"Name\" : specifies the author of this unit test file\n";
   print "      -overwrite      : overwrites the output file if it already exists\n";
   print "      <testname>     : the name of the testcase to run\n";
@@ -69,9 +67,6 @@ sub CheckArgs() {
         $i++;
         $skip = 1;
         $output_file = $ARGV[$i];
-      }
-      elsif ( @ARGV[$i] =~ /-i/ ) {
-        $interactive = 1;
       }
       elsif ( @ARGV[$i] =~ /-author/ ) {
         $i++;
@@ -118,17 +113,8 @@ sub ValidArgs() {
 sub OpenFiles() {
   open (INFILE,  "$testname")     or die "Cannot Open file $testname\n";
   if ( -r $output_file and $overwrite != 1 ) {
-    if ( $interactive == 1 ) {
-      print "\nWARNING: The file already exists, do you want to overwrite it? (y/n) ";
-      chomp($answer = <STDIN>);
-      if ($answer eq "y" or $answer eq "Y" or $answer eq "" ) {
-        open (OUTFILE, ">$output_file") or die "Cannot Open file $output_file\n";
-      }
-    }
-    else {
-      print "\nERROR: The file already exists, to overwrite, use the -overwrite argument\n\n";
-      exit 1;
-    }
+    print "\nERROR: The file already exists, to overwrite, use the -overwrite argument\n\n";
+    exit 1;
   }
   else {
     open (OUTFILE, ">$output_file") or die "Cannot Open file $output_file\n";
@@ -177,25 +163,50 @@ sub GetTasksFunctions() {
         $incomments = 1;
       }
 
-      if ( $inclass == 0 ) {
+      if ( $processing_uut == 0 ) {
         if ( $line =~ /^\s*class/ or $line =~ /^\s*virtual\s+class/ ) {
           $line =~ s/virtual//g;
           $line =~ s/^\s*class/class/g;
-          $line =~ s/\s+/:/g;
-          $line =~ s/;/:/g;
+          $line =~ s/\s+/ /g;
+          $line =~ s/\W/:/g;
           @items = split(/:/, $line);
-          $class = $items[1];
-          $inclass = 1;
+          $uut = $items[1];
+          $processing_class = 1;
+          $processing_uut = 1;
+        }
+        elsif ( $line =~ /^\s*module/ or $line =~ /^\s*virtual\s+module/ ) {
+          $line =~ s/^\s*module/module/g;
+          $line =~ s/\s+/:/g;
+          $line =~ s/\W/:/g;
+          @items = split(/:/, $line);
+          $uut = $items[1];
+          $processing_module = 1;
+          $processing_uut = 1;
         }
       }
       else {
-        if ( $line =~ /^\s*endclass/ ) {
-          $inclass = 0;
+        if ( $processing_class && $line =~ /^\s*endclass/ ) {
           CreateUnitTest();
           $total_tests = $total_tests + $num_tests;
           $num_tests = 0;
           @func_task = ();
+          $processing_class = 0;
+          $processing_uut = 0;
         }
+
+        elsif ( $processing_module && $line =~ /^\s*endmodule/ ) {
+          CreateUnitTest();
+          $total_tests = $total_tests + $num_tests;
+          $num_tests = 0;
+          @func_task = ();
+          $processing_module = 0;
+          $processing_uut = 0;
+        }
+
+        ###########################################################################
+        # below are the 2 branches that handle parsing of functions and task. These
+        # aren't tested and I suspect they are pretty fragile.
+        ###########################################################################
         elsif ( $line =~ /\s*function/ and $line !~ /endfunction/ and $line !~ /new/ and $line !~ /local/ and $line !~ /\/\/\s*function/ ) {
           if ( $line !~ /pure/ ) {
             $line =~ s/^\s*/ /g;         # This adds a space at the beginning so we know which item to choose
@@ -230,32 +241,50 @@ sub GetTasksFunctions() {
 
 
 ##########################################################################
-# CreateUnitTest(): This creates the output for the unit test class.  It's
-#                   called for each class within the file
+# CreateUnitTest(): invoke the method to create a unit test for either a
+#                   class or module
 ##########################################################################
 sub CreateUnitTest() {
+  if ($processing_class) {
+    CreateClassUnitTest();
+  }
 
+  elsif ($processing_module) {
+    CreateModuleUnitTest();
+  }
+
+  else {
+    die "ERROR: CreateUnitTest called but \$processing_class or \$processing_module is asserted";
+  }
+}
+
+
+##########################################################################
+# CreateClassUnitTest(): This creates the output for the unit test class.  It's
+#                   called for each class within the file
+##########################################################################
+sub CreateClassUnitTest() {
   $in_list = 0;
 
   print OUTFILE "`include \"svunit_defines.svh\"\n";
   print OUTFILE "`include \"" . basename($testname) . "\"\n";
-  print OUTFILE "typedef class c_$class\_unit_test;\n";
+  print OUTFILE "typedef class c_$uut\_unit_test;\n";
   print OUTFILE "\n";
-  print OUTFILE "module $class\_unit_test;\n";
-  print OUTFILE "  c_$class\_unit_test unittest;\n";
-  print OUTFILE "  string name = \"$class\_ut\";\n";
+  print OUTFILE "module $uut\_unit_test;\n";
+  print OUTFILE "  c_$uut\_unit_test unittest;\n";
+  print OUTFILE "  string name = \"$uut\_ut\";\n";
   print OUTFILE "\n";
   print OUTFILE "  function void setup();\n";
   print OUTFILE "    unittest = new(name);\n";
   print OUTFILE "  endfunction\n";
   print OUTFILE "endmodule\n";
   print OUTFILE "\n";
-  print OUTFILE "class c_$class\_unit_test extends svunit_testcase;\n\n";
+  print OUTFILE "class c_$uut\_unit_test extends svunit_testcase;\n\n";
   print OUTFILE "  //===================================\n";
   print OUTFILE "  // This is the class that we're \n";
   print OUTFILE "  // running the Unit Tests on\n";
   print OUTFILE "  //===================================\n";
-  print OUTFILE "  $class my_$class;\n\n\n";
+  print OUTFILE "  $uut my_$uut;\n\n\n";
   print OUTFILE "  //===================================\n";
   print OUTFILE "  // Constructor\n";
   print OUTFILE "  //===================================\n";
@@ -266,7 +295,7 @@ sub CreateUnitTest() {
   print OUTFILE "  // Setup for running the Unit Tests\n";
   print OUTFILE "  //===================================\n";
   print OUTFILE "  task setup();\n";
-  print OUTFILE "    my_$class = new(\/\* New arguments if needed \*\/);\n";
+  print OUTFILE "    my_$uut = new(\/\* New arguments if needed \*\/);\n";
   print OUTFILE "    \/\* Place Setup Code Here \*\/\n  endtask\n\n\n";
   print OUTFILE "  //===================================\n";
   print OUTFILE "  // This is where we run all the Unit\n";
@@ -276,10 +305,6 @@ sub CreateUnitTest() {
   print OUTFILE "    super.run_test();\n";
   print OUTFILE "\n";
 
-  if ( $interactive == 1 ) {
-    print "\n";
-  }
-
   foreach $func_item (@func_task) {
     foreach $excl_item (@exclude) {
       if ($excl_item eq $func_item) {
@@ -287,20 +312,9 @@ sub CreateUnitTest() {
       }
     }
     if ($in_list == 0) {
-      if ($interactive == 1) {
-        print "$func_item\? (y/n): y ";
-        chomp($answer = <STDIN>);
-        if ($answer eq "y" or $answer eq "Y" or $answer eq "" ) {
-          print OUTFILE "    test_$func_item();\n";
-          push(@tests_to_run, $func_item);
-          $num_tests++;
-        }
-      }
-      else {
-        print OUTFILE "    test_$func_item();\n";
-        push(@tests_to_run, $func_item);
-        $num_tests++;
-      }
+      print OUTFILE "    test_$func_item();\n";
+      push(@tests_to_run, $func_item);
+      $num_tests++;
     }
     else {
       $in_list = 0;
@@ -319,14 +333,85 @@ sub CreateUnitTest() {
 
 
   print "\nSVUNIT: Output File: $output_file\n";
-  print "\nSVUNIT: Creating class $class\_unit_test with tasks/functions:\n\n";
+  print "\nSVUNIT: Creating class $uut\_unit_test with tasks/functions:\n\n";
   #if ( $#tests_to_run >= 0 ) {
   #  print "\nSVUNIT: Output File: $output_file\n";
-  #  print "\nSVUNIT: Creating class $class\_unit_test with tasks/functions:\n\n";
+  #  print "\nSVUNIT: Creating class $uut\_unit_test with tasks/functions:\n\n";
   #}
   #else {
-  #  print "\nSVUNIT: $testname - $class has no tasks/functions or none chosen.\n";
+  #  print "\nSVUNIT: $testname - $uut has no tasks/functions or none chosen.\n";
   #}
+  
+  foreach $test_item (@tests_to_run) {
+    print OUTFILE "\n  //===================================\n";
+    print OUTFILE "  // Unit test for task/function:\n";
+    print OUTFILE "  //   $test_item\n";
+    print OUTFILE "  //===================================\n";
+    print OUTFILE "  task test_$test_item;\n";
+    print OUTFILE "    `INFO(\$psprintf(\"Running %s\:\:test_$test_item\", name));\n";
+    print OUTFILE "    \/\* Place Test Code Here \*\/\n  endtask\n\n";
+    print "  $test_item\n";
+  }
+
+  print OUTFILE "endclass\n\n\n";
+  @tests_to_run = ();
+}
+
+
+##########################################################################
+# CreateModuleUnitTest(): This creates the output for the unit test class.  It's
+#                   called for each module within the file
+##########################################################################
+sub CreateModuleUnitTest() {
+  $in_list = 0;
+
+  print OUTFILE "`include \"svunit_defines.svh\"\n";
+  print OUTFILE "`include \"" . basename($testname) . "\"\n";
+  print OUTFILE "typedef class c_$uut\_unit_test;\n";
+  print OUTFILE "\n";
+  print OUTFILE "module $uut\_unit_test;\n";
+  print OUTFILE "  c_$uut\_unit_test unittest;\n";
+  print OUTFILE "  string name = \"$uut\_ut\";\n";
+  print OUTFILE "\n";
+  print OUTFILE "  function void setup();\n";
+  print OUTFILE "    unittest = new(name);\n";
+  print OUTFILE "  endfunction\n";
+  print OUTFILE "endmodule\n";
+  print OUTFILE "\n";
+  print OUTFILE "$uut my_$uut();\n";
+  print OUTFILE "\n";
+  print OUTFILE "class c_$uut\_unit_test extends svunit_testcase;\n\n";
+  print OUTFILE "  //===================================\n";
+  print OUTFILE "  // Constructor\n";
+  print OUTFILE "  //===================================\n";
+  print OUTFILE "  function new(string name);\n";
+  print OUTFILE "    super.new(name);\n";
+  print OUTFILE "  endfunction\n\n\n";
+  print OUTFILE "  //===================================\n";
+  print OUTFILE "  // Setup for running the Unit Tests\n";
+  print OUTFILE "  //===================================\n";
+  print OUTFILE "  task setup();\n";
+  print OUTFILE "    \/\* Place Setup Code Here \*\/\n  endtask\n\n\n";
+  print OUTFILE "  //===================================\n";
+  print OUTFILE "  // This is where we run all the Unit\n";
+  print OUTFILE "  // Tests\n";
+  print OUTFILE "  //===================================\n";
+  print OUTFILE "  task run_test();\n";
+  print OUTFILE "    super.run_test();\n";
+  print OUTFILE "\n";
+  print OUTFILE "  endtask\n\n\n";
+  print OUTFILE "  //===================================\n";
+  print OUTFILE "  // Here we deconstruct anything we \n";
+  print OUTFILE "  // need after running the Unit Tests\n";
+  print OUTFILE "  //===================================\n";
+  print OUTFILE "  task teardown();\n";
+  print OUTFILE "    super.teardown();\n";
+  print OUTFILE "    \/\* Place Teardown Code Here \*\/\n";
+  print OUTFILE "  endtask\n\n";
+
+
+  print "\nSVUNIT: Output File: $output_file\n";
+  print "\nSVUNIT: Creating class $uut\_unit_test with tasks/functions:\n\n";
   
   foreach $test_item (@tests_to_run) {
     print OUTFILE "\n  //===================================\n";

@@ -5,22 +5,23 @@ Test descriptions
 ----------------------------------------------------------
 Tests for the scripting that generates the svunit framework
 ----------------------------------------------------------
-frmwrk_0: test one basic unit test
-frmwrk_1: test one basic unit test for a class with a different name than the file name
-frmwrk_2: test the comment parsing with one basic unit test that has a bunch of comments mixed in
+frmwrk_0: generate a basic unit test for a class
+frmwrk_1: generate a basic unit test for a class with a different name than the file name
+frmwrk_2: test the comment parsing with one basic unit test for a class that has a bunch of comments mixed in
 frmwrk_3: test multiple classes (2) in the same file
-frmwrk_4: test 2 basic unit tests in different dirs with classes that are in different dirs
+frmwrk_4: test 2 basic unit tests for a class in different dirs with classes that are in different dirs
 frmwrk_5: test one basic unit test in a child dir but none in the parent
 frmwrk_6: testrunner created from 3 levels of test hierarchy
 frmwrk_7: "no unit tests" message delivered and create_svunit.pl returns 1 for multi-level hierarchy without unit tests (see ticket #5)
-frmwrk_8: multi-level hierarchy, unit tests in child dirs but not the test root dir (see ticket #5)
-frmwrk_9: multi-level hierarchy, unit tests in some but not all child dirs and in the test root dir (see ticket #5)
+frmwrk_8: multi-level hierarchy, class unit tests in child dirs but not the test root dir (see ticket #5)
+frmwrk_9: multi-level hierarchy, class unit tests in some but not all child dirs and in the test root dir (see ticket #5)
+frmwrk_10: generate a basic unit test for a module
 
 ---------------------------------
 Tests for the simulator makefiles
 ---------------------------------
-sim_vcsi_mk: run the framework for a single unit test with vcs
-sim_qverilog_mk: run the framework for a single unit test with qverilog
+sim_vcsi_mk: run the framework for a single class unit test with vcs
+sim_qverilog_mk: run the framework for a single unit class test with qverilog
 sim_not_from_pwd: verify make variables allow sims to be run from directories other than pwd
 sim_not_from_pwd_multi_testsuites: same as sim_not_from_pwd except with multiple levels of hierarchy (same hierarchy as frmwrk_6)
                                    make at every level to verify the entire hierarchy runs
