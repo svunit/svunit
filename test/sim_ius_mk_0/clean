@@ -1,8 +1,6 @@
 rm -rf .`pwd | sed -e 's/[\/-]/_/g'`_testsuite.sv \
-       csrc \
        Makefile \
        run.log \
-       simv \
-       simv.daidir \
+       INCA_libs \
        .svunit_top.sv \
        .testrunner.sv
