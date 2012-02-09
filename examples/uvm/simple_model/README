@@ -1,0 +1,35 @@
+################################################################
+#
+#  Licensed to the Apache Software Foundation (ASF) under one
+#  or more contributor license agreements.  See the NOTICE file
+#  distributed with this work for additional information
+#  regarding copyright ownership.  The ASF licenses this file
+#  to you under the Apache License, Version 2.0 (the
+#  "License"); you may not use this file except in compliance
+#  with the License.  You may obtain a copy of the License at
+#
+#  http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing,
+#  software distributed under the License is distributed on an
+#  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+#  KIND, either express or implied.  See the License for the
+#  specific language governing permissions and limitations
+#  under the License.
+#
+################################################################
+
+Step 1: export your UVM_HOME
+>export UVM_HOME=<where ever your UVM lives>
+
+Step 2: source the svunit Setup.bsh
+>cd <where your svunit-code lives> && source Setup.bsh && cd -
+
+Step 3: build the svunit framework
+>create_svunit.pl
+
+Step 4: run it
+>make
+
+NOTE: runs with vcs, you'll need to change the svunit.mk to run
+      with questa or ius

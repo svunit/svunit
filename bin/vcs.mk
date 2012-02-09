@@ -66,6 +66,6 @@ SVUNIT_SIM = $(SIM_EXE) \
 CLEANFILES += csrc \
 							run.log \
 							simv \
-							simv.daidir \
+							simv.* \
               vc_hdrs.h
 
