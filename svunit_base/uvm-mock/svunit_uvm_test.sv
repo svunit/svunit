@@ -84,11 +84,11 @@ endclass
 // global help methods for calling start and finish for
 // the svunit_uvm_test
 //------------------------------------------------------
-task uvm_test_start();
+task svunit_uvm_test_start();
   #0 svunit_uvm_test::start();
   #0;
 endtask
-task uvm_test_finish();
+task svunit_uvm_test_finish();
   #0 svunit_uvm_test::finish();
   #0;
 endtask
