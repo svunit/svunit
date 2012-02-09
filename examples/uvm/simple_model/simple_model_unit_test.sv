@@ -58,7 +58,7 @@ class c_simple_model_unit_test extends svunit_testcase;
 
   //-------------------------------------------
   // for testing purposes, add fifos and ports
-  // to interact with the simple_model                                                                                                     
+  // to interact with the simple_model
   //-------------------------------------------
   uvm_blocking_put_port #(simple_xaction) put_port;
   uvm_tlm_fifo #(simple_xaction) in_fifo;
@@ -129,23 +129,6 @@ class c_simple_model_unit_test extends svunit_testcase;
   //===================================
   task run_test();
     super.run_test();
-  endtask
-
-
-  //===================================
-  // Here we deconstruct anything we 
-  // need after running the Unit Tests
-  //===================================
-  task teardown();
-    super.teardown();
-    /* Place Teardown Code Here */
-
-    //----------------------------------------------------------
-    // deactivate the component so that it doesn't interfere
-    // with subsequent unit tests (i.e. reassign it to the idle
-    // domain)
-    //----------------------------------------------------------
-    svunit_deactivate_uvm_component(my_simple_model);
   endtask
 
 
@@ -243,5 +226,22 @@ class c_simple_model_unit_test extends svunit_testcase;
   `SVTEST_END(xformation_test)
 
   `SVUNIT_TESTS_END
+
+
+  //===================================
+  // Here we deconstruct anything we 
+  // need after running the Unit Tests
+  //===================================
+  task teardown();
+    super.teardown();
+    /* Place Teardown Code Here */
+
+    //----------------------------------------------------------
+    // deactivate the component so that it doesn't interfere
+    // with subsequent unit tests (i.e. reassign it to the idle
+    // domain)
+    //----------------------------------------------------------
+    svunit_deactivate_uvm_component(my_simple_model);
+  endtask
 
 endclass

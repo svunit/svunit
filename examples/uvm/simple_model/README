@@ -22,13 +22,10 @@
 Step 1: export your UVM_HOME
 >export UVM_HOME=<where ever your UVM lives>
 
-Step 2: source the svunit Setup.bsh
->cd <where your svunit-code lives> && source Setup.bsh && cd -
-
-Step 3: build the svunit framework
+Step 2: build the svunit framework
 >create_svunit.pl
 
-Step 4: run it
+Step 3: run it
 >make
 
 NOTE: runs with vcs, you'll need to change the svunit.mk to run
