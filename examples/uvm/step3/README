@@ -19,4 +19,14 @@
 #
 ################################################################
 
-include $(SVUNIT_INSTALL)/bin/questa.mk
+Step 1: export your UVM_HOME
+>export UVM_HOME=<where ever your UVM lives>
+
+Step 2: build the svunit framework
+>create_svunit.pl
+
+Step 3: run it
+>make
+
+NOTE: runs with vcs, you'll need to change the svunit.mk to run
+      with questa or ius

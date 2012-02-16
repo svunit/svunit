@@ -1,3 +1,27 @@
+//###############################################################
+//
+//  Licensed to the Apache Software Foundation (ASF) under one
+//  or more contributor license agreements.  See the NOTICE file
+//  distributed with this work for additional information
+//  regarding copyright ownership.  The ASF licenses this file
+//  to you under the Apache License, Version 2.0 (the
+//  "License"); you may not use this file except in compliance
+//  with the License.  You may obtain a copy of the License at
+//
+//  http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing,
+//  software distributed under the License is distributed on an
+//  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+//  KIND, either express or implied.  See the License for the
+//  specific language governing permissions and limitations
+//  under the License.
+//
+//###############################################################
+
+`ifndef __APB_IF__
+`define __APB_IF__
+
 interface apb_if #(addrWidth = 8, dataWidth = 32) (input clk);
   logic [addrWidth-1:0] paddr;
   logic pwrite;
@@ -21,7 +45,7 @@ interface apb_if #(addrWidth = 8, dataWidth = 32) (input clk);
     input  prdata
   );
 
-  modport slv (
+  modport passive_slv (
     import capture,
 
     input clk,
@@ -59,43 +83,36 @@ interface apb_if #(addrWidth = 8, dataWidth = 32) (input clk);
 
   logic [2:0] st;
   const integer IDLE   = 0;
-  const integer WSETUP  = 1;
+  const integer SETUP  = 1;
   const integer WENABLE = 2;
-  const integer RSETUP  = 3;
-  const integer RENABLE = 4;
+  const integer RENABLE = 3;
 
   always @(negedge clk)
   begin
     case (st)
       IDLE : begin
-        if (write_f) begin
+        if (write_f || read_f) begin
           psel = 1;
           penable = 0;
           paddr = next_paddr;
-          pwdata = next_pwdata;
-          pwrite = 1;
+          pwrite = write_f;
 
-          st   = WSETUP;
-          write_f = 0;
-        end
-        else if (read_f) begin
-          psel = 1;
-          penable = 0;
-          paddr = next_paddr;
-          pwrite = 0;
-
-          st   = RSETUP;
-          read_f = 0;
+          if (write_f) begin
+            pwdata = next_pwdata;
+          end
+          st   = SETUP;
         end
       end
-      WSETUP : begin
+      SETUP : begin
         psel = 1;
         penable = 1;
 
-        st   = WENABLE;
+        if (write_f) st   = WENABLE;
+        else         st   = RENABLE;
       end
       WENABLE : begin
         -> write_done_e;
+        write_f = 0;
 
         // allow a context switch here for back-to-back writes
         #0;
@@ -106,8 +123,7 @@ interface apb_if #(addrWidth = 8, dataWidth = 32) (input clk);
           paddr = next_paddr;
           pwdata = next_pwdata;
 
-          st   = WSETUP;
-          write_f = 0;
+          st   = SETUP;
         end
         else begin
           psel = 0;
@@ -119,14 +135,9 @@ interface apb_if #(addrWidth = 8, dataWidth = 32) (input clk);
           st   = IDLE;
         end
       end
-      RSETUP : begin
-        psel = 1;
-        penable = 1;
-
-        st   = RENABLE;
-      end
       RENABLE : begin
         next_prdata = prdata;
+        read_f = 0;
         -> read_done_e;
 
         // allow a context switch here for back-to-back reads
@@ -137,8 +148,7 @@ interface apb_if #(addrWidth = 8, dataWidth = 32) (input clk);
           penable = 0;
           paddr = next_paddr;
 
-          st   = RSETUP;
-          read_f = 0;
+          st   = SETUP;
         end
         else begin
           psel = 0;
@@ -187,3 +197,5 @@ interface apb_if #(addrWidth = 8, dataWidth = 32) (input clk);
     else       data = prdata;
   endtask
 endinterface
+
+`endif
