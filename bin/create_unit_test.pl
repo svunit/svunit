@@ -183,6 +183,15 @@ sub GetTasksFunctions() {
           $processing_module = 1;
           $processing_uut = 1;
         }
+        elsif ( $line =~ /^\s*interface/ or $line =~ /^\s*virtual\s+interface/ ) {
+          $line =~ s/^\s*interface/interface/g;
+          $line =~ s/\s+/:/g;
+          $line =~ s/\W/:/g;
+          @items = split(/:/, $line);
+          $uut = $items[1];
+          $processing_if = 1;
+          $processing_uut = 1;
+        }
       }
       else {
         if ( $processing_class && $line =~ /^\s*endclass/ ) {
@@ -200,6 +209,15 @@ sub GetTasksFunctions() {
           $num_tests = 0;
           @func_task = ();
           $processing_module = 0;
+          $processing_uut = 0;
+        }
+
+        elsif ( $processing_if && $line =~ /^\s*endinterface/ ) {
+          CreateUnitTest();
+          $total_tests = $total_tests + $num_tests;
+          $num_tests = 0;
+          @func_task = ();
+          $processing_if = 0;
           $processing_uut = 0;
         }
 
@@ -253,8 +271,12 @@ sub CreateUnitTest() {
     CreateModuleUnitTest();
   }
 
+  elsif ($processing_if) {
+    CreateIFUnitTest();
+  }
+
   else {
-    die "ERROR: CreateUnitTest called but \$processing_class or \$processing_module is asserted";
+    die "ERROR: CreateUnitTest called but \$processing_class, \$processing_module or \$processing_if is asserted";
   }
 }
 
@@ -396,6 +418,83 @@ sub CreateModuleUnitTest() {
   print OUTFILE "    super.new(name);\n";
   print OUTFILE "\n";
   print OUTFILE "    this.my_$uut\_if = my_$uut\_if;\n";
+  print OUTFILE "  endfunction\n\n\n";
+  print OUTFILE "  //===================================\n";
+  print OUTFILE "  // Setup for running the Unit Tests\n";
+  print OUTFILE "  //===================================\n";
+  print OUTFILE "  task setup();\n";
+  print OUTFILE "    \/\* Place Setup Code Here \*\/\n  endtask\n\n\n";
+  print OUTFILE "  //===================================\n";
+  print OUTFILE "  // This is where we run all the Unit\n";
+  print OUTFILE "  // Tests\n";
+  print OUTFILE "  //===================================\n";
+  print OUTFILE "  task run_test();\n";
+  print OUTFILE "    super.run_test();\n";
+  print OUTFILE "\n";
+  print OUTFILE "  endtask\n\n\n";
+  print OUTFILE "  //===================================\n";
+  print OUTFILE "  // Here we deconstruct anything we \n";
+  print OUTFILE "  // need after running the Unit Tests\n";
+  print OUTFILE "  //===================================\n";
+  print OUTFILE "  task teardown();\n";
+  print OUTFILE "    super.teardown();\n";
+  print OUTFILE "    \/\* Place Teardown Code Here \*\/\n";
+  print OUTFILE "  endtask\n\n";
+
+
+  print "\nSVUNIT: Output File: $output_file\n";
+  print "\nSVUNIT: Creating class $uut\_unit_test with tasks/functions:\n\n";
+  
+  foreach $test_item (@tests_to_run) {
+    print OUTFILE "\n  //===================================\n";
+    print OUTFILE "  // Unit test for task/function:\n";
+    print OUTFILE "  //   $test_item\n";
+    print OUTFILE "  //===================================\n";
+    print OUTFILE "  task test_$test_item;\n";
+    print OUTFILE "    `INFO(\$psprintf(\"Running %s\:\:test_$test_item\", name));\n";
+    print OUTFILE "    \/\* Place Test Code Here \*\/\n  endtask\n\n";
+    print "  $test_item\n";
+  }
+
+  print OUTFILE "endclass\n\n\n";
+  @tests_to_run = ();
+}
+
+
+##########################################################################
+# CreateIFUnitTest(): This creates the output for the unit test class.  It's
+#                   called for each interface within the file
+##########################################################################
+sub CreateIFUnitTest() {
+  $in_list = 0;
+
+  print OUTFILE "`include \"svunit_defines.svh\"\n";
+  print OUTFILE "`include \"" . basename($testname) . "\"\n";
+  print OUTFILE "typedef class c_$uut\_unit_test;\n";
+  print OUTFILE "\n";
+  print OUTFILE "module $uut\_unit_test;\n";
+  print OUTFILE "  c_$uut\_unit_test unittest;\n";
+  print OUTFILE "  string name = \"$uut\_ut\";\n";
+  print OUTFILE "\n";
+  print OUTFILE "  $uut my_$uut();\n";
+  print OUTFILE "\n";
+  print OUTFILE "  function void setup();\n";
+  print OUTFILE "    unittest = new(name, my_$uut);\n";
+  print OUTFILE "  endfunction\n";
+  print OUTFILE "endmodule\n";
+  print OUTFILE "\n";
+  print OUTFILE "class c_$uut\_unit_test extends svunit_testcase;\n";
+  print OUTFILE "\n";
+  print OUTFILE "  virtual $uut my_$uut;\n";
+  print OUTFILE "\n";
+  print OUTFILE "  //===================================\n";
+  print OUTFILE "  // Constructor\n";
+  print OUTFILE "  //===================================\n";
+  print OUTFILE "  function new(string name,\n";
+  print OUTFILE "               virtual $uut my_$uut);\n";
+  print OUTFILE "    super.new(name);\n";
+  print OUTFILE "\n";
+  print OUTFILE "    this.my_$uut = my_$uut;\n";
   print OUTFILE "  endfunction\n\n\n";
   print OUTFILE "  //===================================\n";
   print OUTFILE "  // Setup for running the Unit Tests\n";

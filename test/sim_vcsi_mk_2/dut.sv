@@ -1,0 +1,2 @@
+interface dut;
+endinterface

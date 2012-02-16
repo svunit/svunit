@@ -16,6 +16,7 @@ frmwrk_7:  "no unit tests" message delivered and create_svunit.pl returns 1 for 
 frmwrk_8:  multi-level hierarchy, class unit tests in child dirs but not the test root dir (see ticket #5)
 frmwrk_9:  multi-level hierarchy, class unit tests in some but not all child dirs and in the test root dir (see ticket #5)
 frmwrk_10: generate a basic unit test for a module
+frmwrk_11: generate a basic unit test for a interface
 
 ---------------------------------
 Tests for the simulator makefiles
@@ -23,7 +24,10 @@ Tests for the simulator makefiles
 sim_ius_mk_0:                      run the framework for a single class unit test with ius
 sim_vcsi_mk_0:                     run the framework for a single class unit test with vcsi
 sim_vcsi_mk_1:                     run the framework for a single module unit test with vcsi
-sim_qverilog_mk:                   run the framework for a single unit class test with qverilog
+sim_vcsi_mk_2:                     run the framework for a single interface unit test with vcsi
+sim_questa_mk_0:                   run the framework for a single class unit test with questa
+sim_questa_mk_1:                   run the framework for a single module unit test with questa
+sim_questa_mk_2:                   run the framework for a single interface unit test with questa
 sim_not_from_pwd:                  verify make variables allow sims to be run from directories other than pwd
 sim_not_from_pwd_multi_testsuites: same as sim_not_from_pwd except with multiple levels of hierarchy (same hierarchy as frmwrk_6) make at every level to verify the entire hierarchy runs
 
