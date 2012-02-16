@@ -2,12 +2,17 @@ import svunit_pkg::*;
 
 `define CLK_PERIOD 5
 
-`define APB_EXPECT(ADDR,WRITE,SEL,ENABLE,DATA) \
+`define MST_EXPECT(ADDR,WRITE,SEL,ENABLE,DATA) \
   `FAIL_IF(my_apb_if.paddr   !== ADDR); \
   `FAIL_IF(my_apb_if.pwrite  !== WRITE); \
   `FAIL_IF(my_apb_if.psel    !== SEL); \
   `FAIL_IF(my_apb_if.penable !== ENABLE); \
   `FAIL_IF(my_apb_if.pwdata  !== DATA)
+
+`define SLV_EXPECT(WRITE,ADDR,DATA) \
+  `FAIL_IF(slv_pwrite  !== WRITE); \
+  `FAIL_IF(slv_paddr   !== ADDR); \
+  `FAIL_IF(slv_pdata  !== DATA)
 
 `define APB_SET(ADDR,WRITE,SEL,ENABLE,DATA) \
   my_apb_if.paddr   = ADDR; \
@@ -33,22 +38,25 @@ module apb_if_unit_test;
   apb_if my_apb_if(.clk(clk));
 
   function void setup();
-    unittest = new(name, my_apb_if);
+    unittest = new(name, my_apb_if, my_apb_if);
   endfunction
 endmodule
 
 class c_apb_if_unit_test extends svunit_testcase;
 
   virtual apb_if.mstr my_apb_if;
+  virtual apb_if.slv my_apb_slv_if;
 
   //===================================
   // Constructor
   //===================================
   function new(string name,
-               virtual apb_if.mstr my_apb_if);
+               virtual apb_if.mstr my_apb_if,
+               virtual apb_if.slv my_apb_slv_if);
     super.new(name);
 
     this.my_apb_if = my_apb_if;
+    this.my_apb_slv_if = my_apb_slv_if;
   endfunction
 
 
@@ -80,6 +88,9 @@ class c_apb_if_unit_test extends svunit_testcase;
   endtask
 
   logic [31:0] rdata;
+  logic slv_pwrite;
+  logic [7:0] slv_paddr;
+  logic [31:0] slv_pdata;
 
   `SVUNIT_TESTS_BEGIN
 
@@ -91,7 +102,7 @@ class c_apb_if_unit_test extends svunit_testcase;
   //--------------------------------------------------
   `SVTEST(async_reset_if_test)
     #1 my_apb_if.async_reset();
-    `APB_EXPECT(0, 0, 0, 0, 0);
+    `MST_EXPECT(0, 0, 0, 0, 0);
   `SVTEST_END(async_reset_if_test)
 
   //--------------------------------------------------
@@ -109,10 +120,10 @@ class c_apb_if_unit_test extends svunit_testcase;
     join_none
 
     #(`CLK_PERIOD - 1);
-    `APB_EXPECT(1, 1, 1, 1, 1);
+    `MST_EXPECT(1, 1, 1, 1, 1);
 
     @(negedge my_apb_if.clk) #1;
-    `APB_EXPECT(0, 0, 0, 0, 0);
+    `MST_EXPECT(0, 0, 0, 0, 0);
   `SVTEST_END(sync_reset_if_test)
 
   //--------------------------------------------------
@@ -464,6 +475,97 @@ class c_apb_if_unit_test extends svunit_testcase;
     @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.pwrite !== 0);
     @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.pwrite !== 1'hx);
   `SVTEST_END(read_2_pwrite)
+
+  //--------------------------------------------------
+  // Test: slv_1_capture_write
+  //
+  // capture the pwrite, paddr and pdata for a write
+  // using the passive slv interface
+  //--------------------------------------------------
+  `SVTEST(slv_capture_1_write)
+    fork
+      my_apb_if.write(2, 3);
+      my_apb_slv_if.capture(slv_pwrite, slv_paddr, slv_pdata);
+    join
+    `SLV_EXPECT(1, 2, 3);
+  `SVTEST_END(slv_capture_1_write)
+
+  //--------------------------------------------------
+  // Test: slv_2_capture_write
+  //
+  // capture the pwrite, paddr and pdata for a write
+  // using the passive slv interface
+  //--------------------------------------------------
+  `SVTEST(slv_capture_2_write)
+    fork
+      begin
+        my_apb_if.write(4, 5);
+        my_apb_if.write('hf3, 'hffff);
+      end
+      begin
+        my_apb_slv_if.capture(slv_pwrite, slv_paddr, slv_pdata);
+        `SLV_EXPECT(1, 4, 5);
+
+        my_apb_slv_if.capture(slv_pwrite, slv_paddr, slv_pdata);
+        `SLV_EXPECT(1, 'hf3, 'hffff);
+      end
+    join
+  `SVTEST_END(slv_capture_2_write)
+
+  //--------------------------------------------------
+  // Test: slv_capture_1_read
+  //
+  // capture the pwrite, paddr and pdata for a read
+  // using the passive slv interface
+  //--------------------------------------------------
+  `SVTEST(slv_capture_1_read)
+    fork
+      begin
+        my_apb_if.read('h55, rdata);
+
+        `FAIL_IF(rdata !== 'h1111);
+      end
+      begin
+        my_apb_slv_if.capture(slv_pwrite, slv_paddr, slv_pdata);
+        `SLV_EXPECT(0, 'h55, 'h1111);
+      end
+    join_none
+
+    @(negedge my_apb_if.clk) #1 my_apb_if.prdata = 'hx;
+    @(negedge my_apb_if.clk) #1 my_apb_if.prdata = 'h1111;
+    @(negedge my_apb_if.clk) #1 my_apb_if.prdata = 'hx;
+  `SVTEST_END(slv_capture_1_read)
+
+  //--------------------------------------------------
+  // Test: slv_capture_2_read
+  //
+  // capture the pwrite, paddr and pdata for 2 reads
+  // using the passive slv interface
+  //--------------------------------------------------
+  `SVTEST(slv_capture_2_read)
+    fork
+      begin
+        my_apb_if.read('h22, rdata);
+        `FAIL_IF(rdata !== 'h9999);
+
+        my_apb_if.read('h10, rdata);
+        `FAIL_IF(rdata !== 'h7777_7777);
+      end
+      begin
+        my_apb_slv_if.capture(slv_pwrite, slv_paddr, slv_pdata);
+        `SLV_EXPECT(0, 'h22, 'h9999);
+
+        my_apb_slv_if.capture(slv_pwrite, slv_paddr, slv_pdata);
+        `SLV_EXPECT(0, 'h10, 'h7777_7777);
+      end
+    join_none
+
+    @(negedge my_apb_if.clk) #1 my_apb_if.prdata = 'hx;
+    @(negedge my_apb_if.clk) #1 my_apb_if.prdata = 'h9999;
+    @(negedge my_apb_if.clk) #1 my_apb_if.prdata = 'hx;
+    @(negedge my_apb_if.clk) #1 my_apb_if.prdata = 'h7777_7777;
+    @(negedge my_apb_if.clk) #1 my_apb_if.prdata = 'hx;
+  `SVTEST_END(slv_capture_2_read)
 
   `SVUNIT_TESTS_END
 endclass

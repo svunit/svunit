@@ -21,6 +21,18 @@ interface apb_if #(addrWidth = 8, dataWidth = 32) (input clk);
     input  prdata
   );
 
+  modport slv (
+    import capture,
+
+    input clk,
+    input paddr,
+    input pwrite,
+    input psel,
+    input penable,
+    input pwdata,
+    input prdata
+  );
+
 
   logic write_f;
   event write_done_e;
@@ -161,5 +173,17 @@ interface apb_if #(addrWidth = 8, dataWidth = 32) (input clk);
     psel    <= 0;
     penable <= 0;
     pwdata  <= 0;
+  endtask
+
+  task capture(output logic write, 
+                      logic [addrWidth-1:0] addr,
+                      logic [dataWidth-1:0] data);
+    @(posedge clk)
+    while (~(psel && penable)) @(posedge clk);
+
+    write = pwrite;
+    addr = paddr;
+    if (write) data = pwdata;
+    else       data = prdata;
   endtask
 endinterface
