@@ -1,0 +1,32 @@
+pushd .
+
+cd $SVUNIT_INSTALL/examples/uvm/uvm_express
+create_svunit.pl
+
+which qverilog >/dev/null
+if [ "$?" != "0" ]; then
+  popd
+  exit 1;
+fi
+
+# build and run svunit with qverilog
+make
+
+# check the log output for a PASS from the testrunner
+if [ ! -e run.log ]; then
+  echo run.log does not exist
+  popd
+  exit 1;
+fi
+
+grep "# INFO:  \[1230ns\]\[testrunner\]: Testrunner Results: PASS" run.log >/dev/null
+
+if [ "$?" != "0" ]; then
+  echo PASS not detected from Testrunner in run.log
+  popd
+  exit 1;
+fi
+
+popd
+
+exit 0
