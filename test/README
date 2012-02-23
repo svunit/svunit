@@ -37,3 +37,9 @@ SVUnit base testing
 svunit_base_vcs_0:    test the use of the svunit logging macros with vcs
 svunit_base_questa_0: test the use of the svunit logging macros with questa
 svunit_base_ius_0:    test the use of the svunit logging macros with ius
+
+-------------
+Example tests
+-------------
+example_uvm_simple_model       run the uvm simple model example
+example_uvm_uvm_express        run the uvm express example
