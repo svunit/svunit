@@ -42,6 +42,13 @@ module simple_model_unit_test;
   string name = "simple_model_ut";
   c_simple_model_unit_test unittest;
 
+  initial begin
+    //---------------------------
+    // start the svunit_uvm_test
+    //---------------------------
+    svunit_uvm_test_inst("svunit_uvm_test");
+  end
+
   function void setup();
     unittest = new(name);
   endfunction
@@ -116,10 +123,11 @@ class c_simple_model_unit_test extends svunit_testcase;
     svunit_activate_uvm_component(my_simple_model);
 
 
-    //---------------------------
-    // start the svunit_uvm_test
-    //---------------------------
-    svunit_uvm_test_inst("svunit_uvm_test");
+    //-----------------------------------------------
+    // FYI: the svunit_uvm_test invocation that used
+    //      to be here has been moved up into the
+    //      simple_model_unit_test *module*
+    //-----------------------------------------------
   endtask
 
 

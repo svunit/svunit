@@ -21,8 +21,6 @@
 
 import svunit_pkg::*;
 
-`define CLK_PERIOD 5
-
 `define MST_EXPECT(ADDR,WRITE,SEL,ENABLE,DATA) \
   `FAIL_IF(my_apb_if.paddr   !== ADDR); \
   `FAIL_IF(my_apb_if.pwrite  !== WRITE); \

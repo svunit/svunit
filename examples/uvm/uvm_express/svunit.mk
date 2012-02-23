@@ -19,4 +19,13 @@
 #
 ################################################################
 
+TESTFILES += $(UVM_HOME)/src/uvm.sv
+INCDIR += $(UVM_HOME)/src \
+					$(SVUNIT_INSTALL)/svunit_base/uvm-mock
+SIM_ARGS += +define+CLK_PERIOD=5 \
+						-R \
+               -sv_lib $(UVM_HOME)/lib/uvm_dpi32 \
+               +UVM_NO_RELNOTES \
+            -
+
 include $(SVUNIT_INSTALL)/bin/questa.mk

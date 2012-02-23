@@ -85,6 +85,7 @@ endclass
 // the svunit_uvm_test
 //------------------------------------------------------
 task svunit_uvm_test_start();
+  if ($time == 0) #1;
   #0 svunit_uvm_test::start();
   #0;
 endtask
@@ -99,7 +100,6 @@ endtask
 // the initial call. for subsequent calls, nothing happens.
 //------------------------------------------------------------
 task svunit_uvm_test_inst(string test_name = "svunit_uvm_test");
-  #0;
   fork
     begin
       uvm_root top;
@@ -119,11 +119,6 @@ task svunit_uvm_test_inst(string test_name = "svunit_uvm_test");
       end
     end
   join_none
-
-  // I need this here I *think* so that the connect phase
-  // executes before I try and use any of the components
-  // (the simulator will complain that the put is undefined)
-  #1;
 endtask
 
 `endif

@@ -164,6 +164,7 @@ interface apb_if #(addrWidth = 8, dataWidth = 32) (input clk);
 
   function void async_reset();
     write_f = 0;
+    read_f = 0;
     st      = IDLE;
 
     paddr   = 0;
@@ -175,6 +176,7 @@ interface apb_if #(addrWidth = 8, dataWidth = 32) (input clk);
 
   task sync_reset();
     write_f = 0;
+    read_f = 0;
     st      = IDLE;
 
     @(negedge clk);
