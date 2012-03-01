@@ -19,7 +19,8 @@
 #
 ################################################################
 
-TESTFILES += $(UVM_HOME)/src/uvm.sv
+TESTFILES += $(UVM_HOME)/src/uvm.sv \
+					$(SVUNIT_INSTALL)/svunit_base/uvm-mock/svunit_uvm_mock_pkg.sv
 INCDIR += $(UVM_HOME)/src \
 					$(SVUNIT_INSTALL)/svunit_base/uvm-mock
 SIM_ARGS += +define+CLK_PERIOD=5 \

@@ -20,9 +20,9 @@
 //###############################################################
 
 import svunit_pkg::*;
+import svunit_uvm_mock_pkg::*;
 
 `include "svunit_defines.svh"
-`include "svunit_uvm_test.sv"
 `include "apb_coverage.sv"
 typedef class c_apb_coverage_unit_test;
 
@@ -34,7 +34,7 @@ module apb_coverage_unit_test;
     //---------------------------
     // start the svunit_uvm_test
     //---------------------------
-    //svunit_uvm_test_inst("svunit_uvm_test");
+    svunit_uvm_test_inst("svunit_uvm_test");
   end
 
   function void setup();
@@ -74,7 +74,6 @@ class c_apb_coverage_unit_test extends svunit_testcase;
     // activate for testing
     //----------------------
     svunit_activate_uvm_component(my_apb_coverage);
-    svunit_uvm_test_inst("svunit_uvm_test");
   endtask
 
 

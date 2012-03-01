@@ -77,7 +77,7 @@ class svunit_idle_uvm_domain extends uvm_domain;
     if (m_svunit_domain == null) begin
       svunit_idle_uvm_component master_idle_component;
 
-      m_svunit_domain = new("svunit");
+      m_svunit_domain = new("svunit_domain");
       m_svunit_schedule = new("svunit_sched", UVM_PHASE_SCHEDULE);
       add_uvm_phases(m_svunit_schedule);
       m_svunit_domain.add(m_svunit_schedule);
@@ -93,6 +93,7 @@ class svunit_idle_uvm_domain extends uvm_domain;
   endfunction
 endclass
 
+const uvm_domain _idle_domain = svunit_idle_uvm_domain::get_svunit_domain();
 
 //---------------------------------------------------------
 // the purpose of this component is to raise an objections

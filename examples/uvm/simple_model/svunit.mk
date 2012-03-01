@@ -28,6 +28,7 @@
 #------------------------------------------------
 
 TESTFILES += $(UVM_HOME)/src/uvm.sv \
+						 $(SVUNIT_INSTALL)/svunit_base/uvm-mock/svunit_uvm_mock_pkg.sv \
 						 $(UVM_HOME)/src/dpi/uvm_dpi.cc -CFLAGS -DVCS
 INCDIR += $(UVM_HOME)/src \
 					$(SVUNIT_INSTALL)/svunit_base/uvm-mock

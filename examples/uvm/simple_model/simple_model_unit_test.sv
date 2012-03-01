@@ -23,12 +23,16 @@ import svunit_pkg::*;
 
 `include "svunit_defines.svh"
 
-//---------------------------------------------
+//-----------------------------------------------
 // the svunit_uvm_test is required for testing
 // uvm_components
-//---------------------------------------------
-`include "svunit_uvm_test.sv"
-
+//
+// UPDATE: the uvm mocks were moved to a package
+//         so that package is imported instead
+//         of including the svunit_uvm_test.sv
+//-----------------------------------------------
+//`include "svunit_uvm_test.sv"
+import svunit_uvm_mock_pkg::*;
 
 //------------------------------------------
 // include the dut and the transaction type
@@ -123,11 +127,11 @@ class c_simple_model_unit_test extends svunit_testcase;
     svunit_activate_uvm_component(my_simple_model);
 
 
-    //-----------------------------------------------
-    // FYI: the svunit_uvm_test invocation that used
+    //--------------------------------------------------
+    // UPDATE: the svunit_uvm_test invocation that used
     //      to be here has been moved up into the
     //      simple_model_unit_test *module*
-    //-----------------------------------------------
+    //--------------------------------------------------
   endtask
 
 
