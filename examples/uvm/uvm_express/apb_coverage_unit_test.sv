@@ -155,7 +155,7 @@ class c_apb_coverage_unit_test extends svunit_testcase;
   //-------------------------------------
   // Test: addr_max_cp
   //
-  // verify the bin for addr == ffff_fffc
+  // verify the bin for addr == fc
   //-------------------------------------
   `SVTEST(addr_max_cp)
     apb_xaction a;
@@ -163,7 +163,7 @@ class c_apb_coverage_unit_test extends svunit_testcase;
     `FAIL_IF(my_apb_coverage.cg.addr_max_cp.get_coverage() != 0);
 
     a = apb_xaction::type_id::create();
-    void'(a.randomize() with { addr == 'hffff_fffc; } );
+    void'(a.randomize() with { addr == 'hfc; } );
 
     my_apb_coverage.write(a);
 
@@ -175,7 +175,7 @@ class c_apb_coverage_unit_test extends svunit_testcase;
   // Test: addr_bins_cp
   //
   // verify 16 bins for addr between
-  // 1:'hffff_fff8
+  // 1:'hf8
   //-------------------------------------
   `SVTEST(addr_bins_cp)
     apb_xaction a;
@@ -190,7 +190,7 @@ class c_apb_coverage_unit_test extends svunit_testcase;
     `FAIL_IF($rtoi(my_apb_coverage.cg.addr_bins_cp.get_coverage()) != (100/16));
 
     for (int i=1; i<16; i+=1) begin
-      a.addr += 'hffff_fff8/16;
+      a.addr += 'hf8/16;
 
       my_apb_coverage.write(a);
 

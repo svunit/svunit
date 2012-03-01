@@ -26,6 +26,9 @@ import uvm_pkg::*;
 `include "apb_xaction.sv"
 
 class apb_mon #(addrWidth = 8, dataWidth = 32) extends uvm_component;
+
+  `uvm_component_utils(apb_mon)
+
   uvm_analysis_port #(apb_xaction) ap;
   virtual apb_if.passive_slv bfm;
 
@@ -42,6 +45,9 @@ class apb_mon #(addrWidth = 8, dataWidth = 32) extends uvm_component;
     super.new(name, parent);
 
     ap = new("ap", this);
+  endfunction
+
+  function void build_phase(uvm_phase phase);
   endfunction
 
   task main_phase(uvm_phase phase);

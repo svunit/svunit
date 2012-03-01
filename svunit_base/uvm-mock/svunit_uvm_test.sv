@@ -105,11 +105,8 @@ task svunit_uvm_test_inst(string test_name = "svunit_uvm_test");
       uvm_root top;
       uvm_component test;
 
-$display("WIDGET");
       top = uvm_root::get();
-$display("GOOFY");
       void'(svunit_idle_uvm_domain::get_common_domain());
-$display("GUMBO");
 
       test = top.get_child("uvm_test_top");
 

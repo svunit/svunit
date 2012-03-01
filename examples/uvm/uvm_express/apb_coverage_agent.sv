@@ -19,69 +19,42 @@
 //
 //###############################################################
 
-`ifndef __APB_COVERAGE_SV__
-`define __APB_COVERAGE_SV__
+`ifndef __APB_COVERAGE_AGENT_SV__
+`define __APB_COVERAGE_AGENT_SV__
 
 `include "uvm_macros.svh"
-`include "apb_xaction.sv"
+
+`include "apb_mon.sv"
+`include "apb_coverage.sv"
 
 import uvm_pkg::*;
 
-class apb_coverage extends uvm_subscriber #(apb_xaction);
-  `uvm_component_utils(apb_coverage)
+class apb_coverage_agent extends uvm_agent;
+  `uvm_component_utils(apb_coverage_agent)
 
-  local apb_xaction sampled_obj;
+  virtual apb_if.passive_slv bfm;
 
-  covergroup cg;
-    addr_min_cp :
-      coverpoint sampled_obj.addr {
-        bins min = { 0 };
-      }
+  apb_mon monitor;
+  apb_coverage coverage;
 
-    addr_max_cp :
-      coverpoint sampled_obj.addr {
-        bins max = { 'hfc };
-      }
-
-    addr_bins_cp :
-      coverpoint sampled_obj.addr {
-        bins b [16] = { [1:'hf8] };
-      }
-
-    data_min_cp :
-      coverpoint sampled_obj.data {
-        bins min = { 0 };
-      }
-
-    data_max_cp :
-      coverpoint sampled_obj.data {
-        bins max = { 'hffff_ffff };
-      }
-
-    data_bins_cp :
-      coverpoint sampled_obj.data {
-        bins b [32] = { [1:'hffff_fffe] };
-      }
-
-    kind_cp :
-      coverpoint sampled_obj.kind;
-  endgroup;
-
-  function new(string name = "apb_coverage",
+  function new(string name = "apb_coverage_agent",
                uvm_component parent = null);
     super.new(name, parent);
-
-    cg = new();
   endfunction
 
-  function void write(apb_xaction t);
-    sampled_obj = t;
+  function void build_phase(uvm_phase phase);
+    if( !uvm_config_db#(virtual apb_if.passive_slv)::get(
+        this, "", "bfm", bfm)) begin
+      `uvm_fatal("ENV", "BFM not set")
+    end
 
-    cg.sample();
+    monitor  = apb_mon#(8,32)::type_id::create({ get_name() , "::monitor" },  this);
+    coverage = apb_coverage::type_id::create({ get_name() , "::coverage" }, this);
   endfunction
 
-  function uvm_sequence_item get_sampled_obj();
-    return sampled_obj;
+  function void connect_phase(uvm_phase phase);
+    monitor.bfm = bfm;
+    monitor.ap.connect(coverage.analysis_export);
   endfunction
 endclass
 

@@ -82,7 +82,7 @@ class c_apb_mon_unit_test extends svunit_testcase;
     //-----------------------
     // deactivate by default
     //-----------------------
-    //svunit_deactivate_uvm_component(my_apb_mon);
+    svunit_deactivate_uvm_component(my_apb_mon);
   endfunction
 
 
@@ -93,7 +93,7 @@ class c_apb_mon_unit_test extends svunit_testcase;
     //----------------------
     // activate for testing
     //----------------------
-    //svunit_activate_uvm_component(my_apb_mon);
+    svunit_activate_uvm_component(my_apb_mon);
 
     //---------------------
     // reset the interface
@@ -123,7 +123,7 @@ class c_apb_mon_unit_test extends svunit_testcase;
     //---------------------------------------
     // deactivate at the end of unit testing
     //---------------------------------------
-    //svunit_deactivate_uvm_component(my_apb_mon);
+    svunit_deactivate_uvm_component(my_apb_mon);
   endtask
 
   `SVUNIT_TESTS_BEGIN
