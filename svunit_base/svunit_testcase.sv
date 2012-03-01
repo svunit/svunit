@@ -77,19 +77,19 @@ virtual class svunit_testcase;
   extern virtual protected task teardown();
 
   extern task run();
-  extern task report();
+  extern function void report();
 
-  extern local task pass(string s);
-  extern local task fail(string s);
+  extern local function void pass(string s);
+  extern local function void fail(string s);
 
-  extern protected task fail_if(bit b, string s);
-  extern protected task fail_unless(bit b, string s);
+  extern protected function void fail_if(bit b, string s);
+  extern protected function void fail_unless(bit b, string s);
 
-  extern task enable_verbose();
-  extern task disable_verbose();
+  extern function void enable_verbose();
+  extern function void disable_verbose();
 
-  extern task enable_unit_test();
-  extern task disable_unit_test();
+  extern function void enable_unit_test();
+  extern function void disable_unit_test();
 
   extern function string    get_name();
   extern function boolean_t get_runstatus();
@@ -115,36 +115,36 @@ endfunction
   Method: disable_unit_test
   Disbles the unit test from running
 */
-task svunit_testcase::disable_unit_test();
+function void svunit_testcase::disable_unit_test();
   run_ut = FALSE;
-endtask
+endfunction
 
 
 /*
   Method: disable_verbose 
   Disbles verbose mode
 */
-task svunit_testcase::disable_verbose();
+function void svunit_testcase::disable_verbose();
   verbose = FALSE;
-endtask
+endfunction
 
 
 /*
   Method: enable_unit_test
   Enables the unit test from running
 */
-task svunit_testcase::enable_unit_test();
+function void svunit_testcase::enable_unit_test();
   run_ut = TRUE;
-endtask
+endfunction
 
 
 /*
   Method: enable_verbose 
   Enables verbose mode
 */
-task svunit_testcase::enable_verbose();
+function void svunit_testcase::enable_verbose();
   verbose = TRUE;
-endtask
+endfunction
 
 
 /*
@@ -154,10 +154,10 @@ endtask
   Parameters:
     s - display statement to print out
 */
-task svunit_testcase::fail(string s);
+function void svunit_testcase::fail(string s);
   error_count++;
   `ERROR($psprintf("%s: FAIL", s));
-endtask
+endfunction
 
 
 /*
@@ -168,12 +168,12 @@ endtask
     b - evaluation of expression (0 - false, 1 - true)
     s - string to pass to pass or fail task
 */
-task svunit_testcase::fail_if(bit b, string s);
+function void svunit_testcase::fail_if(bit b, string s);
   if (b)
     fail($psprintf("fail_if: %s", s));
   else
     pass($psprintf("fail_if: %s", s));
-endtask
+endfunction
 
 
 /*
@@ -184,12 +184,12 @@ endtask
     b - evaluation of expression (0 - false, 1 - true)
     s - string to pass to pass or fail task
 */
-task svunit_testcase::fail_unless(bit b, string s);
+function void svunit_testcase::fail_unless(bit b, string s);
   if (!b)
     fail($psprintf("fail_unless: %s", s));
   else
     pass($psprintf("fail_unless: %s", s));
-endtask
+endfunction
 
 
 /*
@@ -226,22 +226,22 @@ endfunction
   Parameters:
     s - display statement to print out
 */
-task svunit_testcase::pass(string s);
+function void svunit_testcase::pass(string s);
   if (verbose == TRUE)
     `INFO($psprintf("%s: PASS", s));
-endtask
+endfunction
 
 
 /*
   Method: report
   This task reports the results for the unit tests
 */  
-task svunit_testcase::report();
+function void svunit_testcase::report();
   if (success == PASS)
     `INFO($psprintf("Unit Test %0s: PASS", name));
   else
     `ERROR($psprintf("Unit Test %0s: FAIL", name));
-endtask
+endfunction
 
 
 /*
