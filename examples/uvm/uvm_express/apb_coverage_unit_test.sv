@@ -134,9 +134,12 @@ class c_apb_coverage_unit_test extends svunit_testcase;
   `SVTEST(addr_min_cp)
     apb_xaction a;
 
+    // disable the groups we're not concerned with to
+    // avoid bogus results
     my_apb_coverage.cg.data_min_cp.stop();
     my_apb_coverage.cg.data_max_cp.stop();
     my_apb_coverage.cg.data_bins_cp.stop();
+    my_apb_coverage.cg.kind_cp.stop();
 
     `FAIL_IF(my_apb_coverage.cg.addr_min_cp.get_coverage() != 0);
 
@@ -271,6 +274,33 @@ class c_apb_coverage_unit_test extends svunit_testcase;
     svunit_uvm_test_finish();
 
   `SVTEST_END(data_bins_cp)
+
+  //-------------------------------------
+  // Test: kind_cp
+  //
+  // verify the kind for read and write
+  //-------------------------------------
+  `SVTEST(kind_cp)
+    apb_xaction a;
+
+    my_apb_coverage.cg.kind_cp.start();
+
+    `FAIL_IF(my_apb_coverage.cg.kind_cp.get_coverage() != 0);
+
+    a = apb_xaction::type_id::create();
+    void'(a.randomize() with { kind == WRITE; } );
+
+    my_apb_coverage.write(a);
+
+    `FAIL_IF(my_apb_coverage.cg.kind_cp.get_coverage() != 50);
+
+    void'(a.randomize() with { kind == READ; } );
+
+    my_apb_coverage.write(a);
+
+    `FAIL_IF(my_apb_coverage.cg.kind_cp.get_coverage() != 100);
+ 
+  `SVTEST_END(kind_cp)
 
   `SVUNIT_TESTS_END 
 

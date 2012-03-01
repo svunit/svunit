@@ -62,6 +62,9 @@ class apb_coverage extends uvm_subscriber #(apb_xaction);
       coverpoint sampled_obj.data {
         bins b [32] = { [1:'hffff_fffe] };
       }
+
+    kind_cp :
+      coverpoint sampled_obj.kind;
   endgroup;
 
   function new(string name = "apb_coverage",
