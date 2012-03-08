@@ -1,1 +1,2 @@
-test.xyz-
+class test;
+endclass

@@ -96,7 +96,7 @@ sub ValidArgs() {
   }
   if ($output_file eq "") {
     ($name, $path, $suffix) = fileparse($testname, qr/\.[^.]*/);
-    $output_file = "$path$name";
+    $output_file = "$name";
     $output_file .= "_unit_test.sv";
   }
   else {
