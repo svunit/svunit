@@ -19,7 +19,7 @@ if [ ! -e not_pwd/run.log ]; then
   exit 1;
 fi
 
-grep "INFO:  \[0ns\]\[testrunner\]: Testrunner Results: PASS" not_pwd/run.log >/dev/null
+grep "INFO:  \[0\]\[testrunner\]: Testrunner Results: PASS" not_pwd/run.log >/dev/null
 if [ "$?" != "0" ]; then
   echo PASS not detected from Testrunner in not_pwd/run.log
   exit 1;

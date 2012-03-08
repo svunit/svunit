@@ -16,13 +16,13 @@ if [ ! -e run.log ]; then
   exit 1;
 fi
 
-grep "INFO:  \[0ns\]\[dut_ut\]: Use the INFO macro" run.log >/dev/null
+grep "INFO:  \[0\]\[dut_ut\]: Use the INFO macro" run.log >/dev/null
 if [ "$?" != "0" ]; then
   echo INFO not detected from unit test in run.log
   exit 1;
 fi
 
-grep "ERROR: \[0ns\]\[dut_ut\]: Use the ERROR macro" run.log >/dev/null
+grep "ERROR: \[0\]\[dut_ut\]: Use the ERROR macro" run.log >/dev/null
 if [ "$?" != "0" ]; then
   echo ERROR not detected from unit test in run.log
   exit 1;

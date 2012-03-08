@@ -30,6 +30,10 @@
 `define FAIL_IF(exp) \
   fail_if(exp, `"exp`")
 
+// need this to kill the test
+// #0 fail_if(exp, `"exp`"); \
+// if (exp) `ERROR(`"test FAIL`");
+
 
 /*
   Macro: `FAIL_UNLESS
@@ -62,7 +66,7 @@
         ovm_report_info(msg);
     `else
       `define INFO(msg) \
-        $display("INFO:  [%0tns][%0s]: %s", $time, name, msg) 
+        $display("INFO:  [%0t][%0s]: %s", $time, name, msg) 
     `endif
   `endif
 `endif
@@ -88,7 +92,7 @@
         ovm_report_error(msg);
     `else
       `define ERROR(msg) \
-        $display("ERROR: [%0tns][%0s]: %s", $time, name, msg)
+        $display("ERROR: [%0t][%0s]: %s", $time, name, msg)
     `endif
   `endif
 `endif
@@ -130,3 +134,34 @@
 `define SVTEST_END(_NAME_) \
   end \
 end : _NAME_
+
+/*
+  Macro: `NEW_SVTEST
+  START an svunit test within an SVUNIT_TEST_BEGIN/END block
+
+  REQUIRES ACCESS TO error_count
+*/
+`define NEW_SVTEST(_NAME_) \
+  begin : _NAME_ \
+    `INFO($psprintf(`"Running %s::_NAME_`", name)); \
+    setup(); \
+    fork \
+      begin \
+        fork \
+          begin
+
+/*
+  Macro: `NEW_SVTEST_END
+  END an svunit test within an SVUNIT_TEST_BEGIN/END block
+*/
+`define NEW_SVTEST_END(_NAME_) \
+          end \
+          begin \
+            @(error_count); \
+          end \
+        join_any \
+        disable fork; \
+      end \
+    join \
+    teardown(); \
+  end : _NAME_
