@@ -45,7 +45,6 @@ sub PrintHelp() {
   print "      -overwrite      : overwrites the output file if it already exists\n";
   print "      <testname>     : the name of the testcase to run\n";
   print "\n";
-  die;
 }
 
 
@@ -93,6 +92,7 @@ sub ValidArgs() {
   if ( $testname eq "" ) {
     print "\nERROR:  The testfile was either not specified, does not exist or is not readable\n";
     PrintHelp();
+    return 1;
   }
   if ($output_file eq "") {
     ($name, $path, $suffix) = fileparse($testname, qr/\.[^.]*/);
@@ -100,11 +100,12 @@ sub ValidArgs() {
     $output_file .= "_unit_test.sv";
   }
   else {
-    ($name, $path, $suffix) = fileparse($output_file, qr/\.[^.]*/);
-    if ($suffix ne ".sv") {
-      $output_file = $output_file . "\.sv";
+    if ($output_file !~ m/_unit_test\.sv$/) {
+      print "\nERROR:  The output_file '$output_file' must end in '_unit_test.sv'\n";
+      return 1;
     }
   }
+  return 0;
 }
 
 
@@ -570,8 +571,9 @@ sub PrintHeading() {
 # This is the main run flow of the script
 ##########################################################################
 CheckArgs();
-ValidArgs();
-OpenFiles();
-PrintHeading();
-GetTasksFunctions();
-CloseFiles(); 
+if ( ValidArgs() == 0) {
+  OpenFiles();
+  PrintHeading();
+  GetTasksFunctions();
+  CloseFiles(); 
+}
