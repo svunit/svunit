@@ -27,8 +27,11 @@ Step-by-step instructions to get a first unit test going...
 >export SVUNIT_INSTALL=`pwd`
 >export PATH=$PATH:$SVUNIT_INSTALL"/bin"
 
-1a) or you can source the Setup.bsh
+1a) or you can source the Setup.bsh (if you use the bash shell)
 >source Setup.bsh
+
+1b) or you can source the Setup.csh (if you use the csh shell)
+>source Setup.csh
 
 2) go somewhere and start a class-under-test
 ---

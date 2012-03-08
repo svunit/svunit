@@ -1,0 +1,13 @@
+NEWPATH=`echo $PATH | sed -e "s/svunit-code\/bin//"`
+export PATH=$NEWPATH
+export SVUNIT_INSTALL=
+
+csh run.csh
+if [ "$?" != "0" ]; then
+  exit 1
+fi
+
+tcsh run.csh
+if [ "$?" != "0" ]; then
+  exit 1
+fi

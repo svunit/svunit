@@ -19,6 +19,7 @@ frmwrk_10: generate a basic unit test for a module
 frmwrk_11: generate a basic unit test for a interface
 frmwrk_12: verify create_unit_test.pl output file extension is .sv regardless of input file extension
 frmwrk_13: verify create_unit_test.pl output goes to `pwd`
+frmwrk_14: verify the Setup.csh, create_unit_test.pl and create_svunit.pl all run in csh and tcsh
 
 ---------------------------------
 Tests for the simulator makefiles
