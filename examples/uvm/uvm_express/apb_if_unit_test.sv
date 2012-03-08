@@ -22,11 +22,11 @@
 import svunit_pkg::*;
 
 `define MST_EXPECT(ADDR,WRITE,SEL,ENABLE,DATA) \
-  `FAIL_IF(my_apb_if.paddr   !== ADDR); \
-  `FAIL_IF(my_apb_if.pwrite  !== WRITE); \
-  `FAIL_IF(my_apb_if.psel    !== SEL); \
-  `FAIL_IF(my_apb_if.penable !== ENABLE); \
-  `FAIL_IF(my_apb_if.pwdata  !== DATA)
+  `FAIL_IF(my_apb_slv_if.paddr   !== ADDR); \
+  `FAIL_IF(my_apb_slv_if.pwrite  !== WRITE); \
+  `FAIL_IF(my_apb_slv_if.psel    !== SEL); \
+  `FAIL_IF(my_apb_slv_if.penable !== ENABLE); \
+  `FAIL_IF(my_apb_slv_if.pwdata  !== DATA)
 
 `define SLV_EXPECT(WRITE,ADDR,DATA) \
   `FAIL_IF(slv_pwrite  !== WRITE); \
@@ -34,11 +34,11 @@ import svunit_pkg::*;
   `FAIL_IF(slv_pdata  !== DATA)
 
 `define APB_SET(ADDR,WRITE,SEL,ENABLE,DATA) \
-  my_apb_if.paddr   = ADDR; \
-  my_apb_if.pwrite  = WRITE; \
-  my_apb_if.psel    = SEL; \
-  my_apb_if.penable = ENABLE; \
-  my_apb_if.pwdata  = DATA
+  my_apb_mstr_if.paddr   = ADDR; \
+  my_apb_mstr_if.pwrite  = WRITE; \
+  my_apb_mstr_if.psel    = SEL; \
+  my_apb_mstr_if.penable = ENABLE; \
+  my_apb_mstr_if.pwdata  = DATA
 
 `include "svunit_defines.svh"
 `include "apb_if.sv"
@@ -57,25 +57,31 @@ module apb_if_unit_test;
   apb_if my_apb_if(.clk(clk));
 
   function void setup();
-    unittest = new(name, my_apb_if, my_apb_if);
+    unittest = new(name,
+                   my_apb_if,
+                   my_apb_if,
+                   my_apb_if);
   endfunction
 endmodule
 
 class c_apb_if_unit_test extends svunit_testcase;
 
-  virtual apb_if.mstr my_apb_if;
-  virtual apb_if.passive_slv my_apb_slv_if;
+  virtual apb_if.slv         my_apb_slv_if;
+  virtual apb_if.mstr        my_apb_mstr_if;
+  virtual apb_if.passive_slv my_apb_pslv_if;
 
   //===================================
   // Constructor
   //===================================
   function new(string name,
-               virtual apb_if.mstr my_apb_if,
-               virtual apb_if.passive_slv my_apb_slv_if);
+               virtual apb_if.slv  my_apb_slv_if,
+               virtual apb_if.mstr my_apb_mstr_if,
+               virtual apb_if.passive_slv my_apb_pslv_if);
     super.new(name);
 
-    this.my_apb_if = my_apb_if;
     this.my_apb_slv_if = my_apb_slv_if;
+    this.my_apb_mstr_if = my_apb_mstr_if;
+    this.my_apb_pslv_if = my_apb_pslv_if;
   endfunction
 
 
@@ -120,7 +126,7 @@ class c_apb_if_unit_test extends svunit_testcase;
   // asynchronously reset
   //--------------------------------------------------
   `SVTEST(async_reset_if_test)
-    #1 my_apb_if.async_reset();
+    #1 my_apb_mstr_if.async_reset();
     `MST_EXPECT(0, 0, 0, 0, 0);
   `SVTEST_END(async_reset_if_test)
 
@@ -133,15 +139,15 @@ class c_apb_if_unit_test extends svunit_testcase;
   `SVTEST(sync_reset_if_test)
     `APB_SET(1, 1, 1, 1, 1);
 
-    @(posedge my_apb_if.clk);
+    @(posedge my_apb_mstr_if.clk);
     fork
-      my_apb_if.sync_reset();
+      my_apb_mstr_if.sync_reset();
     join_none
 
     #(`CLK_PERIOD - 1);
     `MST_EXPECT(1, 1, 1, 1, 1);
 
-    @(negedge my_apb_if.clk) #1;
+    @(negedge my_apb_mstr_if.clk) #1;
     `MST_EXPECT(0, 0, 0, 0, 0);
   `SVTEST_END(sync_reset_if_test)
 
@@ -153,12 +159,12 @@ class c_apb_if_unit_test extends svunit_testcase;
   //--------------------------------------------------
   `SVTEST(write_1_psel)
     fork
-      my_apb_if.write();
+      my_apb_mstr_if.write(0,0);
     join_none
 
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.psel !== 1);
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.psel !== 1);
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.psel !== 0);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.psel !== 1);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.psel !== 1);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.psel !== 0);
   `SVTEST_END(write_1_psel)
 
   //--------------------------------------------------
@@ -169,14 +175,14 @@ class c_apb_if_unit_test extends svunit_testcase;
   //--------------------------------------------------
   `SVTEST(write_2_psel)
     fork
-      repeat (2) my_apb_if.write();
+      repeat (2) my_apb_mstr_if.write(0,0);
     join_none
 
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.psel !== 1);
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.psel !== 1);
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.psel !== 1);
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.psel !== 1);
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.psel !== 0);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.psel !== 1);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.psel !== 1);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.psel !== 1);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.psel !== 1);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.psel !== 0);
   `SVTEST_END(write_2_psel)
 
   //--------------------------------------------------
@@ -187,12 +193,12 @@ class c_apb_if_unit_test extends svunit_testcase;
   //--------------------------------------------------
   `SVTEST(write_1_penable)
     fork
-      my_apb_if.write();
+      my_apb_mstr_if.write(0,0);
     join_none
 
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.penable !== 0);
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.penable !== 1);
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.penable !== 0);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.penable !== 0);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.penable !== 1);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.penable !== 0);
   `SVTEST_END(write_1_penable)
 
   //--------------------------------------------------
@@ -202,14 +208,14 @@ class c_apb_if_unit_test extends svunit_testcase;
   //--------------------------------------------------
   `SVTEST(write_2_penable)
     fork
-      repeat (2) my_apb_if.write();
+      repeat (2) my_apb_mstr_if.write(0,0);
     join_none
 
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.penable !== 0);
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.penable !== 1);
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.penable !== 0);
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.penable !== 1);
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.penable !== 0);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.penable !== 0);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.penable !== 1);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.penable !== 0);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.penable !== 1);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.penable !== 0);
   `SVTEST_END(write_2_penable)
 
   //--------------------------------------------------
@@ -219,12 +225,12 @@ class c_apb_if_unit_test extends svunit_testcase;
   //--------------------------------------------------
   `SVTEST(write_1_paddr)
     fork
-      my_apb_if.write(1);
+      my_apb_mstr_if.write(1,0);
     join_none
 
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.paddr !== 1);
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.paddr !== 1);
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.paddr !== 8'hx);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.paddr !== 1);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.paddr !== 1);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.paddr !== 8'hx);
   `SVTEST_END(write_1_paddr)
 
   //--------------------------------------------------
@@ -236,16 +242,16 @@ class c_apb_if_unit_test extends svunit_testcase;
   `SVTEST(write_2_paddr)
     fork
       begin
-        my_apb_if.write(2);
-        my_apb_if.write(3);
+        my_apb_mstr_if.write(2,0);
+        my_apb_mstr_if.write(3,0);
       end
     join_none
 
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.paddr !== 2);
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.paddr !== 2);
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.paddr !== 3);
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.paddr !== 3);
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.paddr !== 8'hx);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.paddr !== 2);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.paddr !== 2);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.paddr !== 3);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.paddr !== 3);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.paddr !== 8'hx);
   `SVTEST_END(write_2_paddr)
 
   //--------------------------------------------------
@@ -255,12 +261,12 @@ class c_apb_if_unit_test extends svunit_testcase;
   //--------------------------------------------------
   `SVTEST(write_1_pwdata)
     fork
-      my_apb_if.write(0, 12);
+      my_apb_mstr_if.write(0, 12);
     join_none
 
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.pwdata !== 12);
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.pwdata !== 12);
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.pwdata !== 32'hx);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.pwdata !== 12);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.pwdata !== 12);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.pwdata !== 32'hx);
   `SVTEST_END(write_1_pwdata)
 
   //--------------------------------------------------
@@ -272,16 +278,16 @@ class c_apb_if_unit_test extends svunit_testcase;
   `SVTEST(write_2_pwdata)
     fork
       begin
-        my_apb_if.write(0, 13);
-        my_apb_if.write(0, 14);
+        my_apb_mstr_if.write(0, 13);
+        my_apb_mstr_if.write(0, 14);
       end
     join_none
 
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.pwdata !== 13);
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.pwdata !== 13);
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.pwdata !== 14);
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.pwdata !== 14);
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.pwdata !== 32'hx);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.pwdata !== 13);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.pwdata !== 13);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.pwdata !== 14);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.pwdata !== 14);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.pwdata !== 32'hx);
   `SVTEST_END(write_2_pwdata)
 
   //--------------------------------------------------
@@ -291,12 +297,12 @@ class c_apb_if_unit_test extends svunit_testcase;
   //--------------------------------------------------
   `SVTEST(write_1_pwrite)
     fork
-      my_apb_if.write();
+      my_apb_mstr_if.write(0,0);
     join_none
 
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.pwrite !== 1);
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.pwrite !== 1);
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.pwrite !== 1'hx);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.pwrite !== 1);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.pwrite !== 1);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.pwrite !== 1'hx);
   `SVTEST_END(write_1_pwrite)
 
   //--------------------------------------------------
@@ -307,14 +313,14 @@ class c_apb_if_unit_test extends svunit_testcase;
   //--------------------------------------------------
   `SVTEST(write_2_pwrite)
     fork
-      repeat (2) my_apb_if.write();
+      repeat (2) my_apb_mstr_if.write(0,0);
     join_none
 
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.pwrite !== 1);
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.pwrite !== 1);
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.pwrite !== 1);
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.pwrite !== 1);
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.pwrite !== 1'hx);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.pwrite !== 1);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.pwrite !== 1);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.pwrite !== 1);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.pwrite !== 1);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.pwrite !== 1'hx);
   `SVTEST_END(write_2_pwrite)
 
   //--------------------------------------------------
@@ -325,12 +331,12 @@ class c_apb_if_unit_test extends svunit_testcase;
   //--------------------------------------------------
   `SVTEST(read_1_psel)
     fork
-      my_apb_if.read(0, rdata);
+      my_apb_mstr_if.read(0, rdata);
     join_none
 
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.psel !== 1);
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.psel !== 1);
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.psel !== 0);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.psel !== 1);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.psel !== 1);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.psel !== 0);
   `SVTEST_END(read_1_psel)
 
   //--------------------------------------------------
@@ -341,14 +347,14 @@ class c_apb_if_unit_test extends svunit_testcase;
   //--------------------------------------------------
   `SVTEST(read_2_psel)
     fork
-      repeat (2) my_apb_if.read(0, rdata);
+      repeat (2) my_apb_mstr_if.read(0, rdata);
     join_none
 
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.psel !== 1);
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.psel !== 1);
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.psel !== 1);
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.psel !== 1);
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.psel !== 0);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.psel !== 1);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.psel !== 1);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.psel !== 1);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.psel !== 1);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.psel !== 0);
   `SVTEST_END(read_2_psel)
 
   //--------------------------------------------------
@@ -359,12 +365,12 @@ class c_apb_if_unit_test extends svunit_testcase;
   //--------------------------------------------------
   `SVTEST(read_1_penable)
     fork
-      my_apb_if.read(0, rdata);
+      my_apb_mstr_if.read(0, rdata);
     join_none
 
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.penable !== 0);
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.penable !== 1);
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.penable !== 0);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.penable !== 0);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.penable !== 1);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.penable !== 0);
   `SVTEST_END(read_1_penable)
 
   //--------------------------------------------------
@@ -374,14 +380,14 @@ class c_apb_if_unit_test extends svunit_testcase;
   //--------------------------------------------------
   `SVTEST(read_2_penable)
     fork
-      repeat (2) my_apb_if.read(0, rdata);
+      repeat (2) my_apb_mstr_if.read(0, rdata);
     join_none
  
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.penable !== 0);
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.penable !== 1);
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.penable !== 0);
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.penable !== 1);
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.penable !== 0);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.penable !== 0);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.penable !== 1);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.penable !== 0);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.penable !== 1);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.penable !== 0);
   `SVTEST_END(read_2_penable)
  
   //--------------------------------------------------
@@ -391,12 +397,12 @@ class c_apb_if_unit_test extends svunit_testcase;
   //--------------------------------------------------
   `SVTEST(read_1_paddr)
     fork
-      my_apb_if.read('hf, rdata);
+      my_apb_mstr_if.read('hf, rdata);
     join_none
  
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.paddr !== 'hf);
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.paddr !== 'hf);
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.paddr !== 8'hx);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.paddr !== 'hf);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.paddr !== 'hf);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.paddr !== 8'hx);
   `SVTEST_END(read_1_paddr)
  
   //--------------------------------------------------
@@ -408,16 +414,16 @@ class c_apb_if_unit_test extends svunit_testcase;
   `SVTEST(read_2_paddr)
     fork
       begin
-        my_apb_if.read('hfe, rdata);
-        my_apb_if.read('hff, rdata);
+        my_apb_mstr_if.read('hfe, rdata);
+        my_apb_mstr_if.read('hff, rdata);
       end
     join_none
  
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.paddr !== 'hfe);
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.paddr !== 'hfe);
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.paddr !== 'hff);
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.paddr !== 'hff);
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.paddr !== 8'hx);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.paddr !== 'hfe);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.paddr !== 'hfe);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.paddr !== 'hff);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.paddr !== 'hff);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.paddr !== 8'hx);
   `SVTEST_END(read_2_paddr)
  
   //--------------------------------------------------
@@ -428,14 +434,14 @@ class c_apb_if_unit_test extends svunit_testcase;
   `SVTEST(read_1_prdata)
     fork
       begin
-        my_apb_if.read(0, rdata);
+        my_apb_mstr_if.read(0, rdata);
         `FAIL_IF(rdata !== 'hffff);
       end
     join_none
  
-    @(negedge my_apb_if.clk) #1 my_apb_if.prdata = 'hx;
-    @(negedge my_apb_if.clk) #1 my_apb_if.prdata = 'hffff;
-    @(negedge my_apb_if.clk) #1 my_apb_if.prdata = 'hx;
+    @(negedge my_apb_slv_if.clk) #1 my_apb_slv_if.prdata = 'hx;
+    @(negedge my_apb_slv_if.clk) #1 my_apb_slv_if.prdata = 'hffff;
+    @(negedge my_apb_slv_if.clk) #1 my_apb_slv_if.prdata = 'hx;
   `SVTEST_END(read_1_prdata)
  
   //--------------------------------------------------
@@ -447,19 +453,19 @@ class c_apb_if_unit_test extends svunit_testcase;
   `SVTEST(read_2_prdata)
     fork
       begin
-        my_apb_if.read(0, rdata);
+        my_apb_mstr_if.read(0, rdata);
         `FAIL_IF(rdata !== 'heeee);
 
-        my_apb_if.read(0, rdata);
+        my_apb_mstr_if.read(0, rdata);
         `FAIL_IF(rdata !== 'hcccc);
       end
     join_none
 
-    @(negedge my_apb_if.clk) #1 my_apb_if.prdata = 'hx;
-    @(negedge my_apb_if.clk) #1 my_apb_if.prdata = 'heeee;
-    @(negedge my_apb_if.clk) #1 my_apb_if.prdata = 'hx;
-    @(negedge my_apb_if.clk) #1 my_apb_if.prdata = 'hcccc;
-    @(negedge my_apb_if.clk) #1 my_apb_if.prdata = 'hx;
+    @(negedge my_apb_slv_if.clk) #1 my_apb_slv_if.prdata = 'hx;
+    @(negedge my_apb_slv_if.clk) #1 my_apb_slv_if.prdata = 'heeee;
+    @(negedge my_apb_slv_if.clk) #1 my_apb_slv_if.prdata = 'hx;
+    @(negedge my_apb_slv_if.clk) #1 my_apb_slv_if.prdata = 'hcccc;
+    @(negedge my_apb_slv_if.clk) #1 my_apb_slv_if.prdata = 'hx;
   `SVTEST_END(read_2_prdata)
  
   //--------------------------------------------------
@@ -469,12 +475,12 @@ class c_apb_if_unit_test extends svunit_testcase;
   //--------------------------------------------------
   `SVTEST(read_1_pwrite)
     fork
-      my_apb_if.read(0, rdata);
+      my_apb_mstr_if.read(0, rdata);
     join_none
  
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.pwrite !== 0);
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.pwrite !== 0);
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.pwrite !== 1'hx);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.pwrite !== 0);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.pwrite !== 0);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.pwrite !== 1'hx);
   `SVTEST_END(read_1_pwrite)
  
   //--------------------------------------------------
@@ -485,14 +491,14 @@ class c_apb_if_unit_test extends svunit_testcase;
   //--------------------------------------------------
   `SVTEST(read_2_pwrite)
     fork
-      repeat (2) my_apb_if.read(0, rdata);
+      repeat (2) my_apb_mstr_if.read(0, rdata);
     join_none
  
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.pwrite !== 0);
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.pwrite !== 0);
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.pwrite !== 0);
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.pwrite !== 0);
-    @(negedge my_apb_if.clk) #1 `FAIL_IF(my_apb_if.pwrite !== 1'hx);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.pwrite !== 0);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.pwrite !== 0);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.pwrite !== 0);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.pwrite !== 0);
+    @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.pwrite !== 1'hx);
   `SVTEST_END(read_2_pwrite)
 
   //--------------------------------------------------
@@ -503,8 +509,8 @@ class c_apb_if_unit_test extends svunit_testcase;
   //--------------------------------------------------
   `SVTEST(slv_capture_1_write)
     fork
-      my_apb_if.write(2, 3);
-      my_apb_slv_if.capture(slv_pwrite, slv_paddr, slv_pdata);
+      my_apb_mstr_if.write(2, 3);
+      my_apb_pslv_if.capture(slv_pwrite, slv_paddr, slv_pdata);
     join
     `SLV_EXPECT(1, 2, 3);
   `SVTEST_END(slv_capture_1_write)
@@ -518,14 +524,14 @@ class c_apb_if_unit_test extends svunit_testcase;
   `SVTEST(slv_capture_2_write)
     fork
       begin
-        my_apb_if.write(4, 5);
-        my_apb_if.write('hf3, 'hffff);
+        my_apb_mstr_if.write(4, 5);
+        my_apb_mstr_if.write('hf3, 'hffff);
       end
       begin
-        my_apb_slv_if.capture(slv_pwrite, slv_paddr, slv_pdata);
+        my_apb_pslv_if.capture(slv_pwrite, slv_paddr, slv_pdata);
         `SLV_EXPECT(1, 4, 5);
 
-        my_apb_slv_if.capture(slv_pwrite, slv_paddr, slv_pdata);
+        my_apb_pslv_if.capture(slv_pwrite, slv_paddr, slv_pdata);
         `SLV_EXPECT(1, 'hf3, 'hffff);
       end
     join
@@ -540,19 +546,19 @@ class c_apb_if_unit_test extends svunit_testcase;
   `SVTEST(slv_capture_1_read)
     fork
       begin
-        my_apb_if.read('h55, rdata);
+        my_apb_mstr_if.read('h55, rdata);
 
         `FAIL_IF(rdata !== 'h1111);
       end
       begin
-        my_apb_slv_if.capture(slv_pwrite, slv_paddr, slv_pdata);
+        my_apb_pslv_if.capture(slv_pwrite, slv_paddr, slv_pdata);
         `SLV_EXPECT(0, 'h55, 'h1111);
       end
     join_none
 
-    @(negedge my_apb_if.clk) #1 my_apb_if.prdata = 'hx;
-    @(negedge my_apb_if.clk) #1 my_apb_if.prdata = 'h1111;
-    @(negedge my_apb_if.clk) #1 my_apb_if.prdata = 'hx;
+    @(negedge my_apb_slv_if.clk) #1 my_apb_slv_if.prdata = 'hx;
+    @(negedge my_apb_slv_if.clk) #1 my_apb_slv_if.prdata = 'h1111;
+    @(negedge my_apb_slv_if.clk) #1 my_apb_slv_if.prdata = 'hx;
   `SVTEST_END(slv_capture_1_read)
 
   //--------------------------------------------------
@@ -564,26 +570,26 @@ class c_apb_if_unit_test extends svunit_testcase;
   `SVTEST(slv_capture_2_read)
     fork
       begin
-        my_apb_if.read('h22, rdata);
+        my_apb_mstr_if.read('h22, rdata);
         `FAIL_IF(rdata !== 'h9999);
 
-        my_apb_if.read('h10, rdata);
+        my_apb_mstr_if.read('h10, rdata);
         `FAIL_IF(rdata !== 'h7777_7777);
       end
       begin
-        my_apb_slv_if.capture(slv_pwrite, slv_paddr, slv_pdata);
+        my_apb_pslv_if.capture(slv_pwrite, slv_paddr, slv_pdata);
         `SLV_EXPECT(0, 'h22, 'h9999);
 
-        my_apb_slv_if.capture(slv_pwrite, slv_paddr, slv_pdata);
+        my_apb_pslv_if.capture(slv_pwrite, slv_paddr, slv_pdata);
         `SLV_EXPECT(0, 'h10, 'h7777_7777);
       end
     join_none
 
-    @(negedge my_apb_if.clk) #1 my_apb_if.prdata = 'hx;
-    @(negedge my_apb_if.clk) #1 my_apb_if.prdata = 'h9999;
-    @(negedge my_apb_if.clk) #1 my_apb_if.prdata = 'hx;
-    @(negedge my_apb_if.clk) #1 my_apb_if.prdata = 'h7777_7777;
-    @(negedge my_apb_if.clk) #1 my_apb_if.prdata = 'hx;
+    @(negedge my_apb_slv_if.clk) #1 my_apb_slv_if.prdata = 'hx;
+    @(negedge my_apb_slv_if.clk) #1 my_apb_slv_if.prdata = 'h9999;
+    @(negedge my_apb_slv_if.clk) #1 my_apb_slv_if.prdata = 'hx;
+    @(negedge my_apb_slv_if.clk) #1 my_apb_slv_if.prdata = 'h7777_7777;
+    @(negedge my_apb_slv_if.clk) #1 my_apb_slv_if.prdata = 'hx;
   `SVTEST_END(slv_capture_2_read)
 
   `SVUNIT_TESTS_END

@@ -57,13 +57,23 @@ interface apb_if #(addrWidth = 8, dataWidth = 32) (input clk);
     input prdata
   );
 
+  modport slv (
+    input  clk,
+    input  paddr,
+    input  pwrite,
+    input  psel,
+    input  penable,
+    input  pwdata,
+    output prdata
+  );
+
 
   logic write_f;
   event write_done_e;
   logic [addrWidth-1:0] next_paddr;
   logic [dataWidth-1:0] next_pwdata;
-  task write(logic [addrWidth-1:0] addr = 0,
-             logic [dataWidth-1:0] data = 0);
+  task write(logic [addrWidth-1:0] addr,
+             logic [dataWidth-1:0] data);
     write_f = 1;
     next_paddr = addr;
     next_pwdata = data;
@@ -73,7 +83,7 @@ interface apb_if #(addrWidth = 8, dataWidth = 32) (input clk);
   logic read_f;
   event read_done_e;
   logic [dataWidth-1:0] next_prdata;
-  task read(logic [addrWidth-1:0] addr = 0,
+  task read(logic [addrWidth-1:0] addr,
             output logic [dataWidth-1:0] data);
     read_f = 1;
     next_paddr = addr;

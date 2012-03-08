@@ -28,10 +28,10 @@ import uvm_pkg::*;
 
 class apb_xaction extends uvm_sequence_item;
   typedef enum int {
-                     READ,
-                     WRITE
+                     READ  = 0,
+                     WRITE = 1
                    } kind_t;
-
+ 
   rand kind_t       kind;
   rand logic [31:0] addr;
   rand logic [31:0] data;

@@ -49,6 +49,8 @@ module apb_mon_unit_test;
 
   function void setup();
     unittest = new(name,
+                   bfm,
+                   bfm,
                    bfm);
   endfunction
 endmodule
@@ -60,7 +62,9 @@ class c_apb_mon_unit_test extends svunit_testcase;
   // running the Unit Tests on
   //===================================
   apb_mon my_apb_mon;
-  virtual apb_if.mstr bfm;
+  virtual apb_if.slv slv_bfm;
+  virtual apb_if.mstr mstr_bfm;
+  virtual apb_if.passive_slv pslv_bfm;
 
   uvm_tlm_analysis_fifo #(apb_xaction) af;
 
@@ -68,12 +72,15 @@ class c_apb_mon_unit_test extends svunit_testcase;
   // Constructor
   //===================================
   function new(string name,
-               virtual apb_if bfm);
+               virtual apb_if.slv         slv_bfm,
+               virtual apb_if.mstr        mstr_bfm,
+               virtual apb_if.passive_slv pslv_bfm);
     super.new(name);
-    this.bfm = bfm;
+    this.slv_bfm = slv_bfm;
+    this.mstr_bfm = mstr_bfm;
 
     my_apb_mon = new({ name , "::my_apb_mon" }, null);
-    my_apb_mon.bfm = bfm;
+    my_apb_mon.bfm = pslv_bfm;
 
     // connect a fifo to the mon.ap
     af = new({ name , "::af" }, null);
@@ -98,7 +105,7 @@ class c_apb_mon_unit_test extends svunit_testcase;
     //---------------------
     // reset the interface
     //---------------------
-    bfm.async_reset();
+    mstr_bfm.async_reset();
   endtask
 
 
@@ -167,12 +174,12 @@ class c_apb_mon_unit_test extends svunit_testcase;
     svunit_uvm_test_start();
 
     // wait for the bfm to go IDLE
-    @(negedge bfm.clk);
+    @(negedge mstr_bfm.clk);
 
     // write a xaction to the bus and wait for
     // a xaction out
     fork
-      bfm.write(0,0);
+      mstr_bfm.write(0,0);
     join_none
 
     fork
@@ -187,7 +194,7 @@ class c_apb_mon_unit_test extends svunit_testcase;
 
           // watchdog
           begin
-            repeat (3) @(negedge bfm.clk);
+            repeat (3) @(negedge mstr_bfm.clk);
             `FAIL_IF(1);
           end
         join_any
@@ -209,12 +216,12 @@ class c_apb_mon_unit_test extends svunit_testcase;
     svunit_uvm_test_start();
 
     // wait for the bfm to go IDLE
-    @(negedge bfm.clk);
+    @(negedge mstr_bfm.clk);
 
     // write a xaction to the bus and wait for
     // a xaction out
     fork
-      repeat (2) bfm.write(0,0);
+      repeat (2) mstr_bfm.write(0,0);
     join_none
 
     repeat (2) begin
@@ -230,7 +237,7 @@ class c_apb_mon_unit_test extends svunit_testcase;
 
             // watchdog
             begin
-              repeat (3) @(negedge bfm.clk);
+              repeat (3) @(negedge mstr_bfm.clk);
               `FAIL_IF(1);
             end
           join_any
@@ -253,12 +260,12 @@ class c_apb_mon_unit_test extends svunit_testcase;
     svunit_uvm_test_start();
 
     // wait for the bfm to go IDLE
-    @(negedge bfm.clk);
+    @(negedge mstr_bfm.clk);
 
     // write a xaction to the bus and wait for
     // a xaction out
     fork
-      bfm.write('hf,'hff);
+      mstr_bfm.write('hf,'hff);
     join_none
 
     fork
@@ -275,7 +282,7 @@ class c_apb_mon_unit_test extends svunit_testcase;
 
           // watchdog
           begin
-            repeat (3) @(negedge bfm.clk);
+            repeat (3) @(negedge mstr_bfm.clk);
             `FAIL_IF(1);
           end
         join_any
@@ -296,14 +303,14 @@ class c_apb_mon_unit_test extends svunit_testcase;
     svunit_uvm_test_start();
 
     // wait for the bfm to go IDLE
-    @(negedge bfm.clk);
+    @(negedge mstr_bfm.clk);
 
     // write a xaction to the bus and wait for
     // a xaction out
     fork
       begin
-        bfm.write('haa,'hbb);
-        bfm.write('h11,'hffff_ffff);
+        mstr_bfm.write('haa,'hbb);
+        mstr_bfm.write('h11,'hffff_ffff);
       end
     join_none
 
@@ -329,7 +336,7 @@ class c_apb_mon_unit_test extends svunit_testcase;
 
             // watchdog
             begin
-              repeat (3) @(negedge bfm.clk);
+              repeat (3) @(negedge mstr_bfm.clk);
               `FAIL_IF(1);
             end
           join_any
@@ -353,12 +360,12 @@ class c_apb_mon_unit_test extends svunit_testcase;
     svunit_uvm_test_start();
 
     // wait for the bfm to go IDLE
-    @(negedge bfm.clk);
+    @(negedge mstr_bfm.clk);
 
     // read a xaction from the bus and wait for
     // a xaction out
     fork
-      bfm.read(0,rdata);
+      mstr_bfm.read(0,rdata);
     join_none
 
     fork
@@ -373,7 +380,7 @@ class c_apb_mon_unit_test extends svunit_testcase;
 
           // watchdog
           begin
-            repeat (3) @(negedge bfm.clk);
+            repeat (3) @(negedge mstr_bfm.clk);
             `FAIL_IF(1);
           end
         join_any
@@ -397,12 +404,12 @@ class c_apb_mon_unit_test extends svunit_testcase;
     svunit_uvm_test_start();
 
     // wait for the bfm to go IDLE
-    @(negedge bfm.clk);
+    @(negedge mstr_bfm.clk);
 
     // read a xaction to the bus and wait for
     // a xaction out
     fork
-      repeat (2) bfm.read(0,rdata);
+      repeat (2) mstr_bfm.read(0,rdata);
     join_none
 
     repeat (2) begin
@@ -418,7 +425,7 @@ class c_apb_mon_unit_test extends svunit_testcase;
 
             // watchdog
             begin
-              repeat (3) @(negedge bfm.clk);
+              repeat (3) @(negedge mstr_bfm.clk);
               `FAIL_IF(1);
             end
           join_any
@@ -442,13 +449,13 @@ class c_apb_mon_unit_test extends svunit_testcase;
     svunit_uvm_test_start();
 
     // wait for the bfm to go IDLE
-    @(negedge bfm.clk);
+    @(negedge mstr_bfm.clk);
 
     // read a xaction to the bus and wait for
     // a xaction out
     fork
-      bfm.prdata = 'hff;
-      bfm.read('hf,rdata);
+      slv_bfm.prdata = 'hff;
+      mstr_bfm.read('hf,rdata);
     join_none
 
     fork
@@ -465,7 +472,7 @@ class c_apb_mon_unit_test extends svunit_testcase;
 
           // watchdog
           begin
-            repeat (3) @(negedge bfm.clk);
+            repeat (3) @(negedge mstr_bfm.clk);
             `FAIL_IF(1);
           end
         join_any
@@ -488,16 +495,16 @@ class c_apb_mon_unit_test extends svunit_testcase;
     svunit_uvm_test_start();
 
     // wait for the bfm to go IDLE
-    @(negedge bfm.clk);
+    @(negedge mstr_bfm.clk);
 
     // read a xaction to the bus and wait for
     // a xaction out
     fork
       begin
-        bfm.prdata = 'hbb;
-        bfm.read('haa,rdata);
-        bfm.prdata = 'hffff_ffff;
-        bfm.read('h11,rdata);
+        slv_bfm.prdata = 'hbb;
+        mstr_bfm.read('haa,rdata);
+        slv_bfm.prdata = 'hffff_ffff;
+        mstr_bfm.read('h11,rdata);
       end
     join_none
 
@@ -523,7 +530,7 @@ class c_apb_mon_unit_test extends svunit_testcase;
 
             // watchdog
             begin
-              repeat (3) @(negedge bfm.clk);
+              repeat (3) @(negedge mstr_bfm.clk);
               `FAIL_IF(1);
             end
           join_any

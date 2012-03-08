@@ -19,6 +19,9 @@
 #
 ################################################################
 
+SIMULATOR := QUESTA
+
+ifeq ($(SIMULATOR),QUESTA)
 TESTFILES += $(UVM_HOME)/src/uvm.sv \
 					$(SVUNIT_INSTALL)/svunit_base/uvm-mock/svunit_uvm_mock_pkg.sv
 INCDIR += $(UVM_HOME)/src \
@@ -30,3 +33,17 @@ SIM_ARGS += +define+CLK_PERIOD=5 \
             -
 
 include $(SVUNIT_INSTALL)/bin/questa.mk
+endif
+
+ifeq ($(SIMULATOR),VCS)
+TESTFILES += $(UVM_HOME)/src/uvm.sv \
+						 $(SVUNIT_INSTALL)/svunit_base/uvm-mock/svunit_uvm_mock_pkg.sv \
+						 $(UVM_HOME)/src/dpi/uvm_dpi.cc -CFLAGS -DVCS
+INCDIR += $(UVM_HOME)/src \
+					$(SVUNIT_INSTALL)/svunit_base/uvm-mock
+SIM_ARGS += +define+CLK_PERIOD=5 \
+				    +UVM_NO_RELNOTES
+
+SIM_EXE=vcsi
+include $(SVUNIT_INSTALL)/bin/vcs.mk
+endif

@@ -106,51 +106,35 @@ class c_apb_coverage_unit_test extends svunit_testcase;
   // Test: write_method
   //
   // verify the write_method sets the
-  // local obj to be sampled
+  // local obj to be sampled and that
+  // the addr_min_cp and data_min_cp are
+  // sampled correctly
   //-------------------------------------
   `SVTEST(write_method)
     apb_xaction a, b;
 
     svunit_uvm_test_start();
 
-    a = apb_xaction::type_id::create();
-    void'(a.randomize());
+    `FAIL_IF(my_apb_coverage.cg.addr_min_cp.get_coverage() != 0);
+    `FAIL_IF(my_apb_coverage.cg.data_min_cp.get_coverage() != 0);
+    `FAIL_IF(my_apb_coverage.cg.kind_cp.get_coverage() != 0);
 
-    my_apb_coverage.cg.stop();
+    a = apb_xaction::type_id::create();
+    void'(a.randomize() with { addr == 0;
+                               data == 0;
+                               kind == WRITE;
+                             });
 
     my_apb_coverage.write(a);
-    $cast(b, my_apb_coverage.get_sampled_obj());
 
+    $cast(b, my_apb_coverage.get_sampled_obj());
     `FAIL_IF(!a.compare(b));
+    `FAIL_IF(my_apb_coverage.cg.addr_min_cp.get_coverage() != 100);
+    `FAIL_IF(my_apb_coverage.cg.data_min_cp.get_coverage() != 100);
+    `FAIL_IF(my_apb_coverage.cg.kind_cp.get_coverage() != 50);
 
     my_apb_coverage.cg.start();
   `SVTEST_END(write_method)
-
-  //-------------------------------------
-  // Test: addr_min_cp
-  //
-  // verify the bin for addr == 0
-  //-------------------------------------
-  `SVTEST(addr_min_cp)
-    apb_xaction a;
-
-    // disable the groups we're not concerned with to
-    // avoid bogus results
-    my_apb_coverage.cg.data_min_cp.stop();
-    my_apb_coverage.cg.data_max_cp.stop();
-    my_apb_coverage.cg.data_bins_cp.stop();
-    my_apb_coverage.cg.kind_cp.stop();
-
-    `FAIL_IF(my_apb_coverage.cg.addr_min_cp.get_coverage() != 0);
-
-    a = apb_xaction::type_id::create();
-    void'(a.randomize() with { addr == 0; } );
-
-    my_apb_coverage.write(a);
-
-    `FAIL_IF(my_apb_coverage.cg.addr_min_cp.get_coverage() != 100);
- 
-  `SVTEST_END(addr_min_cp)
 
   //-------------------------------------
   // Test: addr_max_cp
@@ -163,7 +147,10 @@ class c_apb_coverage_unit_test extends svunit_testcase;
     `FAIL_IF(my_apb_coverage.cg.addr_max_cp.get_coverage() != 0);
 
     a = apb_xaction::type_id::create();
-    void'(a.randomize() with { addr == 'hfc; } );
+    void'(a.randomize() with { addr == 'hfc;
+                               data == 0; 
+                               kind == WRITE;
+                             });
 
     my_apb_coverage.write(a);
 
@@ -183,7 +170,10 @@ class c_apb_coverage_unit_test extends svunit_testcase;
     `FAIL_IF(my_apb_coverage.cg.addr_bins_cp.get_coverage() != 0);
 
     a = apb_xaction::type_id::create();
-    void'(a.randomize() with { addr == 1; } );
+    void'(a.randomize() with { addr == 1;
+                               data == 0; 
+                               kind == WRITE;
+                             });
 
     my_apb_coverage.write(a);
 
@@ -202,29 +192,6 @@ class c_apb_coverage_unit_test extends svunit_testcase;
   `SVTEST_END(addr_bins_cp)
 
   //-------------------------------------
-  // Test: data_min_cp
-  //
-  // verify the bin for data == 0
-  //-------------------------------------
-  `SVTEST(data_min_cp)
-    apb_xaction a;
-
-    my_apb_coverage.cg.data_min_cp.start();
-    my_apb_coverage.cg.data_max_cp.start();
-    my_apb_coverage.cg.data_bins_cp.start();
-
-    `FAIL_IF(my_apb_coverage.cg.data_min_cp.get_coverage() != 0);
-
-    a = apb_xaction::type_id::create();
-    void'(a.randomize() with { data == 0; } );
-
-    my_apb_coverage.write(a);
-
-    `FAIL_IF(my_apb_coverage.cg.data_min_cp.get_coverage() != 100);
- 
-  `SVTEST_END(data_min_cp)
-
-  //-------------------------------------
   // Test: data_max_cp
   //
   // verify the bin for data == ffff_ffff
@@ -235,7 +202,9 @@ class c_apb_coverage_unit_test extends svunit_testcase;
     `FAIL_IF(my_apb_coverage.cg.data_max_cp.get_coverage() != 0);
 
     a = apb_xaction::type_id::create();
-    void'(a.randomize() with { data == 'hffff_ffff; } );
+    void'(a.randomize() with { data == 'hffff_ffff;
+                               kind == WRITE;
+                             });
 
     my_apb_coverage.write(a);
 
@@ -255,7 +224,9 @@ class c_apb_coverage_unit_test extends svunit_testcase;
     `FAIL_IF(my_apb_coverage.cg.data_bins_cp.get_coverage() != 0);
 
     a = apb_xaction::type_id::create();
-    void'(a.randomize() with { data == 1; } );
+    void'(a.randomize() with { data == 1;
+                               kind == WRITE;
+                             });
 
     my_apb_coverage.write(a);
 
@@ -285,15 +256,9 @@ class c_apb_coverage_unit_test extends svunit_testcase;
 
     my_apb_coverage.cg.kind_cp.start();
 
-    `FAIL_IF(my_apb_coverage.cg.kind_cp.get_coverage() != 0);
-
-    a = apb_xaction::type_id::create();
-    void'(a.randomize() with { kind == WRITE; } );
-
-    my_apb_coverage.write(a);
-
     `FAIL_IF(my_apb_coverage.cg.kind_cp.get_coverage() != 50);
 
+    a = apb_xaction::type_id::create();
     void'(a.randomize() with { kind == READ; } );
 
     my_apb_coverage.write(a);
