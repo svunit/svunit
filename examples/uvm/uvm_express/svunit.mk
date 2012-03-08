@@ -19,6 +19,15 @@
 #
 ################################################################
 
+#------------------------------------------------
+# export the UVM_HOME to point to an available
+# version of UVM. For questa, this makefile
+# also requires you compile the dpi manually
+#------------------------------------------------
+# i.e
+#   >export UVM_HOME=~/lib/uvm-1.1a
+#------------------------------------------------
+
 SIMULATOR := QUESTA
 
 ifeq ($(SIMULATOR),QUESTA)

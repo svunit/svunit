@@ -3,6 +3,10 @@ pushd .
 cd $SVUNIT_INSTALL/examples/uvm/uvm_express
 create_svunit.pl
 
+
+###################
+# RUN WITH QUESTA #
+###################
 which qverilog >/dev/null
 if [ "$?" != "0" ]; then
   popd
@@ -20,7 +24,33 @@ if [ ! -e run.log ]; then
 fi
 
 grep "# INFO:  \[.*\]\[testrunner\]: Testrunner Results: PASS" run.log >/dev/null
+if [ "$?" != "0" ]; then
+  echo PASS not detected from Testrunner in run.log
+  popd
+  exit 1;
+fi
 
+
+################
+# RUN WITH VCS #
+################
+which vcsi >/dev/null
+if [ "$?" != "0" ]; then
+  popd
+  exit 1;
+fi
+
+# build and run svunit with qverilog
+make SIMULATOR=VCS
+
+# check the log output for a PASS from the testrunner
+if [ ! -e run.log ]; then
+  echo run.log does not exist
+  popd
+  exit 1;
+fi
+
+grep "INFO:  \[.*\]\[testrunner\]: Testrunner Results: PASS" run.log >/dev/null
 if [ "$?" != "0" ]; then
   echo PASS not detected from Testrunner in run.log
   popd
