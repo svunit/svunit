@@ -95,12 +95,13 @@ sub ValidArgs() {
     PrintHelp();
   }
   if ($output_file eq "") {
-    $output_file = $testname;
-    $output_file =~ s/.sv/_unit_test.sv/g;
+    ($name, $path, $suffix) = fileparse($testname, qr/\.[^.]*/);
+    $output_file = "$path$name";
+    $output_file .= "_unit_test.sv";
   }
   else {
-    ($base, $dir, $ext) = fileparse($output_file, qr/\.[^.]*/);
-    if ($ext ne ".sv") {
+    ($name, $path, $suffix) = fileparse($output_file, qr/\.[^.]*/);
+    if ($suffix ne ".sv") {
       $output_file = $output_file . "\.sv";
     }
   }
@@ -113,7 +114,7 @@ sub ValidArgs() {
 sub OpenFiles() {
   open (INFILE,  "$testname")     or die "Cannot Open file $testname\n";
   if ( -r $output_file and $overwrite != 1 ) {
-    print "\nERROR: The file already exists, to overwrite, use the -overwrite argument\n\n";
+    print "\nERROR: The output file '$output_file' already exists, to overwrite, use the -overwrite argument\n\n";
     exit 1;
   }
   else {
