@@ -19,7 +19,7 @@ if [ ! -e run.log ]; then
   exit 1;
 fi
 
-grep "# INFO:  \[1230ns\]\[testrunner\]: Testrunner Results: PASS" run.log >/dev/null
+grep "# INFO:  \[.*\]\[testrunner\]: Testrunner Results: PASS" run.log >/dev/null
 
 if [ "$?" != "0" ]; then
   echo PASS not detected from Testrunner in run.log
