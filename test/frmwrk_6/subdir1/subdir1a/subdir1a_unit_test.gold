@@ -27,6 +27,8 @@ class c_subdir1a_unit_test extends svunit_testcase;
   //===================================
   function new(string name);
     super.new(name);
+
+    my_subdir1a = new(/* New arguments if needed */);
   endfunction
 
 
@@ -34,17 +36,8 @@ class c_subdir1a_unit_test extends svunit_testcase;
   // Setup for running the Unit Tests
   //===================================
   task setup();
-    my_subdir1a = new(/* New arguments if needed */);
+    super.setup();
     /* Place Setup Code Here */
-  endtask
-
-
-  //===================================
-  // This is where we run all the Unit
-  // Tests
-  //===================================
-  task run_test();
-    super.run_test();
   endtask
 
 
@@ -56,6 +49,26 @@ class c_subdir1a_unit_test extends svunit_testcase;
     super.teardown();
     /* Place Teardown Code Here */
   endtask
+  
+  
+  //===================================
+  // All tests are defined between the
+  // SVUNIT_TESTS_BEGIN/END macros
+  //
+  // Each individual test must be
+  // defined between `SVTEST(_NAME_)
+  // `SVTEST_END(_NAME_)
+  //
+  // i.e.
+  //   `SVTEST(mytest)
+  //     <test code>
+  //   `SVTEST_END(mytest)
+  //===================================
+  `SVUNIT_TESTS_BEGIN
+
+
+
+  `SVUNIT_TESTS_END
 
 endclass
 

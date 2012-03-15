@@ -139,9 +139,9 @@ sub CloseFiles() {
 
 
 ##########################################################################
-# GetTasksFunctions(): Gets the list of tasks and functions 
+# Main(): writes the rest of the unit test file
 ##########################################################################
-sub GetTasksFunctions() {
+sub Main() {
   $incomments = 0;
   while ( $line = <INFILE> ) {
     # if a /* */ comment is still open, look for the end
@@ -200,7 +200,6 @@ sub GetTasksFunctions() {
           CreateUnitTest();
           $total_tests = $total_tests + $num_tests;
           $num_tests = 0;
-          @func_task = ();
           $processing_class = 0;
           $processing_uut = 0;
         }
@@ -209,7 +208,6 @@ sub GetTasksFunctions() {
           CreateUnitTest();
           $total_tests = $total_tests + $num_tests;
           $num_tests = 0;
-          @func_task = ();
           $processing_module = 0;
           $processing_uut = 0;
         }
@@ -218,41 +216,8 @@ sub GetTasksFunctions() {
           CreateUnitTest();
           $total_tests = $total_tests + $num_tests;
           $num_tests = 0;
-          @func_task = ();
           $processing_if = 0;
           $processing_uut = 0;
-        }
-
-        ###########################################################################
-        # below are the 2 branches that handle parsing of functions and task. These
-        # aren't tested and I suspect they are pretty fragile.
-        ###########################################################################
-        elsif ( $line =~ /\s*function/ and $line !~ /endfunction/ and $line !~ /new/ and $line !~ /local/ and $line !~ /\/\/\s*function/ ) {
-          if ( $line !~ /pure/ ) {
-            $line =~ s/^\s*/ /g;         # This adds a space at the beginning so we know which item to choose
-            $line =~ s/:/0/g;            # This is in case return type has ":" in it
-            $line =~ s/extern//g;        # This removes the extern from the line if it exists
-            $line =~ s/virtual//g;       # This removes the virtual from the line if it exists
-            $line =~ s/\s+/:/g;          # This removes extra white spaces and replaces them with ":"
-            $line =~ s/[\(;]/:/g;        # This turns the opening bracket of the argument list into a delimiter
-            @items = split(/:/, $line);  # This splits the line into a list using the ":" as a delimiter
-            $func = $items[3];           # For functions, the function name is now the 4th item in the list 
-                                       # (the first is the start of line)
-            push(@func_task,$func);      # Push the function name into a list of functions
-          }
-        }
-        elsif ( $line =~ /\s*task/ and $line !~ /endtask/ and $line !~ /local/ and $line !~ /\/\/\s*task/ ) {
-          if ( $line !~ /pure/ ) {
-            $line =~ s/^\s*/ /g;
-            #$line =~ s/^/ /g;
-            $line =~ s/extern//g;
-            $line =~ s/virtual//g;
-            $line =~ s/\s+/:/g;
-            $line =~ s/[\(;]/:/g;
-            @items = split(/:/, $line);
-            $tasks = $items[2];
-            push(@func_task,$tasks);
-          }
         }
       }
     }
@@ -314,38 +279,15 @@ sub CreateClassUnitTest() {
   print OUTFILE "  //===================================\n";
   print OUTFILE "  function new(string name);\n";
   print OUTFILE "    super.new(name);\n";
+  print OUTFILE "\n";
+  print OUTFILE "    my_$uut = new(\/\* New arguments if needed \*\/);\n";
   print OUTFILE "  endfunction\n\n\n";
   print OUTFILE "  //===================================\n";
   print OUTFILE "  // Setup for running the Unit Tests\n";
   print OUTFILE "  //===================================\n";
   print OUTFILE "  task setup();\n";
-  print OUTFILE "    my_$uut = new(\/\* New arguments if needed \*\/);\n";
+  print OUTFILE "    super.setup();\n";
   print OUTFILE "    \/\* Place Setup Code Here \*\/\n  endtask\n\n\n";
-  print OUTFILE "  //===================================\n";
-  print OUTFILE "  // This is where we run all the Unit\n";
-  print OUTFILE "  // Tests\n";
-  print OUTFILE "  //===================================\n";
-  print OUTFILE "  task run_test();\n";
-  print OUTFILE "    super.run_test();\n";
-  print OUTFILE "\n";
-
-  foreach $func_item (@func_task) {
-    foreach $excl_item (@exclude) {
-      if ($excl_item eq $func_item) {
-        $in_list = 1;
-      }
-    }
-    if ($in_list == 0) {
-      print OUTFILE "    test_$func_item();\n";
-      push(@tests_to_run, $func_item);
-      $num_tests++;
-    }
-    else {
-      $in_list = 0;
-    }
-  }
-
-  print OUTFILE "  endtask\n\n\n";
   print OUTFILE "  //===================================\n";
   print OUTFILE "  // Here we deconstruct anything we \n";
   print OUTFILE "  // need after running the Unit Tests\n";
@@ -353,32 +295,24 @@ sub CreateClassUnitTest() {
   print OUTFILE "  task teardown();\n";
   print OUTFILE "    super.teardown();\n";
   print OUTFILE "    \/\* Place Teardown Code Here \*\/\n";
-  print OUTFILE "  endtask\n\n";
-
-
-  print "\nSVUNIT: Output File: $output_file\n";
-  print "\nSVUNIT: Creating class $uut\_unit_test with tasks/functions:\n\n";
-  #if ( $#tests_to_run >= 0 ) {
-  #  print "\nSVUNIT: Output File: $output_file\n";
-  #  print "\nSVUNIT: Creating class $uut\_unit_test with tasks/functions:\n\n";
-  #}
-  #else {
-  #  print "\nSVUNIT: $testname - $uut has no tasks/functions or none chosen.\n";
-  #}
-  
-  foreach $test_item (@tests_to_run) {
-    print OUTFILE "\n  //===================================\n";
-    print OUTFILE "  // Unit test for task/function:\n";
-    print OUTFILE "  //   $test_item\n";
-    print OUTFILE "  //===================================\n";
-    print OUTFILE "  task test_$test_item;\n";
-    print OUTFILE "    `INFO(\$psprintf(\"Running %s\:\:test_$test_item\", name));\n";
-    print OUTFILE "    \/\* Place Test Code Here \*\/\n  endtask\n\n";
-    print "  $test_item\n";
-  }
+  print OUTFILE "  endtask\n\n\n";
+  print OUTFILE "  //===================================\n";
+  print OUTFILE "  // All tests are defined between the\n";
+  print OUTFILE "  // SVUNIT_TESTS_BEGIN/END macros\n";
+  print OUTFILE "  //\n";
+  print OUTFILE "  // Each individual test must be\n";
+  print OUTFILE "  // defined between `SVTEST(_NAME_)\n";
+  print OUTFILE "  // `SVTEST_END(_NAME_)\n";
+  print OUTFILE "  //\n";
+  print OUTFILE "  // i.e.\n";
+  print OUTFILE "  //   `SVTEST(mytest)\n";
+  print OUTFILE "  //     <test code>\n";
+  print OUTFILE "  //   `SVTEST_END(mytest)\n";
+  print OUTFILE "  //===================================\n";
+  print OUTFILE "  `SVUNIT_TESTS_BEGIN\n\n\n\n";
+  print OUTFILE "  `SVUNIT_TESTS_END\n\n";
 
   print OUTFILE "endclass\n\n\n";
-  @tests_to_run = ();
 }
 
 
@@ -425,15 +359,8 @@ sub CreateModuleUnitTest() {
   print OUTFILE "  // Setup for running the Unit Tests\n";
   print OUTFILE "  //===================================\n";
   print OUTFILE "  task setup();\n";
+  print OUTFILE "    super.setup();\n";
   print OUTFILE "    \/\* Place Setup Code Here \*\/\n  endtask\n\n\n";
-  print OUTFILE "  //===================================\n";
-  print OUTFILE "  // This is where we run all the Unit\n";
-  print OUTFILE "  // Tests\n";
-  print OUTFILE "  //===================================\n";
-  print OUTFILE "  task run_test();\n";
-  print OUTFILE "    super.run_test();\n";
-  print OUTFILE "\n";
-  print OUTFILE "  endtask\n\n\n";
   print OUTFILE "  //===================================\n";
   print OUTFILE "  // Here we deconstruct anything we \n";
   print OUTFILE "  // need after running the Unit Tests\n";
@@ -441,25 +368,28 @@ sub CreateModuleUnitTest() {
   print OUTFILE "  task teardown();\n";
   print OUTFILE "    super.teardown();\n";
   print OUTFILE "    \/\* Place Teardown Code Here \*\/\n";
-  print OUTFILE "  endtask\n\n";
+  print OUTFILE "  endtask\n\n\n";
+  print OUTFILE "  //===================================\n";
+  print OUTFILE "  // All tests are defined between the\n";
+  print OUTFILE "  // SVUNIT_TESTS_BEGIN/END macros\n";
+  print OUTFILE "  //\n";
+  print OUTFILE "  // Each individual test must be\n";
+  print OUTFILE "  // defined between `SVTEST(_NAME_)\n";
+  print OUTFILE "  // `SVTEST_END(_NAME_)\n";
+  print OUTFILE "  //\n";
+  print OUTFILE "  // i.e.\n";
+  print OUTFILE "  //   `SVTEST(mytest)\n";
+  print OUTFILE "  //     <test code>\n";
+  print OUTFILE "  //   `SVTEST_END(mytest)\n";
+  print OUTFILE "  //===================================\n";
+  print OUTFILE "  `SVUNIT_TESTS_BEGIN\n\n\n\n";
+  print OUTFILE "  `SVUNIT_TESTS_END\n\n";
 
 
   print "\nSVUNIT: Output File: $output_file\n";
-  print "\nSVUNIT: Creating class $uut\_unit_test with tasks/functions:\n\n";
-  
-  foreach $test_item (@tests_to_run) {
-    print OUTFILE "\n  //===================================\n";
-    print OUTFILE "  // Unit test for task/function:\n";
-    print OUTFILE "  //   $test_item\n";
-    print OUTFILE "  //===================================\n";
-    print OUTFILE "  task test_$test_item;\n";
-    print OUTFILE "    `INFO(\$psprintf(\"Running %s\:\:test_$test_item\", name));\n";
-    print OUTFILE "    \/\* Place Test Code Here \*\/\n  endtask\n\n";
-    print "  $test_item\n";
-  }
+  print "\nSVUNIT: Creating class $uut\_unit_test\n\n";
 
   print OUTFILE "endclass\n\n\n";
-  @tests_to_run = ();
 }
 
 
@@ -502,15 +432,8 @@ sub CreateIFUnitTest() {
   print OUTFILE "  // Setup for running the Unit Tests\n";
   print OUTFILE "  //===================================\n";
   print OUTFILE "  task setup();\n";
+  print OUTFILE "    super.setup();\n";
   print OUTFILE "    \/\* Place Setup Code Here \*\/\n  endtask\n\n\n";
-  print OUTFILE "  //===================================\n";
-  print OUTFILE "  // This is where we run all the Unit\n";
-  print OUTFILE "  // Tests\n";
-  print OUTFILE "  //===================================\n";
-  print OUTFILE "  task run_test();\n";
-  print OUTFILE "    super.run_test();\n";
-  print OUTFILE "\n";
-  print OUTFILE "  endtask\n\n\n";
   print OUTFILE "  //===================================\n";
   print OUTFILE "  // Here we deconstruct anything we \n";
   print OUTFILE "  // need after running the Unit Tests\n";
@@ -518,25 +441,27 @@ sub CreateIFUnitTest() {
   print OUTFILE "  task teardown();\n";
   print OUTFILE "    super.teardown();\n";
   print OUTFILE "    \/\* Place Teardown Code Here \*\/\n";
-  print OUTFILE "  endtask\n\n";
-
+  print OUTFILE "  endtask\n\n\n";
+  print OUTFILE "  //===================================\n";
+  print OUTFILE "  // All tests are defined between the\n";
+  print OUTFILE "  // SVUNIT_TESTS_BEGIN/END macros\n";
+  print OUTFILE "  //\n";
+  print OUTFILE "  // Each individual test must be\n";
+  print OUTFILE "  // defined between `SVTEST(_NAME_)\n";
+  print OUTFILE "  // `SVTEST_END(_NAME_)\n";
+  print OUTFILE "  //\n";
+  print OUTFILE "  // i.e.\n";
+  print OUTFILE "  //   `SVTEST(mytest)\n";
+  print OUTFILE "  //     <test code>\n";
+  print OUTFILE "  //   `SVTEST_END(mytest)\n";
+  print OUTFILE "  //===================================\n";
+  print OUTFILE "  `SVUNIT_TESTS_BEGIN\n\n\n\n";
+  print OUTFILE "  `SVUNIT_TESTS_END\n\n";
 
   print "\nSVUNIT: Output File: $output_file\n";
-  print "\nSVUNIT: Creating class $uut\_unit_test with tasks/functions:\n\n";
-  
-  foreach $test_item (@tests_to_run) {
-    print OUTFILE "\n  //===================================\n";
-    print OUTFILE "  // Unit test for task/function:\n";
-    print OUTFILE "  //   $test_item\n";
-    print OUTFILE "  //===================================\n";
-    print OUTFILE "  task test_$test_item;\n";
-    print OUTFILE "    `INFO(\$psprintf(\"Running %s\:\:test_$test_item\", name));\n";
-    print OUTFILE "    \/\* Place Test Code Here \*\/\n  endtask\n\n";
-    print "  $test_item\n";
-  }
+  print "\nSVUNIT: Creating class $uut\_unit_test\n\n";
 
   print OUTFILE "endclass\n\n\n";
-  @tests_to_run = ();
 }
 
 
@@ -574,6 +499,6 @@ CheckArgs();
 if ( ValidArgs() == 0) {
   OpenFiles();
   PrintHeading();
-  GetTasksFunctions();
+  Main();
   CloseFiles(); 
 }

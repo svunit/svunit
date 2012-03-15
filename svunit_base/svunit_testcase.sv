@@ -64,11 +64,7 @@ virtual class svunit_testcase;
 
   extern function new(string name);
 
-  `ifdef VCS 
-    extern virtual protected task setup();
-  `else
-    pure   virtual protected task setup();
-  `endif
+  extern virtual protected task setup();
 
   extern virtual protected task run_test();
 
@@ -277,10 +273,8 @@ endtask
   Method: setup
   Only required if using VCS since pure virtual functions are not implemented
 */
-`ifdef VCS
-  task svunit_testcase::setup();
-  endtask
-`endif
+task svunit_testcase::setup();
+endtask
 
 
 /*
