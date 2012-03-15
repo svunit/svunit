@@ -78,8 +78,12 @@ virtual class svunit_testcase;
   extern local function void pass(string s);
   extern local function void fail(string s);
 
-  extern protected function void fail_if(bit b, string s);
-  extern protected function void fail_unless(bit b, string s);
+  extern protected task wait_for_error();
+  extern protected function integer get_error_count();
+  extern protected task give_up();
+
+  extern protected function bit fail_if(bit b, string s);
+  extern protected function bit fail_unless(bit b, string s);
 
   extern function void enable_verbose();
   extern function void disable_verbose();
@@ -156,6 +160,34 @@ function void svunit_testcase::fail(string s);
 endfunction
 
 
+
+/*
+  Method: wait_for_error
+  Blocks until the error_count changes
+*/
+task svunit_testcase::wait_for_error();
+  @(error_count);
+endtask
+
+
+/*
+  Method: get_error_count
+  returns the error count
+*/
+function integer svunit_testcase::get_error_count();
+  return error_count;
+endfunction
+
+
+/*
+  Method: give_up
+  blocks indefinitely (Should only be called by `FAIL_IF)
+*/
+task svunit_testcase::give_up();
+  event never;
+  @(never);
+endtask
+
 /*
   Method: fail_if
   calls fail if expression is true
@@ -163,12 +195,18 @@ endfunction
   Parameters:
     b - evaluation of expression (0 - false, 1 - true)
     s - string to pass to pass or fail task
+
+    return 1 if fail else 0
 */
-function void svunit_testcase::fail_if(bit b, string s);
-  if (b)
+function bit svunit_testcase::fail_if(bit b, string s);
+  if (b) begin
     fail($psprintf("fail_if: %s", s));
-  else
+    return 1;
+  end
+  else begin
     pass($psprintf("fail_if: %s", s));
+    return 0;
+  end
 endfunction
 
 
@@ -179,12 +217,18 @@ endfunction
   Parameters:
     b - evaluation of expression (0 - false, 1 - true)
     s - string to pass to pass or fail task
+
+    return 1 if fail else 0
 */
-function void svunit_testcase::fail_unless(bit b, string s);
-  if (!b)
+function bit svunit_testcase::fail_unless(bit b, string s);
+  if (!b) begin
     fail($psprintf("fail_unless: %s", s));
-  else
+    return 1;
+  end
+  else begin
     pass($psprintf("fail_unless: %s", s));
+    return 0;
+  end
 endfunction
 
 
@@ -234,9 +278,9 @@ endfunction
 */  
 function void svunit_testcase::report();
   if (success == PASS)
-    `INFO($psprintf("Unit Test %0s: PASS", name));
+    `INFO($psprintf("%0s::PASSED", name));
   else
-    `ERROR($psprintf("Unit Test %0s: FAIL", name));
+    `INFO($psprintf("%0s::FAILED", name));
 endfunction
 
 
@@ -245,9 +289,7 @@ endfunction
   Main run task for the unit test
 */
 task svunit_testcase::run();
-  setup();
   run_test();
-  teardown();
 endtask
 
 
@@ -256,7 +298,7 @@ endtask
   execute the list of registered unit tests 
 */
 task svunit_testcase::run_test();
-  `INFO($psprintf("Running Unit Tests for class %s", name));
+  `INFO($psprintf("%s::RUNNING", name));
   svunit_tests();
 endtask
 

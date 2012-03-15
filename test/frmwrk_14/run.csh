@@ -26,7 +26,7 @@ if ( ! -e run.log ) then
   exit 1;
 endif
 
-grep "INFO:  \[0\]\[testrunner\]: Testrunner Results: PASS" run.log >/dev/null
+grep "INFO:  \[0\]\[testrunner\]: Testrunner::PASSED" run.log >/dev/null
 if ( $status != 0 ) then
   echo PASS not detected from Testrunner in run.log
   exit 1;

@@ -133,23 +133,10 @@ task svunit_testrunner::report();
 
   `LF;
 
-  foreach (list_of_suites[i])
-  begin
-    if (list_of_suites[i].get_runstatus() == TRUE)
-    begin
-      if (list_of_suites[i].get_results() == PASS)
-        `INFO($psprintf("Test Suite %0s: PASS", list_of_suites[i].get_name()));
-      else
-        `ERROR($psprintf("Test Suite %0s: FAIL", list_of_suites[i].get_name()));
-    end
-  end
-
-  `LF;
-
   if (success == PASS)
-    `INFO("Testrunner Results: PASS");
+    `INFO("Testrunner::PASSED");
   else
-    `ERROR("Testrunner Results: FAIL");
+    `INFO("Testrunner::FAILED");
 endtask
 
 

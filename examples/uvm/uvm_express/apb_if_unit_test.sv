@@ -89,17 +89,8 @@ class c_apb_if_unit_test extends svunit_testcase;
   // Setup for running the Unit Tests
   //===================================
   task setup();
+    super.setup();
     /* Place Setup Code Here */
-  endtask
-
-
-  //===================================
-  // This is where we run all the Unit
-  // Tests
-  //===================================
-  task run_test();
-    super.run_test();
-
   endtask
 
 

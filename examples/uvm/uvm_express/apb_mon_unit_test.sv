@@ -97,6 +97,8 @@ class c_apb_mon_unit_test extends svunit_testcase;
   // Setup for running the Unit Tests
   //===================================
   task setup();
+    super.setup();
+
     //----------------------
     // activate for testing
     //----------------------
@@ -106,16 +108,11 @@ class c_apb_mon_unit_test extends svunit_testcase;
     // reset the interface
     //---------------------
     mstr_bfm.async_reset();
-  endtask
 
-
-  //===================================
-  // This is where we run all the Unit
-  // Tests
-  //===================================
-  task run_test();
-    super.run_test();
-
+    //---------------------
+    // start the component
+    //---------------------
+    svunit_uvm_test_start();
   endtask
 
 
@@ -126,6 +123,11 @@ class c_apb_mon_unit_test extends svunit_testcase;
   task teardown();
     super.teardown();
     /* Place Teardown Code Here */
+
+    //--------------------
+    // stop the component
+    //--------------------
+    svunit_uvm_test_finish();
 
     //---------------------------------------
     // deactivate at the end of unit testing
@@ -141,11 +143,9 @@ class c_apb_mon_unit_test extends svunit_testcase;
   // verify the analysis port is created
   //-------------------------------------
   `SVTEST(analysis_port_not_null)
-    svunit_uvm_test_start();
 
     `FAIL_IF(my_apb_mon.ap == null);
 
-    svunit_uvm_test_finish();
   `SVTEST_END(analysis_port_not_null)
 
   //---------------------------------------
@@ -154,11 +154,9 @@ class c_apb_mon_unit_test extends svunit_testcase;
   // verify the bfm exists in the monitor
   //---------------------------------------
   `SVTEST(bfm_not_null)
-    svunit_uvm_test_start();
 
     `FAIL_IF(my_apb_mon.bfm == null);
 
-    svunit_uvm_test_finish();
   `SVTEST_END(bfm_not_null)
 
   //---------------------------------------
@@ -170,8 +168,6 @@ class c_apb_mon_unit_test extends svunit_testcase;
   //---------------------------------------
   `SVTEST(capture_write_xaction)
     uvm_transaction tr;
-
-    svunit_uvm_test_start();
 
     // wait for the bfm to go IDLE
     @(negedge mstr_bfm.clk);
@@ -202,7 +198,6 @@ class c_apb_mon_unit_test extends svunit_testcase;
       end
     join
 
-    svunit_uvm_test_finish();
   `SVTEST_END(capture_write_xaction)
 
   //---------------------------------------
@@ -213,8 +208,6 @@ class c_apb_mon_unit_test extends svunit_testcase;
   // analysis port
   //---------------------------------------
   `SVTEST(capture_b2b_write_xaction)
-    svunit_uvm_test_start();
-
     // wait for the bfm to go IDLE
     @(negedge mstr_bfm.clk);
 
@@ -246,7 +239,6 @@ class c_apb_mon_unit_test extends svunit_testcase;
       join
     end
 
-    svunit_uvm_test_finish();
   `SVTEST_END(capture_b2b_write_xaction)
 
   //---------------------------------------
@@ -256,8 +248,6 @@ class c_apb_mon_unit_test extends svunit_testcase;
   //---------------------------------------
   `SVTEST(capture_write_xaction_chk)
     apb_xaction tr;
-
-    svunit_uvm_test_start();
 
     // wait for the bfm to go IDLE
     @(negedge mstr_bfm.clk);
@@ -290,7 +280,6 @@ class c_apb_mon_unit_test extends svunit_testcase;
       end
     join
 
-    svunit_uvm_test_finish();
   `SVTEST_END(capture_write_xaction_chk)
 
   //---------------------------------------
@@ -300,8 +289,6 @@ class c_apb_mon_unit_test extends svunit_testcase;
   // transactions
   //---------------------------------------
   `SVTEST(capture_b2b_write_xaction_chk)
-    svunit_uvm_test_start();
-
     // wait for the bfm to go IDLE
     @(negedge mstr_bfm.clk);
 
@@ -357,8 +344,6 @@ class c_apb_mon_unit_test extends svunit_testcase;
     uvm_transaction tr;
     logic [31:0] rdata;
 
-    svunit_uvm_test_start();
-
     // wait for the bfm to go IDLE
     @(negedge mstr_bfm.clk);
 
@@ -388,7 +373,6 @@ class c_apb_mon_unit_test extends svunit_testcase;
       end
     join
 
-    svunit_uvm_test_finish();
   `SVTEST_END(capture_read_xaction)
 
   //---------------------------------------
@@ -400,8 +384,6 @@ class c_apb_mon_unit_test extends svunit_testcase;
   //---------------------------------------
   `SVTEST(capture_b2b_read_xaction)
     logic [31:0] rdata;
-
-    svunit_uvm_test_start();
 
     // wait for the bfm to go IDLE
     @(negedge mstr_bfm.clk);
@@ -434,7 +416,6 @@ class c_apb_mon_unit_test extends svunit_testcase;
       join
     end
 
-    svunit_uvm_test_finish();
   `SVTEST_END(capture_b2b_read_xaction)
 
   //---------------------------------------
@@ -445,8 +426,6 @@ class c_apb_mon_unit_test extends svunit_testcase;
   `SVTEST(capture_read_xaction_chk)
     apb_xaction tr;
     logic [31:0] rdata;
-
-    svunit_uvm_test_start();
 
     // wait for the bfm to go IDLE
     @(negedge mstr_bfm.clk);
@@ -480,7 +459,6 @@ class c_apb_mon_unit_test extends svunit_testcase;
       end
     join
 
-    svunit_uvm_test_finish();
   `SVTEST_END(capture_read_xaction_chk)
 
   //---------------------------------------
@@ -491,8 +469,6 @@ class c_apb_mon_unit_test extends svunit_testcase;
   //---------------------------------------
   `SVTEST(capture_b2b_read_xaction_chk)
     logic [31:0] rdata;
-
-    svunit_uvm_test_start();
 
     // wait for the bfm to go IDLE
     @(negedge mstr_bfm.clk);

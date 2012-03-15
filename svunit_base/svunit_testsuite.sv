@@ -177,17 +177,8 @@ endtask
 */
 task svunit_testsuite::report();
   int i;
-  `LF;
-  `INFO($psprintf("Results for Test Suite %0s", name));
-  foreach(list_of_svunits[i])
-  begin
-    if (list_of_svunits[i].get_runstatus() == TRUE)
-    begin
-      list_of_svunits[i].report();
-      if (list_of_svunits[i].get_results() == FAIL)
-        success = FAIL;
-    end
-  end
+  if (success == PASS) `INFO($psprintf("%0s::PASSED", name));
+  else                 `INFO($psprintf("%0s::FAILED", name));
 endtask
 
 
@@ -199,11 +190,16 @@ task svunit_testsuite::run();
   if (run_suite == TRUE)
   begin
     `LF;
-    `INFO($psprintf("Running Suite: %0s", name));
+    `INFO($psprintf("%0s::RUNNING", name));
     foreach(list_of_svunits[i])
     begin
-      if (list_of_svunits[i].get_runstatus() == TRUE)
+      if (list_of_svunits[i].get_runstatus() == TRUE) begin
         load_testcase(list_of_svunits[i]);
+        list_of_svunits[i].report();
+        if (list_of_svunits[i].get_results() == FAIL) begin
+          success = FAIL;
+        end
+      end
     end
   end
 endtask

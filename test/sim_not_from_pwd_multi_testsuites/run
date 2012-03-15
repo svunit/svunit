@@ -34,7 +34,7 @@ test()
     exit 1;
   fi
 
-  grep "# INFO:  \[0\]\[testrunner\]: Testrunner Results: PASS" $run_log >/dev/null
+  grep "# INFO:  \[0\]\[testrunner\]: Testrunner::PASSED" $run_log >/dev/null
   if [ "$?" != "0" ]; then
     echo PASS not detected from Testrunner in $run_log
     exit 1;

@@ -70,20 +70,17 @@ class c_apb_coverage_unit_test extends svunit_testcase;
   // Setup for running the Unit Tests
   //===================================
   task setup();
+    super.setup();
+
     //----------------------
     // activate for testing
     //----------------------
     svunit_activate_uvm_component(my_apb_coverage);
-  endtask
 
-
-  //===================================
-  // This is where we run all the Unit
-  // Tests
-  //===================================
-  task run_test();
-    super.run_test();
-
+    //---------------------
+    // start the component
+    //---------------------
+    svunit_uvm_test_start();
   endtask
 
 
@@ -93,6 +90,11 @@ class c_apb_coverage_unit_test extends svunit_testcase;
   //===================================
   task teardown();
     super.teardown();
+
+    //--------------------
+    // stop the component
+    //--------------------
+    svunit_uvm_test_finish();
 
     //---------------------------------------
     // deactivate at the end of unit testing
@@ -112,8 +114,6 @@ class c_apb_coverage_unit_test extends svunit_testcase;
   //-------------------------------------
   `SVTEST(write_method)
     apb_xaction a, b;
-
-    svunit_uvm_test_start();
 
     `FAIL_IF(my_apb_coverage.cg.addr_min_cp.get_coverage() != 0);
     `FAIL_IF(my_apb_coverage.cg.data_min_cp.get_coverage() != 0);
@@ -241,8 +241,6 @@ class c_apb_coverage_unit_test extends svunit_testcase;
     end
 
     `FAIL_IF(my_apb_coverage.cg.data_bins_cp.get_coverage() != 100);
-
-    svunit_uvm_test_finish();
 
   `SVTEST_END(data_bins_cp)
 

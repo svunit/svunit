@@ -120,6 +120,8 @@ class c_simple_model_unit_test extends svunit_testcase;
   // Setup for running the Unit Tests
   //===================================
   task setup();
+    super.setup();
+
     //---------------------------------------------------
     // activate the component (i.e. add the component to
     // the default uvm_domain)
@@ -132,15 +134,11 @@ class c_simple_model_unit_test extends svunit_testcase;
     //      to be here has been moved up into the
     //      simple_model_unit_test *module*
     //--------------------------------------------------
-  endtask
 
-
-  //===================================
-  // This is where we run all the Unit
-  // Tests
-  //===================================
-  task run_test();
-    super.run_test();
+    //-----------------------------
+    // start the testing phase
+    //-----------------------------
+    svunit_uvm_test_start();
   endtask
 
 
@@ -155,11 +153,9 @@ class c_simple_model_unit_test extends svunit_testcase;
   //   test for the existance of the simple_model::get_port
   //************************************************************
   `SVTEST(get_port_not_null_test)
-    svunit_uvm_test_start();
 
     `FAIL_IF(my_simple_model.get_port == null);
 
-    svunit_uvm_test_finish();
   `SVTEST_END(get_port_not_null_test)
 
 
@@ -175,18 +171,15 @@ class c_simple_model_unit_test extends svunit_testcase;
   `SVTEST(get_port_active_test)
     begin
       simple_xaction tr = new();
-
-      svunit_uvm_test_start(); 
+ 
       put_port.put(tr);
       #1;
       `FAIL_IF(!in_fifo.is_empty());
-      svunit_uvm_test_finish();
-      #1 out_fifo.flush();
     end
   `SVTEST_END(get_port_active_test)
-
-
-
+ 
+ 
+ 
   //************************************************************
   // Test:
   //   put_port_active_test
@@ -199,18 +192,16 @@ class c_simple_model_unit_test extends svunit_testcase;
     begin
       time put_time;
       simple_xaction tr = new();
-
-      svunit_uvm_test_start();
+ 
       put_time = $time;
       put_port.put(tr);
       get_port.get(tr);
       `FAIL_IF(put_time != $time);
-      svunit_uvm_test_finish();
     end
   `SVTEST_END(put_port_active_test)
-
-
-
+ 
+ 
+ 
   //************************************************************
   // Test:
   //   xformation_test
@@ -224,16 +215,14 @@ class c_simple_model_unit_test extends svunit_testcase;
     begin
       simple_xaction in_tr = new();
       simple_xaction out_tr;
-
+ 
       void'(in_tr.randomize() with { field == 2; });
-
-      svunit_uvm_test_start(); 
+ 
       put_port.put(in_tr);
       get_port.get(out_tr);
-
+ 
       `FAIL_IF(in_tr.field != 2);
       `FAIL_IF(out_tr.field != 4);
-      svunit_uvm_test_finish();
     end
   `SVTEST_END(xformation_test)
 
@@ -247,6 +236,16 @@ class c_simple_model_unit_test extends svunit_testcase;
   task teardown();
     super.teardown();
     /* Place Teardown Code Here */
+
+    //-----------------------------
+    // terminate the testing phase
+    //-----------------------------
+    svunit_uvm_test_finish();
+
+    //-----------------------
+    // flush the output fifo
+    //-----------------------
+    #0 out_fifo.flush();
 
     //----------------------------------------------------------
     // deactivate the component so that it doesn't interfere

@@ -28,11 +28,9 @@
     exp - expression to evaluate
 */
 `define FAIL_IF(exp) \
-  fail_if(exp, `"exp`")
-
-// need this to kill the test
-// #0 fail_if(exp, `"exp`"); \
-// if (exp) `ERROR(`"test FAIL`");
+  if (fail_if(exp, `"exp`")) begin \
+    give_up(); \
+  end
 
 
 /*
@@ -43,7 +41,9 @@
     exp - expression to evaluate
 */
 `define FAIL_UNLESS(exp) \
-  fail_unless(exp, `"exp`")
+  if (fail_unless(exp, `"exp`")) begin \
+    give_up(); \
+  end
 
 
 /*
@@ -121,29 +121,14 @@
 /*
   Macro: `SVTEST
   START an svunit test within an SVUNIT_TEST_BEGIN/END block
-*/
-`define SVTEST(_NAME_) \
-  begin : _NAME_ \
-    `INFO($psprintf(`"Running %s::_NAME_`", name)); \
-    begin
-
-/*
-  Macro: `SVTEST_END
-  END an svunit test within an SVUNIT_TEST_BEGIN/END block
-*/
-`define SVTEST_END(_NAME_) \
-  end \
-end : _NAME_
-
-/*
-  Macro: `NEW_SVTEST
-  START an svunit test within an SVUNIT_TEST_BEGIN/END block
 
   REQUIRES ACCESS TO error_count
 */
-`define NEW_SVTEST(_NAME_) \
+`define SVTEST(_NAME_) \
   begin : _NAME_ \
-    `INFO($psprintf(`"Running %s::_NAME_`", name)); \
+    integer local_error_count = get_error_count(); \
+\
+    `INFO($psprintf(`"%s::_NAME_::RUNNING`", name)); \
     setup(); \
     fork \
       begin \
@@ -151,13 +136,17 @@ end : _NAME_
           begin
 
 /*
-  Macro: `NEW_SVTEST_END
+  Macro: `SVTEST_END
   END an svunit test within an SVUNIT_TEST_BEGIN/END block
 */
-`define NEW_SVTEST_END(_NAME_) \
+`define SVTEST_END(_NAME_) \
+            `INFO($psprintf(`"%s::_NAME_::PASSED`", name)); \
           end \
           begin \
-            @(error_count); \
+            if (get_error_count() == local_error_count) begin \
+              wait_for_error(); \
+            end \
+            `INFO($psprintf(`"%s::_NAME_::FAILED`", name)); \
           end \
         join_any \
         disable fork; \

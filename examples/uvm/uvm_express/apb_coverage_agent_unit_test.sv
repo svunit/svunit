@@ -88,20 +88,19 @@ class c_apb_coverage_agent_unit_test extends svunit_testcase;
   // Setup for running the Unit Tests
   //===================================
   task setup();
+    super.setup();
+
     //----------------------
     // activate for testing
     //----------------------
     svunit_activate_uvm_component(my_apb_coverage_agent);
-  endtask
 
+    bfm_mstr.async_reset();
 
-  //===================================
-  // This is where we run all the Unit
-  // Tests
-  //===================================
-  task run_test();
-    super.run_test();
-
+    //---------------------
+    // start the component
+    //---------------------
+    svunit_uvm_test_start();
   endtask
 
 
@@ -112,6 +111,11 @@ class c_apb_coverage_agent_unit_test extends svunit_testcase;
   task teardown();
     super.teardown();
     /* Place Teardown Code Here */
+
+    //--------------------
+    // stop the component
+    //--------------------
+    svunit_uvm_test_finish();
 
     //---------------------------------------
     // deactivate at the end of unit testing
@@ -143,13 +147,11 @@ class c_apb_coverage_agent_unit_test extends svunit_testcase;
   // model is sampled properly
   //---------------------------------------
   `SVTEST(connectivity)
-    svunit_uvm_test_start();
 
     `FAIL_IF(my_apb_coverage_agent.coverage.cg.kind_cp.get_coverage() != 0);
     `FAIL_IF(my_apb_coverage_agent.coverage.cg.addr_max_cp.get_coverage() != 0);
     `FAIL_IF(my_apb_coverage_agent.coverage.cg.data_min_cp.get_coverage() != 0);
 
-    #1 bfm_mstr.async_reset();
     bfm_mstr.write('hfc, 0);
 
     // NOTE: for some reason, the coverage stats for kind_cp with vcs aren't
@@ -158,7 +160,6 @@ class c_apb_coverage_agent_unit_test extends svunit_testcase;
     `FAIL_IF(my_apb_coverage_agent.coverage.cg.addr_max_cp.get_coverage() != 100);
     `FAIL_IF(my_apb_coverage_agent.coverage.cg.data_min_cp.get_coverage() != 100);
 
-    svunit_uvm_test_finish();
   `SVTEST_END(connectivity)
 
   `SVUNIT_TESTS_END

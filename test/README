@@ -29,6 +29,7 @@ sim_ius_mk_0:                      run the framework for a single class unit tes
 sim_vcsi_mk_0:                     run the framework for a single class unit test with vcsi
 sim_vcsi_mk_1:                     run the framework for a single module unit test with vcsi
 sim_vcsi_mk_2:                     run the framework for a single interface unit test with vcsi
+sim_vcsi_mk_3:                     verify the test PASS/FAIL status
 sim_questa_mk_0:                   run the framework for a single class unit test with questa
 sim_questa_mk_1:                   run the framework for a single module unit test with questa
 sim_questa_mk_2:                   run the framework for a single interface unit test with questa

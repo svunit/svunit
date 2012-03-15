@@ -1,0 +1,9 @@
+rm -rf .`pwd | sed -e 's/[\/-]/_/g'`_testsuite.sv \
+       csrc \
+       Makefile \
+       run.log \
+       simv \
+       simv.daidir \
+       vc_hdrs.h \
+       .svunit_top.sv \
+       .testrunner.sv

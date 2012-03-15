@@ -24,7 +24,7 @@ if [ ! -e run.log ]; then
   exit 1;
 fi
 
-grep "INFO:  \[3\]\[testrunner\]: Testrunner Results: PASS" run.log >/dev/null
+grep "INFO:  \[.*\]\[testrunner\]: Testrunner::PASSED" run.log >/dev/null
 
 if [ "$?" != "0" ]; then
   echo PASS not detected from Testrunner in run.log
@@ -53,7 +53,7 @@ if [ ! -e run.log ]; then
   exit 1;
 fi
 
-grep "# INFO:  \[3\]\[testrunner\]: Testrunner Results: PASS" run.log >/dev/null
+grep "# INFO:  \[.*\]\[testrunner\]: Testrunner::PASSED" run.log >/dev/null
 
 if [ "$?" != "0" ]; then
   echo PASS not detected from Testrunner in run.log
