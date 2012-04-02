@@ -33,6 +33,7 @@ sim_vcsi_mk_3:                     verify the test PASS/FAIL status
 sim_questa_mk_0:                   run the framework for a single class unit test with questa
 sim_questa_mk_1:                   run the framework for a single module unit test with questa
 sim_questa_mk_2:                   run the framework for a single interface unit test with questa
+sim_questa_mk_3:                   verify the test PASS/FAIL status
 sim_not_from_pwd:                  verify make variables allow sims to be run from directories other than pwd
 sim_not_from_pwd_multi_testsuites: same as sim_not_from_pwd except with multiple levels of hierarchy (same hierarchy as frmwrk_6) make at every level to verify the entire hierarchy runs
 

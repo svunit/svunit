@@ -1,0 +1,8 @@
+rm -rf .`pwd | sed -e 's/[\/-]/_/g'`_testsuite.sv \
+       csrc \
+       Makefile \
+       run.log \
+       vsim.wlf \
+       work \
+       .svunit_top.sv \
+       .testrunner.sv
