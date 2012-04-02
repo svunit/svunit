@@ -46,22 +46,7 @@ Step-by-step instructions to get a first unit test going...
 4) create the svunit makefiles
 >create_svunit.pl
 
-5a) add tests as methods (OR go to 5b)
----
-  bogus_unit_test.sv:
-    task run_test();
-      super.run_test();
-
-      test_mytest(); // <-- add this line to invoke the test
-    endtask
-
-    task test_mytest(); // <-- add the actual test
-      `INFO("Running bogus::test_mytest");
-      /* Place Test Code Here */
-    endtask
----
-
-5b) add tests using the helper macros
+5) add tests using the helper macros
 ---
   bogus_unit_test.sv:
     `SVUNIT_TESTS_BEGIN

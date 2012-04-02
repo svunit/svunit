@@ -82,8 +82,8 @@ virtual class svunit_testcase;
   extern protected function integer get_error_count();
   extern protected task give_up();
 
-  extern protected function bit fail_if(bit b, string s);
-  extern protected function bit fail_unless(bit b, string s);
+  extern protected function bit fail_if(bit b, string s, string f, int l);
+  extern protected function bit fail_unless(bit b, string s, string f, int l);
 
   extern function void enable_verbose();
   extern function void disable_verbose();
@@ -195,12 +195,14 @@ endtask
   Parameters:
     b - evaluation of expression (0 - false, 1 - true)
     s - string to pass to pass or fail task
+    f - file name of the failure
+    l - line number of the failure
 
     return 1 if fail else 0
 */
-function bit svunit_testcase::fail_if(bit b, string s);
+function bit svunit_testcase::fail_if(bit b, string s, string f, int l);
   if (b) begin
-    fail($psprintf("fail_if: %s", s));
+    fail($psprintf("fail_if: %s (at %s line:%0d)", s, f, l));
     return 1;
   end
   else begin
@@ -220,9 +222,9 @@ endfunction
 
     return 1 if fail else 0
 */
-function bit svunit_testcase::fail_unless(bit b, string s);
+function bit svunit_testcase::fail_unless(bit b, string s, string f, int l);
   if (!b) begin
-    fail($psprintf("fail_unless: %s", s));
+    fail($psprintf("fail_unless: %s (at %s line:%0d)", s, f, l));
     return 1;
   end
   else begin

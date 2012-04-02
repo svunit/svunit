@@ -28,7 +28,7 @@
     exp - expression to evaluate
 */
 `define FAIL_IF(exp) \
-  if (fail_if(exp, `"exp`")) begin \
+  if (fail_if(exp, `"exp`", `__FILE__, `__LINE__)) begin \
     give_up(); \
   end
 
@@ -41,7 +41,7 @@
     exp - expression to evaluate
 */
 `define FAIL_UNLESS(exp) \
-  if (fail_unless(exp, `"exp`")) begin \
+  if (fail_unless(exp, `"exp`", `__FILE__, `__LINE__)) begin \
     give_up(); \
   end
 
@@ -127,6 +127,8 @@
 `define SVTEST(_NAME_) \
   begin : _NAME_ \
     integer local_error_count = get_error_count(); \
+    string fileName; \
+    int lineNumber; \
 \
     `INFO($psprintf(`"%s::_NAME_::RUNNING`", name)); \
     setup(); \
