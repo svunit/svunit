@@ -42,12 +42,12 @@ TESTFILES  += $(CHILD_UNITTESTS) \
 
 
 # This file is simulator independant which
-# meand the command line (i.e. SVUNIT_SIM)
+# means the command line (i.e. SVUNIT_SIM)
 # must be formed elsewhere
 ifeq ($(SVUNIT_SIM),)
 	SVUNIT_SIM=@echo "Error: SVUNIT_SIM command line not defined"
 endif
-sim : clean .$(SVUNIT_TOP)
+sim : .$(SVUNIT_TOP)
 	@$(SVUNIT_SIM)
 
 

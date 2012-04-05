@@ -27,10 +27,12 @@
   Parameters: 
     exp - expression to evaluate
 */
+`ifndef FAIL_IF
 `define FAIL_IF(exp) \
   if (fail_if(exp, `"exp`", `__FILE__, `__LINE__)) begin \
     give_up(); \
   end
+`endif
 
 
 /*
@@ -40,10 +42,12 @@
   Parameters: 
     exp - expression to evaluate
 */
+`ifndef FAIL_UNLESS
 `define FAIL_UNLESS(exp) \
   if (fail_unless(exp, `"exp`", `__FILE__, `__LINE__)) begin \
     give_up(); \
   end
+`endif
 
 
 /*
