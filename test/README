@@ -8,7 +8,7 @@ Tests for the scripting that generates the svunit framework
 frmwrk_0:  generate a basic unit test for a class
 frmwrk_1:  generate a basic unit test for a class with a different name than the file name
 frmwrk_2:  test the comment parsing with one basic unit test for a class that has a bunch of comments mixed in
-frmwrk_3:  test multiple classes (2) in the same file
+frmwrk_3:  test multiple classes (2) in the same file as well as 1 virtual class
 frmwrk_4:  test 2 basic unit tests for a class in different dirs with classes that are in different dirs
 frmwrk_5:  test one basic unit test in a child dir but none in the parent
 frmwrk_6:  testrunner created from 3 levels of test hierarchy

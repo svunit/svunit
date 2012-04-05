@@ -166,7 +166,7 @@ sub Main() {
       }
 
       if ( $processing_uut == 0 ) {
-        if ( $line =~ /^\s*class\s/ or $line =~ /^\s*virtual\s+class\s/ ) {
+        if ( $line =~ /^\s*class\s/ ) {
           $line =~ s/virtual//g;
           $line =~ s/^\s*class/class/g;
           $line =~ s/\s+/ /g;
