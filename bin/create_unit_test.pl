@@ -154,12 +154,12 @@ sub Main() {
     }
 
     if (!$incomments) {
-      # filter // comments
-      $line =~ s|//.*||;
-
       # filter full /* */ comments
       $line =~ s|/\*.*?\*/||g;
    
+      # filter // comments
+      $line =~ s|//.*||;
+
       # filter /* comments that go past the end of a line
       if ( $line =~ /\/\*/) {
         $line =~ s/\/\*.*//;
