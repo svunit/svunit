@@ -27,10 +27,11 @@ use File::Basename;
 
 
 ##########################################################################
-# Local Variables
+# Variables
 ##########################################################################
-$num_tests   = 0;
-$total_tests = 0;
+my $num_tests   = 0;
+my $total_tests = 0;
+my $includes_already_printed = 0;
 
 
 ##########################################################################
@@ -257,8 +258,11 @@ sub CreateUnitTest() {
 sub CreateClassUnitTest() {
   $in_list = 0;
 
-  print OUTFILE "`include \"svunit_defines.svh\"\n";
-  print OUTFILE "`include \"" . basename($testname) . "\"\n";
+  if (!$includes_already_printed) {
+    print OUTFILE "`include \"svunit_defines.svh\"\n";
+    print OUTFILE "`include \"" . basename($testname) . "\"\n";
+    $includes_already_printed = 1;
+  }
   print OUTFILE "typedef class c_$uut\_unit_test;\n";
   print OUTFILE "\n";
   print OUTFILE "module $uut\_unit_test;\n";
@@ -325,8 +329,11 @@ sub CreateClassUnitTest() {
 sub CreateModuleUnitTest() {
   $in_list = 0;
 
-  print OUTFILE "`include \"svunit_defines.svh\"\n";
-  print OUTFILE "`include \"" . basename($testname) . "\"\n";
+  if (!$includes_already_printed) {
+    print OUTFILE "`include \"svunit_defines.svh\"\n";
+    print OUTFILE "`include \"" . basename($testname) . "\"\n";
+    $includes_already_printed = 1;
+  }
   print OUTFILE "typedef class c_$uut\_unit_test;\n";
   print OUTFILE "\n";
   print OUTFILE "interface $uut\_unit_test_if;\n";
@@ -402,8 +409,11 @@ sub CreateModuleUnitTest() {
 sub CreateIFUnitTest() {
   $in_list = 0;
 
-  print OUTFILE "`include \"svunit_defines.svh\"\n";
-  print OUTFILE "`include \"" . basename($testname) . "\"\n";
+  if (!$includes_already_printed) {
+    print OUTFILE "`include \"svunit_defines.svh\"\n";
+    print OUTFILE "`include \"" . basename($testname) . "\"\n";
+    $includes_already_printed = 1;
+  }
   print OUTFILE "typedef class c_$uut\_unit_test;\n";
   print OUTFILE "\n";
   print OUTFILE "module $uut\_unit_test;\n";

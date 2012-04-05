@@ -73,8 +73,6 @@ class c_test0_unit_test extends svunit_testcase;
 endclass
 
 
-`include "svunit_defines.svh"
-`include "test.sv"
 typedef class c_test1_unit_test;
 
 module test1_unit_test;
