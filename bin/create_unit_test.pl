@@ -166,7 +166,7 @@ sub Main() {
       }
 
       if ( $processing_uut == 0 ) {
-        if ( $line =~ /^\s*class/ or $line =~ /^\s*virtual\s+class/ ) {
+        if ( $line =~ /^\s*class\s/ or $line =~ /^\s*virtual\s+class\s/ ) {
           $line =~ s/virtual//g;
           $line =~ s/^\s*class/class/g;
           $line =~ s/\s+/ /g;
@@ -176,7 +176,7 @@ sub Main() {
           $processing_class = 1;
           $processing_uut = 1;
         }
-        elsif ( $line =~ /^\s*module/ or $line =~ /^\s*virtual\s+module/ ) {
+        elsif ( $line =~ /^\s*module\s/ ) {
           $line =~ s/^\s*module/module/g;
           $line =~ s/\s+/:/g;
           $line =~ s/\W/:/g;
@@ -185,8 +185,10 @@ sub Main() {
           $processing_module = 1;
           $processing_uut = 1;
         }
-        elsif ( $line =~ /^\s*interface/ or $line =~ /^\s*virtual\s+interface/ ) {
+        elsif ( $line =~ /^\s*interface\s/ ) {
           $line =~ s/^\s*interface/interface/g;
+          $line =~ s/\sstatic\s/ /;
+          $line =~ s/\sautomatic\s/ /;
           $line =~ s/\s+/:/g;
           $line =~ s/\W/:/g;
           @items = split(/:/, $line);

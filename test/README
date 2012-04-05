@@ -21,6 +21,7 @@ frmwrk_12: verify create_unit_test.pl output file extension is .sv regardless of
 frmwrk_13: verify create_unit_test.pl output goes to `pwd`
 frmwrk_14: verify the Setup.csh, create_unit_test.pl and create_svunit.pl all run in csh and tcsh
 frmwrk_15: verify svunit_unit_test.pl -out switch
+frmwrk_16: verify unit test templates are created properly for interfaces declared as 'automatic'
 
 ---------------------------------
 Tests for the simulator makefiles
