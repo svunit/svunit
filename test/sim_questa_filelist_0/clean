@@ -1,0 +1,9 @@
+rm -rf .`pwd | sed -e 's/[\/-]/_/g'`_testsuite.sv \
+       Makefile \
+       qverilog.log \
+       dut_unit_test.sv \
+       .svunit_top.sv \
+       .testrunner.sv \
+       vsim.wlf \
+       work \
+       run.log

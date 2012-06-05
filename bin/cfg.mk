@@ -30,7 +30,10 @@ ALLPKGS  += $(SVUNIT_INSTALL)/svunit_base/svunit_pkg.sv
 
 TESTRUNNER := testrunner.sv
 SVUNIT_TOP := svunit_top.sv
-TESTFILES  += $(CHILD_UNITTESTS) \
+FILELISTS  += $(wildcard svunit.f)
+SIM_FLISTS += $(foreach FILE,$(FILELISTS), -f $(FILE))
+TESTFILES  += $(SIM_FLISTS) \
+							$(CHILD_UNITTESTS) \
               $(UNITTESTS) \
               $(CHILD_TESTSUITES) \
               $(TESTSUITES) \
@@ -38,8 +41,8 @@ TESTFILES  += $(CHILD_UNITTESTS) \
               $(TESTDIR)/.$(SVUNIT_TOP)
 
 
-############## TARGETS ############## 
 
+############## TARGETS ############## 
 
 # This file is simulator independant which
 # means the command line (i.e. SVUNIT_SIM)
