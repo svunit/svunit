@@ -31,7 +31,7 @@ ALLPKGS  += $(SVUNIT_INSTALL)/svunit_base/svunit_pkg.sv
 TESTRUNNER := testrunner.sv
 SVUNIT_TOP := svunit_top.sv
 FILELISTS  += $(wildcard svunit.f)
-SIM_FLISTS += $(foreach FILE,$(FILELISTS), -f $(FILE))
+SIM_FLISTS += $(foreach FILE,$(FILELISTS), -file $(FILE))
 TESTFILES  += $(SIM_FLISTS) \
 							$(CHILD_UNITTESTS) \
               $(UNITTESTS) \

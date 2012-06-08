@@ -115,7 +115,7 @@ task svunit_uvm_test_start();
       begin
         #1;
         if (!svunit_uvm_test_running) begin
-          `uvm_fatal("svunit_uvm_test_start", "You're running svunit with uvm without defining RUN_SVUNIT_WITH_UVM. Please add 'SIM_ARGS += +define+RUN_SVUNIT_WITH_UVM' to your svunit.mk file.");
+          `uvm_fatal("svunit_uvm_test_start", "You're running svunit with uvm without defining RUN_SVUNIT_WITH_UVM. Please add '+define+RUN_SVUNIT_WITH_UVM' to your svunit.f file.");
         end
       end
     join_none

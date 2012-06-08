@@ -46,13 +46,6 @@ module simple_model_unit_test;
   string name = "simple_model_ut";
   c_simple_model_unit_test unittest;
 
-  initial begin
-    //---------------------------
-    // start the svunit_uvm_test
-    //---------------------------
-    svunit_uvm_test_inst("svunit_uvm_test");
-  end
-
   function void setup();
     unittest = new(name);
   endfunction

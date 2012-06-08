@@ -19,42 +19,21 @@
 #
 ################################################################
 
-#------------------------------------------------
-# export the UVM_HOME to point to an available
-# version of UVM. For questa, this makefile
-# also requires you compile the dpi manually
-#------------------------------------------------
-# i.e
-#   >export UVM_HOME=~/lib/uvm-1.1a
-#------------------------------------------------
-
 SIMULATOR := QUESTA
 
 ifeq ($(SIMULATOR),QUESTA)
-TESTFILES += $(UVM_HOME)/src/uvm.sv \
-					$(SVUNIT_INSTALL)/svunit_base/uvm-mock/svunit_uvm_mock_pkg.sv
-INCDIR += $(UVM_HOME)/src \
-					$(SVUNIT_INSTALL)/svunit_base/uvm-mock
-SIM_ARGS += +define+CLK_PERIOD=5 \
-						-R \
-               -sv_lib $(UVM_HOME)/lib/uvm_dpi32 \
-               +UVM_NO_RELNOTES \
-            -
-SIM_ARGS += +define+RUN_SVUNIT_WITH_UVM
-
+SVUNIT_F=svunit-questa.f
 include $(SVUNIT_INSTALL)/bin/questa.mk
 endif
 
 ifeq ($(SIMULATOR),VCS)
-TESTFILES += $(UVM_HOME)/src/uvm.sv \
-						 $(SVUNIT_INSTALL)/svunit_base/uvm-mock/svunit_uvm_mock_pkg.sv \
-						 $(UVM_HOME)/src/dpi/uvm_dpi.cc -CFLAGS -DVCS
-INCDIR += $(UVM_HOME)/src \
-					$(SVUNIT_INSTALL)/svunit_base/uvm-mock
-SIM_ARGS += +define+CLK_PERIOD=5 \
-				    +UVM_NO_RELNOTES
-SIM_ARGS += +define+RUN_SVUNIT_WITH_UVM
-
+SVUNIT_F=svunit-vcs.f
 SIM_EXE=vcsi
 include $(SVUNIT_INSTALL)/bin/vcs.mk
 endif
+
+
+all : svunit.f sim
+
+svunit.f : FORCE
+	ln -sf $(SVUNIT_F) svunit.f
