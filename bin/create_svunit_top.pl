@@ -119,7 +119,8 @@ sub WriteTopLevel() {
 
   print TOPFILE "\nmodule top;\n\n";
   print TOPFILE "  testrunner runner();\n\n";
-  print TOPFILE "  initial\n  begin\n    runner.setup();\n    runner.run();\n    \$finish();\n  end\n\n";
+  print TOPFILE "  `ifdef RUN_SVUNIT_WITH_UVM\n    import svunit_uvm_mock_pkg::*;\n    initial\n    begin\n      svunit_uvm_test_inst(\"svunit_uvm_test\");\n    end\n  `endif\n\n";
+  print TOPFILE "  initial\n  begin\n    runner.setup();\n    runner.run();\n    \$finish();\n  end\n";
   print TOPFILE "endmodule\n\n";
 
   close ( TOPFILE ) or die "ERROR: Cannot Close File svunit_top.sv\n\n";

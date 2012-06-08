@@ -108,7 +108,19 @@ endclass
 // global help methods for calling start and finish for
 // the svunit_uvm_test
 //------------------------------------------------------
+bit svunit_uvm_test_running = 0;
 task svunit_uvm_test_start();
+  if (!svunit_uvm_test_running) begin
+    fork
+      begin
+        #1;
+        if (!svunit_uvm_test_running) begin
+          `uvm_fatal("svunit_uvm_test_start", "You're running svunit with uvm without defining RUN_SVUNIT_WITH_UVM. Please add 'SIM_ARGS += +define+RUN_SVUNIT_WITH_UVM' to your svunit.mk file.");
+        end
+      end
+    join_none
+  end
+    
   // wait for the svunit_test to get to the pre_reset_phase
   if (!svunit_uvm_test::is_ready()) svunit_uvm_test::wait_for_ready();
 
@@ -128,25 +140,28 @@ endtask
 // the initial call. for subsequent calls, nothing happens.
 //------------------------------------------------------------
 task svunit_uvm_test_inst(string test_name = "svunit_uvm_test");
-  fork
-    begin
-      uvm_root top;
-      uvm_component test;
+  if (!svunit_uvm_test_running) begin
+    svunit_uvm_test_running = 1;
+    fork
+      begin
+        uvm_root top;
+        uvm_component test;
 
-      top = uvm_root::get();
-      void'(svunit_idle_uvm_domain::get_common_domain());
+        top = uvm_root::get();
+        void'(svunit_idle_uvm_domain::get_common_domain());
 
-      test = top.get_child("uvm_test_top");
+        test = top.get_child("uvm_test_top");
 
-      //--------------------------------------------------------------------------------------
-      // if no test is running yet (i.e this is the first call to svunit_uvm_test_inst), setup
-      // the svunit_idle_uvm_domain and invoke the svunit_uvm_test. Breeze by this otherwise.
-      //--------------------------------------------------------------------------------------
-      if (test == null) begin
-        top.run_test("svunit_uvm_test");
+        //--------------------------------------------------------------------------------------
+        // if no test is running yet (i.e this is the first call to svunit_uvm_test_inst), setup
+        // the svunit_idle_uvm_domain and invoke the svunit_uvm_test. Breeze by this otherwise.
+        //--------------------------------------------------------------------------------------
+        if (test == null) begin
+          top.run_test("svunit_uvm_test");
+        end
       end
-    end
-  join_none
+    join_none
+  end
 endtask
 
 `endif

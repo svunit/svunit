@@ -3,6 +3,14 @@ module top;
 
   testrunner runner();
 
+  `ifdef RUN_SVUNIT_WITH_UVM
+    import svunit_uvm_mock_pkg::*;
+    initial
+    begin
+      svunit_uvm_test_inst("svunit_uvm_test");
+    end
+  `endif
+
   initial
   begin
     runner.setup();

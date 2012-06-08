@@ -40,6 +40,7 @@ SIM_ARGS += +define+CLK_PERIOD=5 \
                -sv_lib $(UVM_HOME)/lib/uvm_dpi32 \
                +UVM_NO_RELNOTES \
             -
+SIM_ARGS += +define+RUN_SVUNIT_WITH_UVM
 
 include $(SVUNIT_INSTALL)/bin/questa.mk
 endif
@@ -52,6 +53,7 @@ INCDIR += $(UVM_HOME)/src \
 					$(SVUNIT_INSTALL)/svunit_base/uvm-mock
 SIM_ARGS += +define+CLK_PERIOD=5 \
 				    +UVM_NO_RELNOTES
+SIM_ARGS += +define+RUN_SVUNIT_WITH_UVM
 
 SIM_EXE=vcsi
 include $(SVUNIT_INSTALL)/bin/vcs.mk

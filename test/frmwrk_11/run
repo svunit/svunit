@@ -19,8 +19,8 @@ sed -e "s/TS_TYPE/$TS_TYPE/g" testrunner.gold | sed -e "s/TS_INST/$TS_INST/g" > 
 
 
 # do the checking
-gold=(  test_if_unit_test.gold    .testsuite.gold   .testrunner.gold     svunit_top.gold )
-check=( test_if_unit_test.sv      .$TS_TYPE.sv      .testrunner.sv       .svunit_top.sv )
+gold=(  test_if_unit_test.gold    .testsuite.gold   .testrunner.gold )
+check=( test_if_unit_test.sv      .$TS_TYPE.sv      .testrunner.sv   )
 for i in {0..3}; do
   if [ "`diff -bB ${gold[$i]} ${check[$i]}`" != "" ]; then
     echo ${check[$i]} failed;

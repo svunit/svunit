@@ -30,13 +30,6 @@ module apb_coverage_unit_test;
   c_apb_coverage_unit_test unittest;
   string name = "apb_coverage_ut";
 
-  initial begin
-    //---------------------------
-    // start the svunit_uvm_test
-    //---------------------------
-    svunit_uvm_test_inst("svunit_uvm_test");
-  end
-
   function void setup();
     unittest = new(name);
   endfunction
