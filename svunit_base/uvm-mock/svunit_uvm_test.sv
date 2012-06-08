@@ -99,6 +99,16 @@ class svunit_uvm_test extends uvm_test;
   endtask
 
   task post_shutdown_phase(uvm_phase phase);
+    //------------------------------------------------
+    // mask the PH_JUMP message because it's annoying
+    //------------------------------------------------
+    uvm_root top;
+    top = uvm_root::get();
+    top.m_rh.set_severity_id_action(UVM_MEDIUM, "PH_JUMP", UVM_NO_ACTION);
+
+    //-------------
+    // do the jump
+    //-------------
     phase.jump(uvm_pre_reset_phase::get());
   endtask
 endclass
