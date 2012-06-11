@@ -19,6 +19,12 @@
 #
 ################################################################
 
+
+NOTE: for instructions on how to get going with SVUnit, go to
+      www.agilesoc.com/svunit.
+
+NOTE: Refer also to the FAQ at: www.agilesoc.com/svunit/svunit-FAQ
+
 -----------------------------------------------------------
 Step-by-step instructions to get a first unit test going...
 -----------------------------------------------------------
@@ -46,7 +52,12 @@ Step-by-step instructions to get a first unit test going...
 4) create the svunit makefiles
 >create_svunit.pl
 
-5) add tests using the helper macros
+5) include one of the the simulator specific make files in your svunit.mk
+>cat include $(SVUNIT_INSTALL)/bin/vcs.mk >> svunit.mk
+OR
+>cat include $(SVUNIT_INSTALL)/bin/questa.mk >> svunit.mk
+
+6) add tests using the helper macros
 ---
   bogus_unit_test.sv:
     `SVUNIT_TESTS_BEGIN
@@ -59,15 +70,9 @@ Step-by-step instructions to get a first unit test going...
     `SVUNIT_TESTS_END
 ---
 
-6) include one of the the simulator specific make files in your svunit.mk
->cat include $(SVUNIT_INSTALL)/bin/vcs.mk
-OR
->cat include $(SVUNIT_INSTALL)/bin/questa.mk
-
-6a) run the unittests
+7) run the unittests
 >make
 
-6b) or if you only want to build the framework but not run it...
->make .svunit_top.sv
+8) repeat steps 6 and 7 until done
 
-7) repeat steps 5a/5b and 6a until done
+9) pat self on back
