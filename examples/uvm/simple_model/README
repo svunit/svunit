@@ -25,8 +25,8 @@ Step 1: export your UVM_HOME
 Step 2: build the svunit framework
 >create_svunit.pl
 
-Step 3: run it
+Step 3a: run it with VCS
 >make
 
-NOTE: runs with vcs, you'll need to change the svunit.mk to run
-      with questa or ius
+Step 3b: run it with Questa
+>make SIMULATOR=QUESTA
