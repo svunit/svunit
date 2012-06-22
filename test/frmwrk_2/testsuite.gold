@@ -12,16 +12,16 @@ module TS_TYPE;
   // These are the unit tests that we
   // want included in this testsuite
   //===================================
-  test_unit_test test_ut();
+  virtual_test_unit_test virtual_test_ut();
 
 
   //===================================
   // Setup
   //===================================
   function void setup();
-    test_ut.setup();
+    virtual_test_ut.setup();
     svunit_ts = new(name);
-    svunit_ts.add_testcase(test_ut.unittest);
+    svunit_ts.add_testcase(virtual_test_ut.unittest);
   endfunction
 
 endmodule

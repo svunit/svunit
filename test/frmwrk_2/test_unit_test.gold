@@ -2,24 +2,24 @@ import svunit_pkg::*;
 
 `include "svunit_defines.svh"
 `include "test.sv"
-typedef class c_test_unit_test;
+typedef class c_virtual_test_unit_test;
 
-module test_unit_test;
-  c_test_unit_test unittest;
-  string name = "test_ut";
+module virtual_test_unit_test;
+  c_virtual_test_unit_test unittest;
+  string name = "virtual_test_ut";
 
   function void setup();
     unittest = new(name);
   endfunction
 endmodule
 
-class c_test_unit_test extends svunit_testcase;
+class c_virtual_test_unit_test extends svunit_testcase;
 
   //===================================
   // This is the class that we're 
   // running the Unit Tests on
   //===================================
-  test my_test;
+  virtual_test my_virtual_test;
 
 
   //===================================
@@ -28,7 +28,7 @@ class c_test_unit_test extends svunit_testcase;
   function new(string name);
     super.new(name);
 
-    my_test = new(/* New arguments if needed */);
+    my_virtual_test = new(/* New arguments if needed */);
   endfunction
 
 

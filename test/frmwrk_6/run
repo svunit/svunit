@@ -77,7 +77,7 @@ sed -e "s/THIS_TYPE/$THIS_TYPE/g" testrunner.gold | sed -e "s/THIS_INST/$THIS_IN
 # do the checking
 gold=(  test_unit_test.gold .testsuite.gold .testrunner.gold )
 check=( test_unit_test.sv   .$THIS_TYPE.sv  .testrunner.sv   )
-for i in {0..3}; do
+for i in {0..2}; do
   if [ "`diff -bB ${gold[$i]} ${check[$i]}`" != "" ]; then
     echo ${check[$i]} failed;
     exit 1;

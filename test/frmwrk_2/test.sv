@@ -7,5 +7,5 @@ ment*/
 /*//
 //*/
 /*//*/
-/*yikes*/c/*a*/las/**/s test; // jfjfj
+/*yikes*/c/*a*/las/**/s virtual_test; // jfjfj
 endclas/*jabs*/s
