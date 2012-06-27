@@ -242,10 +242,15 @@ class c_apb_slave_unit_test extends svunit_testcase;
       my_apb_slave_if.penable = 0;
     end
 
-    // this is the SETUP state where the psel, pwrite, paddr and pdata are set
+    // this is the SETUP state where the psel,
+    // pwrite, paddr and pdata are set
+    //
+    // NOTE:
+    //   setup_psel == 0 for protocol errors on the psel
+    //   setup_pwrite == 0 for protocol errors on the pwrite
     @(negedge my_apb_slave_if.clk);
-    my_apb_slave_if.psel = setup_psel;     // use setup_psel == 0 to test a protocol error on the psel
-    my_apb_slave_if.pwrite = setup_pwrite;  // use setup_pwrite == 0 to test a protocol error on the pwrite
+    my_apb_slave_if.psel = setup_psel;
+    my_apb_slave_if.pwrite = setup_pwrite;
     my_apb_slave_if.paddr = addr;
     my_apb_slave_if.pwdata = data;
     my_apb_slave_if.penable = 0;

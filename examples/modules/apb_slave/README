@@ -19,6 +19,10 @@
 #
 ################################################################
 
+Don't forget to read the svunit-code/README for instructions on
+how to setup the SVUnit test environment and instructions for
+building your own tests.
+
 Step 1: build the svunit framework
 >create_svunit.pl
 
