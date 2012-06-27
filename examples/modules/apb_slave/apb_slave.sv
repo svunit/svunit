@@ -42,15 +42,19 @@ const logic [1:0] SETUP = 0;
 const logic [1:0] W_ENABLE = 1;
 const logic [1:0] R_ENABLE = 2;
 
-// IDLE -> SETUP -> ENABLE
+// SETUP -> ENABLE
 always @(negedge rst_n or posedge clk) begin
   if (rst_n == 0) begin
     apb_st <= 0;
+    prdata <= 0;
   end
 
   else begin
     case (apb_st)
       SETUP : begin
+        // clear the prdata
+        prdata <= 0;
+
         // Move to ENABLE when the psel is asserted
         if (psel && !penable) begin
           if (pwrite) begin
@@ -64,6 +68,7 @@ always @(negedge rst_n or posedge clk) begin
       end
 
       W_ENABLE : begin
+        // write pwdata to memory
         if (psel && penable && pwrite) begin
           mem[paddr] <= pwdata;
         end
@@ -73,6 +78,7 @@ always @(negedge rst_n or posedge clk) begin
       end
 
       R_ENABLE : begin
+        // read prdata from memory
         if (psel && penable && !pwrite) begin
           prdata <= mem[paddr];
         end

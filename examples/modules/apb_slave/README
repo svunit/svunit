@@ -19,14 +19,11 @@
 #
 ################################################################
 
-SIMULATOR := QUESTA
+Step 1: build the svunit framework
+>create_svunit.pl
 
-ifeq ($(SIMULATOR),VCS)
-SIM_EXE=vcsi
-include $(SVUNIT_INSTALL)/bin/vcs.mk
-endif
+Step 2a: run it with Questa
+>make
 
-
-ifeq ($(SIMULATOR),QUESTA)
-include $(SVUNIT_INSTALL)/bin/questa.mk
-endif
+Step 2b: run it with VCS
+>make SIMULATOR=QUESTA
