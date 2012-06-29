@@ -15,9 +15,9 @@ tar cvf svunit-v0.$1.tar svunit-code/bin svunit-code/docs svunit-code/examples s
 gzip svunit-v0.$1.tar
 mv svunit-v0.$1.tar.gz svunit-code
 cd -
-#git add svunit-v0.$1.tar.gz
-#git commit -m "release svunit-v0.$1.tar.gz"
-#git tag -a v0.$1 -m "v0.$1"
-#git push --tags
-#git push
-#scp svunit-v0.$1.tar.gz nosnhojn@frs.sourceforge.net:/home/frs/project/svunit
+git add svunit-v0.$1.tar.gz
+git commit -m "release svunit-v0.$1.tar.gz"
+git tag -a v0.$1 -m "v0.$1"
+git push --tags
+git push
+scp svunit-v0.$1.tar.gz nosnhojn@frs.sourceforge.net:/home/frs/project/svunit
