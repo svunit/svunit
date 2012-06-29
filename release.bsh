@@ -10,11 +10,14 @@ if [ -e svunit-v0.$1.tar.gz ]; then
   exit 1
 fi
 
-tar cvf svunit-v0.$1.tar bin docs examples header.txt LICENSE.txt README.txt Setup.bsh Setup.csh svunit_base
+cd ..
+tar cvf svunit-v0.$1.tar svunit-code/bin svunit-code/docs svunit-code/examples svunit-code/header.txt svunit-code/LICENSE.txt svunit-code/README.txt svunit-code/Setup.bsh svunit-code/Setup.csh svunit-code/svunit_base
 gzip svunit-v0.$1.tar
-git add svunit-v0.$1.tar.gz
-git commit -m "release svunit-v0.$1.tar.gz"
-git tag -a v0.$1 -m "v0.$1"
-git push --tags
-git push
-scp svunit-v0.$1.tar.gz nosnhojn@frs.sourceforge.net:/home/frs/project/svunit
+mv svunit-v0.$1.tar.gz svunit-code
+cd -
+#git add svunit-v0.$1.tar.gz
+#git commit -m "release svunit-v0.$1.tar.gz"
+#git tag -a v0.$1 -m "v0.$1"
+#git push --tags
+#git push
+#scp svunit-v0.$1.tar.gz nosnhojn@frs.sourceforge.net:/home/frs/project/svunit
