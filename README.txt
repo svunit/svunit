@@ -53,9 +53,11 @@ Step-by-step instructions to get a first unit test going...
 >create_svunit.pl
 
 5) include one of the the simulator specific make files in your svunit.mk
->cat include $(SVUNIT_INSTALL)/bin/vcs.mk >> svunit.mk
+>echo 'include $(SVUNIT_INSTALL)/bin/vcs.mk' >> svunit.mk
 OR
->cat include $(SVUNIT_INSTALL)/bin/questa.mk >> svunit.mk
+>echo 'include $(SVUNIT_INSTALL)/bin/questa.mk' >> svunit.mk
+OR
+>echo 'include $(SVUNIT_INSTALL)/bin/ius.mk' >> svunit.mk
 
 6) add tests using the helper macros
 ---
