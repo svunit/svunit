@@ -51,7 +51,7 @@ sub CheckArgs() {
       $skip = 0;
     }
     else {
-      if ( @ARGV[$i] =~ /(-help)|(-h)/ ) {
+      if ( $ARGV[$i] =~ /(-help)|(-h)/ ) {
         PrintHelp();
       }
     }
