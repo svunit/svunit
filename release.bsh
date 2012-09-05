@@ -1,5 +1,12 @@
 #!/bin/bash
 
+################################################################
+#  Use this to release a new version of svunit to sourceforge  #
+#                                                              #
+#  eg. release.bsh 5                                           #
+#       - release version 0.5 of svunit                        #
+################################################################
+
 if [ "$1" == "" ]; then
   echo "Error: No release specified"
   exit 1
