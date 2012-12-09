@@ -1,0 +1,29 @@
+verify() {
+  for i in `seq ${#gold[@]}`; do
+    if [ "`diff -bB ${gold[$i-1]} ${output[$i-1]}`" != "" ]; then
+      echo ${output[$i-1]} failed;
+      exit 1;
+    fi
+  done
+}
+
+create_unit_test() {
+  create_unit_test.pl $1
+}
+
+setup() {
+  ./clean
+}
+
+translate_testsuite_gold() {
+  TS_TYPE=`pwd | sed -e "s/[\/-]/_/g"`_testsuite
+  TS_INST=`pwd | sed -e "s/[\/-]/_/g"`_ts
+  sed -e "s/TS_TYPE/$TS_TYPE/g" $1 | sed -e "s/TS_INST/$TS_INST/g" > .$1
+}
+
+translate_testrunner_gold() {
+  TS_TYPE=`pwd | sed -e "s/[\/-]/_/g"`_testsuite
+  TS_INST=`pwd | sed -e "s/[\/-]/_/g"`_ts
+  sed -e "s/TS_TYPE/$TS_TYPE/g" $1 | sed -e "s/TS_INST/$TS_INST/g" > .$1
+}
+
