@@ -27,3 +27,19 @@ translate_testrunner_gold() {
   sed -e "s/TS_TYPE/$TS_TYPE/g" $1 | sed -e "s/TS_INST/$TS_INST/g" > .$1
 }
 
+verify_file() {
+  if [ "`diff -bB $1 $2`" != "" ]; then
+    echo $1 failed;
+    exit 1;
+  fi
+}
+
+verify_testsuite() {
+  translate_testsuite_gold $1
+  verify_file .$1 .$TS_TYPE.sv
+}
+
+verify_testrunner() {
+  translate_testrunner_gold $1
+  verify_file .testrunner.gold .testrunner.sv
+}
