@@ -36,4 +36,5 @@ endif
 all : svunit.f sim
 
 svunit.f : FORCE
+	rm -f svunit.f
 	ln -sf $(SVUNIT_F) svunit.f

@@ -27,17 +27,15 @@
 import uvm_pkg::*;
 
 class apb_xaction extends uvm_sequence_item;
-  typedef enum int {
-                     READ  = 0,
-                     WRITE = 1
-                   } kind_t;
+  static const logic READ  = 0;
+  static const logic WRITE = 1;
  
-  rand kind_t       kind;
+  rand logic        kind;
   rand logic [31:0] addr;
   rand logic [31:0] data;
 
   `uvm_object_utils_begin(apb_xaction)
-    `uvm_field_enum(kind_t, kind, UVM_ALL_ON)
+    `uvm_field_int(kind, UVM_ALL_ON)
     `uvm_field_int(addr, UVM_ALL_ON)
     `uvm_field_int(data, UVM_ALL_ON)
   `uvm_object_utils_end

@@ -23,14 +23,11 @@ Don't forget to read the svunit-code/README for instructions on
 how to setup the SVUnit test environment and instructions for
 building your own tests.
 
-Step 1: export your UVM_HOME
->export UVM_HOME=<where ever your UVM lives>
-
-Step 2: build the svunit framework
+Step 1: build the svunit framework
 >create_svunit.pl
 
-Step 3a: run it with VCS
+Step 2a: run it with VCS
 >make
 
-Step 3b: run it with Questa
+Step 2b: run it with Questa
 >make SIMULATOR=QUESTA

@@ -28,12 +28,6 @@
 //   >export UVM_HOME=~/lib/uvm-1.1a
 //------------------------------------------------
 
-$UVM_HOME/src/uvm.sv
 $SVUNIT_INSTALL/svunit_base/uvm-mock/svunit_uvm_mock_pkg.sv
-+incdir+$UVM_HOME/src
 +incdir+$SVUNIT_INSTALL/svunit_base/uvm-mock
--R \
-   -sv_lib $UVM_HOME/lib/uvm_dpi32 \
-   +UVM_NO_RELNOTES \
--
 +define+RUN_SVUNIT_WITH_UVM
