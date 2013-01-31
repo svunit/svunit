@@ -67,5 +67,6 @@ CLEANFILES += csrc \
 							run.log \
 							simv \
 							simv.* \
+							ucli.key \
               vc_hdrs.h
 

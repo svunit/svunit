@@ -6,4 +6,5 @@ rm -rf .`pwd | sed -e 's/[\/-]/_/g'`_testsuite.sv \
        run.log \
        csrc \
        simv \
+       ucli.key \
        simv.daidir

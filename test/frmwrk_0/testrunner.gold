@@ -8,7 +8,7 @@ module testrunner();
   // These are the tests suites that we
   // want included in this testrunner
   //===================================
-  TS_TYPE TS_INST();
+  PWD_testsuite PWD_ts();
 
 
   //===================================
@@ -16,8 +16,8 @@ module testrunner();
   //===================================
   function void setup();
     svunit_tr = new(name);
-    TS_INST.setup();
-    svunit_tr.add_testsuite(TS_INST.svunit_ts);
+    PWD_ts.setup();
+    svunit_tr.add_testsuite(PWD_ts.svunit_ts);
   endfunction
 
   task run();

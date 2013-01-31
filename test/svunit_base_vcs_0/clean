@@ -4,5 +4,6 @@ rm -rf .`pwd | sed -e 's/[\/-]/_/g'`_testsuite.sv \
        run.log \
        simv \
        simv.daidir \
+       ucli.key \
        .svunit_top.sv \
        .testrunner.sv

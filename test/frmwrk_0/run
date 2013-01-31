@@ -13,5 +13,5 @@ make .svunit_top.sv
 
 verify_file       test_unit_test.gold test_unit_test.sv
 verify_testsuite  testsuite.gold
-verify_testrunner testrunner.gold
+verify_testrunner testrunner.gold .
 verify_file       svunit_top.gold .svunit_top.sv
