@@ -1,5 +1,14 @@
 v0.6
 ----
+* This release was completely broken so I removed it entirely
+
+v0.7
+----
+* it's harder than it looks. broken again.
+
+v0.8
+----
+* success :)
 * primarily a maintenence update (no real funcational additions)
 * refactored frmwork* unit tests (not included in the release package)
 * remove reliance on UVM_HOME for examples and use the build-in uvm libraries that come with simulators

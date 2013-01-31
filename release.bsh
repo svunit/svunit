@@ -18,15 +18,15 @@ if [ -e svunit-v0.$1.tar.gz ]; then
 fi
 
 cd ..
-tar cvf svunit-v0.$1.tar svunit-code/bin
-                         svunit-code/docs
-                         svunit-code/examples
-                         svunit-code/header.txt
-                         svunit-code/RELEASE.txt
-                         svunit-code/LICENSE.txt
-                         svunit-code/README.txt
-                         svunit-code/Setup.bsh
-                         svunit-code/Setup.csh
+tar cvf svunit-v0.$1.tar svunit-code/bin \
+                         svunit-code/docs \
+                         svunit-code/examples \
+                         svunit-code/header.txt \
+                         svunit-code/RELEASE.txt \
+                         svunit-code/LICENSE.txt \
+                         svunit-code/README.txt \
+                         svunit-code/Setup.bsh \
+                         svunit-code/Setup.csh \
                          svunit-code/svunit_base
 gzip svunit-v0.$1.tar
 mv svunit-v0.$1.tar.gz svunit-code
