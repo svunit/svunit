@@ -19,15 +19,6 @@
 //
 //###############################################################
 
-//------------------------------------------------
-// export the UVM_HOME to point to an available
-// version of UVM. For questa, this makefile
-// also requires you compile the dpi manually
-//------------------------------------------------
-// i.e
-//   >export UVM_HOME=~/lib/uvm-1.1a
-//------------------------------------------------
-
 $SVUNIT_INSTALL/svunit_base/uvm-mock/svunit_uvm_mock_pkg.sv
 +incdir+$SVUNIT_INSTALL/svunit_base/uvm-mock
 +define+CLK_PERIOD=5
