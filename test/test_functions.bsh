@@ -6,12 +6,6 @@ setup() {
   ./clean
 }
 
-translate_testsuite_gold() {
-  TS_TYPE=`pwd | sed -e "s/[\/-]/_/g"`_testsuite
-  TS_INST=`pwd | sed -e "s/[\/-]/_/g"`_ts
-  sed -e "s/TS_TYPE/$TS_TYPE/g" $1 | sed -e "s/TS_INST/$TS_INST/g" > .$1
-}
-
 verify_file() {
   if [ "`diff -bB $1 $2`" != "" ]; then
     echo $1 failed;
@@ -20,14 +14,9 @@ verify_file() {
 }
 
 verify_testsuite() {
-  if [ "$2" != "" ]; then
-    cd $2
-  fi
-  translate_testsuite_gold $1
-  verify_file .$1 .$TS_TYPE.sv
-  if [ "$2" != "" ]; then
-    cd -
-  fi
+  PWD=`pwd | sed -e "s/[\/-]/_/g"`
+  sed -e "s/PWD/$PWD/g" $1 > .$1
+  verify_file .$1 .${PWD}_testsuite.sv
 }
 
 verify_testrunner() {

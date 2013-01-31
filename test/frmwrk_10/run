@@ -1,8 +1,9 @@
+source ../test_functions.bsh
+
+setup
+
 # remove and create the unit_test
-if [ -e test_unit_test.sv ]; then
-	rm -rf test_unit_test.sv;
-fi
-create_unit_test.pl -overwrite -out test_unit_test.sv test.sv
+create_unit_test test.sv
 
 # create the Makefile
 create_svunit.pl
@@ -10,20 +11,6 @@ create_svunit.pl
 # build the svunit_top
 make .svunit_top.sv
 
-# massage the testsuite golden reference
-TS_TYPE=`pwd | sed -e "s/[\/-]/_/g"`_testsuite
-TS_INST=`pwd | sed -e "s/[\/-]/_/g"`_ts
-sed -e "s/TS_TYPE/$TS_TYPE/g" testsuite.gold | sed -e "s/TS_INST/$TS_INST/g" > .testsuite.gold
-sed -e "s/TS_TYPE/$TS_TYPE/g" testrunner.gold | sed -e "s/TS_INST/$TS_INST/g" > .testrunner.gold
-
-
-
-# do the checking
-gold=(  test_unit_test.gold    .testsuite.gold   .testrunner.gold )
-check=( test_unit_test.sv      .$TS_TYPE.sv      .testrunner.sv   )
-for i in {0..2}; do
-  if [ "`diff -bB ${gold[$i]} ${check[$i]}`" != "" ]; then
-    echo ${check[$i]} failed;
-    exit 1;
-  fi
-done
+verify_file       test_unit_test.gold test_unit_test.sv
+verify_testsuite  testsuite.gold
+verify_testrunner testrunner.gold .

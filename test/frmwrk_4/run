@@ -14,5 +14,5 @@ make .svunit_top.sv
 
 verify_file test_unit_test.gold test_unit_test.sv
 verify_testsuite testsuite.gold
-verify_testsuite testsuite.gold ./another_test
+cd ./another_test && verify_testsuite testsuite.gold && cd ..
 verify_testrunner testrunner.gold _another_test

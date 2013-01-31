@@ -1,7 +1,7 @@
 import svunit_pkg::*;
 
-module THIS_TYPE;
-  string name = "THIS_INST";
+module PWD_testsuite;
+  string name = "PWD_ts";
 
   //===================
   // Test suite master

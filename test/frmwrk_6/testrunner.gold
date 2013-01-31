@@ -8,10 +8,10 @@ module testrunner();
   // These are the tests suites that we
   // want included in this testrunner
   //===================================
-  THIS_TYPE THIS_INST();
-  SUB0_TYPE SUB0_INST();
-  SUB1A_TYPE SUB1A_INST();
-  SUB1_TYPE SUB1_INST();
+  PWD_testsuite PWD_ts();
+  PWD_subdir0_testsuite PWD_subdir0_ts();
+  PWD_subdir1_subdir1a_testsuite PWD_subdir1_subdir1a_ts();
+  PWD_subdir1_testsuite PWD_subdir1_ts();
 
 
   //===================================
@@ -19,14 +19,14 @@ module testrunner();
   //===================================
   function void setup();
     svunit_tr = new(name);
-    THIS_INST.setup();
-    svunit_tr.add_testsuite(THIS_INST.svunit_ts);
-    SUB0_INST.setup();
-    svunit_tr.add_testsuite(SUB0_INST.svunit_ts);
-    SUB1A_INST.setup();
-    svunit_tr.add_testsuite(SUB1A_INST.svunit_ts);
-    SUB1_INST.setup();
-    svunit_tr.add_testsuite(SUB1_INST.svunit_ts);
+    PWD_ts.setup();
+    svunit_tr.add_testsuite(PWD_ts.svunit_ts);
+    PWD_subdir0_ts.setup();
+    svunit_tr.add_testsuite(PWD_subdir0_ts.svunit_ts);
+    PWD_subdir1_subdir1a_ts.setup();
+    svunit_tr.add_testsuite(PWD_subdir1_subdir1a_ts.svunit_ts);
+    PWD_subdir1_ts.setup();
+    svunit_tr.add_testsuite(PWD_subdir1_ts.svunit_ts);
   endfunction
 
   task run();

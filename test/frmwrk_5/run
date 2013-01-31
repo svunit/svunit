@@ -1,3 +1,7 @@
+source ../test_functions.bsh
+
+setup
+
 # remove and create the unit_test
 create_unit_test.pl -overwrite -out ./another_test/test0_unit_test.sv ./another_test/test0.sv
 
@@ -14,23 +18,9 @@ fi
 # cd to the child dir
 cd another_test
 
-# build the svunit_top
+## build the svunit_top
 make .svunit_top.sv
 
-# massage the testsuite golden reference
-TS_TYPE=`pwd | sed -e "s/[\/-]/_/g"`_testsuite
-TS_INST=`pwd | sed -e "s/[\/-]/_/g"`_ts
-sed -e "s/TS_TYPE/$TS_TYPE/g" testsuite.gold | sed -e "s/TS_INST/$TS_INST/g" > .testsuite.gold
-sed -e "s/TS_TYPE/$TS_TYPE/g" testrunner.gold | sed -e "s/TS_INST/$TS_INST/g" > .testrunner.gold
-
-
-
-# do the checking
-gold=(  test0_unit_test.gold    .testsuite.gold   .testrunner.gold )
-check=( test0_unit_test.sv      .$TS_TYPE.sv      .testrunner.sv   )
-for i in {0..2}; do
-  if [ "`diff -bB ${gold[$i]} ${check[$i]}`" != "" ]; then
-    echo ${check[$i]} failed;
-    exit 1;
-  fi
-done
+verify_file test0_unit_test.gold test0_unit_test.sv
+verify_testsuite testsuite.gold
+verify_testrunner testrunner.gold
