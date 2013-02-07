@@ -13,3 +13,8 @@ v0.8
 * refactored frmwork* unit tests (not included in the release package)
 * remove reliance on UVM_HOME for examples and use the build-in uvm libraries that come with simulators
 * add thsi RELEASE.txt and update the release script
+
+v0.9
+----
+* more test refactoring
+* updates to the uvm examples that were broken since the upgrade to rm the uvm dpi compilation
