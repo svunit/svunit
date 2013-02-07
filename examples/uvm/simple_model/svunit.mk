@@ -21,6 +21,8 @@
 
 SIMULATOR := VCS
 
+FILELISTS+=svunit.f
+
 ifeq ($(SIMULATOR),VCS)
 SIM_EXE=vcsi
 SVUNIT_F=svunit-vcs.f

@@ -21,6 +21,8 @@
 
 SIMULATOR := QUESTA
 
+FILELISTS+=svunit.f
+
 ifeq ($(SIMULATOR),QUESTA)
 SVUNIT_F=svunit-questa.f
 include $(SVUNIT_INSTALL)/bin/questa.mk

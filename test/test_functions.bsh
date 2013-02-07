@@ -24,3 +24,30 @@ verify_testrunner() {
   sed -e "s/PWD/$PWD/g" $1 > .$1
   verify_file .testrunner.gold .testrunner.sv
 }
+
+expect_file() {
+  if [ ! -e $1 ]; then
+    echo $1 not created
+    exit 1
+  fi
+}
+
+expect_eq() {
+  if [ "$1" != "$2" ]; then
+    exit 1
+  fi
+}
+
+expect_return_code() {
+  if [ "$?" != "$1" ]; then
+    echo bad return code $?
+    exit 1
+  fi
+}
+
+expect_file_does_not_contain() {
+  grep "$1" $2 >/dev/null
+  if [ "$?" == "0" ]; then
+    exit 1;
+  fi
+}

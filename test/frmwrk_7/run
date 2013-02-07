@@ -1,18 +1,13 @@
+source ../test_functions.bsh
+
 # remove and create the unit_test
 
 # invoke create_svunit.pl (nothing should happen and should return 1)
 create_svunit.pl
-if [ "$?" != "1" ]; then
-  echo create_svunit.pl returned $?
-  exit 1
-fi
+expect_return_code 1
 
-# verify no files were created
-for f in `ls`; do
-  if [ "$f" != "clean" -a "$f" != "run" ]; then
-    echo bad file created: $f
-    exit 1
-  fi
-done
+# verify no new files were created
+files=(`ls`)
+expect_eq ${#files[*]} 2
 
 exit 0

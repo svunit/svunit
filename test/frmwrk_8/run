@@ -1,3 +1,5 @@
+source ../test_functions.bsh
+
 # remove and create the unit_test
 create_unit_test.pl -overwrite -out ./another_test/test0_unit_test.sv ./another_test/test0.sv
 
@@ -5,14 +7,7 @@ create_unit_test.pl -overwrite -out ./another_test/test0_unit_test.sv ./another_
 create_svunit.pl
 
 # confirm there's a makefile in both the test root and another_test
-if [ ! -e ./Makefile ]; then
-  echo ./Makefile not created
-  exit 1
-fi
-
-if [ ! -e ./another_test/Makefile ]; then
-  echo ./another_test/Makefile not created
-  exit 1
-fi
+expect_file ./Makefile
+expect_file ./another_test/Makefile
 
 exit 0
