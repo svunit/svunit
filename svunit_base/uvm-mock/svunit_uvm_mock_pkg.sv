@@ -19,6 +19,9 @@
 //
 //###############################################################
 
+`ifndef SVUNIT_UVM_MOCK_PKG
+`define SVUNIT_UVM_MOCK_PKG
+
 package svunit_uvm_mock_pkg;
   import uvm_pkg::*;
 
@@ -27,3 +30,5 @@ package svunit_uvm_mock_pkg;
   `include "svunit_idle_uvm_domain.sv"
   `include "svunit_uvm_test.sv"
 endpackage
+
+`endif
