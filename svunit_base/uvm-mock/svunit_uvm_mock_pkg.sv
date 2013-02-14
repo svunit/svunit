@@ -29,6 +29,7 @@ package svunit_uvm_mock_pkg;
   `include "uvm_macros.svh"
 
   `include "svunit_idle_uvm_domain.sv"
+  `include "svunit_uvm_report_mock_types.svh"
   `include "svunit_uvm_report_mock.sv"
   `include "svunit_uvm_test.sv"
 endpackage
