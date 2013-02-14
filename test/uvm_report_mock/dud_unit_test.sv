@@ -2,6 +2,7 @@ import svunit_pkg::*;
 import svunit_uvm_mock_pkg::*;
 
 `include "svunit_defines.svh"
+`include "dud_defines.svh"
 `include "dud.sv"
 typedef class c_dud_unit_test;
 
@@ -13,6 +14,7 @@ module dud_unit_test;
     unittest = new(name);
   endfunction
 endmodule
+
 
 class c_dud_unit_test extends svunit_testcase;
 
@@ -83,58 +85,9 @@ class c_dud_unit_test extends svunit_testcase;
     `FAIL_IF(!uvm_report_mock::verify_complete());
   `SVTEST_END(verify_complete)
 
-
-  `SVTEST(expect_error)
-    uvm_report_mock::expect_error();
-    `FAIL_IF(uvm_report_mock::expected_error_cnt() != 1);
-  `SVTEST_END(expect_error)
-
-
-  `SVTEST(actual_error)
-    uvm_report_mock::actual_error();
-    `FAIL_IF(uvm_report_mock::actual_error_cnt() != 1);
-  `SVTEST_END(actual_error)
-
-
-  `SVTEST(incomplete_w_expected_error)
-    uvm_report_mock::expect_error();
-    `FAIL_IF(uvm_report_mock::verify_complete());
-  `SVTEST_END(incomplete_w_expected_error)
-
-
-  `SVTEST(incomplete_w_actual_error)
-    uvm_report_mock::actual_error();
-    `FAIL_IF(uvm_report_mock::verify_complete());
-  `SVTEST_END(incomplete_w_actual_error)
-
-
-  `SVTEST(complete_w_actual_and_expected)
-    uvm_report_mock::actual_error();
-    uvm_report_mock::expect_error();
-    `FAIL_IF(!uvm_report_mock::verify_complete());
-  `SVTEST_END(complete_w_actual_and_expected)
-
-
-  `SVTEST(actual_string_expect_null)
-    uvm_report_mock::actual_error("MESSAGE", "ID");
-    uvm_report_mock::expect_error();
-    `FAIL_IF(!uvm_report_mock::verify_complete());
-  `SVTEST_END(actual_string_expect_null)
-
-
-  `SVTEST(actual_string_expect_wrong_message)
-    uvm_report_mock::actual_error("MESSAGE");
-    uvm_report_mock::expect_error("wrong_MESSAGE");
-    `FAIL_IF(uvm_report_mock::verify_complete());
-  `SVTEST_END(actual_string_expect_wrong_message)
-
-
-  `SVTEST(actual_string_expect_wrong_id)
-    uvm_report_mock::actual_error("MESSAGE", "ID");
-    uvm_report_mock::expect_error("MESSAGE", "wrong_ID");
-    `FAIL_IF(uvm_report_mock::verify_complete());
-  `SVTEST_END(actual_string_expect_wrong_id)
-  
+  // you'll find these defined in dud_defines.svh
+  `TEST_SET(error)
+  `TEST_SET(fatal)
 
   `SVUNIT_TESTS_END
 
