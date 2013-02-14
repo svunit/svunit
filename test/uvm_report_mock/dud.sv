@@ -7,9 +7,9 @@
 //  to you under the Apache License, Version 2.0 (the
 //  "License"); you may not use this file except in compliance
 //  with the License.  You may obtain a copy of the License at
-//  
+//
 //  http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 //  Unless required by applicable law or agreed to in writing,
 //  software distributed under the License is distributed on an
 //  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -19,18 +19,20 @@
 //
 //###############################################################
 
-`ifndef SVUNIT_UVM_MOCK_PKG
-`define SVUNIT_UVM_MOCK_PKG
+`ifndef __DUD_SV___
+`define __DUD_SV___
 
-package svunit_uvm_mock_pkg;
-  import uvm_pkg::*;
-  import svunit_pkg::*;
+`include "uvm_macros.svh"
 
-  `include "uvm_macros.svh"
+import uvm_pkg::*;
 
-  `include "svunit_idle_uvm_domain.sv"
-  `include "svunit_uvm_report_mock.sv"
-  `include "svunit_uvm_test.sv"
-endpackage
+class dud extends uvm_component;
+
+  function new(string name = "dud",
+               uvm_component parent = null);
+    super.new(name, parent);
+  endfunction
+
+endclass
 
 `endif
