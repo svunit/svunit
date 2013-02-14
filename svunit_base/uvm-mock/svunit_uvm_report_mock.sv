@@ -27,19 +27,54 @@ class uvm_report_mock;
   static function int actual_fatal_cnt();
   endfunction
 
-  static function void expect_error(string id="",
-                                    string message="");
+  static function void expect_error(string message="",
+                                    string id="");
     _expected_error_message.push_back(message);
     _expected_error_id.push_back(id);
   endfunction
 
-  static function void actual_error(string id="",
-                                    string message="");
+  static function void actual_error(string message="",
+                                    string id="");
     _actual_error_message.push_back(message);
     _actual_error_id.push_back(id);
   endfunction
 
   static function bit verify_complete(/*svunit_testcase tc = null*/);
-    return expected_error_cnt() == actual_error_cnt();
+    if (expected_error_cnt() != actual_error_cnt()) begin
+      return 0;
+    end
+
+    foreach (_expected_error_message[i]) begin
+      if (!error_message_match_at_idx(i)) return 0;
+      else if (!error_id_match_at_idx(i)) return 0;
+    end
+
+    return 1;
+  endfunction
+
+  local static function bit error_message_match_at_idx(int i);
+    if (expect_message_at_idx(i)) return message_matches_at_idx(i);
+    else return 1;
+  endfunction
+
+  local static function bit expect_message_at_idx(int i);
+    return (_expected_error_message[i] != "");
+  endfunction
+
+  local static function bit message_matches_at_idx(int i);
+    return (_expected_error_message[i] == _actual_error_message[i]);
+  endfunction
+
+  local static function bit error_id_match_at_idx(int i);
+    if (expect_id_at_idx(i)) return id_matches_at_idx(i);
+    else return 1;
+  endfunction
+
+  local static function bit expect_id_at_idx(int i);
+    return (_expected_error_id[i] != "");
+  endfunction
+
+  local static function bit id_matches_at_idx(int i);
+    return (_expected_error_id[i] == _actual_error_id[i]);
   endfunction
 endclass

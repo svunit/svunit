@@ -122,11 +122,18 @@ class c_dud_unit_test extends svunit_testcase;
   `SVTEST_END(actual_string_expect_null)
 
 
-// `SVTEST(actual_string_expect_wrong_message)
-//   uvm_report_mock::actual_error("MESSAGE", "ID");
-//   uvm_report_mock::expect_error("wrong_MESSAGE", "ID");
-//   `FAIL_IF(uvm_report_mock::verify_complete());
-// `SVTEST_END(actual_string_expect_wrong_message)
+  `SVTEST(actual_string_expect_wrong_message)
+    uvm_report_mock::actual_error("MESSAGE");
+    uvm_report_mock::expect_error("wrong_MESSAGE");
+    `FAIL_IF(uvm_report_mock::verify_complete());
+  `SVTEST_END(actual_string_expect_wrong_message)
+
+
+  `SVTEST(actual_string_expect_wrong_id)
+    uvm_report_mock::actual_error("MESSAGE", "ID");
+    uvm_report_mock::expect_error("MESSAGE", "wrong_ID");
+    `FAIL_IF(uvm_report_mock::verify_complete());
+  `SVTEST_END(actual_string_expect_wrong_id)
   
 
   `SVUNIT_TESTS_END
