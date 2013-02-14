@@ -37,3 +37,4 @@ git tag -a v0.$1 -m "v0.$1"
 git push --tags
 git push
 scp svunit-v0.$1.tar.gz nosnhojn@frs.sourceforge.net:/home/frs/project/svunit
+scp README.txt nosnhojn@frs.sourceforge.net:/home/frs/project/svunit
