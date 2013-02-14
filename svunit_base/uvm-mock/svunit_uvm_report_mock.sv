@@ -1,27 +1,30 @@
-class uvm_report_mock;
-  local static string _expected_error_message [$];
-  local static string _expected_error_id [$];
+class expected_actual_container;
+  string expected [$];
+  string actual [$];
+endclass
 
-  local static string _actual_error_message [$];
-  local static string _actual_error_id [$];
+
+class uvm_report_mock;
+  local static expected_actual_container error_messages = new();;
+  local static expected_actual_container error_ids = new();;
 
   static function void setup();
-    _expected_error_message.delete();
-    _expected_error_id.delete();
+    error_messages.expected.delete();
+    error_ids.expected.delete();
 
-    _actual_error_message.delete();
-    _actual_error_id.delete();
+    error_messages.actual.delete();
+    error_ids.actual.delete();
   endfunction
 
   static function int expected_error_cnt();
-    return _expected_error_message.size();
+    return error_messages.expected.size();
   endfunction
 
   static function int expected_fatal_cnt();
   endfunction
 
   static function int actual_error_cnt();
-    return _actual_error_message.size();
+    return error_messages.actual.size();
   endfunction
 
   static function int actual_fatal_cnt();
@@ -29,14 +32,14 @@ class uvm_report_mock;
 
   static function void expect_error(string message="",
                                     string id="");
-    _expected_error_message.push_back(message);
-    _expected_error_id.push_back(id);
+    error_messages.expected.push_back(message);
+    error_ids.expected.push_back(id);
   endfunction
 
   static function void actual_error(string message="",
                                     string id="");
-    _actual_error_message.push_back(message);
-    _actual_error_id.push_back(id);
+    error_messages.actual.push_back(message);
+    error_ids.actual.push_back(id);
   endfunction
 
   static function bit verify_complete(/*svunit_testcase tc = null*/);
@@ -44,7 +47,7 @@ class uvm_report_mock;
       return 0;
     end
 
-    foreach (_expected_error_message[i]) begin
+    foreach (error_messages.expected[i]) begin
       if (!error_message_match_at_idx(i)) return 0;
       else if (!error_id_match_at_idx(i)) return 0;
     end
@@ -58,11 +61,11 @@ class uvm_report_mock;
   endfunction
 
   local static function bit expect_message_at_idx(int i);
-    return (_expected_error_message[i] != "");
+    return (error_messages.expected[i] != "");
   endfunction
 
   local static function bit message_matches_at_idx(int i);
-    return (_expected_error_message[i] == _actual_error_message[i]);
+    return (error_messages.expected[i] == error_messages.actual[i]);
   endfunction
 
   local static function bit error_id_match_at_idx(int i);
@@ -71,10 +74,10 @@ class uvm_report_mock;
   endfunction
 
   local static function bit expect_id_at_idx(int i);
-    return (_expected_error_id[i] != "");
+    return (error_ids.expected[i] != "");
   endfunction
 
   local static function bit id_matches_at_idx(int i);
-    return (_expected_error_id[i] == _actual_error_id[i]);
+    return (error_ids.expected[i] == error_ids.actual[i]);
   endfunction
 endclass
