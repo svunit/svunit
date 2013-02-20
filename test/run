@@ -15,6 +15,9 @@ svunit_base_tests=`ls -d svunit_base_*`
 declare -a example_tests
 example_tests=`ls -d example_*`
 
+declare -a uvm_mock_tests
+example_tests=`ls -d uvm_*_mock`
+
 
 # define the concatentated master list
 declare -a testlist

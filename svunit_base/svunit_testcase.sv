@@ -62,6 +62,13 @@ virtual class svunit_testcase;
   local results_t success;
 
 
+  /*
+    Variable: is_running
+    1 is somewhere between setup and teardown, 1 otherwise
+  */
+  protected bit is_running;
+
+
   extern function new(string name);
 
   extern virtual protected task setup();

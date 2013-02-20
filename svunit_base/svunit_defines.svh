@@ -30,7 +30,7 @@
 `ifndef FAIL_IF
 `define FAIL_IF(exp) \
   if (fail_if(exp, `"exp`", `__FILE__, `__LINE__)) begin \
-    give_up(); \
+    if (is_running) give_up(); \
   end
 `endif
 
@@ -136,6 +136,7 @@
 \
     `INFO($psprintf(`"%s::_NAME_::RUNNING`", name)); \
     setup(); \
+    is_running = 1; \
     fork \
       begin \
         fork \
@@ -158,5 +159,6 @@
         disable fork; \
       end \
     join \
+    is_running = 0; \
     teardown(); \
   end : _NAME_
