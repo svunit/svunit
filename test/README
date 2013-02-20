@@ -53,3 +53,8 @@ Example tests
 example_uvm_simple_model       run the uvm simple model example
 example_uvm_uvm_express        run the uvm express example
 example_modules_apb_slave      run the modules apb slave example
+
+----------
+Mock tests
+----------
+mock_uvm_report                unit tests for the svunit_uvm_report_mock
