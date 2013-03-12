@@ -58,8 +58,15 @@ class c_dut_unit_test extends svunit_testcase;
   //===================================
   task teardown();
     super.teardown();
-    /* Place Teardown Code Here */
+    `FAIL_IF(1);
   endtask
+
+  `SVUNIT_TESTS_BEGIN
+
+  `SVTEST(strictly_so_the_teardown_is_called)
+  `SVTEST_END(strictly_so_the_teardown_is_called)
+
+  `SVUNIT_TESTS_END
 
 endclass
 

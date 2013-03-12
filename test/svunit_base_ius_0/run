@@ -28,4 +28,24 @@ if [ "$?" != "0" ]; then
   exit 1;
 fi
 
+grep "dut_ut::strictly_so_the_teardown_is_called::FAILED" run.log >/dev/null
+if [ "$?" != "0" ]; then
+  exit 1;
+fi
+
+grep "dut_ut::FAILED" run.log >/dev/null
+if [ "$?" != "0" ]; then
+  exit 1;
+fi
+
+grep "ts::FAILED" run.log >/dev/null
+if [ "$?" != "0" ]; then
+  exit 1;
+fi
+
+grep "Testrunner::FAILED" run.log >/dev/null
+if [ "$?" != "0" ]; then
+  exit 1;
+fi
+
 exit 0

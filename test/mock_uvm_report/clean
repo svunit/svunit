@@ -6,6 +6,6 @@ rm -rf csrc \
        simv.vdb \
        ucli.key \
        vc_hdrs.h \
-       ._home_njohnson_sandbox_svunit_code_test_uvm_report_mock_testsuite.sv \
+       .*testsuite.sv \
        .svunit_top.sv \
        .testrunner.sv

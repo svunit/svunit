@@ -45,7 +45,7 @@
 `ifndef FAIL_UNLESS
 `define FAIL_UNLESS(exp) \
   if (fail_unless(exp, `"exp`", `__FILE__, `__LINE__)) begin \
-    give_up(); \
+    if (is_running) give_up(); \
   end
 `endif
 
@@ -133,6 +133,7 @@
     integer local_error_count = get_error_count(); \
     string fileName; \
     int lineNumber; \
+    bit is_running = 0; \
 \
     `INFO($psprintf(`"%s::_NAME_::RUNNING`", name)); \
     setup(); \
@@ -147,13 +148,11 @@
   END an svunit test within an SVUNIT_TEST_BEGIN/END block
 */
 `define SVTEST_END(_NAME_) \
-            `INFO($psprintf(`"%s::_NAME_::PASSED`", name)); \
           end \
           begin \
             if (get_error_count() == local_error_count) begin \
               wait_for_error(); \
             end \
-            `INFO($psprintf(`"%s::_NAME_::FAILED`", name)); \
           end \
         join_any \
         disable fork; \
@@ -161,4 +160,9 @@
     join \
     is_running = 0; \
     teardown(); \
+    if (get_error_count() == local_error_count) \
+      `INFO($psprintf(`"%s::_NAME_::PASSED`", name)); \
+    else \
+      `INFO($psprintf(`"%s::_NAME_::FAILED`", name)); \
+    update_exit_status(); \
   end : _NAME_

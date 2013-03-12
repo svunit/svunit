@@ -79,6 +79,8 @@ virtual class svunit_testcase;
 
   extern virtual protected task teardown();
 
+  extern virtual protected function void update_exit_status();
+
   extern task run();
   extern function void report();
 
@@ -333,10 +335,13 @@ endtask
   Registers test as passed or failed
 */
 task svunit_testcase::teardown();
+endtask
+
+
+function void svunit_testcase::update_exit_status();
   if (error_count == 0)
     success = PASS;
   else
     success = FAIL;
-endtask
-
+endfunction
 
