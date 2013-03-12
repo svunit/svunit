@@ -61,6 +61,35 @@ if [ "$?" != "0" ]; then
   exit 1;
 fi
 
+
+###################
+# RUN WITH IUS #
+###################
+
+which irun >/dev/null
+if [ "$?" != "0" ]; then
+  popd
+  exit 1;
+fi
+
+# build and run svunit with qverilog
+make SIMULATOR=IUS
+
+# check the log output for a PASS from the testrunner
+if [ ! -e run.log ]; then
+  echo run.log does not exist
+  popd
+  exit 1;
+fi
+
+grep "INFO:  \[.*\]\[testrunner\]: Testrunner::PASSED" run.log >/dev/null
+
+if [ "$?" != "0" ]; then
+  echo PASS not detected from Testrunner in run.log
+  popd
+  exit 1;
+fi
+
 popd
 
 exit 0

@@ -36,6 +36,12 @@ include $(SVUNIT_INSTALL)/bin/questa.mk
 endif
 
 
+ifeq ($(SIMULATOR),IUS)
+SVUNIT_F=svunit-ius.f
+include $(SVUNIT_INSTALL)/bin/ius.mk
+endif
+
+
 all : svunit.f sim
 
 svunit.f : FORCE

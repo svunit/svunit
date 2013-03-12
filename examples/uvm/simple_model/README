@@ -31,3 +31,6 @@ Step 2a: run it with VCS
 
 Step 2b: run it with Questa
 >make SIMULATOR=QUESTA
+
+Step 2c: run it with IUS
+>make SIMULATOR=IUS
