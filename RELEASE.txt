@@ -18,3 +18,7 @@ v0.9
 ----
 * more test refactoring
 * updates to the uvm examples that were broken since the upgrade to rm the uvm dpi compilation
+
+v0.10
+-----
+* initial release of the mock_uvm_report object
