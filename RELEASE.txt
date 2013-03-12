@@ -22,3 +22,8 @@ v0.9
 v0.10
 -----
 * initial release of the mock_uvm_report object
+
+v0.11
+-----
+* confirm ius support (close ticket #31)
+* add ius support to the uvm examples
