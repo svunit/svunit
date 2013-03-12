@@ -33,6 +33,16 @@ class basic extends uvm_component;
     super.new(name, parent);
   endfunction
 
+
+  function void actual_error();
+    `uvm_error("my_basic", "error message");
+  endfunction
+
+
+  function void actual_fatal();
+    `uvm_fatal("my_basic", "fatal message");
+  endfunction
+
 endclass
 
 `endif

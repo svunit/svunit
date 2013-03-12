@@ -5,23 +5,23 @@ Test descriptions
 ----------------------------------------------------------
 Tests for the scripting that generates the svunit framework
 ----------------------------------------------------------
-frmwrk_0:  generate a basic unit test for a class
-frmwrk_1:  generate a basic unit test for a class with a different name than the file name
-frmwrk_2:  test the comment parsing with one basic unit test for a class that has a bunch of comments mixed in. also filtering of 'virtual' keyword (ticket #29)
-frmwrk_3:  test multiple classes (2) in the same file as well as 1 virtual class
-frmwrk_4:  test 2 basic unit tests for a class in different dirs with classes that are in different dirs
-frmwrk_5:  test one basic unit test in a child dir but none in the parent
-frmwrk_6:  testrunner created from 3 levels of test hierarchy
-frmwrk_7:  "no unit tests" message delivered and create_svunit.pl returns 1 for multi-level hierarchy without unit tests (see ticket #5)
-frmwrk_8:  multi-level hierarchy, class unit tests in child dirs but not the test root dir (see ticket #5)
-frmwrk_9:  multi-level hierarchy, class unit tests in some but not all child dirs and in the test root dir (see ticket #5)
-frmwrk_10: generate a basic unit test for a module
-frmwrk_11: generate a basic unit test for a interface
-frmwrk_12: verify create_unit_test.pl output file extension is .sv regardless of input file extension
-frmwrk_13: verify create_unit_test.pl output goes to `pwd`
-frmwrk_14: verify the Setup.csh, create_unit_test.pl and create_svunit.pl all run in csh and tcsh
-frmwrk_15: verify svunit_unit_test.pl -out switch
-frmwrk_16: verify unit test templates are created properly for interfaces declared as 'automatic'
+frmwrk_0:                generate a basic unit test for a class
+frmwrk_1:                generate a basic unit test for a class with a different name than the file name
+frmwrk_2:                test the comment parsing with one basic unit test for a class that has a bunch of comments mixed in. also filtering of 'virtual' keyword (ticket #29)
+frmwrk_3:                test multiple classes (2) in the same file as well as 1 virtual class
+frmwrk_4:                test 2 basic unit tests for a class in different dirs with classes that are in different dirs
+frmwrk_5:                test one basic unit test in a child dir but none in the parent
+frmwrk_6:                testrunner created from 3 levels of test hierarchy
+frmwrk_7:                "no unit tests" message delivered and create_svunit.pl returns 1 for multi-level hierarchy without unit tests (see ticket #5)
+frmwrk_8:                multi-level hierarchy, class unit tests in child dirs but not the test root dir (see ticket #5)
+frmwrk_9:                multi-level hierarchy, class unit tests in some but not all child dirs and in the test root dir (see ticket #5)
+frmwrk_10:               generate a basic unit test for a module
+frmwrk_11:               generate a basic unit test for a interface
+frmwrk_12:               verify create_unit_test.pl output file extension is .sv regardless of input file extension
+frmwrk_13:               verify create_unit_test.pl output goes to `pwd`
+frmwrk_14:               verify the Setup.csh, create_unit_test.pl and create_svunit.pl all run in csh and tcsh
+frmwrk_15:               verify svunit_unit_test.pl -out switch
+frmwrk_16:               verify unit test templates are created properly for interfaces declared as 'automatic'
 
 ---------------------------------
 Tests for the simulator makefiles
@@ -43,9 +43,9 @@ sim_vcs_filelist_0:                verify file lists are added properly with vcs
 -------------------
 SVUnit base testing
 -------------------
-svunit_base_vcs_0:    test the use of the svunit logging macros with vcs
-svunit_base_questa_0: test the use of the svunit logging macros with questa
-svunit_base_ius_0:    test the use of the svunit logging macros with ius
+svunit_base_vcs_0:                 test the use of the svunit logging macros with vcs
+svunit_base_questa_0:              test the use of the svunit logging macros with questa
+svunit_base_ius_0:                 test the use of the svunit logging macros with ius
 
 -------------
 Example tests
