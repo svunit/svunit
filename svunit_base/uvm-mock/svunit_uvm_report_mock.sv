@@ -1,18 +1,3 @@
-`ifdef uvm_error
-`undef uvm_error
-`endif
-
-`ifdef uvm_fatal
-`undef uvm_fatal
-`endif
-
-`define uvm_error(ID,MSG) \
-uvm_report_mock::actual_error(MSG, ID);
-
-`define uvm_fatal(ID,MSG) \
-uvm_report_mock::actual_fatal(MSG, ID);
-
-
 class uvm_report_mock;
   local static svunit_uvm_report_mock_expected_actual_container error_messages = new();;
   local static svunit_uvm_report_mock_expected_actual_container error_ids = new();;
@@ -68,8 +53,9 @@ class uvm_report_mock;
     fatal_ids.actual.push_back(id);
   endfunction
 
-  static function bit verify_complete(/*svunit_testcase tc = null*/);
+  static function bit verify_complete();
     return (error_messages.verify_complete() && error_ids.verify_complete() &&
             fatal_messages.verify_complete() && fatal_ids.verify_complete());
   endfunction
+
 endclass
