@@ -22,8 +22,6 @@
 `ifndef __DUD_SV___
 `define __DUD_SV___
 
-`include "uvm_macros.svh"
-
 import uvm_pkg::*;
 
 class basic extends uvm_component;

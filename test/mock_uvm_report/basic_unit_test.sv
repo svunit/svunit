@@ -3,8 +3,11 @@ import svunit_uvm_mock_pkg::*;
 
 `include "svunit_defines.svh"
 `include "test_defines.svh"
-`include "basic.sv"
+
+`include "uvm_macros.svh"
 `include "svunit_uvm_mock_defines.sv"
+
+`include "basic.sv"
 typedef class c_basic_unit_test;
 
 module basic_unit_test;
