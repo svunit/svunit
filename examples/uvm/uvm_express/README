@@ -27,7 +27,7 @@ Step 1: build the svunit framework
 >create_svunit.pl
 
 Step 2a: run it with questa
->make
+>make SIMULATOR=QUESTA
 
 Step 2b: or run it with vcs
 >make SIMULATOR=VCS
