@@ -1,9 +1,9 @@
 class uvm_report_mock;
-  local static svunit_uvm_report_mock_expected_actual_container error_messages = new();;
-  local static svunit_uvm_report_mock_expected_actual_container error_ids = new();;
+  local static svunit_uvm_report_mock_expected_actual_container error_messages = new();
+  local static svunit_uvm_report_mock_expected_actual_container error_ids = new();
 
-  local static svunit_uvm_report_mock_expected_actual_container fatal_messages = new();;
-  local static svunit_uvm_report_mock_expected_actual_container fatal_ids = new();;
+  local static svunit_uvm_report_mock_expected_actual_container fatal_messages = new();
+  local static svunit_uvm_report_mock_expected_actual_container fatal_ids = new();
 
   static function void setup();
     error_messages.delete();

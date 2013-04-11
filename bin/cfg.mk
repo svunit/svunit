@@ -84,7 +84,7 @@ TESTSUITE_ARGS += -overwrite
 TESTSUITE_ARGS +=  $(foreach UNITTEST, $(UNITTESTS), -add $(UNITTEST))
 TESTSUITE_ARGS += -out $(notdir $@)
 $(TESTDIR)/%_testsuite.sv : $(UNITTESTS)
-	create_testsuite.pl $(TESTSUITE_ARGS)
+	@create_testsuite.pl $(TESTSUITE_ARGS)
 
 testsuites : $(TESTSUITES)
 
