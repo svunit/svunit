@@ -23,7 +23,7 @@
   Class: svunit_testcase
   Base class for the unit testcase
 */
-virtual class svunit_testcase;
+class svunit_testcase;
 
 
   /*
@@ -71,13 +71,13 @@ virtual class svunit_testcase;
 
   extern function new(string name);
 
-  extern virtual protected task setup();
+  extern virtual task setup();
 
   extern virtual protected task run_test();
 
   extern virtual protected task svunit_tests();
 
-  extern virtual protected task teardown();
+  extern virtual task teardown();
 
   extern virtual protected function void update_exit_status();
 

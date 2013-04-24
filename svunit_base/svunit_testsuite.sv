@@ -176,7 +176,16 @@ endtask
   This task reports the results for the unit tests
 */
 task svunit_testsuite::report();
-  int i;
+  foreach(list_of_svunits[i])
+  begin
+    if (list_of_svunits[i].get_runstatus() == TRUE) begin
+      list_of_svunits[i].report();
+      if (list_of_svunits[i].get_results() == FAIL) begin
+        success = FAIL;
+      end
+    end
+  end
+
   if (success == PASS) `INFO($psprintf("%0s::PASSED", name));
   else                 `INFO($psprintf("%0s::FAILED", name));
 endtask

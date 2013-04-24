@@ -263,28 +263,24 @@ sub CreateClassUnitTest() {
     print OUTFILE "`include \"" . basename($testname) . "\"\n";
     $includes_already_printed = 1;
   }
-  print OUTFILE "typedef class c_$uut\_unit_test;\n";
   print OUTFILE "\n";
-  print OUTFILE "module $uut\_unit_test;\n";
-  print OUTFILE "  c_$uut\_unit_test unittest;\n";
+  print OUTFILE "import svunit_pkg::\*;\n\n";
+  print OUTFILE "\n";
+  print OUTFILE "module $uut\_unit_test;\n\n";
   print OUTFILE "  string name = \"$uut\_ut\";\n";
+  print OUTFILE "  svunit_testcase svunit_ut;\n";
   print OUTFILE "\n";
-  print OUTFILE "  function void setup();\n";
-  print OUTFILE "    unittest = new(name);\n";
-  print OUTFILE "  endfunction\n";
-  print OUTFILE "endmodule\n";
   print OUTFILE "\n";
-  print OUTFILE "class c_$uut\_unit_test extends svunit_testcase;\n\n";
   print OUTFILE "  //===================================\n";
-  print OUTFILE "  // This is the class that we're \n";
+  print OUTFILE "  // This is the UUT that we're \n";
   print OUTFILE "  // running the Unit Tests on\n";
   print OUTFILE "  //===================================\n";
   print OUTFILE "  $uut my_$uut;\n\n\n";
   print OUTFILE "  //===================================\n";
-  print OUTFILE "  // Constructor\n";
+  print OUTFILE "  // Build\n";
   print OUTFILE "  //===================================\n";
-  print OUTFILE "  function new(string name);\n";
-  print OUTFILE "    super.new(name);\n";
+  print OUTFILE "  function build();\n";
+  print OUTFILE "    svunit_ut = new(name);\n";
   print OUTFILE "\n";
   print OUTFILE "    my_$uut = new(\/\* New arguments if needed \*\/);\n";
   print OUTFILE "  endfunction\n\n\n";
@@ -292,14 +288,14 @@ sub CreateClassUnitTest() {
   print OUTFILE "  // Setup for running the Unit Tests\n";
   print OUTFILE "  //===================================\n";
   print OUTFILE "  task setup();\n";
-  print OUTFILE "    super.setup();\n";
+  print OUTFILE "    svunit_ut.setup();\n";
   print OUTFILE "    \/\* Place Setup Code Here \*\/\n  endtask\n\n\n";
   print OUTFILE "  //===================================\n";
   print OUTFILE "  // Here we deconstruct anything we \n";
   print OUTFILE "  // need after running the Unit Tests\n";
   print OUTFILE "  //===================================\n";
   print OUTFILE "  task teardown();\n";
-  print OUTFILE "    super.teardown();\n";
+  print OUTFILE "    svunit_ut.teardown();\n";
   print OUTFILE "    \/\* Place Teardown Code Here \*\/\n";
   print OUTFILE "  endtask\n\n\n";
   print OUTFILE "  //===================================\n";
@@ -318,7 +314,7 @@ sub CreateClassUnitTest() {
   print OUTFILE "  `SVUNIT_TESTS_BEGIN\n\n\n\n";
   print OUTFILE "  `SVUNIT_TESTS_END\n\n";
 
-  print OUTFILE "endclass\n\n\n";
+  print OUTFILE "endmodule\n";
 }
 
 
@@ -500,7 +496,6 @@ sub PrintHeading() {
     #}
     print OUTFILE $line;
   }
-  print OUTFILE "import svunit_pkg::\*;\n\n";
 }
 
 
