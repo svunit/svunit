@@ -2,11 +2,8 @@ import svunit_pkg::*;
 
 module PWD_testsuite;
   string name = "PWD_ts";
-
-  //===================
-  // Test suite master
-  //===================
   svunit_testsuite svunit_ts;
+
 
   //===================================
   // These are the unit tests that we
@@ -16,13 +13,22 @@ module PWD_testsuite;
 
 
   //===================================
-  // Setup
+  // Build
   //===================================
-  function void setup();
-    test_ut.setup();
+  function void build();
+    test_ut.build();
     svunit_ts = new(name);
-    svunit_ts.add_testcase(test_ut.unittest);
+    svunit_ts.add_testcase(test_ut.svunit_ut);
   endfunction
+
+
+  //===================================
+  // Run
+  //===================================
+  task run();
+    test_ut.run();
+    svunit_ts.report();
+  endtask
 
 endmodule
 

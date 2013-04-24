@@ -1,19 +1,12 @@
-import svunit_pkg::*;
-
 `include "svunit_defines.svh"
 `include "test.sv"
-typedef class c_test_unit_test;
+
+import svunit_pkg::*;
 
 module test_unit_test;
-  c_test_unit_test unittest;
   string name = "test_ut";
+  svunit_testcase svunit_ut;
 
-  function void setup();
-    unittest = new(name);
-  endfunction
-endmodule
-
-class c_test_unit_test extends svunit_testcase;
 
   //===================================
   // This is the class that we're 
@@ -23,10 +16,10 @@ class c_test_unit_test extends svunit_testcase;
 
 
   //===================================
-  // Constructor
+  // Build
   //===================================
-  function new(string name);
-    super.new(name);
+  function build();
+    svunit_ut = new(name);
 
     my_test = new(/* New arguments if needed */);
   endfunction
@@ -36,7 +29,7 @@ class c_test_unit_test extends svunit_testcase;
   // Setup for running the Unit Tests
   //===================================
   task setup();
-    super.setup();
+    svunit_ut.setup();
     /* Place Setup Code Here */
   endtask
 
@@ -46,7 +39,7 @@ class c_test_unit_test extends svunit_testcase;
   // need after running the Unit Tests
   //===================================
   task teardown();
-    super.teardown();
+    svunit_ut.teardown();
     /* Place Teardown Code Here */
   endtask
 
@@ -67,9 +60,6 @@ class c_test_unit_test extends svunit_testcase;
   `SVUNIT_TESTS_BEGIN
 
 
-
   `SVUNIT_TESTS_END
 
-endclass
-
-
+endmodule

@@ -4,23 +4,52 @@ module testrunner();
   string name = "testrunner";
   svunit_testrunner svunit_tr;
 
-  //===================================
-  // These are the tests suites that we
+
+  //==================================
+  // These are the test suites that we
   // want included in this testrunner
-  //===================================
+  //==================================
   PWD_testsuite PWD_ts();
 
 
   //===================================
-  // Setup
+  // Main
   //===================================
-  function void setup();
+  initial
+  begin
+    build();
+    run();
+    $finish();
+  end
+
+
+  //===================================
+  // Build
+  //===================================
+  function void build();
     svunit_tr = new(name);
-    PWD_ts.setup();
+    PWD_ts.build();
     svunit_tr.add_testsuite(PWD_ts.svunit_ts);
   endfunction
 
+
+  //===================================
+  // Run
+  //===================================
   task run();
-    svunit_tr.run();
+    PWD_ts.run();
+    svunit_tr.report();
   endtask
+
+
+  //===================================
+  // UVM test hooks
+  //===================================
+  `ifdef RUN_SVUNIT_WITH_UVM
+    import svunit_uvm_mock_pkg::*;
+    initial
+    begin
+      svunit_uvm_test_inst("svunit_uvm_test");
+    end
+  `endif
 endmodule
