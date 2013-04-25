@@ -196,21 +196,7 @@ endtask
   Main Run Task of the Test Suite
 */
 task svunit_testsuite::run();
-  if (run_suite == TRUE)
-  begin
-    `LF;
-    `INFO($psprintf("%0s::RUNNING", name));
-    foreach(list_of_svunits[i])
-    begin
-      if (list_of_svunits[i].get_runstatus() == TRUE) begin
-        load_testcase(list_of_svunits[i]);
-        list_of_svunits[i].report();
-        if (list_of_svunits[i].get_results() == FAIL) begin
-          success = FAIL;
-        end
-      end
-    end
-  end
+  `INFO($psprintf("%0s::RUNNING", name));
 endtask
 
 

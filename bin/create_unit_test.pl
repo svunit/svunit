@@ -252,7 +252,11 @@ sub CreateUnitTest() {
   print OUTFILE "  // This is the UUT that we're \n";
   print OUTFILE "  // running the Unit Tests on\n";
   print OUTFILE "  //===================================\n";
-  print OUTFILE "  $uut my_$uut;\n\n\n";
+  if ($processing_class) {
+    print OUTFILE "  $uut my_$uut;\n\n\n";
+  } else {
+    print OUTFILE "  $uut my_$uut();\n\n\n";
+  }
   print OUTFILE "  //===================================\n";
   print OUTFILE "  // Build\n";
   print OUTFILE "  //===================================\n";

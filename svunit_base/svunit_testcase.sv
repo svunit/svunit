@@ -79,7 +79,7 @@ class svunit_testcase;
 
   extern virtual task teardown();
 
-  extern virtual protected function void update_exit_status();
+  extern virtual function void update_exit_status();
 
   extern task run();
   extern function void report();
@@ -87,12 +87,12 @@ class svunit_testcase;
   extern local function void pass(string s);
   extern local function void fail(string s);
 
-  extern protected task wait_for_error();
-  extern protected function integer get_error_count();
-  extern protected task give_up();
+  extern task wait_for_error();
+  extern function integer get_error_count();
+  extern task give_up();
 
-  extern protected function bit fail_if(bit b, string s, string f, int l);
-  extern protected function bit fail_unless(bit b, string s, string f, int l);
+  extern function bit fail_if(bit b, string s, string f, int l);
+  extern function bit fail_unless(bit b, string s, string f, int l);
 
   extern function void enable_verbose();
   extern function void disable_verbose();

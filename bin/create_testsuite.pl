@@ -239,11 +239,12 @@ sub CreateTestSuite() {
   print OUTFILE "  // Run\n";
   print OUTFILE "  //===================================\n";
   print OUTFILE "  task run();\n";
+  print OUTFILE "    svunit_ts.run();\n";
   foreach $item ( @instance_names ) {
     print OUTFILE "    $item.run();\n";
     $cnt++;
   }
-
+  print OUTFILE "    svunit_ts.report();\n";
   print OUTFILE "  endtask\n\n";
 
   print OUTFILE "endmodule\n";

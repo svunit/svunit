@@ -1,32 +1,25 @@
-import svunit_pkg::*;
-
 `include "svunit_defines.svh"
 `include "dut.sv"
-typedef class c_dut_unit_test;
+
+import svunit_pkg::*;
 
 module dut_unit_test;
-  c_dut_unit_test unittest;
   string name = "dut_ut";
+  svunit_testcase svunit_ut;
 
+
+  //===================================
+  // This is the UUT that we're 
+  // running the Unit Tests on
+  //===================================
   dut my_dut();
 
-  function void setup();
-    unittest = new(name, my_dut);
-  endfunction
-endmodule
-
-class c_dut_unit_test extends svunit_testcase;
-
-  virtual dut my_dut;
 
   //===================================
-  // Constructor
+  // Build
   //===================================
-  function new(string name,
-               virtual dut my_dut);
-    super.new(name);
-
-    this.my_dut = my_dut;
+  function void build();
+    svunit_ut = new(name);
   endfunction
 
 
@@ -34,7 +27,7 @@ class c_dut_unit_test extends svunit_testcase;
   // Setup for running the Unit Tests
   //===================================
   task setup();
-    super.setup();
+    svunit_ut.setup();
     /* Place Setup Code Here */
   endtask
 
@@ -44,7 +37,7 @@ class c_dut_unit_test extends svunit_testcase;
   // need after running the Unit Tests
   //===================================
   task teardown();
-    super.teardown();
+    svunit_ut.teardown();
     /* Place Teardown Code Here */
   endtask
 
@@ -76,13 +69,10 @@ class c_dut_unit_test extends svunit_testcase;
 
     // this should have the "running" and "fail" logged w/1 error
     `SVTEST(third_test)
-      int beam = 4;
+      static int beam = 4;
       `FAIL_UNLESS(beam == 1);
       `FAIL_IF(beam != 2);
     `SVTEST_END(third_test)
-
   `SVUNIT_TESTS_END
 
-endclass
-
-
+endmodule

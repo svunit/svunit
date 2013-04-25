@@ -43,7 +43,7 @@ if [ "$?" != "0" ]; then
   echo error 5
   exit 1
 fi
-grep "ERROR: \[0\]\[dut_ut\]: fail_if: 1 (at .*dut_unit_test.sv line:73): FAIL" run.log >/dev/null
+grep "ERROR: \[0\]\[dut_ut\]: fail_if: 1 (at .*dut_unit_test.sv line:66): FAIL" run.log >/dev/null
 if [ "$?" != "0" ]; then
   echo error 6
   exit 1
@@ -58,7 +58,7 @@ if [ "$?" != "0" ]; then
   echo error 8
   exit 1
 fi
-grep "ERROR: \[0\]\[dut_ut\]: fail_unless: beam == 1 (at .*dut_unit_test.sv line:80): FAIL" run.log >/dev/null
+grep "ERROR: \[0\]\[dut_ut\]: fail_unless: beam == 1 (at .*dut_unit_test.sv line:73): FAIL" run.log >/dev/null
 if [ "$?" != "0" ]; then
   echo error 9
   exit 1

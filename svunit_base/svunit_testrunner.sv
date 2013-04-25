@@ -125,7 +125,6 @@ task svunit_testrunner::report();
   begin
     if (list_of_suites[i].get_runstatus() == TRUE)
     begin
-      list_of_suites[i].report();
       if (list_of_suites[i].get_results() == FAIL)
         success = FAIL;
     end

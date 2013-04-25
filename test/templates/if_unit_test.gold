@@ -12,7 +12,7 @@ module MYNAME_unit_test;
   // This is the UUT that we're 
   // running the Unit Tests on
   //===================================
-  MYNAME my_MYNAME;
+  MYNAME my_MYNAME();
 
 
   //===================================

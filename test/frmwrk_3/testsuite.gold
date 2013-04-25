@@ -28,8 +28,10 @@ module PWD_testsuite;
   // Run
   //===================================
   task run();
+    svunit_ts.run();
     test0_ut.run();
     test1_ut.run();
+    svunit_ts.report();
   endtask
 
 endmodule
