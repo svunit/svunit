@@ -6,13 +6,7 @@ setup
 create_unit_test test_if.sv
 create_unit_test test_if2.sv
 
-# create the Makefile
-create_svunit.pl
-
-# build the svunit_top
-make .svunit_top.sv
-
-verify_file       test_if_unit_test.gold test_if_unit_test.sv
-verify_file       test_if2_unit_test.gold test_if2_unit_test.sv
-verify_testsuite  testsuite.gold
-verify_testrunner testrunner.gold .
+golden_if_unit_test test_if test_if
+golden_if_unit_test test_if2 test_if2
+verify_file         test_if_unit_test.gold test_if_unit_test.sv
+verify_file         test_if2_unit_test.gold test_if2_unit_test.sv
