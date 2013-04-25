@@ -24,31 +24,25 @@ import svunit_uvm_mock_pkg::*;
 
 `include "svunit_defines.svh"
 `include "apb_coverage.sv"
-typedef class c_apb_coverage_unit_test;
 
 module apb_coverage_unit_test;
-  c_apb_coverage_unit_test unittest;
+
   string name = "apb_coverage_ut";
+  svunit_testcase svunit_ut;
 
-  function void setup();
-    unittest = new(name);
-  endfunction
-endmodule
-
-class c_apb_coverage_unit_test extends svunit_testcase;
 
   //===================================
-  // This is the class that we're 
+  // This is the UUT that we're 
   // running the Unit Tests on
   //===================================
   apb_coverage my_apb_coverage;
 
 
   //===================================
-  // Constructor
+  // Build
   //===================================
-  function new(string name);
-    super.new(name);
+  function void build();
+    svunit_ut = new(name);
 
     my_apb_coverage = new({ name , "::my_apb_coverage" }, null);
 
@@ -63,7 +57,7 @@ class c_apb_coverage_unit_test extends svunit_testcase;
   // Setup for running the Unit Tests
   //===================================
   task setup();
-    super.setup();
+    svunit_ut.setup();
 
     //----------------------
     // activate for testing
@@ -82,7 +76,7 @@ class c_apb_coverage_unit_test extends svunit_testcase;
   // need after running the Unit Tests
   //===================================
   task teardown();
-    super.teardown();
+    svunit_ut.teardown();
 
     //--------------------
     // stop the component
@@ -95,7 +89,21 @@ class c_apb_coverage_unit_test extends svunit_testcase;
     svunit_deactivate_uvm_component(my_apb_coverage);
   endtask
 
-  `SVUNIT_TESTS_BEGIN 
+
+  //===================================
+  // All tests are defined between the
+  // SVUNIT_TESTS_BEGIN/END macros
+  //
+  // Each individual test must be
+  // defined between `SVTEST(_NAME_)
+  // `SVTEST_END(_NAME_)
+  //
+  // i.e.
+  //   `SVTEST(mytest)
+  //     <test code>
+  //   `SVTEST_END(mytest)
+  //===================================
+  `SVUNIT_TESTS_BEGIN
 
   //-------------------------------------
   // Test: write_method
@@ -258,8 +266,7 @@ class c_apb_coverage_unit_test extends svunit_testcase;
  
   `SVTEST_END(kind_cp)
 
-  `SVUNIT_TESTS_END 
 
-endclass
+  `SVUNIT_TESTS_END
 
-
+endmodule

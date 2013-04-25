@@ -25,11 +25,11 @@ import svunit_uvm_mock_pkg::*;
 `include "svunit_defines.svh"
 `include "apb_coverage_agent.sv"
 `include "apb_if.sv"
-typedef class c_apb_coverage_agent_unit_test;
 
 module apb_coverage_agent_unit_test;
-  c_apb_coverage_agent_unit_test unittest;
+
   string name = "apb_coverage_agent_ut";
+  svunit_testcase svunit_ut;
 
   logic clk;
   initial begin
@@ -38,37 +38,26 @@ module apb_coverage_agent_unit_test;
   end
 
   apb_if bfm(.clk(clk));
-
-  function void setup();
-    unittest = new(name,
-                   bfm);
-  endfunction
-endmodule
-
-class c_apb_coverage_agent_unit_test extends svunit_testcase;
+  virtual apb_if.mstr bfm_mstr;
 
   //===================================
-  // This is the class that we're 
+  // This is the UUT that we're 
   // running the Unit Tests on
   //===================================
   apb_coverage_agent my_apb_coverage_agent;
-  virtual apb_if bfm;
-  virtual apb_if.mstr bfm_mstr;
 
 
   //===================================
-  // Constructor
+  // Build
   //===================================
-  function new(string name,
-               virtual apb_if bfm);
-    super.new(name);
+  function void build();
+    svunit_ut = new(name);
 
-    this.bfm = bfm;
-    this.bfm_mstr = bfm;
+    bfm_mstr = bfm;
 
     my_apb_coverage_agent = new({ name , "::my_apb_coverage_agent" }, null);
     uvm_config_db#(virtual apb_if.passive_slv)::
-      set( uvm_root::get(), { name , "::my_apb_coverage_agent" }, "bfm", this.bfm);
+      set( uvm_root::get(), { name , "::my_apb_coverage_agent" }, "bfm", bfm);
 
     //-----------------------
     // deactivate by default
@@ -81,7 +70,7 @@ class c_apb_coverage_agent_unit_test extends svunit_testcase;
   // Setup for running the Unit Tests
   //===================================
   task setup();
-    super.setup();
+    svunit_ut.setup();
 
     //----------------------
     // activate for testing
@@ -102,8 +91,7 @@ class c_apb_coverage_agent_unit_test extends svunit_testcase;
   // need after running the Unit Tests
   //===================================
   task teardown();
-    super.teardown();
-    /* Place Teardown Code Here */
+    svunit_ut.teardown();
 
     //--------------------
     // stop the component
@@ -116,6 +104,20 @@ class c_apb_coverage_agent_unit_test extends svunit_testcase;
     svunit_deactivate_uvm_component(my_apb_coverage_agent);
   endtask
 
+
+  //===================================
+  // All tests are defined between the
+  // SVUNIT_TESTS_BEGIN/END macros
+  //
+  // Each individual test must be
+  // defined between `SVTEST(_NAME_)
+  // `SVTEST_END(_NAME_)
+  //
+  // i.e.
+  //   `SVTEST(mytest)
+  //     <test code>
+  //   `SVTEST_END(mytest)
+  //===================================
   `SVUNIT_TESTS_BEGIN
 
   //-------------------------------------
@@ -155,8 +157,8 @@ class c_apb_coverage_agent_unit_test extends svunit_testcase;
 
   `SVTEST_END(connectivity)
 
+
+
   `SVUNIT_TESTS_END
 
-endclass
-
-
+endmodule

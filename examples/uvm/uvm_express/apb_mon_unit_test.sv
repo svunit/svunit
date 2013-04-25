@@ -26,11 +26,12 @@ import svunit_uvm_mock_pkg::*;
 `include "apb_mon.sv"
 `include "apb_xaction.sv"
 `include "apb_if.sv"
-typedef class c_apb_mon_unit_test;
+
 
 module apb_mon_unit_test;
-  c_apb_mon_unit_test unittest;
+
   string name = "apb_mon_ut";
+  svunit_testcase svunit_ut;
 
   logic clk;
   initial begin
@@ -38,42 +39,28 @@ module apb_mon_unit_test;
     forever #`CLK_PERIOD clk = ~clk;
   end
 
-  apb_if bfm(.clk(clk));
-
-  function void setup();
-    unittest = new(name,
-                   bfm,
-                   bfm,
-                   bfm);
-  endfunction
-endmodule
-
-class c_apb_mon_unit_test extends svunit_testcase;
-
-  //===================================
-  // This is the class that we're 
-  // running the Unit Tests on
-  //===================================
-  apb_mon my_apb_mon;
-  virtual apb_if.slv slv_bfm;
+  apb_if slv_bfm(.clk(clk));
   virtual apb_if.mstr mstr_bfm;
   virtual apb_if.passive_slv pslv_bfm;
 
   uvm_tlm_analysis_fifo #(apb_xaction) af;
 
   //===================================
-  // Constructor
+  // This is the UUT that we're 
+  // running the Unit Tests on
   //===================================
-  function new(string name,
-               virtual apb_if.slv         slv_bfm,
-               virtual apb_if.mstr        mstr_bfm,
-               virtual apb_if.passive_slv pslv_bfm);
-    super.new(name);
-    this.slv_bfm = slv_bfm;
-    this.mstr_bfm = mstr_bfm;
+  apb_mon my_apb_mon;
+
+
+  //===================================
+  // Build
+  //===================================
+  function void build();
+    svunit_ut = new(name);
 
     my_apb_mon = new({ name , "::my_apb_mon" }, null);
-    my_apb_mon.bfm = pslv_bfm;
+    mstr_bfm = slv_bfm;
+    my_apb_mon.bfm = slv_bfm;
 
     // connect a fifo to the mon.ap
     af = new({ name , "::af" }, null);
@@ -90,7 +77,7 @@ class c_apb_mon_unit_test extends svunit_testcase;
   // Setup for running the Unit Tests
   //===================================
   task setup();
-    super.setup();
+    svunit_ut.setup();
 
     //----------------------
     // activate for testing
@@ -114,8 +101,7 @@ class c_apb_mon_unit_test extends svunit_testcase;
   // need after running the Unit Tests
   //===================================
   task teardown();
-    super.teardown();
-    /* Place Teardown Code Here */
+    svunit_ut.teardown();
 
     //--------------------
     // stop the component
@@ -128,7 +114,22 @@ class c_apb_mon_unit_test extends svunit_testcase;
     svunit_deactivate_uvm_component(my_apb_mon);
   endtask
 
+
+  //===================================
+  // All tests are defined between the
+  // SVUNIT_TESTS_BEGIN/END macros
+  //
+  // Each individual test must be
+  // defined between `SVTEST(_NAME_)
+  // `SVTEST_END(_NAME_)
+  //
+  // i.e.
+  //   `SVTEST(mytest)
+  //     <test code>
+  //   `SVTEST_END(mytest)
+  //===================================
   `SVUNIT_TESTS_BEGIN
+
 
   //-------------------------------------
   // Test: analysis_port_not_null
@@ -511,6 +512,4 @@ class c_apb_mon_unit_test extends svunit_testcase;
 
   `SVUNIT_TESTS_END
 
-endclass
-
-
+endmodule

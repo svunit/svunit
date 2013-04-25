@@ -42,11 +42,12 @@ import svunit_pkg::*;
 
 `include "svunit_defines.svh"
 `include "apb_if.sv"
-typedef class c_apb_if_unit_test;
+
 
 module apb_if_unit_test;
-  c_apb_if_unit_test unittest;
+
   string name = "apb_if_ut";
+  svunit_testcase svunit_ut;
 
   logic clk;
   initial begin
@@ -54,34 +55,23 @@ module apb_if_unit_test;
     forever #`CLK_PERIOD clk = ~clk;
   end
 
-  apb_if my_apb_if(.clk(clk));
-
-  function void setup();
-    unittest = new(name,
-                   my_apb_if,
-                   my_apb_if,
-                   my_apb_if);
-  endfunction
-endmodule
-
-class c_apb_if_unit_test extends svunit_testcase;
-
-  virtual apb_if.slv         my_apb_slv_if;
+  //===================================
+  // This is the UUT that we're 
+  // running the Unit Tests on
+  //===================================
+  apb_if my_apb_slv_if(.clk(clk));
   virtual apb_if.mstr        my_apb_mstr_if;
   virtual apb_if.passive_slv my_apb_pslv_if;
 
-  //===================================
-  // Constructor
-  //===================================
-  function new(string name,
-               virtual apb_if.slv  my_apb_slv_if,
-               virtual apb_if.mstr my_apb_mstr_if,
-               virtual apb_if.passive_slv my_apb_pslv_if);
-    super.new(name);
 
-    this.my_apb_slv_if = my_apb_slv_if;
-    this.my_apb_mstr_if = my_apb_mstr_if;
-    this.my_apb_pslv_if = my_apb_pslv_if;
+  //===================================
+  // Build
+  //===================================
+  function void build();
+    svunit_ut = new(name);
+
+    my_apb_mstr_if = my_apb_slv_if;
+    my_apb_pslv_if = my_apb_slv_if;
   endfunction
 
 
@@ -89,7 +79,7 @@ class c_apb_if_unit_test extends svunit_testcase;
   // Setup for running the Unit Tests
   //===================================
   task setup();
-    super.setup();
+    svunit_ut.setup();
     /* Place Setup Code Here */
   endtask
 
@@ -99,9 +89,24 @@ class c_apb_if_unit_test extends svunit_testcase;
   // need after running the Unit Tests
   //===================================
   task teardown();
-    super.teardown();
+    svunit_ut.teardown();
     /* Place Teardown Code Here */
   endtask
+
+
+  //===================================
+  // All tests are defined between the
+  // SVUNIT_TESTS_BEGIN/END macros
+  //
+  // Each individual test must be
+  // defined between `SVTEST(_NAME_)
+  // `SVTEST_END(_NAME_)
+  //
+  // i.e.
+  //   `SVTEST(mytest)
+  //     <test code>
+  //   `SVTEST_END(mytest)
+  //===================================
 
   logic [31:0] rdata;
   logic slv_pwrite;
@@ -583,7 +588,7 @@ class c_apb_if_unit_test extends svunit_testcase;
     @(negedge my_apb_slv_if.clk) #1 my_apb_slv_if.prdata = 'hx;
   `SVTEST_END(slv_capture_2_read)
 
+
   `SVUNIT_TESTS_END
-endclass
 
-
+endmodule
