@@ -6,4 +6,5 @@ rm -rf .`pwd | sed -e 's/[\/-]/_/g'`_testsuite.sv \
        .testsuite.gold \
        .testsuite.gold.tmp \
        Makefile \
+       test_unit_test.gold \
        test_unit_test.sv

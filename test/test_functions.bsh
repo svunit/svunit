@@ -6,6 +6,10 @@ setup() {
   ./clean
 }
 
+golden_unit_test() {
+  sed -e "s/FILE/$1/" ../templates/unit_test.gold | sed -e "s/MYNAME/$2/g" > ${1}_unit_test.gold
+}
+
 verify_file() {
   if [ "`diff -bB $1 $2`" != "" ]; then
     echo $1 failed;
