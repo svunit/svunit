@@ -8,32 +8,25 @@ import svunit_uvm_mock_pkg::*;
 `include "svunit_uvm_mock_defines.sv"
 
 `include "basic.sv"
-typedef class c_basic_unit_test;
 
 module basic_unit_test;
-  c_basic_unit_test unittest;
+
   string name = "basic_ut";
+  svunit_testcase svunit_ut;
 
-  function void setup();
-    unittest = new(name);
-  endfunction
-endmodule
-
-
-class c_basic_unit_test extends svunit_testcase;
 
   //===================================
-  // This is the class that we're 
+  // This is the UUT that we're 
   // running the Unit Tests on
   //===================================
   basic my_basic;
 
 
   //===================================
-  // Constructor
+  // Build
   //===================================
-  function new(string name);
-    super.new(name);
+  function void build();
+    svunit_ut = new(name);
 
     my_basic = new("my_basic");
   endfunction
@@ -43,7 +36,7 @@ class c_basic_unit_test extends svunit_testcase;
   // Setup for running the Unit Tests
   //===================================
   task setup();
-    super.setup();
+    svunit_ut.setup();
 
     uvm_report_mock::setup();
   endtask
@@ -54,7 +47,8 @@ class c_basic_unit_test extends svunit_testcase;
   // need after running the Unit Tests
   //===================================
   task teardown();
-    super.teardown();
+    svunit_ut.teardown();
+    /* Place Teardown Code Here */
   endtask
 
 
@@ -93,8 +87,8 @@ class c_basic_unit_test extends svunit_testcase;
   `TEST_SET(error)
   `TEST_SET(fatal)
 
+
+
   `SVUNIT_TESTS_END
 
-endclass
-
-
+endmodule

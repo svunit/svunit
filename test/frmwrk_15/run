@@ -7,6 +7,7 @@ rm -rf dud*
 
 testfiles_here=`ls test*`
 
+mkdir third_dir
 for f in $testfiles_here; do
   echo Process $f...
   output=`echo $f | sed -e 's/\.[a-zZ-Z0-9_\-][a-zZ-Z0-9_\-]*$//' | sed -e 's/$/_unit_test.sv/' | sed -e 's/^/third_dir\//'`
