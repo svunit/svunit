@@ -11,7 +11,9 @@ create_svunit.pl
 # build the testrunner
 make .testrunner.sv
 
-golden_unit_test  test test
-verify_file       test_unit_test.gold test_unit_test.sv
-verify_testsuite  testsuite.gold
-verify_testrunner testrunner.gold .
+golden_unit_test                    test test
+golden_testsuite_with_1_unittest    test
+golden_testrunner_with_1_testsuite
+verify_file                         test_unit_test.gold test_unit_test.sv
+verify_testsuite                    testsuite.gold
+verify_testrunner                   testrunner.gold .

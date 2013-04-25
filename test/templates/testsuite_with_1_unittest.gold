@@ -9,16 +9,16 @@ module PWD_testsuite;
   // These are the unit tests that we
   // want included in this testsuite
   //===================================
-  test_unit_test test_ut();
+  MYNAME_unit_test MYNAME_ut();
 
 
   //===================================
   // Build
   //===================================
   function void build();
-    test_ut.build();
+    MYNAME_ut.build();
     svunit_ts = new(name);
-    svunit_ts.add_testcase(test_ut.svunit_ut);
+    svunit_ts.add_testcase(MYNAME_ut.svunit_ut);
   endfunction
 
 
@@ -26,7 +26,7 @@ module PWD_testsuite;
   // Run
   //===================================
   task run();
-    test_ut.run();
+    MYNAME_ut.run();
   endtask
 
 endmodule
