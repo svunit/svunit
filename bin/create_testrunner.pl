@@ -162,11 +162,11 @@ sub CreateTestSuite() {
 
   print OUTFILE "module $class();\n";
   print OUTFILE "  string name = \"$class\";\n";
-  print OUTFILE "  svunit_testrunner svunit_tr;\n\n";
-  print OUTFILE "  //===================================\n";
-  print OUTFILE "  // These are the tests suites that we\n";
+  print OUTFILE "  svunit_testrunner svunit_tr;\n\n\n";
+  print OUTFILE "  //==================================\n";
+  print OUTFILE "  // These are the test suites that we\n";
   print OUTFILE "  // want included in this testrunner\n";
-  print OUTFILE "  //===================================\n";
+  print OUTFILE "  //==================================\n";
 
   print "SVUNIT: Creating instances for:\n";
   foreach $item ( @class_names ) {
@@ -176,26 +176,59 @@ sub CreateTestSuite() {
   }
   print "\n";
 
+  print OUTFILE "\n";
+  print OUTFILE "\n";
+  print OUTFILE "  //===================================\n";
+  print OUTFILE "  // Main\n";
+  print OUTFILE "  //===================================\n";
+  print OUTFILE "  initial\n";
+  print OUTFILE "  begin\n";
+  print OUTFILE "    build();\n";
+  print OUTFILE "    run();\n";
+  print OUTFILE "    \$finish();\n";
+  print OUTFILE "  end\n";
+
   $cnt = 0;
 
   print OUTFILE "\n\n";
   print OUTFILE "  //===================================\n";
-  print OUTFILE "  // Setup\n";
+  print OUTFILE "  // Build\n";
   print OUTFILE "  //===================================\n";
-  print OUTFILE "  function void setup();\n";
+  print OUTFILE "  function void build();\n";
   print OUTFILE "    svunit_tr = new(name);\n";
 
   foreach $item ( @instance_names ) {
-    print OUTFILE "    $item.setup();\n";
+    print OUTFILE "    $item.build();\n";
     print OUTFILE "    svunit_tr.add_testsuite($item.svunit_ts);\n";
     $cnt++;
   }
 
-  print OUTFILE "  endfunction\n\n";
+  print OUTFILE "  endfunction\n\n\n";
 
+  print OUTFILE "  //===================================\n";
+  print OUTFILE "  // Run\n";
+  print OUTFILE "  //===================================\n";
   print OUTFILE "  task run();\n";
-  print OUTFILE "    svunit_tr.run();\n";
+  foreach $item ( @instance_names ) {
+    print OUTFILE "    $item.run();\n";
+  }
+  print OUTFILE "    svunit_tr.report();\n";
   print OUTFILE "  endtask\n";
+
+  print OUTFILE "\n";
+  print OUTFILE "\n";
+  print OUTFILE "  //===================================\n";
+  print OUTFILE "  // UVM test hooks\n";
+  print OUTFILE "  //===================================\n";
+  print OUTFILE "  `ifdef RUN_SVUNIT_WITH_UVM\n";
+  print OUTFILE "    import svunit_uvm_mock_pkg::*;\n";
+  print OUTFILE "    initial\n";
+  print OUTFILE "    begin\n";
+  print OUTFILE "      svunit_uvm_test_inst(\"svunit_uvm_test\");\n";
+  print OUTFILE "    end\n";
+  print OUTFILE "  `endif\n";
+
+  print OUTFILE "\n";
   print OUTFILE "endmodule\n";
 
 }

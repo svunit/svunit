@@ -194,11 +194,10 @@ sub CreateTestSuite() {
   print OUTFILE "module $class;\n";
   $inst = $class;
   $inst =~ s/_testsuite/_ts/g;
-  print OUTFILE "  string name = \"$inst\";\n\n";
-  print OUTFILE "  //===================\n";
-  print OUTFILE "  // Test suite master\n";
-  print OUTFILE "  //===================\n";
-  print OUTFILE "  svunit_testsuite svunit_ts;\n\n";
+  print OUTFILE "  string name = \"$inst\";\n";
+  print OUTFILE "  svunit_testsuite svunit_ts;\n";
+  print OUTFILE "  \n";
+  print OUTFILE "  \n";
   print OUTFILE "  //===================================\n";
   print OUTFILE "  // These are the unit tests that we\n";
   print OUTFILE "  // want included in this testsuite\n";
@@ -217,11 +216,11 @@ sub CreateTestSuite() {
 
   print OUTFILE "\n\n";
   print OUTFILE "  //===================================\n";
-  print OUTFILE "  // Setup\n";
+  print OUTFILE "  // Build\n";
   print OUTFILE "  //===================================\n";
-  print OUTFILE "  function void setup();\n";
+  print OUTFILE "  function void build();\n";
   foreach $item ( @instance_names ) {
-    print OUTFILE "    $item.setup();\n";
+    print OUTFILE "    $item.build();\n";
     $cnt++;
   }
 
@@ -229,12 +228,26 @@ sub CreateTestSuite() {
 
   print OUTFILE "    svunit_ts = new(name);\n";
   foreach $item ( @instance_names ) {
-    print OUTFILE "    svunit_ts.add_testcase($item.unittest);\n";
+    print OUTFILE "    svunit_ts.add_testcase($item.svunit_ut);\n";
+    $cnt++;
+  }
+  print OUTFILE "  endfunction\n\n";
+
+
+  print OUTFILE "\n";
+  print OUTFILE "  //===================================\n";
+  print OUTFILE "  // Run\n";
+  print OUTFILE "  //===================================\n";
+  print OUTFILE "  task run();\n";
+  foreach $item ( @instance_names ) {
+    print OUTFILE "    $item.run();\n";
     $cnt++;
   }
 
-  print OUTFILE "  endfunction\n\n";
-  print OUTFILE "endmodule\n\n\n";
+  print OUTFILE "    svunit_ts.report();\n";
+  print OUTFILE "  endtask\n\n";
+
+  print OUTFILE "endmodule\n";
 
 }
 

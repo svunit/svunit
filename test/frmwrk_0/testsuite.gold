@@ -31,5 +31,3 @@ module PWD_testsuite;
   endtask
 
 endmodule
-
-
