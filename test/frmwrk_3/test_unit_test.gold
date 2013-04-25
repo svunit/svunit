@@ -1,32 +1,25 @@
-import svunit_pkg::*;
-
 `include "svunit_defines.svh"
 `include "test.sv"
-typedef class c_test0_unit_test;
+
+import svunit_pkg::*;
 
 module test0_unit_test;
-  c_test0_unit_test unittest;
   string name = "test0_ut";
+  svunit_testcase svunit_ut;
 
-  function void setup();
-    unittest = new(name);
-  endfunction
-endmodule
-
-class c_test0_unit_test extends svunit_testcase;
 
   //===================================
-  // This is the class that we're 
+  // This is the UUT that we're 
   // running the Unit Tests on
   //===================================
   test0 my_test0;
 
 
   //===================================
-  // Constructor
+  // Build
   //===================================
-  function new(string name);
-    super.new(name);
+  function void build();
+    svunit_ut = new(name);
 
     my_test0 = new(/* New arguments if needed */);
   endfunction
@@ -36,7 +29,7 @@ class c_test0_unit_test extends svunit_testcase;
   // Setup for running the Unit Tests
   //===================================
   task setup();
-    super.setup();
+    svunit_ut.setup();
     /* Place Setup Code Here */
   endtask
 
@@ -46,11 +39,11 @@ class c_test0_unit_test extends svunit_testcase;
   // need after running the Unit Tests
   //===================================
   task teardown();
-    super.teardown();
+    svunit_ut.teardown();
     /* Place Teardown Code Here */
   endtask
-  
-  
+
+
   //===================================
   // All tests are defined between the
   // SVUNIT_TESTS_BEGIN/END macros
@@ -67,37 +60,30 @@ class c_test0_unit_test extends svunit_testcase;
   `SVUNIT_TESTS_BEGIN
 
 
-
   `SVUNIT_TESTS_END
 
-endclass
-
-
-typedef class c_test1_unit_test;
-
-module test1_unit_test;
-  c_test1_unit_test unittest;
-  string name = "test1_ut";
-
-  function void setup();
-    unittest = new(name);
-  endfunction
 endmodule
 
-class c_test1_unit_test extends svunit_testcase;
+
+import svunit_pkg::*;
+
+module test1_unit_test;
+  string name = "test1_ut";
+  svunit_testcase svunit_ut;
+
 
   //===================================
-  // This is the class that we're 
+  // This is the UUT that we're 
   // running the Unit Tests on
   //===================================
   test1 my_test1;
 
 
   //===================================
-  // Constructor
+  // Build
   //===================================
-  function new(string name);
-    super.new(name);
+  function void build();
+    svunit_ut = new(name);
 
     my_test1 = new(/* New arguments if needed */);
   endfunction
@@ -107,7 +93,7 @@ class c_test1_unit_test extends svunit_testcase;
   // Setup for running the Unit Tests
   //===================================
   task setup();
-    super.setup();
+    svunit_ut.setup();
     /* Place Setup Code Here */
   endtask
 
@@ -117,11 +103,11 @@ class c_test1_unit_test extends svunit_testcase;
   // need after running the Unit Tests
   //===================================
   task teardown();
-    super.teardown();
+    svunit_ut.teardown();
     /* Place Teardown Code Here */
   endtask
-  
-  
+
+
   //===================================
   // All tests are defined between the
   // SVUNIT_TESTS_BEGIN/END macros
@@ -138,9 +124,6 @@ class c_test1_unit_test extends svunit_testcase;
   `SVUNIT_TESTS_BEGIN
 
 
-
   `SVUNIT_TESTS_END
 
-endclass
-
-
+endmodule

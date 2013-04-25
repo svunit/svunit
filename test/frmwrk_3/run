@@ -9,8 +9,7 @@ create_unit_test test.sv
 create_svunit.pl
 
 # build the svunit_top
-make .svunit_top.sv
+make .testrunner.sv
 
 verify_file       test_unit_test.gold test_unit_test.sv
 verify_testsuite  testsuite.gold
-verify_testrunner testrunner.gold
