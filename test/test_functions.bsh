@@ -7,15 +7,15 @@ setup() {
 }
 
 golden_unit_test() {
-  sed -e "s/FILE/$1/" ../templates/unit_test.gold | sed -e "s/MYNAME/$2/g" > ${1}_unit_test.gold
+  sed -e "s/FILE/$1/" $SVUNIT_INSTALL/test/templates/unit_test.gold | sed -e "s/MYNAME/$2/g" > ${1}_unit_test.gold
 }
 
 golden_testsuite_with_1_unittest() {
-  sed -e "s/MYNAME/$1/g" ../templates/testsuite_with_1_unittest.gold > testsuite.gold
+  sed -e "s/MYNAME/$1/g" $SVUNIT_INSTALL/test/templates/testsuite_with_1_unittest.gold > testsuite.gold
 }
 
 golden_testrunner_with_1_testsuite() {
-  cp ../templates/testrunner_with_1_testsuite.gold testrunner.gold
+  cp $SVUNIT_INSTALL/test/templates/testrunner_with_1_testsuite.gold testrunner.gold
 }
 
 verify_file() {
