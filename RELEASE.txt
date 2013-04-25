@@ -36,3 +36,7 @@ v0.12
 v0.13
 -----
 * fixed tickets 42 and 44
+
+v1.1
+----
+* major upgrade to switch to module based svunit hierarchy
