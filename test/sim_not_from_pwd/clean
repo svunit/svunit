@@ -2,4 +2,5 @@ rm -rf .`pwd | sed -e 's/[\/-]/_/g'`_testsuite.sv \
        Makefile \
        .svunit_top.sv \
        .testrunner.sv \
+       dut_unit_test.sv \
        not_pwd

@@ -1,12 +1,12 @@
-rm -rf not_pwd >/dev/null
+source ../test_functions.bsh
+
+setup
+
+create_unit_test dut.sv
 
 # create the Makefile
 create_svunit.pl
 
-which vcsi >/dev/null
-if [ "$?" != "0" ]; then
-  exit 1;
-fi
 
 # build and run svunit with vcsi
 mkdir not_pwd
@@ -14,15 +14,7 @@ make
 
 
 # check the log output for a PASS from the testrunner
-if [ ! -e not_pwd/run.log ]; then
-  echo not_pwd/run.log does not exist
-  exit 1;
-fi
-
-grep "INFO:  \[0\]\[testrunner\]: Testrunner::PASSED" not_pwd/run.log >/dev/null
-if [ "$?" != "0" ]; then
-  echo PASS not detected from Testrunner in not_pwd/run.log
-  exit 1;
-fi
+expect_file not_pwd/run.log
+expect_testrunner_pass not_pwd/run.log
 
 exit 0

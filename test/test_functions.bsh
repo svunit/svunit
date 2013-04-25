@@ -71,3 +71,11 @@ expect_file_does_not_contain() {
     exit 1;
   fi
 }
+
+expect_testrunner_pass() {
+  grep "INFO:  \[0\]\[testrunner\]: Testrunner::PASSED" $1 >/dev/null
+  if [ "$?" != "0" ]; then
+    echo PASS not detected from Testrunner in not_pwd/run.log
+    exit 1;
+  fi
+}
