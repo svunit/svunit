@@ -19,37 +19,35 @@
 //
 //###############################################################
 
-import svunit_pkg::*;
-
 `include "svunit_defines.svh"
 `include "apb_slave.sv"
-typedef class c_apb_slave_unit_test;
 
+import svunit_pkg::*;
 
-// virtual interface to the uut
-interface apb_slave_unit_test_if
-#(
-  addrWidth = 8,
-  dataWidth = 32
-)
-(
-  input                 clk
-);
-  logic                 rst_n;
-  logic [addrWidth-1:0] paddr;
-  logic                 pwrite;
-  logic                 psel;
-  logic                 penable;
-  logic [dataWidth-1:0] pwdata;
-  logic [dataWidth-1:0] prdata;
-endinterface
 
 module apb_slave_unit_test;
-  c_apb_slave_unit_test unittest;
+
   string name = "apb_slave_ut";
+  svunit_testcase svunit_ut;
+
+  logic [7:0] addr;
+  logic [31:0] data, rdata;
+
+
+  //===================================
+  // This is the UUT that we're 
+  // running the Unit Tests on
+  //===================================
+  reg         clk;
+  reg         rst_n;
+  reg [7:0]   paddr;
+  reg         pwrite;
+  reg         psel;
+  reg         penable;
+  reg [31:0]  pwdata;
+  wire [31:0] prdata;
 
   // clk generator
-  reg clk;
   initial begin
     clk = 0;
     forever begin
@@ -57,38 +55,13 @@ module apb_slave_unit_test;
     end
   end
 
-  // uut instance and connections to the virtual interface
-  apb_slave my_apb_slave(.clk(clk),
-                         .rst_n(my_apb_slave_if.rst_n),
-                         .paddr(my_apb_slave_if.paddr),
-                         .pwrite(my_apb_slave_if.pwrite),
-                         .psel(my_apb_slave_if.psel),
-                         .penable(my_apb_slave_if.penable),
-                         .pwdata(my_apb_slave_if.pwdata),
-                         .prdata(my_apb_slave_if.prdata));
-
-  // virtual interface instance
-  apb_slave_unit_test_if my_apb_slave_if(.clk(clk));
-
-  function void setup();
-    unittest = new(name, my_apb_slave_if);
-  endfunction
-endmodule
-
-class c_apb_slave_unit_test extends svunit_testcase;
-
-  virtual apb_slave_unit_test_if my_apb_slave_if;
-  logic [7:0] addr;
-  logic [31:0] data, rdata;
+  apb_slave my_apb_slave(.*);
 
   //===================================
-  // Constructor
+  // Build
   //===================================
-  function new(string name,
-               virtual apb_slave_unit_test_if my_apb_slave_if);
-    super.new(name);
-
-    this.my_apb_slave_if = my_apb_slave_if;
+  function void build();
+    svunit_ut = new(name);
   endfunction
 
 
@@ -96,7 +69,7 @@ class c_apb_slave_unit_test extends svunit_testcase;
   // Setup for running the Unit Tests
   //===================================
   task setup();
-    super.setup();
+    svunit_ut.setup();
 
     //-----------------------------------------
     // move the bus into the IDLE state
@@ -107,9 +80,9 @@ class c_apb_slave_unit_test extends svunit_testcase;
     //-----------------------------
     // then do a reset for the uut
     //-----------------------------
-    my_apb_slave_if.rst_n = 0;
-    repeat (8) @(posedge my_apb_slave_if.clk);
-    my_apb_slave_if.rst_n = 1;
+    rst_n = 0;
+    repeat (8) @(posedge clk);
+    rst_n = 1;
   endtask
 
 
@@ -118,9 +91,8 @@ class c_apb_slave_unit_test extends svunit_testcase;
   // need after running the Unit Tests
   //===================================
   task teardown();
-    super.teardown();
-
-    // nothing special worth doing here
+    svunit_ut.teardown();
+    /* Place Teardown Code Here */
   endtask
 
 
@@ -237,9 +209,9 @@ class c_apb_slave_unit_test extends svunit_testcase;
 
     // if !back2back, insert an idle cycle before the write
     if (!back2back) begin
-      @(negedge my_apb_slave_if.clk);
-      my_apb_slave_if.psel = 0;
-      my_apb_slave_if.penable = 0;
+      @(negedge clk);
+      psel = 0;
+      penable = 0;
     end
 
     // this is the SETUP state where the psel,
@@ -248,18 +220,18 @@ class c_apb_slave_unit_test extends svunit_testcase;
     // NOTE:
     //   setup_psel == 0 for protocol errors on the psel
     //   setup_pwrite == 0 for protocol errors on the pwrite
-    @(negedge my_apb_slave_if.clk);
-    my_apb_slave_if.psel = setup_psel;
-    my_apb_slave_if.pwrite = setup_pwrite;
-    my_apb_slave_if.paddr = addr;
-    my_apb_slave_if.pwdata = data;
-    my_apb_slave_if.penable = 0;
+    @(negedge clk);
+    psel = setup_psel;
+    pwrite = setup_pwrite;
+    paddr = addr;
+    pwdata = data;
+    penable = 0;
 
     // this is the ENABLE state where the penable is asserted
-    @(negedge my_apb_slave_if.clk);
-    my_apb_slave_if.pwrite = 1;
-    my_apb_slave_if.penable = 1;
-    my_apb_slave_if.psel = 1;
+    @(negedge clk);
+    pwrite = 1;
+    penable = 1;
+    psel = 1;
   endtask
 
 
@@ -275,25 +247,25 @@ class c_apb_slave_unit_test extends svunit_testcase;
 
     // if !back2back, insert an idle cycle before the read
     if (!back2back) begin
-      @(negedge my_apb_slave_if.clk);
-      my_apb_slave_if.psel = 0;
-      my_apb_slave_if.penable = 0;
+      @(negedge clk);
+      psel = 0;
+      penable = 0;
     end
 
     // this is the SETUP state where the psel, pwrite and paddr
-    @(negedge my_apb_slave_if.clk);
-    my_apb_slave_if.psel = 1;
-    my_apb_slave_if.paddr = addr;
-    my_apb_slave_if.penable = 0;
-    my_apb_slave_if.pwrite = 0;
+    @(negedge clk);
+    psel = 1;
+    paddr = addr;
+    penable = 0;
+    pwrite = 0;
 
     // this is the ENABLE state where the penable is asserted
-    @(negedge my_apb_slave_if.clk);
-    my_apb_slave_if.penable = 1;
+    @(negedge clk);
+    penable = 1;
 
     // the prdata should be flopped after the subsequent posedge
-    @(posedge my_apb_slave_if.clk);
-    #1 data = my_apb_slave_if.prdata;
+    @(posedge clk);
+    #1 data = prdata;
   endtask
 
 
@@ -305,12 +277,12 @@ class c_apb_slave_unit_test extends svunit_testcase;
   //
   //-------------------------------------------------------------------------------
   task idle();
-    @(negedge my_apb_slave_if.clk);
-    my_apb_slave_if.psel = 0;
-    my_apb_slave_if.penable = 0;
-    my_apb_slave_if.pwrite = 0;
-    my_apb_slave_if.paddr = 0;
-    my_apb_slave_if.pwdata = 0;
+    @(negedge clk);
+    psel = 0;
+    penable = 0;
+    pwrite = 0;
+    paddr = 0;
+    pwdata = 0;
   endtask
 
-endclass
+endmodule
