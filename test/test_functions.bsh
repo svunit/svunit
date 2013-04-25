@@ -10,6 +10,10 @@ golden_module_unit_test() {
   sed -e "s/FILE/$1/" $SVUNIT_INSTALL/test/templates/module_unit_test.gold | sed -e "s/MYNAME/$2/g" > ${1}_unit_test.gold
 }
 
+golden_if_unit_test() {
+  sed -e "s/FILE/$1/" $SVUNIT_INSTALL/test/templates/if_unit_test.gold | sed -e "s/MYNAME/$2/g" > ${1}_unit_test.gold
+}
+
 golden_class_unit_test() {
   sed -e "s/FILE/$1/" $SVUNIT_INSTALL/test/templates/class_unit_test.gold | sed -e "s/MYNAME/$2/g" > ${1}_unit_test.gold
 }

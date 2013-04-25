@@ -229,33 +229,10 @@ sub Main() {
 
 
 ##########################################################################
-# CreateUnitTest(): invoke the method to create a unit test for either a
-#                   class or module
-##########################################################################
-sub CreateUnitTest() {
-  if ($processing_class) {
-    CreateClassUnitTest();
-  }
-
-  elsif ($processing_module) {
-    CreateModuleUnitTest();
-  }
-
-  elsif ($processing_if) {
-    CreateIFUnitTest();
-  }
-
-  else {
-    die "ERROR: CreateUnitTest called but \$processing_class, \$processing_module or \$processing_if is asserted";
-  }
-}
-
-
-##########################################################################
 # CreateClassUnitTest(): This creates the output for the unit test class.  It's
 #                   called for each class within the file
 ##########################################################################
-sub CreateClassUnitTest() {
+sub CreateUnitTest() {
   $in_list = 0;
 
   if (!$includes_already_printed) {
@@ -281,8 +258,10 @@ sub CreateClassUnitTest() {
   print OUTFILE "  //===================================\n";
   print OUTFILE "  function void build();\n";
   print OUTFILE "    svunit_ut = new(name);\n";
-  print OUTFILE "\n";
-  print OUTFILE "    my_$uut = new(\/\* New arguments if needed \*\/);\n";
+  if ($processing_class) {
+    print OUTFILE "\n";
+    print OUTFILE "    my_$uut = new(\/\* New arguments if needed \*\/);\n";
+  }
   print OUTFILE "  endfunction\n\n\n";
   print OUTFILE "  //===================================\n";
   print OUTFILE "  // Setup for running the Unit Tests\n";
