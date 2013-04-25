@@ -17,7 +17,7 @@ cd another_test
 ## build the svunit_top
 make .testrunner.sv
 
-golden_unit_test test0 test0
+golden_class_unit_test test0 test0
 golden_testsuite_with_1_unittest test0
 golden_testrunner_with_1_testsuite
 verify_file test0_unit_test.gold test0_unit_test.sv

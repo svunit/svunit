@@ -5,12 +5,5 @@ setup
 # remove and create the unit_test
 create_unit_test test.sv
 
-# create the Makefile
-create_svunit.pl
-
-# build the svunit_top
-make .svunit_top.sv
-
-verify_file       test_unit_test.gold test_unit_test.sv
-verify_testsuite  testsuite.gold
-verify_testrunner testrunner.gold .
+golden_module_unit_test test test
+verify_file             test_unit_test.gold test_unit_test.sv
