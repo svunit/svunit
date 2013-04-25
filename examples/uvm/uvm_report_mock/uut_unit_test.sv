@@ -29,31 +29,25 @@ import svunit_pkg::*;
 import svunit_uvm_mock_pkg::*;
 
 `include "uut.sv"
-typedef class c_uut_unit_test;
 
 module uut_unit_test;
-  c_uut_unit_test unittest;
+
   string name = "uut_ut";
+  svunit_testcase svunit_ut;
 
-  function void setup();
-    unittest = new(name);
-  endfunction
-endmodule
-
-class c_uut_unit_test extends svunit_testcase;
 
   //===================================
-  // This is the class that we're 
+  // This is the UUT that we're 
   // running the Unit Tests on
   //===================================
   uut my_uut;
 
 
   //===================================
-  // Constructor
+  // Build
   //===================================
-  function new(string name);
-    super.new(name);
+  function void build();
+    svunit_ut = new(name);
 
     my_uut = new("uut");
   endfunction
@@ -63,7 +57,7 @@ class c_uut_unit_test extends svunit_testcase;
   // Setup for running the Unit Tests
   //===================================
   task setup();
-    super.setup();
+    svunit_ut.setup();
 
     uvm_report_mock::setup();
   endtask
@@ -74,7 +68,7 @@ class c_uut_unit_test extends svunit_testcase;
   // need after running the Unit Tests
   //===================================
   task teardown();
-    super.teardown();
+    svunit_ut.teardown();
     /* Place Teardown Code Here */
   endtask
 
@@ -93,7 +87,6 @@ class c_uut_unit_test extends svunit_testcase;
   //   `SVTEST_END(mytest)
   //===================================
   `SVUNIT_TESTS_BEGIN
-
 
   //--------------------------------------------
   // test: _99_is_an_error
@@ -141,6 +134,4 @@ class c_uut_unit_test extends svunit_testcase;
 
   `SVUNIT_TESTS_END
 
-endclass
-
-
+endmodule

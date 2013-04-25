@@ -1,3 +1,5 @@
+source ../test_functions.bsh
+
 pushd .
 
 cd $SVUNIT_INSTALL/examples/uvm/uvm_report_mock
@@ -8,87 +10,34 @@ create_svunit.pl
 # RUN WITH VCS #
 ################
 
-which vcsi >/dev/null
-if [ "$?" != "0" ]; then
-  popd
-  exit 1;
-fi
-
-# build and run svunit with vcsi
 make SIMULATOR=VCS
 
-# check the log output for a PASS from the testrunner
-if [ ! -e run.log ]; then
-  echo run.log does not exist
-  popd
-  exit 1;
-fi
+expect_file $SVUNIT_INSTALL/examples/uvm/uvm_report_mock/run.log
+expect_testrunner_pass $SVUNIT_INSTALL/examples/uvm/uvm_report_mock/run.log
 
-grep "INFO:  \[.*\]\[testrunner\]: Testrunner::PASSED" run.log >/dev/null
-
-if [ "$?" != "0" ]; then
-  echo PASS not detected from Testrunner in run.log
-  popd
-  exit 1;
-fi
-
+make SIMULATOR=VCS clean
 
 ###################
 # RUN WITH QUESTA #
 ###################
 
-which qverilog >/dev/null
-if [ "$?" != "0" ]; then
-  popd
-  exit 1;
-fi
-
-# build and run svunit with qverilog
 make SIMULATOR=QUESTA
 
-# check the log output for a PASS from the testrunner
-if [ ! -e run.log ]; then
-  echo run.log does not exist
-  popd
-  exit 1;
-fi
+expect_file $SVUNIT_INSTALL/examples/uvm/uvm_report_mock/run.log
+expect_testrunner_pass $SVUNIT_INSTALL/examples/uvm/uvm_report_mock/run.log
 
-grep "# INFO:  \[.*\]\[testrunner\]: Testrunner::PASSED" run.log >/dev/null
-
-if [ "$?" != "0" ]; then
-  echo PASS not detected from Testrunner in run.log
-  popd
-  exit 1;
-fi
-
+make SIMULATOR=QUESTA clean
 
 ###################
 # RUN WITH IUS #
 ###################
 
-which irun >/dev/null
-if [ "$?" != "0" ]; then
-  popd
-  exit 1;
-fi
-
-# build and run svunit with qverilog
 make SIMULATOR=IUS
 
-# check the log output for a PASS from the testrunner
-if [ ! -e run.log ]; then
-  echo run.log does not exist
-  popd
-  exit 1;
-fi
+expect_file $SVUNIT_INSTALL/examples/uvm/uvm_report_mock/run.log
+expect_testrunner_pass $SVUNIT_INSTALL/examples/uvm/uvm_report_mock/run.log
 
-grep "INFO:  \[.*\]\[testrunner\]: Testrunner::PASSED" run.log >/dev/null
-
-if [ "$?" != "0" ]; then
-  echo PASS not detected from Testrunner in run.log
-  popd
-  exit 1;
-fi
+make SIMULATOR=IUS clean
 
 popd
 
