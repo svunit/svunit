@@ -73,9 +73,25 @@ expect_file_does_not_contain() {
 }
 
 expect_testrunner_pass() {
-  grep "INFO:  \[0\]\[testrunner\]: Testrunner::PASSED" $1 >/dev/null
+  grep "INFO:  \[.*\]\[testrunner\]: Testrunner::PASSED" $1 >/dev/null
   if [ "$?" != "0" ]; then
-    echo PASS not detected from Testrunner in not_pwd/run.log
+    echo PASS not detected from Testrunner in $1
+    exit 1;
+  fi
+}
+
+expect_testrunner_fail() {
+  grep "INFO:  \[.*\]\[testrunner\]: Testrunner::FAILED" $1 >/dev/null
+  if [ "$?" != "0" ]; then
+    echo PASS not detected from Testrunner in $1
+    exit 1;
+  fi
+}
+
+expect_string() {
+  grep "$1" $2 >/dev/null
+  if [ "$?" != "0" ]; then
+    echo "$1" not detected in $2
     exit 1;
   fi
 }

@@ -66,7 +66,7 @@ class svunit_testcase;
     Variable: is_running
     1 is somewhere between setup and teardown, 1 otherwise
   */
-  protected bit is_running;
+  bit is_running = 0;
 
 
   extern function new(string name);

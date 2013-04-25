@@ -30,7 +30,7 @@
 `ifndef FAIL_IF
 `define FAIL_IF(exp) \
   if (svunit_ut.fail_if(exp, `"exp`", `__FILE__, `__LINE__)) begin \
-    if (is_running) svunit_ut.give_up(); \
+    if (svunit_ut.is_running) svunit_ut.give_up(); \
   end
 `endif
 
@@ -45,7 +45,7 @@
 `ifndef FAIL_UNLESS
 `define FAIL_UNLESS(exp) \
   if (svunit_ut.fail_unless(exp, `"exp`", `__FILE__, `__LINE__)) begin \
-    if (is_running) svunit_ut.give_up(); \
+    if (svunit_ut.is_running) svunit_ut.give_up(); \
   end
 `endif
 
@@ -136,11 +136,10 @@
     integer local_error_count = svunit_ut.get_error_count(); \
     string fileName; \
     int lineNumber; \
-    bit is_running = 0; \
 \
     `INFO($psprintf(`"%s::_NAME_::RUNNING`", name)); \
     setup(); \
-    is_running = 1; \
+    svunit_ut.is_running = 1; \
     fork \
       begin \
         fork \
@@ -161,7 +160,7 @@
         disable fork; \
       end \
     join \
-    is_running = 0; \
+    svunit_ut.is_running = 0; \
     teardown(); \
     if (svunit_ut.get_error_count() == local_error_count) \
       `INFO($psprintf(`"%s::_NAME_::PASSED`", name)); \

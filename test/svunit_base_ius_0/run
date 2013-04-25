@@ -1,51 +1,17 @@
+source ../test_functions.bsh
+
 # create the Makefile
 create_svunit.pl
-
-which irun >/dev/null
-if [ "$?" != "0" ]; then
-  exit 1;
-fi
 
 # build and run svunit with vcsi
 make
 
-
-# check the log output for a PASS from the testrunner
-if [ ! -e run.log ]; then
-  echo run.log does not exist
-  exit 1;
-fi
-
-grep "INFO:  \[0\]\[dut_ut\]: Use the INFO macro" run.log >/dev/null
-if [ "$?" != "0" ]; then
-  echo INFO not detected from unit test in run.log
-  exit 1;
-fi
-
-grep "ERROR: \[0\]\[dut_ut\]: Use the ERROR macro" run.log >/dev/null
-if [ "$?" != "0" ]; then
-  echo ERROR not detected from unit test in run.log
-  exit 1;
-fi
-
-grep "dut_ut::strictly_so_the_teardown_is_called::FAILED" run.log >/dev/null
-if [ "$?" != "0" ]; then
-  exit 1;
-fi
-
-grep "dut_ut::FAILED" run.log >/dev/null
-if [ "$?" != "0" ]; then
-  exit 1;
-fi
-
-grep "ts::FAILED" run.log >/dev/null
-if [ "$?" != "0" ]; then
-  exit 1;
-fi
-
-grep "Testrunner::FAILED" run.log >/dev/null
-if [ "$?" != "0" ]; then
-  exit 1;
-fi
+expect_file run.log
+expect_string "INFO:  \[0\]\[dut_ut\]: Use the INFO macro" run.log
+expect_string "ERROR: \[0\]\[dut_ut\]: Use the ERROR macro" run.log
+expect_string "dut_ut::strictly_so_the_teardown_is_called::FAILED" run.log
+expect_string "dut_ut::FAILED" run.log
+expect_string "ts::FAILED" run.log
+expect_testrunner_fail run.log
 
 exit 0
