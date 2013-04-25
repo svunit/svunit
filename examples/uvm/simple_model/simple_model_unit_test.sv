@@ -19,8 +19,6 @@
 //
 //###############################################################
 
-import svunit_pkg::*;
-
 `include "svunit_defines.svh"
 
 //-----------------------------------------------
@@ -31,8 +29,8 @@ import svunit_pkg::*;
 //         so that package is imported instead
 //         of including the svunit_uvm_test.sv
 //-----------------------------------------------
-//`include "svunit_uvm_test.sv"
 import svunit_uvm_mock_pkg::*;
+import svunit_pkg::*;
 
 //------------------------------------------
 // include the dut and the transaction type
@@ -40,21 +38,15 @@ import svunit_uvm_mock_pkg::*;
 `include "simple_model.sv"
 `include "simple_xaction.sv"
 
-typedef class c_simple_model_unit_test;
 
 module simple_model_unit_test;
+
   string name = "simple_model_ut";
-  c_simple_model_unit_test unittest;
+  svunit_testcase svunit_ut;
 
-  function void setup();
-    unittest = new(name);
-  endfunction
-endmodule
-
-class c_simple_model_unit_test extends svunit_testcase;
 
   //===================================
-  // This is the class that we're 
+  // This is the UUT that we're 
   // running the Unit Tests on
   //===================================
   simple_model my_simple_model;
@@ -69,13 +61,13 @@ class c_simple_model_unit_test extends svunit_testcase;
                                                                                                      
   uvm_tlm_fifo #(simple_xaction) out_fifo;
   uvm_blocking_get_port #(simple_xaction) get_port;
- 
- 
+
+
   //===================================
-  // Constructor
+  // Build
   //===================================
-  function new(string name);
-    super.new(name);
+  function void build();
+    svunit_ut = new(name);
 
     //---------------------------------------------
     // build an instance of the simple model along
@@ -113,7 +105,7 @@ class c_simple_model_unit_test extends svunit_testcase;
   // Setup for running the Unit Tests
   //===================================
   task setup();
-    super.setup();
+    svunit_ut.setup();
 
     //---------------------------------------------------
     // activate the component (i.e. add the component to
@@ -135,6 +127,45 @@ class c_simple_model_unit_test extends svunit_testcase;
   endtask
 
 
+  //===================================
+  // Here we deconstruct anything we 
+  // need after running the Unit Tests
+  //===================================
+  task teardown();
+    svunit_ut.teardown();
+
+    //-----------------------------
+    // terminate the testing phase
+    //-----------------------------
+    svunit_uvm_test_finish();
+
+    //-----------------------
+    // flush the output fifo
+    //-----------------------
+    #0 out_fifo.flush();
+
+    //----------------------------------------------------------
+    // deactivate the component so that it doesn't interfere
+    // with subsequent unit tests (i.e. reassign it to the idle
+    // domain)
+    //----------------------------------------------------------
+    svunit_deactivate_uvm_component(my_simple_model);
+  endtask
+
+
+  //===================================
+  // All tests are defined between the
+  // SVUNIT_TESTS_BEGIN/END macros
+  //
+  // Each individual test must be
+  // defined between `SVTEST(_NAME_)
+  // `SVTEST_END(_NAME_)
+  //
+  // i.e.
+  //   `SVTEST(mytest)
+  //     <test code>
+  //   `SVTEST_END(mytest)
+  //===================================
   `SVUNIT_TESTS_BEGIN
 
 
@@ -219,33 +250,7 @@ class c_simple_model_unit_test extends svunit_testcase;
     end
   `SVTEST_END(xformation_test)
 
+
   `SVUNIT_TESTS_END
 
-
-  //===================================
-  // Here we deconstruct anything we 
-  // need after running the Unit Tests
-  //===================================
-  task teardown();
-    super.teardown();
-    /* Place Teardown Code Here */
-
-    //-----------------------------
-    // terminate the testing phase
-    //-----------------------------
-    svunit_uvm_test_finish();
-
-    //-----------------------
-    // flush the output fifo
-    //-----------------------
-    #0 out_fifo.flush();
-
-    //----------------------------------------------------------
-    // deactivate the component so that it doesn't interfere
-    // with subsequent unit tests (i.e. reassign it to the idle
-    // domain)
-    //----------------------------------------------------------
-    svunit_deactivate_uvm_component(my_simple_model);
-  endtask
-
-endclass
+endmodule
