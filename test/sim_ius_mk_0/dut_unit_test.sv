@@ -1,31 +1,29 @@
+`include "svunit_defines.svh"
+`include "dut.sv"
+
 import svunit_pkg::*;
 
-`include "dut.sv"
-typedef class c_dut_unit_test;
 
 module dut_unit_test;
-  c_dut_unit_test unittest;
+
   string name = "dut_ut";
+  svunit_testcase svunit_ut;
 
-  function void setup();
-    unittest = new(name);
-  endfunction
-endmodule
-
-class c_dut_unit_test extends svunit_testcase;
 
   //===================================
-  // This is the class that we're 
+  // This is the UUT that we're 
   // running the Unit Tests on
   //===================================
   dut my_dut;
 
 
   //===================================
-  // Constructor
+  // Build
   //===================================
-  function new(string name);
-    super.new(name);
+  function void build();
+    svunit_ut = new(name);
+
+    my_dut = new(/* New arguments if needed */);
   endfunction
 
 
@@ -33,18 +31,8 @@ class c_dut_unit_test extends svunit_testcase;
   // Setup for running the Unit Tests
   //===================================
   task setup();
-    my_dut = new(/* New arguments if needed */);
+    svunit_ut.setup();
     /* Place Setup Code Here */
-  endtask
-
-
-  //===================================
-  // This is where we run all the Unit
-  // Tests
-  //===================================
-  task run_test();
-    super.run_test();
-
   endtask
 
 
@@ -53,10 +41,28 @@ class c_dut_unit_test extends svunit_testcase;
   // need after running the Unit Tests
   //===================================
   task teardown();
-    super.teardown();
+    svunit_ut.teardown();
     /* Place Teardown Code Here */
   endtask
 
-endclass
+
+  //===================================
+  // All tests are defined between the
+  // SVUNIT_TESTS_BEGIN/END macros
+  //
+  // Each individual test must be
+  // defined between `SVTEST(_NAME_)
+  // `SVTEST_END(_NAME_)
+  //
+  // i.e.
+  //   `SVTEST(mytest)
+  //     <test code>
+  //   `SVTEST_END(mytest)
+  //===================================
+  `SVUNIT_TESTS_BEGIN
 
 
+
+  `SVUNIT_TESTS_END
+
+endmodule

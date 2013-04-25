@@ -29,7 +29,6 @@ INCDIR   += $(SVUNIT_INSTALL)/svunit_base
 ALLPKGS  += $(SVUNIT_INSTALL)/svunit_base/svunit_pkg.sv
 
 TESTRUNNER := testrunner.sv
-SVUNIT_TOP := svunit_top.sv
 FILELISTS  += $(wildcard svunit.f)
 SIM_FLISTS += $(foreach FILE,$(FILELISTS), -file $(FILE))
 TESTFILES  += $(SIM_FLISTS) \
@@ -38,7 +37,6 @@ TESTFILES  += $(SIM_FLISTS) \
               $(CHILD_TESTSUITES) \
               $(TESTSUITES) \
               $(TESTDIR)/.$(TESTRUNNER) \
-              $(TESTDIR)/.$(SVUNIT_TOP)
 
 
 
@@ -50,20 +48,15 @@ TESTFILES  += $(SIM_FLISTS) \
 ifeq ($(SVUNIT_SIM),)
 	SVUNIT_SIM=@echo "Error: SVUNIT_SIM command line not defined"
 endif
-sim : .$(SVUNIT_TOP)
-	@$(SVUNIT_SIM)
 
+
+
+sim : .$(TESTRUNNER)
+	@$(SVUNIT_SIM)
 
 
 svunit : FORCE
 	exit 1
-
-
-
-.$(SVUNIT_TOP) : .$(TESTRUNNER)
-	@create_svunit_top.pl -overwrite
-	@mv $(SVUNIT_TOP) .$(SVUNIT_TOP)
-
 
 
 TEST_RUNNER_ARGS += -overwrite

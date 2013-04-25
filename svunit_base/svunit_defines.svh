@@ -113,7 +113,7 @@
   Macro: `SVUNIT_TESTS_BEGIN
   START a block of unit tests
 */
-`define SVUNIT_TESTS_BEGIN task svunit_tests();
+`define SVUNIT_TESTS_BEGIN task run();
 
 
 /*

@@ -18,7 +18,7 @@ module MYNAME_unit_test;
   //===================================
   // Build
   //===================================
-  function build();
+  function void build();
     svunit_ut = new(name);
 
     my_MYNAME = new(/* New arguments if needed */);

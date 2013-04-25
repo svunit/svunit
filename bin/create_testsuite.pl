@@ -244,7 +244,6 @@ sub CreateTestSuite() {
     $cnt++;
   }
 
-  print OUTFILE "    svunit_ts.report();\n";
   print OUTFILE "  endtask\n\n";
 
   print OUTFILE "endmodule\n";

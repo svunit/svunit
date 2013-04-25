@@ -279,7 +279,7 @@ sub CreateClassUnitTest() {
   print OUTFILE "  //===================================\n";
   print OUTFILE "  // Build\n";
   print OUTFILE "  //===================================\n";
-  print OUTFILE "  function build();\n";
+  print OUTFILE "  function void build();\n";
   print OUTFILE "    svunit_ut = new(name);\n";
   print OUTFILE "\n";
   print OUTFILE "    my_$uut = new(\/\* New arguments if needed \*\/);\n";

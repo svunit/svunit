@@ -27,7 +27,6 @@ module PWD_testsuite;
   //===================================
   task run();
     test_ut.run();
-    svunit_ts.report();
   endtask
 
 endmodule
