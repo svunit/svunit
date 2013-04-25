@@ -10,9 +10,8 @@ cd another_test && create_unit_test test0.sv && cd -
 create_svunit.pl
 
 ## build the svunit_top
-make .svunit_top.sv
+make .testrunner.sv
 
-verify_file test_unit_test.gold test_unit_test.sv
 verify_testsuite testsuite.gold
 cd ./another_test && verify_testsuite testsuite.gold && cd ..
 verify_testrunner testrunner.gold _another_test

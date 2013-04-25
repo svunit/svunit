@@ -1,5 +1,5 @@
 for test in `ls`; do
-  if [ -d $test ]; then
+  if [ -d $test -a "$test" != "templates" ]; then
     echo cleaning $test...
     cd $test && ./clean && cd - > /dev/null 2>&1
   fi
