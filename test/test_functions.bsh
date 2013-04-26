@@ -108,7 +108,7 @@ expect_string() {
 }
 
 
-expect_passing_sim() {
+expect_passing_example() {
   pushd . >/dev/null
 
   cd $1

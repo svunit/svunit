@@ -33,13 +33,6 @@ class svunit_testsuite;
 
 
   /*
-    Boolean: run_suite
-    Run this suite or not
-  */
-  local boolean_t run_suite = TRUE;
-
-
-  /*
     Array: list_of_svunits
     Queue list of Unit Tests to include for this Test Suite
   */
@@ -55,17 +48,11 @@ class svunit_testsuite;
 
   extern function new(string name);
   extern task run();
-  extern task load_testcase(svunit_testcase svunit);
   extern task report();
 
   extern function void add_testcase(svunit_testcase svunit);
-  extern function void add_testcases(svunit_testcase svunits[]);
-
-  extern task enable_suite();
-  extern task disable_suite();
 
   extern function string    get_name();
-  extern function boolean_t get_runstatus();
   extern function results_t get_results();
 
 endclass
@@ -91,45 +78,9 @@ endfunction
     svunit - unit test to add to the list of unit tests
 */
 function void svunit_testsuite::add_testcase(svunit_testcase svunit);
-  if (run_suite == TRUE && svunit.get_runstatus() == TRUE)
-  begin
-    `INFO($psprintf("Registering Unit Testcase %s", svunit.get_name()));
-    list_of_svunits.push_back(svunit); 
-  end
+  `INFO($psprintf("Registering Unit Testcase %s", svunit.get_name()));
+  list_of_svunits.push_back(svunit); 
 endfunction
-
-
-/*
-  Method: add_testcase
-  Adds list of testcases to list of tests
-
-  Parameters:
-    svunit - list of unit tests to add to the list of unit tests
-*/
-function void svunit_testsuite::add_testcases(svunit_testcase svunits[]);
-  foreach(svunits[i])
-    add_testcase(svunits[i]);
-endfunction
-
-
-/*
-  Method: disable_suite
-  Disables running of the Test Suite
-*/
-task svunit_testsuite::disable_suite();
-  `INFO($psprintf("Disabling Test Suite %0s", name));
-  run_suite = FALSE;
-endtask
-
-
-/*
-  Method: enable_suite
-  Enables running of the Test Suite
-*/
-task svunit_testsuite::enable_suite();
-  `INFO($psprintf("Enabling Test Suite %0s", name));
-  run_suite = TRUE;
-endtask
 
 
 /*
@@ -138,15 +89,6 @@ endtask
 */
 function string svunit_testsuite::get_name();
   return name;
-endfunction
-
-
-/*
-  Function: get_runstatus
-  Returns run_suite variable which determines whether to run this suite or not
-*/
-function boolean_t svunit_testsuite::get_runstatus();
-  return run_suite;
 endfunction
 
 
@@ -160,29 +102,15 @@ endfunction
 
 
 /*
-  Method: load_testcase
-  Calls setup, run, and teardown of the individual unit testcases
-
-  Parameters:
-    svunit - unit test to load and run
-*/
-task svunit_testsuite::load_testcase(svunit_testcase svunit);
-  svunit.run();
-endtask
-
-
-/*
   Method: report
   This task reports the results for the unit tests
 */
 task svunit_testsuite::report();
   foreach(list_of_svunits[i])
   begin
-    if (list_of_svunits[i].get_runstatus() == TRUE) begin
-      list_of_svunits[i].report();
-      if (list_of_svunits[i].get_results() == FAIL) begin
-        success = FAIL;
-      end
+    list_of_svunits[i].report();
+    if (list_of_svunits[i].get_results() == FAIL) begin
+      success = FAIL;
     end
   end
 
@@ -198,5 +126,3 @@ endtask
 task svunit_testsuite::run();
   `INFO($psprintf("%0s::RUNNING", name));
 endtask
-
-

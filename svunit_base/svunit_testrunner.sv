@@ -95,11 +95,8 @@ endfunction
 task svunit_testrunner::report();
   foreach (list_of_suites[i])
   begin
-    if (list_of_suites[i].get_runstatus() == TRUE)
-    begin
-      if (list_of_suites[i].get_results() == FAIL)
-        success = FAIL;
-    end
+    if (list_of_suites[i].get_results() == FAIL)
+      success = FAIL;
   end
 
   `LF;
