@@ -1,44 +1,7 @@
 source ../test_functions.bsh
 
-pushd .
-
-cd $SVUNIT_INSTALL/examples/uvm/simple_model
-create_svunit.pl
-
-
-################
-# RUN WITH VCS #
-################
-
-make SIMULATOR=VCS
-
-expect_file $SVUNIT_INSTALL/examples/uvm/simple_model/run.log
-expect_testrunner_pass $SVUNIT_INSTALL/examples/uvm/simple_model/run.log
-
-make SIMULATOR=VCS clean
-
-###################
-# RUN WITH QUESTA #
-###################
-
-make SIMULATOR=QUESTA
-
-expect_file $SVUNIT_INSTALL/examples/uvm/simple_model/run.log
-expect_testrunner_pass $SVUNIT_INSTALL/examples/uvm/simple_model/run.log
-
-make SIMULATOR=QUESTA clean
-
-###################
-# RUN WITH IUS #
-###################
-
-make SIMULATOR=IUS
-
-expect_file $SVUNIT_INSTALL/examples/uvm/simple_model/run.log
-expect_testrunner_pass $SVUNIT_INSTALL/examples/uvm/simple_model/run.log
-
-make SIMULATOR=IUS clean
-
-popd
+expect_passing_example $SVUNIT_INSTALL/examples/uvm/simple_model QUESTA
+expect_passing_example $SVUNIT_INSTALL/examples/uvm/simple_model VCS
+expect_passing_example $SVUNIT_INSTALL/examples/uvm/simple_model IUS
 
 exit 0
