@@ -21,8 +21,6 @@
 #
 ################################################################
 
-require "$ENV{SVUNIT_INSTALL}/bin/create_test_globals.pl";
-
 use File::Basename;
 
 
@@ -39,10 +37,9 @@ my $includes_already_printed = 0;
 ##########################################################################
 sub PrintHelp() {
   print "\n";
-  print "Usage:  create_unit_test.pl [ -help | -out <file> | -i | -author \"Author\" | -overwrite | <testname> ]\n\n";
+  print "Usage:  create_unit_test.pl [ -help | -out <file> | -i | -overwrite | <testname> ]\n\n";
   print "Where -help          : prints this help screen\n";
   print "      -out <file>    : specifies a new default output file\n";
-  print "      -author \"Name\" : specifies the author of this unit test file\n";
   print "      -overwrite      : overwrites the output file if it already exists\n";
   print "      <testname>     : the name of the testcase to run\n";
   print "\n";
@@ -67,11 +64,6 @@ sub CheckArgs() {
         $i++;
         $skip = 1;
         $output_file = $ARGV[$i];
-      }
-      elsif ( @ARGV[$i] =~ /-author/ ) {
-        $i++;
-        $skip = 1;
-        $author = $ARGV[$i];
       }
       elsif ( @ARGV[$i] =~ /-overwrite/ ) {
         $overwrite = 1;
@@ -122,7 +114,6 @@ sub OpenFiles() {
   else {
     open (OUTFILE, ">$output_file") or die "Cannot Open file $output_file\n";
   }
-  open (HDRFILE, "$header_file")  or die "Cannot Open file $header_file\n";
 }
 
 
@@ -132,10 +123,6 @@ sub OpenFiles() {
 sub CloseFiles() {
   close (INFILE)  or die "Cannot Close file $testname\n";
   close (OUTFILE) or die "Cannot Close file $output_file\n";
-  #if ( $total_tests == 0 ) {
-  #  system( "rm $output_file" );
-  #}
-  close (HDRFILE) or die "Cannot Close file $header_file\n";
 }
 
 
@@ -442,38 +429,11 @@ sub CreateIFUnitTest() {
 
 
 ##########################################################################
-# PrintHeading(): Prints out the XtremeEDA copyright heading
-##########################################################################
-sub PrintHeading() {
-  while ( $line = <HDRFILE> ) {
-    if ( $line =~ /FILENAME/ ) {
-      $of = basename($output_file);
-      $line =~ s/FILENAME/$of/g;
-    }
-    elsif ( $line =~ /DESCRIPTION/ ) {
-      $tn = basename($testname);
-      $line =~ s/DESCRIPTION/Unit Test file for $tn/g;
-    }
-    # NJ: rm this for now until we make it part of the unit test suite
-    #elsif ( $line =~ /DATE/ ) {
-    #  chomp( $date );
-    #  $line =~ s/DATE/$date/g;
-    #}
-    #elsif ( $line =~ /AUTHOR/ ) {
-    #  $line =~ s/AUTHOR/$author/g;
-    #}
-    print OUTFILE $line;
-  }
-}
-
-
-##########################################################################
 # This is the main run flow of the script
 ##########################################################################
 CheckArgs();
 if ( ValidArgs() == 0) {
   OpenFiles();
-  PrintHeading();
   Main();
   CloseFiles(); 
 }

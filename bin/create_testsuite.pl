@@ -21,8 +21,6 @@
 #
 ################################################################
 
-require "$ENV{SVUNIT_INSTALL}/bin/create_test_globals.pl";
-
 ##########################################################################
 # Local Variables
 ##########################################################################
@@ -34,11 +32,10 @@ $num_tests   = 0;
 ##########################################################################
 sub PrintHelp() {
   print "\n";
-  print "Usage:  create_testsuite.pl [ -help | -i | -r | -out <file> | -add <filename> | -author \"Name\" | -overwrite ]\n\n";
+  print "Usage:  create_testsuite.pl [ -help | -i | -r | -out <file> | -add <filename> | -overwrite ]\n\n";
   print "Where -help           : prints this help screen\n";
   print "      -out <file>     : specifies an output filename\n";
   print "      -add <filename> : adds test to test suite\n";
-  print "      -author \"Name\"  : specifies the author of this unit test file\n";
   print "      -overwrite      : overwrites the output file if it already exists\n";
   print "\n";
   die;
@@ -68,11 +65,6 @@ sub CheckArgs() {
         $i++;
         $skip = 1;
         push(@files_to_add, $ARGV[$i]);
-      }
-      elsif ( @ARGV[$i] =~ /-author/ ) {
-        $i++;
-        $skip = 1;
-        $author = $ARGV[$i];
       }
       elsif ( @ARGV[$i] =~ /-overwrite/ ) {
         $overwrite = 1;
@@ -113,7 +105,6 @@ sub OpenFiles() {
   else {
     open ( OUTFILE, ">$output_file"  ) or die "Cannot Open file $output_file\n";
   }
-  open ( HDRFILE, "$header_file"   ) or die "Cannot Open file $header_file\n";
 }
 
 
@@ -121,7 +112,6 @@ sub OpenFiles() {
 # CloseFiles(): This closes the input and output files
 ##########################################################################
 sub CloseFiles() {
-  close (HDRFILE) or die "Cannot Close file $header_file\n";
   close ( OUTFILE ) or die "Cannot Close file $output_file\n";
 }
 
@@ -191,6 +181,7 @@ sub CreateTestSuite() {
 
   print "SVUNIT: Creating class $class:\n\n";
 
+  print OUTFILE "import svunit_pkg::\*;\n\n";
   print OUTFILE "module $class;\n";
   $inst = $class;
   $inst =~ s/_testsuite/_ts/g;
@@ -253,31 +244,6 @@ sub CreateTestSuite() {
 
 
 ##########################################################################
-# PrintHeading(): Prints out the XtremeEDA copyright heading
-##########################################################################
-sub PrintHeading() {
-  while ( $line = <HDRFILE> ) {
-    if ( $line =~ /FILENAME/ ) {
-      $line =~ s/FILENAME/$output_file/g;
-    }
-    elsif ( $line =~ /DESCRIPTION/ ) {
-      $line =~ s/DESCRIPTION/Test Suite File/g;
-    }
-    # NJ: rm this until it's part of the test suite
-    #elsif ( $line =~ /DATE/ ) {
-    #  chomp( $date );
-    #  $line =~ s/DATE/$date/g;
-    #}
-    #elsif ( $line =~ /AUTHOR/ ) {
-    #  $line =~ s/AUTHOR/$author/g;
-    #}
-    print OUTFILE $line;
-  }
-  print OUTFILE "import svunit_pkg::\*;\n\n";
-}
-
-
-##########################################################################
 # MoveFile(): This moves the overwrites the output file with the 
 #             temporary output file.
 ##########################################################################
@@ -297,6 +263,5 @@ sub MoveFile() {
 CheckArgs();
 ValidArgs();
 OpenFiles();
-PrintHeading();
 CreateTestSuite();
 CloseFiles(); 
