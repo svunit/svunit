@@ -11,5 +11,8 @@ create_svunit.pl
 # build the svunit_top
 make .testrunner.sv
 
+# generate golden reference files
 verify_file       test_unit_test.gold test_unit_test.sv
+
+# verify the output
 verify_testsuite  testsuite.gold

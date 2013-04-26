@@ -5,5 +5,8 @@ setup
 # remove and create the unit_test
 create_unit_test test.sv
 
+# generate golden reference files
 golden_class_unit_test  test virtual_test
+
+# verify the output
 verify_file             test_unit_test.gold test_unit_test.sv

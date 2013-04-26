@@ -12,6 +12,8 @@ create_svunit.pl
 ## build the svunit_top
 make .testrunner.sv
 
-verify_testsuite testsuite.gold
-cd ./another_test && verify_testsuite testsuite.gold && cd ..
-verify_testrunner testrunner.gold _another_test
+# generate golden reference files
+golden_testrunner_with_2_testsuites
+
+# verify the output
+verify_testrunner testrunner.gold another_test
