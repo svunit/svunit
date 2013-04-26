@@ -20,6 +20,10 @@ expect_file_does_not_contain "subdir1 " subdir1/subdir1a/Makefile
 ## build the svunit_top
 make .testrunner.sv
 
-verify_testrunner testrunner.gold
+# generate golden reference files
+golden_testrunner_with_4_testsuites
+
+# verify the output
+verify_testrunner testrunner.gold subdir0 subdir1_subdir1a subdir1 
 
 exit 0

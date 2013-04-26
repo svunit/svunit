@@ -30,6 +30,10 @@ golden_testrunner_with_2_testsuites() {
   cp $SVUNIT_INSTALL/test/templates/testrunner_with_2_testsuite.gold testrunner.gold
 }
 
+golden_testrunner_with_4_testsuites() {
+  cp $SVUNIT_INSTALL/test/templates/testrunner_with_4_testsuite.gold testrunner.gold
+}
+
 verify_file() {
   if [ "`diff -bB $1 $2`" != "" ]; then
     echo $1 failed;
@@ -46,7 +50,9 @@ verify_testsuite() {
 verify_testrunner() {
   PWD=`pwd | sed -e "s/[\/-]/_/g"`
   sed -e "s/PWD/$PWD/g" $1 | \
-    sed -e "s/CHILD1/$2/g" > .$1
+    sed -e "s/CHILD1/$2/g" | \
+    sed -e "s/CHILD2/$3/g" | \
+    sed -e "s/CHILD3/$4/g" > .$1
   verify_file .testrunner.gold .testrunner.sv
 }
 

@@ -4,14 +4,15 @@ module testrunner();
   string name = "testrunner";
   svunit_testrunner svunit_tr;
 
+
   //==================================
   // These are the test suites that we
   // want included in this testrunner
   //==================================
   PWD_testsuite PWD_ts();
-  PWD_subdir0_testsuite PWD_subdir0_ts();
-  PWD_subdir1_subdir1a_testsuite PWD_subdir1_subdir1a_ts();
-  PWD_subdir1_testsuite PWD_subdir1_ts();
+  PWD_CHILD1_testsuite PWD_CHILD1_ts();
+  PWD_CHILD2_testsuite PWD_CHILD2_ts();
+  PWD_CHILD3_testsuite PWD_CHILD3_ts();
 
 
   //===================================
@@ -32,12 +33,12 @@ module testrunner();
     svunit_tr = new(name);
     PWD_ts.build();
     svunit_tr.add_testsuite(PWD_ts.svunit_ts);
-    PWD_subdir0_ts.build();
-    svunit_tr.add_testsuite(PWD_subdir0_ts.svunit_ts);
-    PWD_subdir1_subdir1a_ts.build();
-    svunit_tr.add_testsuite(PWD_subdir1_subdir1a_ts.svunit_ts);
-    PWD_subdir1_ts.build();
-    svunit_tr.add_testsuite(PWD_subdir1_ts.svunit_ts);
+    PWD_CHILD1_ts.build();
+    svunit_tr.add_testsuite(PWD_CHILD1_ts.svunit_ts);
+    PWD_CHILD2_ts.build();
+    svunit_tr.add_testsuite(PWD_CHILD2_ts.svunit_ts);
+    PWD_CHILD3_ts.build();
+    svunit_tr.add_testsuite(PWD_CHILD3_ts.svunit_ts);
   endfunction
 
 
@@ -46,9 +47,9 @@ module testrunner();
   //===================================
   task run();
     PWD_ts.run();
-    PWD_subdir0_ts.run();
-    PWD_subdir1_subdir1a_ts.run();
-    PWD_subdir1_ts.run();
+    PWD_CHILD1_ts.run();
+    PWD_CHILD2_ts.run();
+    PWD_CHILD3_ts.run();
     svunit_tr.report();
   endtask
 

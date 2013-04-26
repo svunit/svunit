@@ -6,7 +6,8 @@ rm -rf .`pwd | sed -e 's/[\/-]/_/g'`_testsuite.sv \
        .testsuite.gold \
        .testsuite.gold.tmp \
        Makefile \
-       test_unit_test.sv
+       test_unit_test.sv \
+       testrunner.gold
 
 
 cd subdir0 && \
