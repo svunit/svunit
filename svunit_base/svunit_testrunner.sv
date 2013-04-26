@@ -48,7 +48,6 @@ class svunit_testrunner;
 
   extern function new(string name);
   extern function void add_testsuite(svunit_testsuite suite);
-  extern function void add_testsuites(svunit_testsuite suites[]);
   extern task report();
   extern function string get_name();
 
@@ -77,19 +76,6 @@ endfunction
 function void svunit_testrunner::add_testsuite(svunit_testsuite suite);
   `INFO($psprintf("Registering Test Suite %0s", suite.get_name()));
   list_of_suites.push_back(suite); 
-endfunction
-
-
-/*
-  Method: add_testsuite
-  Adds list of test suites to list of suites
-
-  Parameters:
-    suites - list of test suites to add to the list of test suites
-*/
-function void svunit_testrunner::add_testsuites(svunit_testsuite suites[]);
-  foreach(suites[i])
-    add_testsuite(suites[i]);
 endfunction
 
 
