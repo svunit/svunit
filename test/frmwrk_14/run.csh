@@ -12,11 +12,6 @@ create_unit_test.pl -overwrite -out dut_unit_test.sv dut.sv
 # create the Makefile
 create_svunit.pl
 
-which vcsi
-if ( $status != 0 ) then
-  exit 1;
-endif
-
 # build and run svunit with vcsi
 make
 

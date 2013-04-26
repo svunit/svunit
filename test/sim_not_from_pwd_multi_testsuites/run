@@ -8,11 +8,6 @@ create_unit_test.pl -overwrite -out subdir1/subdir1a/subdir1a_unit_test.sv subdi
 # create the Makefile
 create_svunit.pl
 
-which qverilog >/dev/null
-if [ "$?" != "0" ]; then
-  exit 1;
-fi
-
 mkdir not_pwd
 mkdir subdir1/not_pwd
 

@@ -30,3 +30,8 @@ endif
 ifeq ($(SIMULATOR),QUESTA)
 include $(SVUNIT_INSTALL)/bin/questa.mk
 endif
+
+
+ifeq ($(SIMULATOR),IUS)
+include $(SVUNIT_INSTALL)/bin/ius.mk
+endif

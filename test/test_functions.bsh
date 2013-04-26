@@ -106,3 +106,22 @@ expect_string() {
     exit 1;
   fi
 }
+
+
+expect_passing_sim() {
+  pushd . >/dev/null
+
+  cd $1
+  create_svunit.pl
+
+  # build and run svunit with qverilog
+  make SIMULATOR=$2
+
+  # check the log output for a PASS from the testrunner
+  expect_file run.log
+  expect_testrunner_pass run.log
+
+  make SIMULATOR=$2 clean
+
+  popd >/dev/null
+}
