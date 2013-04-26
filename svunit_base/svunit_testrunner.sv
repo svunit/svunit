@@ -47,10 +47,8 @@ class svunit_testrunner;
 
 
   extern function new(string name);
-  extern task run();
   extern function void add_testsuite(svunit_testsuite suite);
   extern function void add_testsuites(svunit_testsuite suites[]);
-  extern task load_testsuite(svunit_testsuite suite);
   extern task report();
   extern function string get_name();
 
@@ -105,18 +103,6 @@ endfunction
 
 
 /*
-  Method: load_testcase
-  Calls setup, run, and teardown of the test suite
-
-  Parameters:
-    suite - test suite to load and run
-*/
-task svunit_testrunner::load_testsuite(svunit_testsuite suite);
-  suite.run();
-endtask
-
-
-/*
   Method: report
   This task reports the results for the test suites
 */
@@ -137,19 +123,3 @@ task svunit_testrunner::report();
   else
     `INFO("Testrunner::FAILED");
 endtask
-
-
-/*
-  Method: run
-  Main Run Task of the Test Runner
-*/
-task svunit_testrunner::run();
-  foreach(list_of_suites[i]) 
-  begin
-    if (list_of_suites[i].get_runstatus() == TRUE)
-      load_testsuite(list_of_suites[i]);
-  end
-  report();
-endtask
-
-
