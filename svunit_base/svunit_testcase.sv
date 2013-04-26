@@ -34,21 +34,6 @@ class svunit_testcase;
 
 
   /*
-    Boolean: run_ut
-    Enables the unit test to run
-  */
-  local boolean_t run_ut = TRUE;
-
-
-
-  /*
-    Boolean: verbose
-    Increase verbosity of messages
-  */
-  local boolean_t verbose = FALSE;
-
-
-  /*
     uint: error_count
     Counter for number of errors
   */
@@ -84,7 +69,6 @@ class svunit_testcase;
   extern task run();
   extern function void report();
 
-  extern local function void pass(string s);
   extern local function void fail(string s);
 
   extern task wait_for_error();
@@ -94,14 +78,7 @@ class svunit_testcase;
   extern function bit fail_if(bit b, string s, string f, int l);
   extern function bit fail_unless(bit b, string s, string f, int l);
 
-  extern function void enable_verbose();
-  extern function void disable_verbose();
-
-  extern function void enable_unit_test();
-  extern function void disable_unit_test();
-
   extern function string    get_name();
-  extern function boolean_t get_runstatus();
   extern function results_t get_results();
 
 endclass
@@ -117,42 +94,6 @@ endclass
 */
 function svunit_testcase::new(string name);
   this.name = name;
-endfunction
-
-
-/*
-  Method: disable_unit_test
-  Disbles the unit test from running
-*/
-function void svunit_testcase::disable_unit_test();
-  run_ut = FALSE;
-endfunction
-
-
-/*
-  Method: disable_verbose 
-  Disbles verbose mode
-*/
-function void svunit_testcase::disable_verbose();
-  verbose = FALSE;
-endfunction
-
-
-/*
-  Method: enable_unit_test
-  Enables the unit test from running
-*/
-function void svunit_testcase::enable_unit_test();
-  run_ut = TRUE;
-endfunction
-
-
-/*
-  Method: enable_verbose 
-  Enables verbose mode
-*/
-function void svunit_testcase::enable_verbose();
-  verbose = TRUE;
 endfunction
 
 
@@ -215,7 +156,6 @@ function bit svunit_testcase::fail_if(bit b, string s, string f, int l);
     return 1;
   end
   else begin
-    pass($psprintf("fail_if: %s", s));
     return 0;
   end
 endfunction
@@ -237,7 +177,6 @@ function bit svunit_testcase::fail_unless(bit b, string s, string f, int l);
     return 1;
   end
   else begin
-    pass($psprintf("fail_unless: %s", s));
     return 0;
   end
 endfunction
@@ -258,28 +197,6 @@ endfunction
 */
 function results_t svunit_testcase::get_results();
   return success;
-endfunction
-
-
-/*
-  Function: get_runstatus
-  Returns run_suite variable which determines whether to run this suite or not
-*/
-function boolean_t svunit_testcase::get_runstatus();
-  return run_ut;
-endfunction
-
-
-/*
-  Method: pass 
-  If verbose is true, print out display statement from argument
-  
-  Parameters:
-    s - display statement to print out
-*/
-function void svunit_testcase::pass(string s);
-  if (verbose == TRUE)
-    `INFO($psprintf("%s: PASS", s));
 endfunction
 
 
