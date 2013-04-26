@@ -40,3 +40,10 @@ v0.13
 v1.1
 ----
 * major upgrade to switch to module based svunit hierarchy
+
+v1.2
+----
+* maintenance release for consolidating functionality that's used and removing functionality that isn't
+* refactored/consolidated svunit regression suite
+* refactor svunit framework to remove unused features
+* refactor perl scripts to remove unused features
