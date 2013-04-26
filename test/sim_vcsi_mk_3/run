@@ -1,83 +1,24 @@
 # create the Makefile
 create_svunit.pl
 
-# build and run svunit with vcsi
+# build and run svunit with qverilog
 make
 
 
-# check the log output for a PASS from the testrunner
-if [ ! -e run.log ]; then
-  echo run.log does not exist
-  exit 1;
-fi
+expect_file run.log
 
-
-
-grep "INFO:  \[0\]\[_.*_ts\]: _.*_ts::RUNNING" run.log >/dev/null
-if [ "$?" != "0" ]; then
-  echo error 1
-  exit 1
-fi
-grep "INFO:  \[0\]\[dut_ut\]: dut_ut::RUNNING" run.log >/dev/null
-if [ "$?" != "0" ]; then
-  echo error 2
-  exit 1
-fi
-grep "INFO:  \[0\]\[dut_ut\]: dut_ut::first_test::RUNNING" run.log >/dev/null
-if [ "$?" != "0" ]; then
-  echo error 3
-  exit 1
-fi
-grep "INFO:  \[0\]\[dut_ut\]: dut_ut::first_test::PASSED" run.log >/dev/null
-if [ "$?" != "0" ]; then
-  echo error 4
-  exit 1
-fi
-grep "INFO:  \[0\]\[dut_ut\]: dut_ut::second_test::RUNNING" run.log >/dev/null
-if [ "$?" != "0" ]; then
-  echo error 5
-  exit 1
-fi
-grep "ERROR: \[0\]\[dut_ut\]: fail_if: 1 (at .*dut_unit_test.sv line:66): FAIL" run.log >/dev/null
-if [ "$?" != "0" ]; then
-  echo error 6
-  exit 1
-fi
-grep "INFO:  \[0\]\[dut_ut\]: dut_ut::second_test::FAILED" run.log >/dev/null
-if [ "$?" != "0" ]; then
-  echo error 7
-  exit 1
-fi
-grep "INFO:  \[0\]\[dut_ut\]: dut_ut::third_test::RUNNING" run.log >/dev/null
-if [ "$?" != "0" ]; then
-  echo error 8
-  exit 1
-fi
-grep "ERROR: \[0\]\[dut_ut\]: fail_unless: beam == 1 (at .*dut_unit_test.sv line:73): FAIL" run.log >/dev/null
-if [ "$?" != "0" ]; then
-  echo error 9
-  exit 1
-fi
-grep "INFO:  \[0\]\[dut_ut\]: dut_ut::third_test::FAILED" run.log >/dev/null
-if [ "$?" != "0" ]; then
-  echo error 10
-  exit 1
-fi
-grep "INFO:  \[0\]\[dut_ut\]: dut_ut::FAILED" run.log >/dev/null
-if [ "$?" != "0" ]; then
-  echo error 11
-  exit 1
-fi
-grep "INFO:  \[0\]\[_.*_ts\]: _.*_ts::FAILED" run.log >/dev/null
-if [ "$?" != "0" ]; then
-  echo error 12
-  exit 1
-fi
-grep "INFO:  \[0\]\[testrunner\]: Testrunner::FAILED" run.log >/dev/null
-if [ "$?" != "0" ]; then
-  echo error 13
-  exit 1
-fi
-
+expect_string "INFO:  \[0\]\[_.*_ts\]: _.*_ts::RUNNING" run.log
+expect_string "INFO:  \[0\]\[dut_ut\]: dut_ut::RUNNING" run.log
+expect_string "INFO:  \[0\]\[dut_ut\]: dut_ut::first_test::RUNNING" run.log
+expect_string "INFO:  \[0\]\[dut_ut\]: dut_ut::first_test::PASSED" run.log
+expect_string "INFO:  \[0\]\[dut_ut\]: dut_ut::second_test::RUNNING" run.log
+expect_string "ERROR: \[0\]\[dut_ut\]: fail_if: 1 (at .*dut_unit_test.sv line:66): FAIL" run.log
+expect_string "INFO:  \[0\]\[dut_ut\]: dut_ut::second_test::FAILED" run.log
+expect_string "INFO:  \[0\]\[dut_ut\]: dut_ut::third_test::RUNNING" run.log
+expect_string "ERROR: \[0\]\[dut_ut\]: fail_unless: beam == 1 (at .*dut_unit_test.sv line:73): FAIL" run.log
+expect_string "INFO:  \[0\]\[dut_ut\]: dut_ut::third_test::FAILED" run.log
+expect_string "INFO:  \[0\]\[dut_ut\]: dut_ut::FAILED" run.log
+expect_string "INFO:  \[0\]\[_.*_ts\]: _.*_ts::FAILED" run.log
+expect_string "INFO:  \[0\]\[testrunner\]: Testrunner::FAILED" run.log
 
 exit 0

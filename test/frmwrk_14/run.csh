@@ -15,16 +15,7 @@ create_svunit.pl
 # build and run svunit with vcsi
 make
 
-# check the log output for a PASS from the testrunner
-if ( ! -e run.log ) then
-  echo run.log does not exist
-  exit 1;
-endif
-
-grep "INFO:  \[0\]\[testrunner\]: Testrunner::PASSED" run.log >/dev/null
-if ( $status != 0 ) then
-  echo PASS not detected from Testrunner in run.log
-  exit 1;
-endif
+expect_file run.log
+expect_testrunner_pass run.log
 
 exit 0

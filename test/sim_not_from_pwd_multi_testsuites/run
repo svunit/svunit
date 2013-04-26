@@ -28,16 +28,8 @@ test()
   fi
 
   # check the log output for a PASS from the testrunner
-  if [ ! -e $run_log ]; then
-    echo $run_log does not exist
-    exit 1;
-  fi
-
-  grep "# INFO:  \[0\]\[testrunner\]: Testrunner::PASSED" $run_log >/dev/null
-  if [ "$?" != "0" ]; then
-    echo PASS not detected from Testrunner in $run_log
-    exit 1;
-  fi
+  expect_file $run_log
+  expect_testrunner_pass $run_log
 
   cd - >/dev/null
 }

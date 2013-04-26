@@ -1,9 +1,7 @@
+source ../test_functions.bsh
+
 create_svunit.pl
 
 make
 
-grep "INFO:  \[0\]\[testrunner\]: Testrunner::PASSED" run.log >/dev/null
-if [ "$?" != "0" ]; then
-  echo PASS not detected from Testrunner in run.log
-  exit 1;
-fi
+expect_testrunner_pass run.log
