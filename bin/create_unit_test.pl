@@ -75,6 +75,11 @@ sub CheckArgs() {
         $skip = 1;
         $class_name = $ARGV[$i];
       }
+      elsif ( @ARGV[$i] =~ /-module_name/ ) {
+        $i++;
+        $skip = 1;
+        $module_name = $ARGV[$i];
+      }
       elsif ( @ARGV[$i] =~ /-overwrite/ ) {
         $overwrite = 1;
       }
@@ -92,13 +97,17 @@ sub CheckArgs() {
 # ValidArgs(): This checks to see if the arguments provided make sense.
 ##########################################################################
 sub ValidArgs() {
-  if ( not defined($testname) and not defined($class_name)) {
+  if ( not defined($testname) and not defined($class_name) and not defined($module_name)) {
     print "\nERROR:  The testfile was either not specified, does not exist or is not readable\n";
     PrintHelp();
     return 1;
   }
   if (defined ($class_name)) {
     $output_file = $class_name;
+    $output_file .= "_unit_test.sv";
+  }
+  elsif (defined ($module_name)) {
+    $output_file = $module_name;
     $output_file .= "_unit_test.sv";
   }
   elsif ($output_file eq "") {
@@ -238,6 +247,12 @@ sub Main() {
     $processing_class = 1;
     $uut = $class_name;
     $testfilename = "$class_name.sv";
+    CreateUnitTest();
+  }
+  elsif (defined ($module_name)) {
+    $processing_module = 1;
+    $uut = $module_name;
+    $testfilename = "$module_name.sv";
     CreateUnitTest();
   }
 }

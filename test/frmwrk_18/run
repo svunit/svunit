@@ -1,0 +1,12 @@
+source ../test_functions.bsh
+
+setup
+
+# remove and create the unit_test
+create_unit_test.pl -module_name module_under_test
+
+# generate golden reference files
+golden_module_unit_test              module_under_test module_under_test
+
+# verify the output
+verify_file                         module_under_test_unit_test.gold module_under_test_unit_test.sv
