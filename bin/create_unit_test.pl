@@ -214,6 +214,7 @@ sub Main() {
         }
 
         elsif ( $processing_module && $line =~ /^\s*endmodule/ ) {
+          $testfilename = basename ($testname);
           CreateUnitTest();
           $total_tests = $total_tests + $num_tests;
           $num_tests = 0;
@@ -222,6 +223,7 @@ sub Main() {
         }
 
         elsif ( $processing_if && $line =~ /^\s*endinterface/ ) {
+          $testfilename = basename ($testname);
           CreateUnitTest();
           $total_tests = $total_tests + $num_tests;
           $num_tests = 0;
