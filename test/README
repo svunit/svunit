@@ -23,7 +23,8 @@ frmwrk_14:               verify the Setup.csh, create_unit_test.pl and create_sv
 frmwrk_15:               verify svunit_unit_test.pl -out switch
 frmwrk_16:               verify unit test templates are created properly for interfaces declared as 'automatic'
 frmwrk_17:               verify class unit test templates can be generated without an input file (i.e. generate a template from a name)
-frmwrk_18:               verify module/interface unit test templates can be generated without an input file (i.e. generate a template from a name)
+frmwrk_18:               verify module unit test templates can be generated without an input file (i.e. generate a template from a name)
+frmwrk_18:               verify interface unit test templates can be generated without an input file (i.e. generate a template from a name)
 
 ---------------------------------
 Tests for the simulator makefiles
