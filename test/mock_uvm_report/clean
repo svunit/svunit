@@ -1,11 +1,9 @@
-rm -rf csrc \
+rm -rf  \
        Makefile \
        run.log \
-       simv \
-       simv.daidir \
-       simv.vdb \
-       ucli.key \
-       vc_hdrs.h \
+       work \
+       run.log \
+       vsim.wlf \
        .*testsuite.sv \
        .svunit_top.sv \
        .testrunner.sv

@@ -30,6 +30,8 @@
   `SVTEST_END(complete_w_actual_and_expected_``TYPE) \
   \
   \
+  /* We are not expecting any specific message or id */ \
+  /* so any actual message or id is valid */ \
   `SVTEST(actual_string_expect_null_``TYPE) \
     uvm_report_mock::actual_``TYPE("MESSAGE", "ID"); \
     uvm_report_mock::expect_``TYPE(); \
@@ -37,6 +39,7 @@
   `SVTEST_END(actual_string_expect_null_``TYPE) \
   \
   \
+  /* We are specifically flagging the wrong message reported */ \
   `SVTEST(actual_string_expect_``TYPE``_wrong_message) \
     uvm_report_mock::actual_``TYPE("MESSAGE"); \
     uvm_report_mock::expect_``TYPE("wrong_MESSAGE"); \
@@ -52,6 +55,6 @@
   \
   `SVTEST(complete_w_macro_actual_and_expected_``TYPE) \
     my_basic.actual_``TYPE(); \
-    uvm_report_mock::expect_``TYPE("TYPE message", "my_basic"); \
+    uvm_report_mock::expect_``TYPE(`"TYPE message`", "my_basic"); \
     `FAIL_IF(!uvm_report_mock::verify_complete()); \
   `SVTEST_END(complete_w_macro_actual_and_expected_``TYPE) \

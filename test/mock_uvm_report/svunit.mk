@@ -1,2 +1,1 @@
-SIM_EXE=vcsi
-include $(SVUNIT_INSTALL)/bin/vcs.mk
+include $(SVUNIT_INSTALL)/bin/questa.mk
