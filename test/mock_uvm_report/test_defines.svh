@@ -1,13 +1,13 @@
 `define TEST_SET(TYPE) \
   `SVTEST(expect_``TYPE) \
     uvm_report_mock::expect_``TYPE(); \
-    `FAIL_IF(uvm_report_mock::expected_``TYPE``_cnt() != 1); \
+    `FAIL_IF(uvm_report_mock::expected_cnt() != 1); \
   `SVTEST_END(expect_``TYPE) \
   \
   \
   `SVTEST(actual_``TYPE) \
-    uvm_report_mock::actual_``TYPE(); \
-    `FAIL_IF(uvm_report_mock::actual_``TYPE``_cnt() != 1); \
+    uvm_report_``TYPE("id", "message");  /* actual */ \
+    `FAIL_IF(uvm_report_mock::actual_cnt() != 1); \
   `SVTEST_END(actual_``TYPE) \
   \
   \
@@ -18,14 +18,14 @@
   \
   \
   `SVTEST(incomplete_w_actual_``TYPE) \
-    uvm_report_mock::actual_``TYPE(); \
+    uvm_report_``TYPE("id", "message");  /* actual */ \
     `FAIL_IF(uvm_report_mock::verify_complete()); \
   `SVTEST_END(incomplete_w_actual_``TYPE) \
   \
   \
   `SVTEST(complete_w_actual_and_expected_``TYPE) \
-    uvm_report_mock::actual_``TYPE(); \
-    uvm_report_mock::expect_``TYPE(); \
+    uvm_report_``TYPE("id", "message");  /* actual */ \
+    uvm_report_mock::expect_``TYPE("id", "message"); \
     `FAIL_IF(!uvm_report_mock::verify_complete()); \
   `SVTEST_END(complete_w_actual_and_expected_``TYPE) \
   \
@@ -33,28 +33,57 @@
   /* We are not expecting any specific message or id */ \
   /* so any actual message or id is valid */ \
   `SVTEST(actual_string_expect_null_``TYPE) \
-    uvm_report_mock::actual_``TYPE("MESSAGE", "ID"); \
+    uvm_report_``TYPE("id", "message");  /* actual */ \
     uvm_report_mock::expect_``TYPE(); \
     `FAIL_IF(!uvm_report_mock::verify_complete()); \
   `SVTEST_END(actual_string_expect_null_``TYPE) \
   \
   \
+  /* We are not expecting any specific id */ \
+  /* so any actual id is valid */ \
+  `SVTEST(actual_string_expect_null_id_``TYPE) \
+    uvm_report_``TYPE("id", "message");  /* actual */ \
+    uvm_report_mock::expect_``TYPE("", "message"); \
+    `FAIL_IF(!uvm_report_mock::verify_complete()); \
+  `SVTEST_END(actual_string_expect_null_id_``TYPE) \
+  \
+  \
+  /* We are not expecting any specific message */ \
+  /* so any actual message is valid */ \
+  `SVTEST(actual_string_expect_null_message_``TYPE) \
+    uvm_report_``TYPE("id", "message");  /* actual */ \
+    uvm_report_mock::expect_``TYPE("id", ""); \
+    `FAIL_IF(!uvm_report_mock::verify_complete()); \
+  `SVTEST_END(actual_string_expect_null_message_``TYPE) \
+  \
+  \
+  /* We are specifically flagging the wrong id reported */ \
+  `SVTEST(actual_string_expect_``TYPE``_wrong_id) \
+    uvm_report_``TYPE("id", "message");  /* actual */ \
+    uvm_report_mock::expect_``TYPE("wrong_id", "message"); \
+    `FAIL_IF(uvm_report_mock::verify_complete()); \
+  `SVTEST_END(actual_string_expect_``TYPE``_wrong_id) \
+  \
+  \
   /* We are specifically flagging the wrong message reported */ \
   `SVTEST(actual_string_expect_``TYPE``_wrong_message) \
-    uvm_report_mock::actual_``TYPE("MESSAGE"); \
-    uvm_report_mock::expect_``TYPE("wrong_MESSAGE"); \
+    uvm_report_``TYPE("id", "message");  /* actual */ \
+    uvm_report_mock::expect_``TYPE("id", "wrong_message"); \
     `FAIL_IF(uvm_report_mock::verify_complete()); \
   `SVTEST_END(actual_string_expect_``TYPE``_wrong_message) \
   \
   \
-  `SVTEST(actual_string_expect_``TYPE``_wrong_id) \
-    uvm_report_mock::actual_``TYPE("MESSAGE", "ID"); \
-    uvm_report_mock::expect_``TYPE("MESSAGE", "wrong_ID"); \
+  /* We are specifically flagging the wrong severity reported */ \
+  `SVTEST(actual_string_expect_``TYPE``_wrong_severity) \
+    uvm_report_info("id", "message");  /* actual */ \
+    uvm_report_mock::expect_``TYPE("id", "wrong_message"); \
     `FAIL_IF(uvm_report_mock::verify_complete()); \
-  `SVTEST_END(actual_string_expect_``TYPE``_wrong_id) \
+  `SVTEST_END(actual_string_expect_``TYPE``_wrong_severity) \
+  \
   \
   `SVTEST(complete_w_macro_actual_and_expected_``TYPE) \
     my_basic.actual_``TYPE(); \
-    uvm_report_mock::expect_``TYPE(`"TYPE message`", "my_basic"); \
+    uvm_report_mock::expect_``TYPE("my_basic", `"TYPE message`"); \
     `FAIL_IF(!uvm_report_mock::verify_complete()); \
-  `SVTEST_END(complete_w_macro_actual_and_expected_``TYPE) \
+  `SVTEST_END(complete_w_macro_actual_and_expected_``TYPE)
+

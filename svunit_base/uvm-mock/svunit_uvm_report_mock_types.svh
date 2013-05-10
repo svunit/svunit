@@ -1,23 +1,60 @@
-class svunit_uvm_report_mock_expected_actual_container;
-  string expected [$];
-  string actual [$];
+//###############################################################
+//
+//  Licensed to the Apache Software Foundation (ASF) under one
+//  or more contributor license agreements.  See the NOTICE file
+//  distributed with this work for additional information
+//  regarding copyright ownership.  The ASF licenses this file
+//  to you under the Apache License, Version 2.0 (the
+//  "License"); you may not use this file except in compliance
+//  with the License.  You may obtain a copy of the License at
+//  
+//  http://www.apache.org/licenses/LICENSE-2.0
+//  
+//  Unless required by applicable law or agreed to in writing,
+//  software distributed under the License is distributed on an
+//  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+//  KIND, either express or implied.  See the License for the
+//  specific language governing permissions and limitations
+//  under the License.
+//
+//###############################################################
+
+
+class svunit_uvm_report_mock_expected_actual_container extends uvm_report_catcher;
+  
+  typedef struct {
+    string        id;
+    string        msg;
+    uvm_severity  sev;
+  } catch_t;
+  
+  catch_t     expected[$];
+  catch_t     actual[$];
+
+  function new(string name="");
+    super.new(name);
+  endfunction
 
   function void delete();
     expected.delete();
     actual.delete();
   endfunction
 
-  function bit valid_at_idx(int i);
-    if (expect_at_idx(i)) return match_at_idx(i);
-    else return 1;
+  function action_e catch();
+    uvm_severity_type sev_t = uvm_severity_type'(get_severity());
+    actual.push_back('{get_id(), get_message(), get_severity()});
+    // prevent the message from being displayed
+    return CAUGHT;
   endfunction
-  
-  local function bit expect_at_idx(int i);
-    return (expected[i] != "");
-  endfunction
-  
+
   local function bit match_at_idx(int i);
-    return (expected[i] == actual[i]);
+    bit match = 0;
+    if (expected[i].id  == "") match = 1;
+    else                       match =  (expected[i].id  == actual[i].id);
+    if (expected[i].msg == "") match &= 1;
+    else                       match &= (expected[i].msg == actual[i].msg);
+    match &= (expected[i].sev == actual[i].sev);
+    return match;
   endfunction
 
   function bit verify_complete();
@@ -25,9 +62,9 @@ class svunit_uvm_report_mock_expected_actual_container;
       return 0;
     end
 
-    foreach (expected[i]) if (!valid_at_idx(i)) return 0;
+    foreach (expected[i])
+      if (!match_at_idx(i)) return 0;
 
     return 1;
   endfunction
 endclass
-

@@ -7,6 +7,9 @@ rm -rf Makefile \
        subdir0_unit_test.sv \
 && cd - > /dev/null 2>&1
 
+cd subdir1 && \
+rm -rf Makefile \
+&& cd - > /dev/null 2>&1
 
 cd subdir1/subdir1a && \
 rm -rf Makefile \

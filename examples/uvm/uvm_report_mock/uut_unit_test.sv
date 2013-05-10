@@ -20,7 +20,6 @@
 //###############################################################
 
 `include "uvm_macros.svh"
-`include "svunit_uvm_mock_defines.sv"
 
 `include "svunit_defines.svh"
 

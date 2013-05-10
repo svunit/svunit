@@ -1,61 +1,55 @@
-class uvm_report_mock;
-  local static svunit_uvm_report_mock_expected_actual_container error_messages = new();
-  local static svunit_uvm_report_mock_expected_actual_container error_ids = new();
+//###############################################################
+//
+//  Licensed to the Apache Software Foundation (ASF) under one
+//  or more contributor license agreements.  See the NOTICE file
+//  distributed with this work for additional information
+//  regarding copyright ownership.  The ASF licenses this file
+//  to you under the Apache License, Version 2.0 (the
+//  "License"); you may not use this file except in compliance
+//  with the License.  You may obtain a copy of the License at
+//  
+//  http://www.apache.org/licenses/LICENSE-2.0
+//  
+//  Unless required by applicable law or agreed to in writing,
+//  software distributed under the License is distributed on an
+//  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+//  KIND, either express or implied.  See the License for the
+//  specific language governing permissions and limitations
+//  under the License.
+//
+//###############################################################
 
-  local static svunit_uvm_report_mock_expected_actual_container fatal_messages = new();
-  local static svunit_uvm_report_mock_expected_actual_container fatal_ids = new();
+class uvm_report_mock;
+  static svunit_uvm_report_mock_expected_actual_container reports = new();
 
   static function void setup();
-    error_messages.delete();
-    error_ids.delete();
-
-    fatal_messages.delete();
-    fatal_ids.delete();
+    reports.delete();
   endfunction
 
-  static function int expected_error_cnt();
-    return error_messages.expected.size();
+  static function int expected_cnt();
+    return reports.expected.size();
   endfunction
 
-  static function int actual_error_cnt();
-    return error_messages.actual.size();
+  static function int actual_cnt();
+    return reports.actual.size();
   endfunction
 
-  static function void expect_error(string message="",
-                                    string id="");
-    error_messages.expected.push_back(message);
-    error_ids.expected.push_back(id);
+  static function void expect_warning(string id="",
+                                    string message="");
+    reports.expected.push_back('{id, message, UVM_WARNING});
   endfunction
 
-  static function void actual_error(string message="",
-                                    string id="");
-    error_messages.actual.push_back(message);
-    error_ids.actual.push_back(id);
+  static function void expect_error(string id="",
+                                    string message="");
+    reports.expected.push_back('{id, message, UVM_ERROR});
   endfunction
 
-  static function int expected_fatal_cnt();
-    return fatal_messages.expected.size();
-  endfunction
-
-  static function int actual_fatal_cnt();
-    return fatal_messages.actual.size();
-  endfunction
-
-  static function void expect_fatal(string message="",
-                                    string id="");
-    fatal_messages.expected.push_back(message);
-    fatal_ids.expected.push_back(id);
-  endfunction
-
-  static function void actual_fatal(string message="",
-                                    string id="");
-    fatal_messages.actual.push_back(message);
-    fatal_ids.actual.push_back(id);
+  static function void expect_fatal(string id="",
+                                    string message="");
+    reports.expected.push_back('{id, message, UVM_FATAL});
   endfunction
 
   static function bit verify_complete();
-    return (error_messages.verify_complete() && error_ids.verify_complete() &&
-            fatal_messages.verify_complete() && fatal_ids.verify_complete());
+    return reports.verify_complete();
   endfunction
-
 endclass

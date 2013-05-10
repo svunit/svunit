@@ -5,11 +5,15 @@ import svunit_uvm_mock_pkg::*;
 `include "test_defines.svh"
 
 `include "uvm_macros.svh"
-`include "svunit_uvm_mock_defines.sv"
 
 `include "basic.sv"
 
+
 module basic_unit_test;
+
+initial begin
+  uvm_report_cb::add(null, uvm_report_mock::reports);
+end
 
   string name = "basic_ut";
   svunit_testcase svunit_ut;
@@ -68,14 +72,12 @@ module basic_unit_test;
   `SVUNIT_TESTS_BEGIN
 
   `SVTEST(init_expected_cnts)
-    `FAIL_IF(uvm_report_mock::expected_error_cnt() != 0);
-    `FAIL_IF(uvm_report_mock::expected_fatal_cnt() != 0);
+    `FAIL_IF(uvm_report_mock::expected_cnt() != 0);
   `SVTEST_END(init_expected_cnts)
 
 
   `SVTEST(init_actual_cnts)
-    `FAIL_IF(uvm_report_mock::actual_error_cnt() != 0);
-    `FAIL_IF(uvm_report_mock::actual_fatal_cnt() != 0);
+    `FAIL_IF(uvm_report_mock::actual_cnt() != 0);
   `SVTEST_END(init_actual_cnts)
 
 
@@ -83,10 +85,28 @@ module basic_unit_test;
     `FAIL_IF(!uvm_report_mock::verify_complete());
   `SVTEST_END(verify_complete)
 
-  // you'll find these defined in test_defines.svh
+
+  `TEST_SET(warning)
   `TEST_SET(error)
   `TEST_SET(fatal)
 
+
+  `SVTEST(actual_error_actual_fatal_expect_in_opposite_order)
+    my_basic.actual_error;
+    my_basic.actual_fatal;
+    uvm_report_mock::expect_fatal();
+    uvm_report_mock::expect_error();
+    `FAIL_IF(uvm_report_mock::verify_complete()); 
+  `SVTEST_END(actual_error_actual_fatal_expect_in_opposite_order)
+
+
+  `SVTEST(actual_error_actual_fatal_expect_error_expect_fatal)
+    my_basic.actual_error;
+    my_basic.actual_fatal;
+    uvm_report_mock::expect_error("my_basic", "error message");
+    uvm_report_mock::expect_fatal("my_basic", "fatal message");
+    `FAIL_IF(!uvm_report_mock::verify_complete()); 
+  `SVTEST_END(actual_error_actual_fatal_expect_error_expect_fatal)
 
 
   `SVUNIT_TESTS_END

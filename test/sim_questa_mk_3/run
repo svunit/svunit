@@ -1,3 +1,5 @@
+source ../test_functions.bsh
+
 # create the Makefile
 create_svunit.pl
 

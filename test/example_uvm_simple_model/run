@@ -1,7 +1,7 @@
 source ../test_functions.bsh
 
 expect_passing_example $SVUNIT_INSTALL/examples/uvm/simple_model QUESTA
-expect_passing_example $SVUNIT_INSTALL/examples/uvm/simple_model VCS
+#expect_passing_example $SVUNIT_INSTALL/examples/uvm/simple_model VCS
 expect_passing_example $SVUNIT_INSTALL/examples/uvm/simple_model IUS
 
 exit 0
