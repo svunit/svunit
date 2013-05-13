@@ -11,10 +11,6 @@ import svunit_uvm_mock_pkg::*;
 
 module basic_unit_test;
 
-initial begin
-  uvm_report_cb::add(null, uvm_report_mock::reports);
-end
-
   string name = "basic_ut";
   svunit_testcase svunit_ut;
 

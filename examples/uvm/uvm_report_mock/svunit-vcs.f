@@ -24,3 +24,4 @@
 $SVUNIT_INSTALL/svunit_base/uvm-mock/svunit_uvm_mock_pkg.sv
 +define+UVM_NO_RELNOTES
 +define+RUN_SVUNIT_WITH_UVM
++define+RUN_SVUNIT_WITH_UVM_REPORT_MOCK

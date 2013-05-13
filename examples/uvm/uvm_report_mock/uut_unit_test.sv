@@ -124,7 +124,7 @@ module uut_unit_test;
   //       expect_error(MSG, ID) function
   //---------------------------------------------
   `SVTEST(_99_has_a_specific_message)
-    uvm_report_mock::expect_error("arg is 99!", "uut");
+    uvm_report_mock::expect_error("uut", "arg is 99!");
     my_uut.verify_arg_is_not_99(99);
 
     `FAIL_IF(!uvm_report_mock::verify_complete());

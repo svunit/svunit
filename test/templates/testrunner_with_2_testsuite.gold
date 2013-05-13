@@ -1,4 +1,8 @@
 import svunit_pkg::*;
+`ifdef RUN_SVUNIT_WITH_UVM
+  import uvm_pkg::*;
+  import svunit_uvm_mock_pkg::*;
+`endif
 
 module testrunner();
   string name = "testrunner";
@@ -18,7 +22,13 @@ module testrunner();
   //===================================
   initial
   begin
+    `ifdef RUN_SVUNIT_WITH_UVM_REPORT_MOCK
+      uvm_report_cb::add(null, uvm_report_mock::reports);
+    `endif
     build();
+    `ifdef RUN_SVUNIT_WITH_UVM
+      svunit_uvm_test_inst("svunit_uvm_test");
+    `endif
     run();
     $finish();
   end
@@ -46,14 +56,4 @@ module testrunner();
   endtask
 
 
-  //===================================
-  // UVM test hooks
-  //===================================
-  `ifdef RUN_SVUNIT_WITH_UVM
-    import svunit_uvm_mock_pkg::*;
-    initial
-    begin
-      svunit_uvm_test_inst("svunit_uvm_test");
-    end
-  `endif
 endmodule
