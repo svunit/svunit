@@ -52,4 +52,8 @@ class uvm_report_mock;
   static function bit verify_complete();
     return reports.verify_complete();
   endfunction
+
+  static function string dump();
+    return reports.dump();
+  endfunction
 endclass

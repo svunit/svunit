@@ -67,4 +67,21 @@ class svunit_uvm_report_mock_expected_actual_container extends uvm_report_catche
 
     return 1;
   endfunction
+
+  function string dump();
+    string exp_sev = "UVM_ERROR";
+    string exp_id = "\"*\"";
+    string exp_msg = "\"*\"";
+    string act_sev = "UVM_ERROR";
+    string act_id = "\"\"";
+    string act_msg = "\"\"";
+    dump = "uvm_report_mock::dump\n";
+//                                    14, 20, *
+//                                                   \"                    \" \"\"
+    $sformat(dump, "%s0:   EXPECTED => %14s %22s %s\n", dump, exp_sev, exp_id, exp_msg);
+    $sformat(dump, "%s     ACTUAL   => %14s %22s %s\n", dump, act_sev, act_id, act_msg);
+
+//   dump = { dump , "0:   EXPECTED => UVM_ERROR                         \"*\" \"*\"\n" };
+//   dump = { dump , "     ACTUAL   => UVM_ERROR                          \"\" \"\"\n" };
+  endfunction
 endclass
