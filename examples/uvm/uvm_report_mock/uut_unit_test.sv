@@ -131,6 +131,21 @@ module uut_unit_test;
   `SVTEST_END(_99_has_a_specific_message)
 
 
+  //--------------------------------------------
+  // test: gt_100_is_a_warning
+  // desc: when 100 is passed in to 
+  //       warn_arg_is_gt_100, we expect that
+  //       warning by first calling the 
+  //       uvm_report_mock::expect_error().
+  //--------------------------------------------
+  `SVTEST(gt_100_is_a_warning)
+    uvm_report_mock::expect_warning();
+    my_uut.warn_arg_is_gt_100(101);
+
+    `FAIL_IF(!uvm_report_mock::verify_complete());
+  `SVTEST_END(gt_100_is_a_warning)
+
+
   `SVUNIT_TESTS_END
 
 endmodule

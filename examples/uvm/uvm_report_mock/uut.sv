@@ -35,6 +35,10 @@ class uut extends uvm_component;
     if (arg == 99) `uvm_error("uut", "arg is 99!");
   endfunction
 
+  function void warn_arg_is_gt_100(bit [7:0] arg);
+    if (arg > 100) uvm_report_warning("uut", "arg is gt 100!");
+  endfunction
+
 endclass
 
 `endif
