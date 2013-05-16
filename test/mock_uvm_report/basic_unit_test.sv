@@ -169,22 +169,52 @@ module basic_unit_test;
   `SVTEST_END(dump_returns_multiple_entries)
 
 
-// `SVTEST(dump_truncates_ids_longer_than_20)
-// `SVTEST_END(dump_truncates_ids_longer_than_20)
+  `SVTEST(dump_returns_no_actual_reported)
+    uvm_report_mock::expect_warning("ID exp0", "MSG exp0");
+    dump_exp = dump_header();
+    dump_exp = { dump_exp , "0:   EXPECTED =>    UVM_WARNING              \"ID exp0\" \"MSG exp0\"\n" };
+    dump_exp = { dump_exp , "     ACTUAL   =>  None reported                        \n" };
+ 
+    dump_act = uvm_report_mock::dump();
 
-// uvm_report_mock::dump
-// 0:   EXPECTED => UVM_ERROR                         "*" "*"
-//      ACTUAL   => UVM_ERROR                          "" ""
-// 1:   EXPECTED => UVM_WARNING                       "*" "*"
-//      ACTUAL   => UVM_WARNING    "ID lkj lkjlkjl lkj l" "MSG"
-// 2:   EXPECTED => UVM_FATAL                        "ID" "MSG"
-//      ACTUAL   =>                <None reported>
-// 3:   EXPECTED =>                <None reported>
-//      ACTUAL   => UVM_WARNING                      "ID" "MSG"
-// 4:   EXPECTED => UVM_ERROR                        "ID" "MSG"
-//      ACTUAL   => UVM_ERROR                        "ID" "MSG"
-// 5:   EXPECTED => UVM_WARNING                      "ID" "MSG"
-//      ACTUAL   => UVM_ERROR                        "ID" "MSG"
+    `FAIL_IF(dump_act != dump_exp);
+  `SVTEST_END(dump_returns_no_actual_reported)
+
+
+  `SVTEST(dump_returns_no_expected_reported)
+    uvm_report_fatal("ID exp0", "MSG exp0");
+    dump_exp = dump_header();
+    dump_exp = { dump_exp , "0:   EXPECTED =>  None reported                        \n" };
+    dump_exp = { dump_exp , "     ACTUAL   =>      UVM_FATAL              \"ID exp0\" \"MSG exp0\"\n" };
+ 
+    dump_act = uvm_report_mock::dump();
+
+    `FAIL_IF(dump_act != dump_exp);
+  `SVTEST_END(dump_returns_no_expected_reported)
+
+
+  `SVTEST(dump_actual_ids_longer_than_20_are_truncated)
+    uvm_report_fatal("ID exp0jfl sj ls jslke ej elekj ", "MSG exp0");
+    dump_exp = dump_header();
+    dump_exp = { dump_exp , "0:   EXPECTED =>  None reported                        \n" };
+    dump_exp = { dump_exp , "     ACTUAL   =>      UVM_FATAL \"ID exp0jfl sj ls jsl\" \"MSG exp0\"\n" };
+ 
+    dump_act = uvm_report_mock::dump();
+
+    `FAIL_IF(dump_act != dump_exp);
+  `SVTEST_END(dump_actual_ids_longer_than_20_are_truncated)
+
+
+  `SVTEST(dump_expected_ids_longer_than_20_are_truncated)
+    uvm_report_mock::expect_fatal("ID exp0jfl sj ls jslke ej elekj ", "");
+    dump_exp = dump_header();
+    dump_exp = { dump_exp , "0:   EXPECTED =>      UVM_FATAL \"ID exp0jfl sj ls jsl\" \"*\"\n" };
+    dump_exp = { dump_exp , "     ACTUAL   =>  None reported                        \n" };
+ 
+    dump_act = uvm_report_mock::dump();
+
+    `FAIL_IF(dump_act != dump_exp);
+  `SVTEST_END(dump_expected_ids_longer_than_20_are_truncated)
 
 
   `SVUNIT_TESTS_END

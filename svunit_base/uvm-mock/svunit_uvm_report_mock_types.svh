@@ -62,8 +62,12 @@ class svunit_uvm_report_mock_expected_actual_container extends uvm_report_catche
       return 0;
     end
 
-    foreach (expected[i])
-      if (!match_at_idx(i)) return 0;
+    foreach (expected[i]) begin
+      if (!match_at_idx(i)) begin
+        $display("%s", dump());
+        return 0;
+      end
+    end
 
     return 1;
   endfunction
@@ -73,23 +77,50 @@ class svunit_uvm_report_mock_expected_actual_container extends uvm_report_catche
     string msg;
     uvm_severity_type sev;
     string s_sev;
+    int i_max = (expected.size() > actual.size()) ? expected.size() : actual.size();
 
     dump = "uvm_report_mock::dump\n";
-    foreach (expected[i]) begin
-      if (expected[i].id != "") $sformat(id, "\"%s\"", expected[i].id);
-      else id = "\"*\"";
-      if (expected[i].msg != "") $sformat(msg, "\"%s\"", expected[i].msg);
-      else msg = "\"*\"";
-      sev = uvm_severity_type'(expected[i].sev);
-      $sformat(s_sev, "%s", sev.name());
+    for (int i=0; i<i_max; i+=1) begin
+      if (i <= expected.size()-1) begin
+        if (expected[i].id != "") $sformat(id, "\"%s\"", expected[i].id);
+        else id = "\"*\"";
+        id = truncate(id);
+        if (expected[i].msg != "") $sformat(msg, "\"%s\"", expected[i].msg);
+        else msg = "\"*\"";
+        sev = uvm_severity_type'(expected[i].sev);
+        $sformat(s_sev, "%s", sev.name());
+      end
+      else none_reported(id, msg, s_sev);
+
       $sformat(dump, "%s%0d:   EXPECTED => %14s %22s %s\n", dump, i, s_sev, id, msg);
 
 
-      $sformat(id, "\"%s\"", actual[i].id);;
-      $sformat(msg, "\"%s\"", actual[i].msg);;
-      sev = uvm_severity_type'(actual[i].sev);
-      $sformat(s_sev, "%s", sev.name());
+      if (i <= actual.size()-1) begin
+        $sformat(id, "\"%s\"", actual[i].id);;
+        id = truncate(id);
+        $sformat(msg, "\"%s\"", actual[i].msg);;
+        sev = uvm_severity_type'(actual[i].sev);
+        $sformat(s_sev, "%s", sev.name());
+      end
+      else none_reported(id, msg, s_sev);
+
       $sformat(dump, "%s     ACTUAL   => %14s %22s %s\n", dump, s_sev, id, msg);
     end
+  endfunction
+
+  local function none_reported(ref string id,
+                                   string msg,
+                                   string s_sev);
+    id = "";
+    msg = "";
+    s_sev = "None reported";
+  endfunction
+
+  local function string truncate(string s, int len = 22);
+    if (s.len() > len) begin
+      s = s.substr(0,len-1);
+      s[s.len()-1] = "\"";
+    end
+    return s;
   endfunction
 endclass
