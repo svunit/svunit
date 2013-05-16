@@ -119,12 +119,54 @@ module basic_unit_test;
     dump_exp = dump_header();
     dump_exp = { dump_exp , "0:   EXPECTED =>      UVM_ERROR                    \"*\" \"*\"\n" };
     dump_exp = { dump_exp , "     ACTUAL   =>      UVM_ERROR                     \"\" \"\"\n" };
-$display("%s", dump_exp);
+
     dump_act = uvm_report_mock::dump();
-$display("%s", dump_act);
  
     `FAIL_IF(dump_act != dump_exp);
   `SVTEST_END(dump_returns_star_for_expect_anything)
+
+
+  `SVTEST(dump_returns_actual_id_msg)
+    uvm_report_mock::expect_warning();
+    uvm_report_warning("ID actual", "MSG actual");
+    dump_exp = dump_header();
+    dump_exp = { dump_exp , "0:   EXPECTED =>    UVM_WARNING                    \"*\" \"*\"\n" };
+    dump_exp = { dump_exp , "     ACTUAL   =>    UVM_WARNING            \"ID actual\" \"MSG actual\"\n" };
+
+    dump_act = uvm_report_mock::dump();
+ 
+    `FAIL_IF(dump_act != dump_exp);
+  `SVTEST_END(dump_returns_actual_id_msg)
+
+
+  `SVTEST(dump_returns_expected_id_msg)
+    uvm_report_mock::expect_warning("ID expected", "MSG expected");
+    uvm_report_warning("ID actual", "MSG actual");
+    dump_exp = dump_header();
+    dump_exp = { dump_exp , "0:   EXPECTED =>    UVM_WARNING          \"ID expected\" \"MSG expected\"\n" };
+    dump_exp = { dump_exp , "     ACTUAL   =>    UVM_WARNING            \"ID actual\" \"MSG actual\"\n" };
+ 
+    dump_act = uvm_report_mock::dump();
+ 
+    `FAIL_IF(dump_act != dump_exp);
+  `SVTEST_END(dump_returns_expected_id_msg)
+
+
+  `SVTEST(dump_returns_multiple_entries)
+    uvm_report_mock::expect_warning("ID exp0", "MSG exp0");
+    uvm_report_warning("ID act0", "MSG act0");
+    uvm_report_mock::expect_error("ID exp1", "MSG exp1");
+    uvm_report_error("ID act1", "MSG act1");
+    dump_exp = dump_header();
+    dump_exp = { dump_exp , "0:   EXPECTED =>    UVM_WARNING              \"ID exp0\" \"MSG exp0\"\n" };
+    dump_exp = { dump_exp , "     ACTUAL   =>    UVM_WARNING              \"ID act0\" \"MSG act0\"\n" };
+    dump_exp = { dump_exp , "1:   EXPECTED =>      UVM_ERROR              \"ID exp1\" \"MSG exp1\"\n" };
+    dump_exp = { dump_exp , "     ACTUAL   =>      UVM_ERROR              \"ID act1\" \"MSG act1\"\n" };
+ 
+    dump_act = uvm_report_mock::dump();
+ 
+    `FAIL_IF(dump_act != dump_exp);
+  `SVTEST_END(dump_returns_multiple_entries)
 
 
 // `SVTEST(dump_truncates_ids_longer_than_20)

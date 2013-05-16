@@ -69,19 +69,27 @@ class svunit_uvm_report_mock_expected_actual_container extends uvm_report_catche
   endfunction
 
   function string dump();
-    string exp_sev = "UVM_ERROR";
-    string exp_id = "\"*\"";
-    string exp_msg = "\"*\"";
-    string act_sev = "UVM_ERROR";
-    string act_id = "\"\"";
-    string act_msg = "\"\"";
-    dump = "uvm_report_mock::dump\n";
-//                                    14, 20, *
-//                                                   \"                    \" \"\"
-    $sformat(dump, "%s0:   EXPECTED => %14s %22s %s\n", dump, exp_sev, exp_id, exp_msg);
-    $sformat(dump, "%s     ACTUAL   => %14s %22s %s\n", dump, act_sev, act_id, act_msg);
+    string id;
+    string msg;
+    uvm_severity_type sev;
+    string s_sev;
 
-//   dump = { dump , "0:   EXPECTED => UVM_ERROR                         \"*\" \"*\"\n" };
-//   dump = { dump , "     ACTUAL   => UVM_ERROR                          \"\" \"\"\n" };
+    dump = "uvm_report_mock::dump\n";
+    foreach (expected[i]) begin
+      if (expected[i].id != "") $sformat(id, "\"%s\"", expected[i].id);
+      else id = "\"*\"";
+      if (expected[i].msg != "") $sformat(msg, "\"%s\"", expected[i].msg);
+      else msg = "\"*\"";
+      sev = uvm_severity_type'(expected[i].sev);
+      $sformat(s_sev, "%s", sev.name());
+      $sformat(dump, "%s%0d:   EXPECTED => %14s %22s %s\n", dump, i, s_sev, id, msg);
+
+
+      $sformat(id, "\"%s\"", actual[i].id);;
+      $sformat(msg, "\"%s\"", actual[i].msg);;
+      sev = uvm_severity_type'(actual[i].sev);
+      $sformat(s_sev, "%s", sev.name());
+      $sformat(dump, "%s     ACTUAL   => %14s %22s %s\n", dump, s_sev, id, msg);
+    end
   endfunction
 endclass
