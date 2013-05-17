@@ -42,6 +42,9 @@ class svunit_uvm_report_mock_expected_actual_container extends uvm_report_catche
 
   function action_e catch();
     uvm_severity_type sev_t = uvm_severity_type'(get_severity());
+
+    if (sev_t == UVM_INFO) return THROW;
+
     actual.push_back('{get_id(), get_message(), get_severity()});
     // prevent the message from being displayed
     return CAUGHT;

@@ -216,6 +216,11 @@ module basic_unit_test;
     `FAIL_IF(dump_act != dump_exp);
   `SVTEST_END(dump_expected_ids_longer_than_20_are_truncated)
 
+  `SVTEST(info_are_ignored)
+    uvm_report_info("", "");
+    `FAIL_IF(!uvm_report_mock::verify_complete()); 
+  `SVTEST_END(info_are_ignored)
+
 
   `SVUNIT_TESTS_END
 
