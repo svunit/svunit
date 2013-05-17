@@ -116,10 +116,6 @@ module apb_coverage_unit_test;
   `SVTEST(write_method)
     apb_xaction a, b;
 
-    `FAIL_IF(my_apb_coverage.cg.addr_min_cp.get_coverage() != 0);
-    `FAIL_IF(my_apb_coverage.cg.data_min_cp.get_coverage() != 0);
-    `FAIL_IF(my_apb_coverage.cg.kind_cp.get_coverage() != 0);
-
     a = apb_xaction::type_id::create();
     void'(a.randomize() with { addr == 0;
                                data == 0;
@@ -145,8 +141,6 @@ module apb_coverage_unit_test;
   `SVTEST(addr_max_cp)
     apb_xaction a;
 
-    `FAIL_IF(my_apb_coverage.cg.addr_max_cp.get_coverage() != 0);
-
     a = apb_xaction::type_id::create();
     void'(a.randomize() with { addr == 'hfc;
                                data == 0; 
@@ -167,8 +161,6 @@ module apb_coverage_unit_test;
   //-------------------------------------
   `SVTEST(addr_bins_cp)
     apb_xaction a;
-
-    `FAIL_IF(my_apb_coverage.cg.addr_bins_cp.get_coverage() != 0);
 
     a = apb_xaction::type_id::create();
     void'(a.randomize() with { addr == 1;
@@ -200,8 +192,6 @@ module apb_coverage_unit_test;
   `SVTEST(data_max_cp)
     apb_xaction a;
 
-    `FAIL_IF(my_apb_coverage.cg.data_max_cp.get_coverage() != 0);
-
     a = apb_xaction::type_id::create();
     void'(a.randomize() with { data == 'hffff_ffff;
                                kind == WRITE;
@@ -221,8 +211,6 @@ module apb_coverage_unit_test;
   //-------------------------------------
   `SVTEST(data_bins_cp)
     apb_xaction a;
-
-    `FAIL_IF(my_apb_coverage.cg.data_bins_cp.get_coverage() != 0);
 
     a = apb_xaction::type_id::create();
     void'(a.randomize() with { data == 1;
@@ -254,8 +242,6 @@ module apb_coverage_unit_test;
     apb_xaction a;
 
     my_apb_coverage.cg.kind_cp.start();
-
-    `FAIL_IF(my_apb_coverage.cg.kind_cp.get_coverage() != 50);
 
     a = apb_xaction::type_id::create();
     void'(a.randomize() with { kind == READ; } );

@@ -65,6 +65,8 @@ class apb_coverage extends uvm_subscriber #(apb_xaction);
 
     kind_cp :
       coverpoint sampled_obj.kind;
+
+    option.per_instance = 1;
   endgroup;
 
   function new(string name = "apb_coverage",

@@ -24,3 +24,5 @@ $SVUNIT_INSTALL/svunit_base/uvm-mock/svunit_uvm_mock_pkg.sv
 +define+CLK_PERIOD=5
 +define+RUN_SVUNIT_WITH_UVM
 -uvm
+-coverage a
+-covoverwrite

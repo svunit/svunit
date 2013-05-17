@@ -37,6 +37,7 @@ endif
 ifeq ($(SIMULATOR),IUS)
 SVUNIT_F=svunit-ius.f
 include $(SVUNIT_INSTALL)/bin/ius.mk
+CLEANFILES += cov_work
 endif
 
 
