@@ -56,3 +56,8 @@ v1.3
 v1.4
 ----
 * in v1.3, UVM_INFO were trapped by the report mock. v1.4 ignores UVM_INFO. they're displayed normally.
+
+v1.5
+----
+* update the uvm_express example to be ius compatible (the coverage_unit_test.sv was holding us back to this point and I've rectified that with updates to the svunit-ius.mks and apb_coverage_unit_test.sv)
+* NOTE: IUS is still a little quirky when it comes to polling coverage statistics. seems the initial state of coverage points may start at 100 instead of 0 for some cases.
