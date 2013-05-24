@@ -21,39 +21,25 @@
 
 /*
   Class: svunit_testsuite
-  Base class for the test suite
+  Base class for the unit test suite
 */
-class svunit_testsuite;
+class svunit_testsuite extends svunit_base;
 
   /*
-    String: name
-    Name of class instance
+    Array: list_of_testcases
+    Queue list of Unit Testcases to include for this Test Suite
   */
-  protected string name;
-
-
-  /*
-    Array: list_of_svunits
-    Queue list of Unit Tests to include for this Test Suite
-  */
-  local svunit_testcase list_of_svunits[$];
+  local svunit_testcase list_of_testcases[$];
 
 
   /*
-    Variable: success
-    Contains Pass or Fail for success of the unit test
+    Interface
   */
-  local results_t success = PASS;
-
-
   extern function new(string name);
-  extern task run();
-  extern task report();
-
   extern function void add_testcase(svunit_testcase svunit);
+  extern task run();
 
-  extern function string    get_name();
-  extern function results_t get_results();
+  extern function void report();
 
 endclass
 
@@ -63,60 +49,24 @@ endclass
   Initializes the test suite
 
   Parameters:
-    name - instance name of the unit test
+    name - instance name of the unit test suite
 */
 function svunit_testsuite::new(string name);
-  this.name = name;
+  super.new(name);
 endfunction
 
 
 /*
   Method: add_testcase
-  Adds single testcase to list of tests
+  Adds a testcase to list of tests
 
   Parameters:
     svunit - unit test to add to the list of unit tests
 */
 function void svunit_testsuite::add_testcase(svunit_testcase svunit);
-  `INFO($psprintf("Registering Unit Testcase %s", svunit.get_name()));
-  list_of_svunits.push_back(svunit); 
+  `INFO($sformatf("Registering Unit Test Case %s", svunit.get_name()));
+  list_of_testcases.push_back(svunit); 
 endfunction
-
-
-/*
-  Function: get_name
-  Returns instance name of the unit test
-*/
-function string svunit_testsuite::get_name();
-  return name;
-endfunction
-
-
-/*
-  Function: get_results
-  Returns success of the unit test case
-*/
-function results_t svunit_testsuite::get_results();
-  return success;
-endfunction
-
-
-/*
-  Method: report
-  This task reports the results for the unit tests
-*/
-task svunit_testsuite::report();
-  foreach(list_of_svunits[i])
-  begin
-    list_of_svunits[i].report();
-    if (list_of_svunits[i].get_results() == FAIL) begin
-      success = FAIL;
-    end
-  end
-
-  if (success == PASS) `INFO($psprintf("%0s::PASSED", name));
-  else                 `INFO($psprintf("%0s::FAILED", name));
-endtask
 
 
 /*
@@ -124,5 +74,37 @@ endtask
   Main Run Task of the Test Suite
 */
 task svunit_testsuite::run();
-  `INFO($psprintf("%0s::RUNNING", name));
+  `INFO("RUNNING");
 endtask
+
+
+/*
+  Method: report
+  This task reports the results for the unit tests
+*/
+function void svunit_testsuite::report();
+  int     pass_cnt;
+  string  success_str;
+
+  foreach(list_of_testcases[i])
+    list_of_testcases[i].report();
+
+  begin
+    svunit_testcase match[$] = list_of_testcases.find() with (item.get_results() == PASS);
+    pass_cnt = match.size();
+  end
+  
+  if (pass_cnt == list_of_testcases.size()) begin
+    success_str = "PASSED";
+    success = PASS;
+  end else begin
+    success_str = "FAILED";
+    success = FAIL;
+  end
+
+  `LF;
+  `INFO($sformatf("%0s (%0d of %0d testcases passing)",
+    success_str,
+    pass_cnt,
+    list_of_testcases.size()));
+endfunction

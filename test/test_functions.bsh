@@ -84,7 +84,7 @@ expect_file_does_not_contain() {
 }
 
 expect_testrunner_pass() {
-  grep "INFO:  \[.*\]\[testrunner\]: Testrunner::PASSED" $1 >/dev/null
+  grep "INFO:  \[.*\]\[testrunner\]: PASSED" $1 >/dev/null
   if [ "$?" != "0" ]; then
     echo PASS not detected from Testrunner in $1
     exit 1;
@@ -92,7 +92,7 @@ expect_testrunner_pass() {
 }
 
 expect_testrunner_fail() {
-  grep "INFO:  \[.*\]\[testrunner\]: Testrunner::FAILED" $1 >/dev/null
+  grep "INFO:  \[.*\]\[testrunner\]: FAILED" $1 >/dev/null
   if [ "$?" != "0" ]; then
     echo PASS not detected from Testrunner in $1
     exit 1;

@@ -23,6 +23,7 @@
 
 package svunit_pkg;
   `include "svunit_types.svh"
+  `include "svunit_base.sv"
   `include "svunit_testcase.sv"
   `include "svunit_testsuite.sv"
   `include "svunit_testrunner.sv"

@@ -332,12 +332,12 @@ sub CreateUnitTest() {
   print OUTFILE "  //\n";
   print OUTFILE "  // Each individual test must be\n";
   print OUTFILE "  // defined between `SVTEST(_NAME_)\n";
-  print OUTFILE "  // `SVTEST_END(_NAME_)\n";
+  print OUTFILE "  // `SVTEST_END\n";
   print OUTFILE "  //\n";
   print OUTFILE "  // i.e.\n";
   print OUTFILE "  //   `SVTEST(mytest)\n";
   print OUTFILE "  //     <test code>\n";
-  print OUTFILE "  //   `SVTEST_END(mytest)\n";
+  print OUTFILE "  //   `SVTEST_END\n";
   print OUTFILE "  //===================================\n";
   print OUTFILE "  `SVUNIT_TESTS_BEGIN\n\n\n\n";
   print OUTFILE "  `SVUNIT_TESTS_END\n\n";

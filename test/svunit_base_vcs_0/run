@@ -9,9 +9,9 @@ make
 expect_file run.log
 expect_string "INFO:  \[0\]\[dut_ut\]: Use the INFO macro" run.log
 expect_string "ERROR: \[0\]\[dut_ut\]: Use the ERROR macro" run.log
-expect_string "dut_ut::strictly_so_the_teardown_is_called::FAILED" run.log
-expect_string "dut_ut::FAILED" run.log
-expect_string "ts::FAILED" run.log
+expect_string "strictly_so_the_teardown_is_called::FAILED" run.log
+expect_string "FAILED" run.log
+expect_string "FAILED" run.log
 expect_testrunner_fail run.log
 
 exit 0

@@ -121,12 +121,12 @@ module apb_mon_unit_test;
   //
   // Each individual test must be
   // defined between `SVTEST(_NAME_)
-  // `SVTEST_END(_NAME_)
+  // `SVTEST_END()
   //
   // i.e.
   //   `SVTEST(mytest)
   //     <test code>
-  //   `SVTEST_END(mytest)
+  //   `SVTEST_END()
   //===================================
   `SVUNIT_TESTS_BEGIN
 
@@ -140,7 +140,7 @@ module apb_mon_unit_test;
 
     `FAIL_IF(my_apb_mon.ap == null);
 
-  `SVTEST_END(analysis_port_not_null)
+  `SVTEST_END()
 
   //---------------------------------------
   // Test: bfm_not_null
@@ -151,7 +151,7 @@ module apb_mon_unit_test;
 
     `FAIL_IF(my_apb_mon.bfm == null);
 
-  `SVTEST_END(bfm_not_null)
+  `SVTEST_END()
 
   //---------------------------------------
   // Test: capture_write_xaction
@@ -192,7 +192,7 @@ module apb_mon_unit_test;
       end
     join
 
-  `SVTEST_END(capture_write_xaction)
+  `SVTEST_END()
 
   //---------------------------------------
   // Test: capture_b2b_write_xaction
@@ -233,7 +233,7 @@ module apb_mon_unit_test;
       join
     end
 
-  `SVTEST_END(capture_b2b_write_xaction)
+  `SVTEST_END()
 
   //---------------------------------------
   // Test: capture_write_xaction_chk
@@ -274,7 +274,7 @@ module apb_mon_unit_test;
       end
     join
 
-  `SVTEST_END(capture_write_xaction_chk)
+  `SVTEST_END()
 
   //---------------------------------------
   // Test: capture_b2b_write_xaction_chk
@@ -325,7 +325,7 @@ module apb_mon_unit_test;
         end
       join
     end
-  `SVTEST_END(capture_b2b_write_xaction_chk)
+  `SVTEST_END()
 
   //---------------------------------------
   // Test: capture_read_xaction
@@ -367,7 +367,7 @@ module apb_mon_unit_test;
       end
     join
 
-  `SVTEST_END(capture_read_xaction)
+  `SVTEST_END()
 
   //---------------------------------------
   // Test: capture_b2b_read_xaction
@@ -410,7 +410,7 @@ module apb_mon_unit_test;
       join
     end
 
-  `SVTEST_END(capture_b2b_read_xaction)
+  `SVTEST_END()
 
   //---------------------------------------
   // Test: capture_read_xaction_chk
@@ -453,7 +453,7 @@ module apb_mon_unit_test;
       end
     join
 
-  `SVTEST_END(capture_read_xaction_chk)
+  `SVTEST_END()
 
   //---------------------------------------
   // Test: capture_b2b_read_xaction_chk
@@ -508,7 +508,7 @@ module apb_mon_unit_test;
         end
       join
     end
-  `SVTEST_END(capture_b2b_read_xaction_chk)
+  `SVTEST_END()
 
   `SVUNIT_TESTS_END
 

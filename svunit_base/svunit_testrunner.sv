@@ -23,14 +23,7 @@
   Class: svunit_testrunner
   Base class for the test runner
 */
-class svunit_testrunner;
-
-  /*
-    String: name
-    Name of class instance
-  */
-  protected string name;
-
+class svunit_testrunner extends svunit_base;
 
   /*
     Array: list_of_svunits
@@ -40,29 +33,25 @@ class svunit_testrunner;
 
 
   /*
-    Variable: success
-    Contains Pass or Fail for success of the unit test
+    Interface
   */
-  local results_t success = PASS;
-
-
   extern function new(string name);
   extern function void add_testsuite(svunit_testsuite suite);
-  extern task report();
-  extern function string get_name();
+
+  extern function void report();
 
 endclass
 
 
 /*
   Constructor: name
-  Initializes the test suite
+  Initializes the test runner
 
   Parameters:
-    name - instance name of the unit test
+    name - instance name of the unit test runner
 */
 function svunit_testrunner::new(string name);
-  this.name = name;
+  super.new(name);
 endfunction
 
 
@@ -74,17 +63,8 @@ endfunction
     suite - test suite to add to the list of test suites
 */
 function void svunit_testrunner::add_testsuite(svunit_testsuite suite);
-  `INFO($psprintf("Registering Test Suite %0s", suite.get_name()));
+  `INFO($sformatf("Registering Test Suite %0s", suite.get_name()));
   list_of_suites.push_back(suite); 
-endfunction
-
-
-/*
-  Function: get_name
-  Returns instance name of the unit test
-*/
-function string svunit_testrunner::get_name();
-  return name;
 endfunction
 
 
@@ -92,17 +72,26 @@ endfunction
   Method: report
   This task reports the results for the test suites
 */
-task svunit_testrunner::report();
-  foreach (list_of_suites[i])
+function void svunit_testrunner::report();
+  int     pass_cnt;
+  string  success_str;
+
   begin
-    if (list_of_suites[i].get_results() == FAIL)
-      success = FAIL;
+    svunit_testsuite match[$] = list_of_suites.find() with (item.get_results() == PASS);
+    pass_cnt = match.size();
+  end
+  
+  if (pass_cnt == list_of_suites.size()) begin
+    success_str = "PASSED";
+    success = PASS;
+  end else begin
+    success_str = "FAILED";
+    success = FAIL;
   end
 
   `LF;
-
-  if (success == PASS)
-    `INFO("Testrunner::PASSED");
-  else
-    `INFO("Testrunner::FAILED");
-endtask
+  `INFO($sformatf("%0s (%0d of %0d suites passing)",
+    success_str,
+    pass_cnt,
+    list_of_suites.size()));
+endfunction

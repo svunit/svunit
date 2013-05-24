@@ -4,7 +4,6 @@ cd $SVUNIT_INSTALL/examples/uvm/simple_model
 make clean >/dev/null 2>&1
 make clean SIMULATOR=QUESTA >/dev/null 2>&1
 make clean SIMULATOR=IUS >/dev/null 2>&1
-rm Makefile svunit.f
-rm Makefile svunit.f
+rm -f Makefile svunit.f
 
 popd >/dev/null 2>&1

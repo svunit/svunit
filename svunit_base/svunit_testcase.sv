@@ -21,16 +21,15 @@
 
 /*
   Class: svunit_testcase
-  Base class for the unit testcase
+  Base class for the unit test case
 */
-class svunit_testcase;
-
+class svunit_testcase extends svunit_base;
 
   /*
-    String: name
-    Name of class instance
+    uint: test_count
+    Counter for number of tests
   */
-  protected string name;
+  local int unsigned test_count = 0;
 
 
   /*
@@ -41,74 +40,49 @@ class svunit_testcase;
 
 
   /*
-    Variable: success
-    Contains Pass or Fail for success of the unit test
+    Variable: running
+    1 is somewhere between setup and teardown, 0 otherwise
   */
-  local results_t success;
+  local bit running = 0;
 
 
   /*
-    Variable: is_running
-    1 is somewhere between setup and teardown, 1 otherwise
+    Interface
   */
-  bit is_running = 0;
-
-
   extern function new(string name);
-
-  extern virtual task setup();
-
-  extern virtual protected task run_test();
-
-  extern virtual protected task svunit_tests();
-
-  extern virtual task teardown();
-
-  extern virtual function void update_exit_status();
-
-  extern task run();
-  extern function void report();
-
-  extern local function void fail(string s);
 
   extern task wait_for_error();
   extern function integer get_error_count();
   extern task give_up();
 
+  extern local function bit fail(string c, bit b, string s, string f, int l);
   extern function bit fail_if(bit b, string s, string f, int l);
   extern function bit fail_unless(bit b, string s, string f, int l);
 
-  extern function string    get_name();
-  extern function results_t get_results();
+  extern function void start();
+  extern function void stop();
+  extern function bit  is_running();
+
+  extern function void update_exit_status();
+  extern function void report();
+
+  extern virtual task setup();
+  extern virtual task teardown();
 
 endclass
 
 
 /*
   Constructor: new
-  Initializes the unit test
+  Initializes the test case
 
   Parameters:
-    name - instance name of the unit test
+    name - instance name of the test case
 
 */
 function svunit_testcase::new(string name);
-  this.name = name;
+  super.new(name);
 endfunction
-
-
-/*
-  Method: fail
-  Increments Test Result's error count and displays message
-  
-  Parameters:
-    s - display statement to print out
-*/
-function void svunit_testcase::fail(string s);
-  error_count++;
-  `ERROR($psprintf("%s: FAIL", s));
-endfunction
-
 
 
 /*
@@ -122,7 +96,7 @@ endtask
 
 /*
   Method: get_error_count
-  returns the error count
+  Returns the error count
 */
 function integer svunit_testcase::get_error_count();
   return error_count;
@@ -131,16 +105,43 @@ endfunction
 
 /*
   Method: give_up
-  blocks indefinitely (Should only be called by `FAIL_IF)
+  Blocks indefinitely (Should only be called by `FAIL_IF)
 */
 task svunit_testcase::give_up();
   event never;
   @(never);
 endtask
 
+
+/*
+  Method: fail
+  If expression fails, increments error count, displays a message
+  and returns the results
+
+  Parameters:
+    c - calling function
+    b - evaluation of expression (0 - false, 1 - true)
+    s - string to pass to pass or fail task
+    f - file name of the failure
+    l - line number of the failure
+
+    return 1 if fail else 0
+*/
+function bit svunit_testcase::fail(string c, bit b, string s, string f, int l);
+  if (b) begin
+    error_count++;
+    `ERROR($sformatf("%s: %s (at %s line:%0d)",c,s,f,l));
+    return 1;
+  end
+  else begin
+    return 0;
+  end
+endfunction
+
+
 /*
   Method: fail_if
-  calls fail if expression is true
+  Returns the evaluation of the expression
 
   Parameters:
     b - evaluation of expression (0 - false, 1 - true)
@@ -151,92 +152,79 @@ endtask
     return 1 if fail else 0
 */
 function bit svunit_testcase::fail_if(bit b, string s, string f, int l);
-  if (b) begin
-    fail($psprintf("fail_if: %s (at %s line:%0d)", s, f, l));
-    return 1;
-  end
-  else begin
-    return 0;
-  end
+  return fail("fail_if",b,s,f,l);
 endfunction
 
 
 /*
   Method: fail_unless
-  calls fail if expression is not true
+  Returns the evaluation of the inverse of the expression
 
   Parameters:
     b - evaluation of expression (0 - false, 1 - true)
     s - string to pass to pass or fail task
+    f - file name of the failure
+    l - line number of the failure
 
     return 1 if fail else 0
 */
 function bit svunit_testcase::fail_unless(bit b, string s, string f, int l);
-  if (!b) begin
-    fail($psprintf("fail_unless: %s (at %s line:%0d)", s, f, l));
-    return 1;
-  end
-  else begin
-    return 0;
-  end
+  return fail("fail_unless",!b,s,f,l);
 endfunction
 
 
 /*
-  Function: get_name
-  Returns instance name of the unit test
+  Method: start
+  Changes the execution status of the test to running and increment the test count
 */
-function string svunit_testcase::get_name();
-  return name;
+function void svunit_testcase::start();
+  running = 1;
+  test_count++;
 endfunction
 
 
 /*
-  Function: get_results
-  Returns success of the unit test case
+  Method: stop
+  Changes the execution status of the test to stopped
 */
-function results_t svunit_testcase::get_results();
-  return success;
+function void svunit_testcase::stop();
+  running = 0;
+endfunction
+
+
+/*
+  Method: is_running
+  Returns the execution status of the test
+*/
+function bit svunit_testcase::is_running();
+  return running;
+endfunction
+
+
+/*
+  Methos: update_exit_status
+  Updates the results of this testcase
+*/
+function void svunit_testcase::update_exit_status();
+  if (error_count == 0)
+    success = PASS;
+  else
+    success = FAIL;
 endfunction
 
 
 /*
   Method: report
   This task reports the results for the unit tests
-*/  
+*/
 function void svunit_testcase::report();
-  if (success == PASS)
-    `INFO($psprintf("%0s::PASSED", name));
-  else
-    `INFO($psprintf("%0s::FAILED", name));
+  string success_str = (success)? "PASSED":"FAILED";
+
+  `INFO($sformatf("%0s (%0d of %0d tests passing)",
+    success_str,
+    test_count-error_count,
+    test_count));
 endfunction
-
-
-/*
-  Method: run
-  Main run task for the unit test
-*/
-task svunit_testcase::run();
-  run_test();
-endtask
-
-
-/*
-  Method: run_test
-  execute the list of registered unit tests 
-*/
-task svunit_testcase::run_test();
-  `INFO($psprintf("%s::RUNNING", name));
-  svunit_tests();
-endtask
-
-
-/*
-  Method: svunit_tests
-  invoke the unit tests registed with the SVUNIT_TEST_BEGIN/END macros
-*/
-task svunit_testcase::svunit_tests();
-endtask
 
 
 /*
@@ -249,16 +237,8 @@ endtask
 
 /*
   Method: teardown
-  Registers test as passed or failed
+  House cleaning after each test
 */
 task svunit_testcase::teardown();
 endtask
-
-
-function void svunit_testcase::update_exit_status();
-  if (error_count == 0)
-    success = PASS;
-  else
-    success = FAIL;
-endfunction
 

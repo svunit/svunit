@@ -111,7 +111,7 @@ class svunit_uvm_report_mock_expected_actual_container extends uvm_report_catche
     end
   endfunction
 
-  local function none_reported(ref string id,
+  local function void none_reported(ref string id,
                                    string msg,
                                    string s_sev);
     id = "";

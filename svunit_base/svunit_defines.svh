@@ -30,7 +30,7 @@
 `ifndef FAIL_IF
 `define FAIL_IF(exp) \
   if (svunit_ut.fail_if(exp, `"exp`", `__FILE__, `__LINE__)) begin \
-    if (svunit_ut.is_running) svunit_ut.give_up(); \
+    if (svunit_ut.is_running()) svunit_ut.give_up(); \
   end
 `endif
 
@@ -45,7 +45,7 @@
 `ifndef FAIL_UNLESS
 `define FAIL_UNLESS(exp) \
   if (svunit_ut.fail_unless(exp, `"exp`", `__FILE__, `__LINE__)) begin \
-    if (svunit_ut.is_running) svunit_ut.give_up(); \
+    if (svunit_ut.is_running()) svunit_ut.give_up(); \
   end
 `endif
 
@@ -115,15 +115,14 @@
 */
 `define SVUNIT_TESTS_BEGIN \
   task automatic run(); \
-    `INFO($psprintf("%s::RUNNING", name));
-
-
+    `INFO("RUNNING");
 
 /*
   Macro: `SVUNIT_TESTS_END
   END a block of unit tests
 */
 `define SVUNIT_TESTS_END endtask
+
 
 /*
   Macro: `SVTEST
@@ -133,13 +132,14 @@
 */
 `define SVTEST(_NAME_) \
   begin : _NAME_ \
+    string _testName = `"_NAME_`"; \
     integer local_error_count = svunit_ut.get_error_count(); \
     string fileName; \
     int lineNumber; \
 \
-    `INFO($psprintf(`"%s::_NAME_::RUNNING`", name)); \
+    `INFO($sformatf(`"%s::RUNNING`", _testName)); \
     setup(); \
-    svunit_ut.is_running = 1; \
+    svunit_ut.start(); \
     fork \
       begin \
         fork \
@@ -149,7 +149,7 @@
   Macro: `SVTEST_END
   END an svunit test within an SVUNIT_TEST_BEGIN/END block
 */
-`define SVTEST_END(_NAME_) \
+`define SVTEST_END(_NAME_="") \
           end \
           begin \
             if (svunit_ut.get_error_count() == local_error_count) begin \
@@ -160,11 +160,12 @@
         disable fork; \
       end \
     join \
-    svunit_ut.is_running = 0; \
+    svunit_ut.stop(); \
     teardown(); \
     if (svunit_ut.get_error_count() == local_error_count) \
-      `INFO($psprintf(`"%s::_NAME_::PASSED`", name)); \
+      `INFO($sformatf(`"%s::PASSED`", _testName)); \
     else \
-      `INFO($psprintf(`"%s::_NAME_::FAILED`", name)); \
+      `INFO($sformatf(`"%s::FAILED`", _testName)); \
     svunit_ut.update_exit_status(); \
-  end : _NAME_
+  end
+

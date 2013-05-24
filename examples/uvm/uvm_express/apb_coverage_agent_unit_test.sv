@@ -111,12 +111,12 @@ module apb_coverage_agent_unit_test;
   //
   // Each individual test must be
   // defined between `SVTEST(_NAME_)
-  // `SVTEST_END(_NAME_)
+  // `SVTEST_END()
   //
   // i.e.
   //   `SVTEST(mytest)
   //     <test code>
-  //   `SVTEST_END(mytest)
+  //   `SVTEST_END()
   //===================================
   `SVUNIT_TESTS_BEGIN
 
@@ -133,7 +133,7 @@ module apb_coverage_agent_unit_test;
     `FAIL_IF(my_apb_coverage_agent.coverage == null);
     `FAIL_IF(my_apb_coverage_agent.monitor.bfm == null);
 
-  `SVTEST_END(members_not_null)
+  `SVTEST_END()
 
   //---------------------------------------
   // Test: connectivity
@@ -155,7 +155,7 @@ module apb_coverage_agent_unit_test;
     `FAIL_IF(my_apb_coverage_agent.coverage.cg.addr_max_cp.get_coverage() != 100);
     `FAIL_IF(my_apb_coverage_agent.coverage.cg.data_min_cp.get_coverage() != 100);
 
-  `SVTEST_END(connectivity)
+  `SVTEST_END()
 
 
 
