@@ -51,6 +51,26 @@
 
 
 /*
+  Macro: `STRCMP_EQUAL
+  Fails if strings are not equal
+
+  Parameters: 
+    a - first string
+    b - second string
+*/
+`ifndef STRCMP_EQUAL
+`define STRCMP_EQUAL(a,b) \
+  begin \
+    string stra = a; \
+    string strb = b; \
+    if (svunit_ut.strcmp_equal(stra.compare(strb)==0, $sformatf("(\"%s\", \"%s\")",stra,strb), `__FILE__, `__LINE__)) begin \
+      if (svunit_ut.is_running()) svunit_ut.give_up(); \
+    end \
+  end
+`endif
+
+
+/*
   Macro: `INFO
   Displays info message to screen and in log file
 

@@ -58,6 +58,7 @@ class svunit_testcase extends svunit_base;
   extern local function bit fail(string c, bit b, string s, string f, int l);
   extern function bit fail_if(bit b, string s, string f, int l);
   extern function bit fail_unless(bit b, string s, string f, int l);
+  extern function bit strcmp_equal(bit b, string s, string f, int l);
 
   extern function void start();
   extern function void stop();
@@ -140,7 +141,7 @@ endfunction
 
 
 /*
-  Method: fail_if
+  Method: fail_if, fail_unless, strcmp_equal
   Returns the evaluation of the expression
 
   Parameters:
@@ -156,20 +157,13 @@ function bit svunit_testcase::fail_if(bit b, string s, string f, int l);
 endfunction
 
 
-/*
-  Method: fail_unless
-  Returns the evaluation of the inverse of the expression
-
-  Parameters:
-    b - evaluation of expression (0 - false, 1 - true)
-    s - string to pass to pass or fail task
-    f - file name of the failure
-    l - line number of the failure
-
-    return 1 if fail else 0
-*/
 function bit svunit_testcase::fail_unless(bit b, string s, string f, int l);
   return fail("fail_unless",!b,s,f,l);
+endfunction
+
+
+function bit svunit_testcase::strcmp_equal(bit b, string s, string f, int l);
+  return fail("strcmp_equal",!b,s,f,l);
 endfunction
 
 
