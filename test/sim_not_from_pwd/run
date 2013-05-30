@@ -14,7 +14,7 @@ make
 
 
 # check the log output for a PASS from the testrunner
-expect_file not_pwd/run.log
+expect_file not_pwd/run.log &&
 expect_testrunner_pass not_pwd/run.log
 
 exit 0

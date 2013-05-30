@@ -47,7 +47,9 @@ sim_vcs_filelist_0:                verify file lists are added properly with vcs
 SVUnit base testing
 -------------------
 svunit_base_vcs_0:                 test the use of the svunit logging macros with vcs
+svunit_base_vcs_1:                 verify the string PASS/FAIL status
 svunit_base_questa_0:              test the use of the svunit logging macros with questa
+svunit_base_questa_1:              verify the string PASS/FAIL status
 svunit_base_ius_0:                 test the use of the svunit logging macros with ius
 
 -------------

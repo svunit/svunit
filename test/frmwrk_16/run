@@ -8,5 +8,5 @@ create_unit_test test_if2.sv
 
 golden_if_unit_test test_if test_if
 golden_if_unit_test test_if2 test_if2
-verify_file         test_if_unit_test.gold test_if_unit_test.sv
+verify_file         test_if_unit_test.gold test_if_unit_test.sv &&
 verify_file         test_if2_unit_test.gold test_if2_unit_test.sv

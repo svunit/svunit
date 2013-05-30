@@ -12,10 +12,11 @@ create_unit_test.pl -overwrite -out ./subdir1/subdir1a/subdir1a_unit_test.sv ./s
 create_svunit.pl
 
 # verify that the Makefiles in each dir have only the UNITTESTS and INCDIRS that are required
-expect_file_does_not_contain subdir1 subdir0/Makefile
-expect_file_does_not_contain subdir0 subdir1/Makefile
-expect_file_does_not_contain subdir0 subdir1/subdir1a/Makefile
+expect_file_does_not_contain subdir1 subdir0/Makefile &&
+expect_file_does_not_contain subdir0 subdir1/Makefile &&
+expect_file_does_not_contain subdir0 subdir1/subdir1a/Makefile &&
 expect_file_does_not_contain "subdir1 " subdir1/subdir1a/Makefile
+expect_return_code 0
 
 ## build the svunit_top
 make .testrunner.sv
@@ -24,6 +25,6 @@ make .testrunner.sv
 golden_testrunner_with_4_testsuites
 
 # verify the output
-verify_testrunner testrunner.gold subdir0 subdir1_subdir1a subdir1 
+verify_testrunner testrunner.gold subdir0 subdir1_subdir1a subdir1
 
 exit 0

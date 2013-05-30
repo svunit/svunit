@@ -21,49 +21,53 @@
 
 
 /*
-  Macro: `FAIL_IF
-  Fails if expression is true
-
-  Parameters: 
-    exp - expression to evaluate
+  Assertion Macros
 */
 `ifndef FAIL_IF
 `define FAIL_IF(exp) \
-  if (svunit_ut.fail_if(exp, `"exp`", `__FILE__, `__LINE__)) begin \
+  if (svunit_ut.fail(`"fail_if`", (exp), `"exp`", `__FILE__, `__LINE__)) begin \
     if (svunit_ut.is_running()) svunit_ut.give_up(); \
   end
 `endif
 
+`ifndef FAIL_IF_EQUAL
+`define FAIL_IF_EQUAL(a,b) \
+  if (svunit_ut.fail(`"fail_if_equal`", (a==b), `"a == b`", `__FILE__, `__LINE__)) begin \
+    if (svunit_ut.is_running()) svunit_ut.give_up(); \
+  end
+`endif
 
-/*
-  Macro: `FAIL_UNLESS
-  Fails if expression is not true
-
-  Parameters: 
-    exp - expression to evaluate
-*/
 `ifndef FAIL_UNLESS
 `define FAIL_UNLESS(exp) \
-  if (svunit_ut.fail_unless(exp, `"exp`", `__FILE__, `__LINE__)) begin \
+  if (svunit_ut.fail(`"fail_unless`", !(exp), `"exp`", `__FILE__, `__LINE__)) begin \
     if (svunit_ut.is_running()) svunit_ut.give_up(); \
   end
 `endif
 
+`ifndef FAIL_UNLESS_EQUAL
+`define FAIL_UNLESS_EQUAL(a,b) \
+  if (svunit_ut.fail(`"fail_unless_equal`", (a!=b), `"a != b`", `__FILE__, `__LINE__)) begin \
+    if (svunit_ut.is_running()) svunit_ut.give_up(); \
+  end
+`endif
 
-/*
-  Macro: `STRCMP_EQUAL
-  Fails if strings are not equal
-
-  Parameters: 
-    a - first string
-    b - second string
-*/
-`ifndef STRCMP_EQUAL
-`define STRCMP_EQUAL(a,b) \
+`ifndef FAIL_IF_STR_EQUAL
+`define FAIL_IF_STR_EQUAL(a,b) \
   begin \
     string stra = a; \
     string strb = b; \
-    if (svunit_ut.strcmp_equal(stra.compare(strb)==0, $sformatf("(\"%s\", \"%s\")",stra,strb), `__FILE__, `__LINE__)) begin \
+    if (svunit_ut.fail(`"fail_if_str_equal`", stra.compare(strb)==0, $sformatf(`"\"%s\" == \"%s\"`",stra,strb), `__FILE__, `__LINE__)) begin \
+      if (svunit_ut.is_running()) svunit_ut.give_up(); \
+    end \
+  end
+`endif
+
+`ifndef FAIL_UNLESS_STR_EQUAL
+`define FAIL_UNLESS_STR_EQUAL(a,b) \
+  begin \
+    string stra = a; \
+    string strb = b; \
+    if (svunit_ut.fail(`"fail_unless_str_equal`", stra.compare(strb)!=0, $sformatf(`"\"%s\" != \"%s\"`",stra,strb), `__FILE__, `__LINE__)) begin \
       if (svunit_ut.is_running()) svunit_ut.give_up(); \
     end \
   end

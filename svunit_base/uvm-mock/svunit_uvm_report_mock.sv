@@ -34,20 +34,15 @@ class uvm_report_mock;
     return reports.actual.size();
   endfunction
 
-  static function void expect_warning(string id="",
-                                    string message="");
-    reports.expected.push_back('{id, message, UVM_WARNING});
-  endfunction
+  `define EXPECT_SEVERITY(NAME, SEV) \
+    static function void expect_``NAME(string id="", \
+                                       string message=""); \
+      reports.expected.push_back('{id, message, SEV}); \
+    endfunction
 
-  static function void expect_error(string id="",
-                                    string message="");
-    reports.expected.push_back('{id, message, UVM_ERROR});
-  endfunction
-
-  static function void expect_fatal(string id="",
-                                    string message="");
-    reports.expected.push_back('{id, message, UVM_FATAL});
-  endfunction
+  `EXPECT_SEVERITY(warning, UVM_WARNING)
+  `EXPECT_SEVERITY(error,   UVM_ERROR)
+  `EXPECT_SEVERITY(fatal,   UVM_FATAL)
 
   static function bit verify_complete();
     return reports.verify_complete();

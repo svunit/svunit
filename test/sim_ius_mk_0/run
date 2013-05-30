@@ -9,7 +9,7 @@ create_svunit.pl
 # build and run svunit with vcsi
 make
 
-expect_file run.log
+expect_file run.log &&
 expect_testrunner_pass run.log
 
 exit 0

@@ -9,9 +9,9 @@ create_unit_test.pl -overwrite -out ./subdir1/subdir1a/subdir1a_unit_test.sv ./s
 create_svunit.pl
 
 # confirm there's a makefile in both the test root and another_test
-expect_file ./Makefile
-expect_file ./subdir0/Makefile
-expect_file ./subdir1/Makefile
+expect_file ./Makefile &&
+expect_file ./subdir0/Makefile &&
+expect_file ./subdir1/Makefile &&
 expect_file ./subdir1/subdir1a/Makefile
 
 exit 0

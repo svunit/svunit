@@ -73,6 +73,20 @@ module dut_unit_test;
       `FAIL_UNLESS(beam == 1);
       `FAIL_IF(beam != 2);
     `SVTEST_END()
+
+    // this should fail on the second test only
+    `SVTEST(fourth_test)
+      `FAIL_IF_EQUAL('ha,15)
+      `FAIL_IF_EQUAL('hf,15)
+    `SVTEST_END()
+
+    // this should fail on the second test only
+    `SVTEST(fifth_test)
+      `FAIL_UNLESS_EQUAL(10,'ha)
+      `FAIL_UNLESS_EQUAL(15,'ha)
+    `SVTEST_END()
+
   `SVUNIT_TESTS_END
+
 
 endmodule
