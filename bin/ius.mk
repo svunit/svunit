@@ -31,6 +31,9 @@ endif
 #------------------------------
 # simulator command line arguments
 #------------------------------
+ifneq ($(UVM_HOME),)
+SIM_ARGS += -64 -uvmhome $(UVM_HOME)
+endif
 SIM_ARGS += -l run.log
 
 
@@ -64,4 +67,5 @@ SVUNIT_SIM = $(SIM_EXE) \
 # Files created by the simulator that need to be cleaned up
 #-----------------------------------------------------------
 CLEANFILES += INCA_libs \
-							run.log
+							run.log \
+              ncsc.log

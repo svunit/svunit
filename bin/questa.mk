@@ -31,7 +31,16 @@ endif
 #------------------------------
 # simulator command line arguments
 #------------------------------
+ifneq ($(UVM_HOME),)
+SIM_ARGS += +incdir+$(UVM_HOME)/src $(UVM_HOME)/src/uvm_pkg.sv -L $(UVM_HOME)
+ifneq (@(uname -a | egrep -o "x86_64"),)
+SIM_UVM  += -R -sv_lib ${UVM_HOME}/lib/uvm_dpi64
+else
+SIM_UVM  += -R -sv_lib ${UVM_HOME}/lib/uvm_dpi
+endif
+endif
 SIM_ARGS += -l run.log
+
 
 
 #----------------------------------------
@@ -57,7 +66,8 @@ SVUNIT_SIM = $(SIM_EXE) \
              $(SIM_ARGS) \
              $(SIM_INC) \
              $(ALLPKGS) \
-             $(TESTFILES)
+             $(TESTFILES) \
+             $(SIM_UVM)
 
 
 #-----------------------------------------------------------
