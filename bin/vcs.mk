@@ -31,7 +31,8 @@ endif
 #----------------------------------
 # simulator command line arguments
 #----------------------------------
-SIM_ARGS += -R -sverilog -l run.log
+RUN_LOG  := -R -sverilog -l run.log
+SIM_ARGS :=
 
 
 #----------------------------------------
@@ -54,10 +55,11 @@ SIM_INC += +incdir$(subst $(space),,$(foreach DIR,$(INCDIR),+$(DIR)))
 #                 .$(SVUNIT_TOP)
 #--------------------------------------------------------------
 SVUNIT_SIM = $(SIM_EXE) \
-             $(SIM_ARGS) \
+             $(RUN_LOG) \
              $(SIM_INC) \
              $(ALLPKGS) \
-             $(TESTFILES)
+             $(TESTFILES) \
+             $(SIM_ARGS)
 
 
 #-----------------------------------------------------------
