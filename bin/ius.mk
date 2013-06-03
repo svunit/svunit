@@ -31,8 +31,11 @@ endif
 #------------------------------
 # simulator command line arguments
 #------------------------------
+ifneq (@(uname -a | egrep -o "x86_64"),)
+SIM_ARGS += -64
+endif
 ifneq ($(UVM_HOME),)
-SIM_ARGS += -64 -uvmhome $(UVM_HOME)
+SIM_ARGS += -uvmhome $(UVM_HOME)
 endif
 SIM_ARGS += -l run.log
 
