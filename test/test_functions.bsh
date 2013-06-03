@@ -42,13 +42,15 @@ verify_file() {
 }
 
 verify_testsuite() {
-  PWD=`pwd | sed -e "s/[\/-]/_/g"`
+  #PWD=`pwd | sed -e "s/[\/-]/_/g"`
+  PWD="_"
   sed -e "s/PWD/$PWD/g" $1 > .$1
   verify_file .$1 .${PWD}_testsuite.sv
 }
 
 verify_testrunner() {
-  PWD=`pwd | sed -e "s/[\/-]/_/g"`
+  #PWD=`pwd | sed -e "s/[\/-]/_/g"`
+  PWD="_"
   sed -e "s/PWD/$PWD/g" $1 | \
     sed -e "s/CHILD1/$2/g" | \
     sed -e "s/CHILD2/$3/g" | \

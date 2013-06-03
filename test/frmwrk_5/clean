@@ -2,7 +2,7 @@ rm -rf Makefile
 
 
 cd another_test && \
-rm -rf .`pwd | sed -e 's/[\/-]/_/g'`_testsuite.sv \
+rm -rf .*testsuite.sv \
        .testrunner.gold \
        .testrunner.gold.tmp \
        .testrunner.sv \

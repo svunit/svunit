@@ -27,7 +27,7 @@ use IO::File;
 use IO::Dir;
 
 
-my $homeDir = getcwd;
+my $homeDir = "."; #getcwd;
 my $g_found_unit_test = 0;
 
 

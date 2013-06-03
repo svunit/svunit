@@ -1,4 +1,4 @@
-rm -rf .`pwd | sed -e 's/[\/-]/_/g'`_testsuite.sv \
+rm -rf .*testsuite.sv \
        Makefile \
        qverilog.log \
        .svunit_top.sv \

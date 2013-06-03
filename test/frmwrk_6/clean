@@ -1,4 +1,4 @@
-rm -rf .`pwd | sed -e 's/[\/-]/_/g'`_testsuite.sv \
+rm -rf .*testsuite.sv \
        .testrunner.gold \
        .testrunner.gold.tmp \
        .testrunner.sv \
@@ -11,7 +11,7 @@ rm -rf .`pwd | sed -e 's/[\/-]/_/g'`_testsuite.sv \
 
 
 cd subdir0 && \
-rm -rf .`pwd | sed -e 's/[\/-]/_/g'`_testsuite.sv \
+rm -rf .*testsuite.sv \
        .testsuite.gold \
        Makefile \
        subdir0_unit_test.sv \
@@ -19,7 +19,7 @@ rm -rf .`pwd | sed -e 's/[\/-]/_/g'`_testsuite.sv \
 
 
 cd subdir1 && \
-rm -rf .`pwd | sed -e 's/[\/-]/_/g'`_testsuite.sv \
+rm -rf .*testsuite.sv \
        .testsuite.gold \
        Makefile \
        subdir1_unit_test.sv \
@@ -27,7 +27,7 @@ rm -rf .`pwd | sed -e 's/[\/-]/_/g'`_testsuite.sv \
 
 
 cd subdir1/subdir1a && \
-rm -rf .`pwd | sed -e 's/[\/-]/_/g'`_testsuite.sv \
+rm -rf .*testsuite.sv \
        .testsuite.gold \
        Makefile \
        subdir1a_unit_test.sv \
