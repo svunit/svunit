@@ -73,3 +73,7 @@ v1.7
 * closed tickets 46 and 48
 * testsuites and makefiles no longer use abs paths
 * new macros for string comparison
+
+v1.8
+----
+* add svunit user feedback
