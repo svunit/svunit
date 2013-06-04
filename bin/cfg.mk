@@ -53,6 +53,7 @@ endif
 
 sim : .$(TESTRUNNER)
 	@$(SVUNIT_SIM)
+	@svunit_user_feedback.pl
 
 
 svunit : FORCE
