@@ -62,6 +62,7 @@ class svunit_uvm_report_mock_expected_actual_container extends uvm_report_catche
 
   function bit verify_complete();
     if (expected.size() != actual.size()) begin
+      $display("%s", dump());
       return 0;
     end
 
