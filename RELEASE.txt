@@ -81,3 +81,8 @@ v1.8
 v1.9
 ----
 * minor update to the uvm_report_mock to add dumping in the condition where the # of expected/actual don't match
+
+v2.0
+----
+* SVTEST_END macro update, parentheses are no longer necessary
+

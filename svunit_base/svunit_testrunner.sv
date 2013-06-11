@@ -7,9 +7,9 @@
 //  to you under the Apache License, Version 2.0 (the
 //  "License"); you may not use this file except in compliance
 //  with the License.  You may obtain a copy of the License at
-//  
+//
 //  http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 //  Unless required by applicable law or agreed to in writing,
 //  software distributed under the License is distributed on an
 //  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -64,7 +64,7 @@ endfunction
 */
 function void svunit_testrunner::add_testsuite(svunit_testsuite suite);
   `INFO($sformatf("Registering Test Suite %0s", suite.get_name()));
-  list_of_suites.push_back(suite); 
+  list_of_suites.push_back(suite);
 endfunction
 
 
@@ -80,7 +80,7 @@ function void svunit_testrunner::report();
     svunit_testsuite match[$] = list_of_suites.find() with (item.get_results() == PASS);
     pass_cnt = match.size();
   end
-  
+
   if (pass_cnt == list_of_suites.size()) begin
     success_str = "PASSED";
     success = PASS;
@@ -90,8 +90,9 @@ function void svunit_testrunner::report();
   end
 
   `LF;
-  `INFO($sformatf("%0s (%0d of %0d suites passing)",
+  `INFO($sformatf("%0s (%0d of %0d suites passing) [%s]",
     success_str,
     pass_cnt,
-    list_of_suites.size()));
+    list_of_suites.size(),
+    svunit_version));
 endfunction

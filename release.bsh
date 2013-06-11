@@ -12,13 +12,19 @@ if [ "$1" == "" ]; then
   exit 1
 fi
 
-if [ -e svunit-v1.$1.tar.gz ]; then
-  echo "Error: svunit-v1.$1.tar.gz already exists"
+ver="v2.$1"
+
+# update the release number in the svunit_defines.svh file
+perl -pi -e "s/SVUnit v[0-9\.]*/SVUnit $ver/" svunit_base/svunit_pkg.sv
+git add svunit_base/svunit_pkg.sv
+
+if [ -e svunit-$ver.tar.gz ]; then
+  echo "Error: svunit-$ver.tar.gz already exists"
   exit 1
 fi
 
 cd ..
-tar cvf svunit-v1.$1.tar svunit-code/bin \
+tar cvf svunit-$ver.tar svunit-code/bin \
                          svunit-code/docs \
                          svunit-code/examples \
                          svunit-code/header.txt \
@@ -28,13 +34,13 @@ tar cvf svunit-v1.$1.tar svunit-code/bin \
                          svunit-code/Setup.bsh \
                          svunit-code/Setup.csh \
                          svunit-code/svunit_base
-gzip svunit-v1.$1.tar
-mv svunit-v1.$1.tar.gz svunit-code
+gzip svunit-$ver.tar
+mv svunit-$ver.tar.gz svunit-code
 cd -
-git add svunit-v1.$1.tar.gz
-git commit -m "release svunit-v1.$1.tar.gz"
-git tag -a v1.$1 -m "v1.$1"
+git add svunit-$ver.tar.gz
+git commit -m "release svunit-$ver.tar.gz"
+git tag -a $ver -m "$ver"
 git push --tags
 git push
-scp svunit-v1.$1.tar.gz nosnhojn@frs.sourceforge.net:/home/frs/project/svunit
+scp svunit-$ver.tar.gz nosnhojn@frs.sourceforge.net:/home/frs/project/svunit
 scp README.txt nosnhojn@frs.sourceforge.net:/home/frs/project/svunit
