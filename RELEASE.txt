@@ -77,3 +77,7 @@ v1.7
 v1.8
 ----
 * add svunit user feedback
+
+v1.9
+----
+* minor update to the uvm_report_mock to add dumping in the condition where the # of expected/actual don't match
