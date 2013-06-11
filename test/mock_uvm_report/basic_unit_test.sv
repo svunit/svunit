@@ -59,28 +59,28 @@ module basic_unit_test;
   //
   // Each individual test must be
   // defined between `SVTEST(_NAME_)
-  // `SVTEST_END()
+  // `SVTEST_END
   //
   // i.e.
   //   `SVTEST(mytest)
   //     <test code>
-  //   `SVTEST_END()
+  //   `SVTEST_END
   //===================================
   `SVUNIT_TESTS_BEGIN
 
   `SVTEST(init_expected_cnts)
     `FAIL_IF(uvm_report_mock::expected_cnt() != 0);
-  `SVTEST_END()
+  `SVTEST_END
 
 
   `SVTEST(init_actual_cnts)
     `FAIL_IF(uvm_report_mock::actual_cnt() != 0);
-  `SVTEST_END()
+  `SVTEST_END
 
 
   `SVTEST(verify_complete)
     `FAIL_IF(!uvm_report_mock::verify_complete());
-  `SVTEST_END()
+  `SVTEST_END
 
 
   `TEST_SET(warning)
@@ -94,7 +94,7 @@ module basic_unit_test;
     uvm_report_mock::expect_fatal();
     uvm_report_mock::expect_error();
     `FAIL_IF(uvm_report_mock::verify_complete()); 
-  `SVTEST_END()
+  `SVTEST_END
 
 
   `SVTEST(actual_error_actual_fatal_expect_error_expect_fatal)
@@ -103,14 +103,14 @@ module basic_unit_test;
     uvm_report_mock::expect_error("my_basic", "error message");
     uvm_report_mock::expect_fatal("my_basic", "fatal message");
     `FAIL_IF(!uvm_report_mock::verify_complete()); 
-  `SVTEST_END()
+  `SVTEST_END
 
 
 // `SVTEST(dump_has_header)
 //   dump_exp = dump_header();
 //   dump_act = uvm_report_mock::dump();
 //   `FAIL_IF(dump_act != dump_exp);
-// `SVTEST_END()
+// `SVTEST_END
 
 
   `SVTEST(dump_returns_star_for_expect_anything)
@@ -123,7 +123,7 @@ module basic_unit_test;
     dump_act = uvm_report_mock::dump();
  
     `FAIL_IF(dump_act != dump_exp);
-  `SVTEST_END()
+  `SVTEST_END
 
 
   `SVTEST(dump_returns_actual_id_msg)
@@ -136,7 +136,7 @@ module basic_unit_test;
     dump_act = uvm_report_mock::dump();
  
     `FAIL_IF(dump_act != dump_exp);
-  `SVTEST_END()
+  `SVTEST_END
 
 
   `SVTEST(dump_returns_expected_id_msg)
@@ -149,7 +149,7 @@ module basic_unit_test;
     dump_act = uvm_report_mock::dump();
  
     `FAIL_IF(dump_act != dump_exp);
-  `SVTEST_END()
+  `SVTEST_END
 
 
   `SVTEST(dump_returns_multiple_entries)
@@ -166,7 +166,7 @@ module basic_unit_test;
     dump_act = uvm_report_mock::dump();
  
     `FAIL_IF(dump_act != dump_exp);
-  `SVTEST_END()
+  `SVTEST_END
 
 
   `SVTEST(dump_returns_no_actual_reported)
@@ -178,7 +178,7 @@ module basic_unit_test;
     dump_act = uvm_report_mock::dump();
 
     `FAIL_IF(dump_act != dump_exp);
-  `SVTEST_END()
+  `SVTEST_END
 
 
   `SVTEST(dump_returns_no_expected_reported)
@@ -190,7 +190,7 @@ module basic_unit_test;
     dump_act = uvm_report_mock::dump();
 
     `FAIL_IF(dump_act != dump_exp);
-  `SVTEST_END()
+  `SVTEST_END
 
 
   `SVTEST(dump_actual_ids_longer_than_20_are_truncated)
@@ -202,7 +202,7 @@ module basic_unit_test;
     dump_act = uvm_report_mock::dump();
 
     `FAIL_IF(dump_act != dump_exp);
-  `SVTEST_END()
+  `SVTEST_END
 
 
   `SVTEST(dump_expected_ids_longer_than_20_are_truncated)
@@ -214,12 +214,12 @@ module basic_unit_test;
     dump_act = uvm_report_mock::dump();
 
     `FAIL_IF(dump_act != dump_exp);
-  `SVTEST_END()
+  `SVTEST_END
 
   `SVTEST(info_are_ignored)
     uvm_report_info("", "");
     `FAIL_IF(!uvm_report_mock::verify_complete()); 
-  `SVTEST_END()
+  `SVTEST_END
 
 
   `SVUNIT_TESTS_END

@@ -100,12 +100,12 @@ module apb_if_unit_test;
   //
   // Each individual test must be
   // defined between `SVTEST(_NAME_)
-  // `SVTEST_END()
+  // `SVTEST_END
   //
   // i.e.
   //   `SVTEST(mytest)
   //     <test code>
-  //   `SVTEST_END()
+  //   `SVTEST_END
   //===================================
 
   logic [31:0] rdata;
@@ -124,7 +124,7 @@ module apb_if_unit_test;
   `SVTEST(async_reset_if_test)
     #1 my_apb_mstr_if.async_reset();
     `MST_EXPECT(0, 0, 0, 0, 0);
-  `SVTEST_END()
+  `SVTEST_END
 
   //--------------------------------------------------
   // Test: sync_reset_if
@@ -145,7 +145,7 @@ module apb_if_unit_test;
 
     @(negedge my_apb_mstr_if.clk) #1;
     `MST_EXPECT(0, 0, 0, 0, 0);
-  `SVTEST_END()
+  `SVTEST_END
 
   //--------------------------------------------------
   // Test: write_1_psel
@@ -161,7 +161,7 @@ module apb_if_unit_test;
     @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.psel !== 1);
     @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.psel !== 1);
     @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.psel !== 0);
-  `SVTEST_END()
+  `SVTEST_END
 
   //--------------------------------------------------
   // Test: write_2_psel
@@ -179,7 +179,7 @@ module apb_if_unit_test;
     @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.psel !== 1);
     @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.psel !== 1);
     @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.psel !== 0);
-  `SVTEST_END()
+  `SVTEST_END
 
   //--------------------------------------------------
   // Test: write_1_penable
@@ -195,7 +195,7 @@ module apb_if_unit_test;
     @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.penable !== 0);
     @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.penable !== 1);
     @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.penable !== 0);
-  `SVTEST_END()
+  `SVTEST_END
 
   //--------------------------------------------------
   // Test: write_2_penable
@@ -212,7 +212,7 @@ module apb_if_unit_test;
     @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.penable !== 0);
     @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.penable !== 1);
     @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.penable !== 0);
-  `SVTEST_END()
+  `SVTEST_END
 
   //--------------------------------------------------
   // Test: write_1_paddr
@@ -227,7 +227,7 @@ module apb_if_unit_test;
     @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.paddr !== 1);
     @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.paddr !== 1);
     @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.paddr !== 8'hx);
-  `SVTEST_END()
+  `SVTEST_END
 
   //--------------------------------------------------
   // Test: write_2_paddr
@@ -248,7 +248,7 @@ module apb_if_unit_test;
     @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.paddr !== 3);
     @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.paddr !== 3);
     @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.paddr !== 8'hx);
-  `SVTEST_END()
+  `SVTEST_END
 
   //--------------------------------------------------
   // Test: write_1_pwdata
@@ -263,7 +263,7 @@ module apb_if_unit_test;
     @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.pwdata !== 12);
     @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.pwdata !== 12);
     @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.pwdata !== 32'hx);
-  `SVTEST_END()
+  `SVTEST_END
 
   //--------------------------------------------------
   // Test: write_2_pwdata
@@ -284,7 +284,7 @@ module apb_if_unit_test;
     @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.pwdata !== 14);
     @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.pwdata !== 14);
     @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.pwdata !== 32'hx);
-  `SVTEST_END()
+  `SVTEST_END
 
   //--------------------------------------------------
   // Test: write_1_pwrite
@@ -299,7 +299,7 @@ module apb_if_unit_test;
     @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.pwrite !== 1);
     @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.pwrite !== 1);
     @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.pwrite !== 1'hx);
-  `SVTEST_END()
+  `SVTEST_END
 
   //--------------------------------------------------
   // Test: write_2_pwrite
@@ -317,7 +317,7 @@ module apb_if_unit_test;
     @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.pwrite !== 1);
     @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.pwrite !== 1);
     @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.pwrite !== 1'hx);
-  `SVTEST_END()
+  `SVTEST_END
 
   //--------------------------------------------------
   // Test: read_1_psel
@@ -333,7 +333,7 @@ module apb_if_unit_test;
     @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.psel !== 1);
     @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.psel !== 1);
     @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.psel !== 0);
-  `SVTEST_END()
+  `SVTEST_END
 
   //--------------------------------------------------
   // Test: read_2_psel
@@ -351,7 +351,7 @@ module apb_if_unit_test;
     @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.psel !== 1);
     @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.psel !== 1);
     @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.psel !== 0);
-  `SVTEST_END()
+  `SVTEST_END
 
   //--------------------------------------------------
   // Test: read_1_penable
@@ -367,7 +367,7 @@ module apb_if_unit_test;
     @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.penable !== 0);
     @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.penable !== 1);
     @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.penable !== 0);
-  `SVTEST_END()
+  `SVTEST_END
 
   //--------------------------------------------------
   // Test: read_2_penable
@@ -384,7 +384,7 @@ module apb_if_unit_test;
     @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.penable !== 0);
     @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.penable !== 1);
     @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.penable !== 0);
-  `SVTEST_END()
+  `SVTEST_END
  
   //--------------------------------------------------
   // Test: read_1_paddr
@@ -399,7 +399,7 @@ module apb_if_unit_test;
     @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.paddr !== 'hf);
     @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.paddr !== 'hf);
     @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.paddr !== 8'hx);
-  `SVTEST_END()
+  `SVTEST_END
  
   //--------------------------------------------------
   // Test: read_2_paddr
@@ -420,7 +420,7 @@ module apb_if_unit_test;
     @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.paddr !== 'hff);
     @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.paddr !== 'hff);
     @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.paddr !== 8'hx);
-  `SVTEST_END()
+  `SVTEST_END
  
   //--------------------------------------------------
   // Test: read_1_prdata
@@ -438,7 +438,7 @@ module apb_if_unit_test;
     @(negedge my_apb_slv_if.clk) #1 my_apb_slv_if.prdata = 'hx;
     @(negedge my_apb_slv_if.clk) #1 my_apb_slv_if.prdata = 'hffff;
     @(negedge my_apb_slv_if.clk) #1 my_apb_slv_if.prdata = 'hx;
-  `SVTEST_END()
+  `SVTEST_END
  
   //--------------------------------------------------
   // Test: read_2_prdata
@@ -462,7 +462,7 @@ module apb_if_unit_test;
     @(negedge my_apb_slv_if.clk) #1 my_apb_slv_if.prdata = 'hx;
     @(negedge my_apb_slv_if.clk) #1 my_apb_slv_if.prdata = 'hcccc;
     @(negedge my_apb_slv_if.clk) #1 my_apb_slv_if.prdata = 'hx;
-  `SVTEST_END()
+  `SVTEST_END
  
   //--------------------------------------------------
   // Test: read_1_pwrite
@@ -477,7 +477,7 @@ module apb_if_unit_test;
     @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.pwrite !== 0);
     @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.pwrite !== 0);
     @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.pwrite !== 1'hx);
-  `SVTEST_END()
+  `SVTEST_END
  
   //--------------------------------------------------
   // Test: read_2_pwrite
@@ -495,7 +495,7 @@ module apb_if_unit_test;
     @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.pwrite !== 0);
     @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.pwrite !== 0);
     @(negedge my_apb_slv_if.clk) #1 `FAIL_IF(my_apb_slv_if.pwrite !== 1'hx);
-  `SVTEST_END()
+  `SVTEST_END
 
   //--------------------------------------------------
   // Test: slv_1_capture_write
@@ -509,7 +509,7 @@ module apb_if_unit_test;
       my_apb_pslv_if.capture(slv_pwrite, slv_paddr, slv_pdata);
     join
     `SLV_EXPECT(1, 2, 3);
-  `SVTEST_END()
+  `SVTEST_END
 
   //--------------------------------------------------
   // Test: slv_2_capture_write
@@ -531,7 +531,7 @@ module apb_if_unit_test;
         `SLV_EXPECT(1, 'hf3, 'hffff);
       end
     join
-  `SVTEST_END()
+  `SVTEST_END
 
   //--------------------------------------------------
   // Test: slv_capture_1_read
@@ -555,7 +555,7 @@ module apb_if_unit_test;
     @(negedge my_apb_slv_if.clk) #1 my_apb_slv_if.prdata = 'hx;
     @(negedge my_apb_slv_if.clk) #1 my_apb_slv_if.prdata = 'h1111;
     @(negedge my_apb_slv_if.clk) #1 my_apb_slv_if.prdata = 'hx;
-  `SVTEST_END()
+  `SVTEST_END
 
   //--------------------------------------------------
   // Test: slv_capture_2_read
@@ -586,7 +586,7 @@ module apb_if_unit_test;
     @(negedge my_apb_slv_if.clk) #1 my_apb_slv_if.prdata = 'hx;
     @(negedge my_apb_slv_if.clk) #1 my_apb_slv_if.prdata = 'h7777_7777;
     @(negedge my_apb_slv_if.clk) #1 my_apb_slv_if.prdata = 'hx;
-  `SVTEST_END()
+  `SVTEST_END
 
 
   `SVUNIT_TESTS_END

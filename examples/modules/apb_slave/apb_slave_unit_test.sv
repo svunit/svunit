@@ -102,12 +102,12 @@ module apb_slave_unit_test;
   //
   // Each individual test must be
   // defined between `SVTEST(_NAME_)
-  // `SVTEST_END()
+  // `SVTEST_END
   //
   // i.e.
   //   `SVTEST(mytest)
   //     <test code>
-  //   `SVTEST_END()
+  //   `SVTEST_END
   //===================================
   `SVUNIT_TESTS_BEGIN
 
@@ -126,7 +126,7 @@ module apb_slave_unit_test;
     write(addr, data);
     read(addr, rdata);
     `FAIL_IF(data !== rdata);
-  `SVTEST_END()
+  `SVTEST_END
 
 
   //************************************************************
@@ -146,7 +146,7 @@ module apb_slave_unit_test;
     write(addr, 'hff, 0, 0);
     read(addr, rdata);
     `FAIL_IF(data !== rdata);
-  `SVTEST_END()
+  `SVTEST_END
 
 
   //************************************************************
@@ -166,7 +166,7 @@ module apb_slave_unit_test;
     write(addr, 'hff, 0, 1, 0);
     read(addr, rdata);
     `FAIL_IF(data !== rdata);
-  `SVTEST_END()
+  `SVTEST_END
 
 
   //************************************************************
@@ -187,7 +187,7 @@ module apb_slave_unit_test;
     read(addr+1, rdata, 1);
     `FAIL_IF(data+1 !== rdata);
 
-  `SVTEST_END()
+  `SVTEST_END
 
 
   `SVUNIT_TESTS_END

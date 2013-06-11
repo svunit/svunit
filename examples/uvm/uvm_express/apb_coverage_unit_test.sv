@@ -96,12 +96,12 @@ module apb_coverage_unit_test;
   //
   // Each individual test must be
   // defined between `SVTEST(_NAME_)
-  // `SVTEST_END()
+  // `SVTEST_END
   //
   // i.e.
   //   `SVTEST(mytest)
   //     <test code>
-  //   `SVTEST_END()
+  //   `SVTEST_END
   //===================================
   `SVUNIT_TESTS_BEGIN
 
@@ -131,7 +131,7 @@ module apb_coverage_unit_test;
     `FAIL_IF(my_apb_coverage.cg.kind_cp.get_coverage() != 50);
 
     my_apb_coverage.cg.start();
-  `SVTEST_END()
+  `SVTEST_END
 
   //-------------------------------------
   // Test: addr_max_cp
@@ -151,7 +151,7 @@ module apb_coverage_unit_test;
 
     `FAIL_IF(my_apb_coverage.cg.addr_max_cp.get_coverage() != 100);
  
-  `SVTEST_END()
+  `SVTEST_END
 
   //-------------------------------------
   // Test: addr_bins_cp
@@ -182,7 +182,7 @@ module apb_coverage_unit_test;
 
     `FAIL_IF(my_apb_coverage.cg.addr_bins_cp.get_coverage() != 100);
  
-  `SVTEST_END()
+  `SVTEST_END
 
   //-------------------------------------
   // Test: data_max_cp
@@ -201,7 +201,7 @@ module apb_coverage_unit_test;
 
     `FAIL_IF(my_apb_coverage.cg.data_max_cp.get_coverage() != 100);
  
-  `SVTEST_END()
+  `SVTEST_END
 
   //-------------------------------------
   // Test: data_bins_cp
@@ -231,7 +231,7 @@ module apb_coverage_unit_test;
 
     `FAIL_IF(my_apb_coverage.cg.data_bins_cp.get_coverage() != 100);
 
-  `SVTEST_END()
+  `SVTEST_END
 
   //-------------------------------------
   // Test: kind_cp
@@ -250,7 +250,7 @@ module apb_coverage_unit_test;
 
     `FAIL_IF(my_apb_coverage.cg.kind_cp.get_coverage() != 100);
  
-  `SVTEST_END()
+  `SVTEST_END
 
 
   `SVUNIT_TESTS_END

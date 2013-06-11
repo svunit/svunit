@@ -78,12 +78,12 @@ module uut_unit_test;
   //
   // Each individual test must be
   // defined between `SVTEST(_NAME_)
-  // `SVTEST_END()
+  // `SVTEST_END
   //
   // i.e.
   //   `SVTEST(mytest)
   //     <test code>
-  //   `SVTEST_END()
+  //   `SVTEST_END
   //===================================
   `SVUNIT_TESTS_BEGIN
 
@@ -99,7 +99,7 @@ module uut_unit_test;
     my_uut.verify_arg_is_not_99(99);
 
     `FAIL_IF(!uvm_report_mock::verify_complete());
-  `SVTEST_END()
+  `SVTEST_END
 
 
   //--------------------------------------------
@@ -113,7 +113,7 @@ module uut_unit_test;
     end
 
     `FAIL_IF(!uvm_report_mock::verify_complete());
-  `SVTEST_END()
+  `SVTEST_END
 
 
   //---------------------------------------------
@@ -128,7 +128,7 @@ module uut_unit_test;
     my_uut.verify_arg_is_not_99(99);
 
     `FAIL_IF(!uvm_report_mock::verify_complete());
-  `SVTEST_END()
+  `SVTEST_END
 
 
   //--------------------------------------------
@@ -143,7 +143,7 @@ module uut_unit_test;
     my_uut.warn_arg_is_gt_100(101);
 
     `FAIL_IF(!uvm_report_mock::verify_complete());
-  `SVTEST_END()
+  `SVTEST_END
 
 
   `SVUNIT_TESTS_END

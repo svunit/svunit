@@ -50,58 +50,58 @@ module dut_unit_test;
   //
   // Each individual test must be
   // defined between `SVTEST(_NAME_)
-  // `SVTEST_END()
+  // `SVTEST_END
   //
   // i.e.
   //   `SVTEST(mytest)
   //     <test code>
-  //   `SVTEST_END()
+  //   `SVTEST_END
   //===================================
   `SVUNIT_TESTS_BEGIN
 
   `SVTEST(fail_unless_str_equal_with_two_different_strings)
     `FAIL_UNLESS_STR_EQUAL("abd", "abcd")
-  `SVTEST_END()
+  `SVTEST_END
 
 
   `SVTEST(fail_unless_str_equal_with_two_identical_strings)
     `FAIL_UNLESS_STR_EQUAL("nice string-with lots of stuff!?!","nice string-with lots of stuff!?!")
-  `SVTEST_END()
+  `SVTEST_END
 
 
   `SVTEST(fail_unless_str_equal_with_one_string_and_one_string_object)
     string str = "nice string-with lots of stuff!?!";
     `FAIL_UNLESS_STR_EQUAL("nice string-with lots of stuff!?!",str)
-  `SVTEST_END()
+  `SVTEST_END
 
 
   `SVTEST(fail_unless_str_equal_with_two_strings_objects)
     string str = "nice string-with lots of stuff!?!";
     `FAIL_UNLESS_STR_EQUAL(str,str)
-  `SVTEST_END()
+  `SVTEST_END
 
 
   `SVTEST(fail_if_str_equal_with_two_identical_strings)
     `FAIL_IF_STR_EQUAL("abcd", "abcd")
-  `SVTEST_END()
+  `SVTEST_END
 
 
   `SVTEST(fail_if_str_equal_with_two_different_strings)
     `FAIL_IF_STR_EQUAL("nice string-with lots of stuff","nice string-with.lots of stuff")
-  `SVTEST_END()
+  `SVTEST_END
 
 
   `SVTEST(fail_if_str_equal_with_one_string_and_one_string_object)
     string str = "nice string-with lots of stuff";
     `FAIL_IF_STR_EQUAL("nice string-with.lots of stuff",str)
-  `SVTEST_END()
+  `SVTEST_END
 
 
   `SVTEST(fail_if_str_equal_with_two_different_strings_objects)
     string stra = "nice string-with lots of stuff";
     string strb = "nice string-with.lots of stuff";
     `FAIL_IF_STR_EQUAL(stra,strb)
-  `SVTEST_END()
+  `SVTEST_END
 
   `SVUNIT_TESTS_END
 

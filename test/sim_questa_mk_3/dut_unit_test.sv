@@ -48,23 +48,23 @@ module dut_unit_test;
   //
   // Each individual test must be
   // defined between `SVTEST(_NAME_)
-  // `SVTEST_END()
+  // `SVTEST_END
   //
   // i.e.
   //   `SVTEST(mytest)
   //     <test code>
-  //   `SVTEST_END()
+  //   `SVTEST_END
   //===================================
   `SVUNIT_TESTS_BEGIN
     // this should have the "running" and "pass" logged
     `SVTEST(first_test)
-    `SVTEST_END()
+    `SVTEST_END
 
 
     // this should have the "running" and "fail" logged w/1 error
     `SVTEST(second_test)
       `FAIL_IF(1);
-    `SVTEST_END()
+    `SVTEST_END
 
 
     // this should have the "running" and "fail" logged w/1 error
@@ -72,19 +72,19 @@ module dut_unit_test;
       static int beam = 4;
       `FAIL_UNLESS(beam == 1);
       `FAIL_IF(beam != 2);
-    `SVTEST_END()
+    `SVTEST_END
 
     // this should fail on the second test only
     `SVTEST(fourth_test)
       `FAIL_IF_EQUAL('ha,15)
       `FAIL_IF_EQUAL('hf,15)
-    `SVTEST_END()
+    `SVTEST_END
 
     // this should fail on the second test only
     `SVTEST(fifth_test)
       `FAIL_UNLESS_EQUAL(10,'ha)
       `FAIL_UNLESS_EQUAL(15,'ha)
-    `SVTEST_END()
+    `SVTEST_END
 
   `SVUNIT_TESTS_END
 

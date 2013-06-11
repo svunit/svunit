@@ -173,7 +173,7 @@
   Macro: `SVTEST_END
   END an svunit test within an SVUNIT_TEST_BEGIN/END block
 */
-`define SVTEST_END(_NAME_="") \
+`define SVTEST_END \
           end \
           begin \
             if (svunit_ut.get_error_count() == local_error_count) begin \

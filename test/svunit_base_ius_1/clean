@@ -3,4 +3,5 @@ rm -rf .*testsuite.sv \
        Makefile \
        run.log \
        .svunit_top.sv \
-       .testrunner.sv
+       .testrunner.sv \
+       ncsc.log

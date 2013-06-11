@@ -55,17 +55,17 @@ module dut_unit_test;
   //
   // Each individual test must be
   // defined between `SVTEST(_NAME_)
-  // `SVTEST_END()
+  // `SVTEST_END
   //
   // i.e.
   //   `SVTEST(mytest)
   //     <test code>
-  //   `SVTEST_END()
+  //   `SVTEST_END
   //===================================
   `SVUNIT_TESTS_BEGIN
 
   `SVTEST(strictly_so_the_teardown_is_called)
-  `SVTEST_END()
+  `SVTEST_END
 
   `SVUNIT_TESTS_END
 

@@ -159,12 +159,12 @@ module simple_model_unit_test;
   //
   // Each individual test must be
   // defined between `SVTEST(_NAME_)
-  // `SVTEST_END()
+  // `SVTEST_END
   //
   // i.e.
   //   `SVTEST(mytest)
   //     <test code>
-  //   `SVTEST_END()
+  //   `SVTEST_END
   //===================================
   `SVUNIT_TESTS_BEGIN
 
@@ -180,7 +180,7 @@ module simple_model_unit_test;
 
     `FAIL_IF(my_simple_model.get_port == null);
 
-  `SVTEST_END()
+  `SVTEST_END
 
 
 
@@ -200,7 +200,7 @@ module simple_model_unit_test;
       #1;
       `FAIL_IF(!in_fifo.is_empty());
     end
-  `SVTEST_END()
+  `SVTEST_END
  
  
  
@@ -222,7 +222,7 @@ module simple_model_unit_test;
       get_port.get(tr);
       `FAIL_IF(put_time != $time);
     end
-  `SVTEST_END()
+  `SVTEST_END
  
  
  
@@ -248,7 +248,7 @@ module simple_model_unit_test;
       `FAIL_IF(in_tr.field != 2);
       `FAIL_IF(out_tr.field != 4);
     end
-  `SVTEST_END()
+  `SVTEST_END
 
 
   `SVUNIT_TESTS_END
