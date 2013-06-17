@@ -15,13 +15,14 @@ fi
 ver="v2.$1"
 
 # update the release number in the svunit_defines.svh file
-perl -pi -e "s/SVUnit v[0-9\.]*/SVUnit $ver/" svunit_base/svunit_pkg.sv
-git add svunit_base/svunit_pkg.sv
 
 if [ -e svunit-$ver.tar.gz ]; then
   echo "Error: svunit-$ver.tar.gz already exists"
   exit 1
 fi
+
+echo "SVUnit $ver" > VERSION.txt
+git add VERSION.txt
 
 cd ..
 tar cvf svunit-$ver.tar svunit-code/bin \
@@ -31,6 +32,7 @@ tar cvf svunit-$ver.tar svunit-code/bin \
                          svunit-code/RELEASE.txt \
                          svunit-code/LICENSE.txt \
                          svunit-code/README.txt \
+                         svunit-code/VERSION.txt \
                          svunit-code/Setup.bsh \
                          svunit-code/Setup.csh \
                          svunit-code/svunit_base
