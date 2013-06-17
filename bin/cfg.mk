@@ -28,6 +28,8 @@ INCDIR   += $(SVUNIT_INSTALL)/svunit_base
 
 ALLPKGS  += $(SVUNIT_INSTALL)/svunit_base/svunit_pkg.sv
 
+VERSION    := $(shell cat $(SVUNIT_INSTALL)/VERSION.txt)
+DEFINES    += +define+SVUNIT_VERSION='"$(VERSION)"'
 TESTRUNNER := testrunner.sv
 FILELISTS  += $(wildcard svunit.f)
 SIM_FLISTS += $(foreach FILE,$(FILELISTS), -file $(FILE))

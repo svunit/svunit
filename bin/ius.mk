@@ -55,6 +55,7 @@ SIM_INC += $(foreach DIR,$(INCDIR),-incdir $(DIR))
 #                 .$(SVUNIT_TOP)
 #--------------------------------------------------------------
 SVUNIT_SIM = $(SIM_EXE) \
+             $(DEFINES) \
              $(RUN_LOG) \
              $(SIM_INC) \
              $(ALLPKGS) \

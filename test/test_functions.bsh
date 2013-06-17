@@ -1,3 +1,4 @@
+SVUnitVersion=`cat $SVUNIT_INSTALL/VERSION.txt`
 create_unit_test() {
   create_unit_test.pl $1
 }
@@ -86,7 +87,7 @@ expect_file_does_not_contain() {
 }
 
 expect_testrunner_pass() {
-  grep "INFO:  \[.*\]\[testrunner\]: PASSED" $1 >/dev/null
+  grep "INFO:  \[.*\]\[testrunner\]: PASSED (. of . suites passing) \[$SVUnitVersion\]" $1 >/dev/null
   if [ "$?" != "0" ]; then
     echo PASS not detected from Testrunner in $1
     exit 1;

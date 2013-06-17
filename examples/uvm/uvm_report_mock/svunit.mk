@@ -33,7 +33,6 @@ endif
 ifeq ($(SIMULATOR),QUESTA)
 SVUNIT_F=svunit-questa.f
 include $(SVUNIT_INSTALL)/bin/questa.mk
-include $(SVUNIT_INSTALL)/bin/questa_uvm.mk
 endif
 
 

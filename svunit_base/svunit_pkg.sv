@@ -23,7 +23,7 @@
 
 package svunit_pkg;
 
-  const string svunit_version = "SVUnit v2.0";
+  const string svunit_version = `SVUNIT_VERSION;
 
   `include "svunit_types.svh"
   `include "svunit_base.sv"
