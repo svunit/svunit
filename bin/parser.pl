@@ -1,16 +1,41 @@
 #!/usr/bin/perl
 
+################################################################
+#
+#  Licensed to the Apache Software Foundation (ASF) under one
+#  or more contributor license agreements.  See the NOTICE file
+#  distributed with this work for additional information
+#  regarding copyright ownership.  The ASF licenses this file
+#  to you under the Apache License, Version 2.0 (the
+#  "License"); you may not use this file except in compliance
+#  with the License.  You may obtain a copy of the License at
+#  
+#  http://www.apache.org/licenses/LICENSE-2.0
+#  
+#  Unless required by applicable law or agreed to in writing,
+#  software distributed under the License is distributed on an
+#  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+#  KIND, either express or implied.  See the License for the
+#  specific language governing permissions and limitations
+#  under the License.
+#
+################################################################
+
+
 ######################################################################
 # Library Requirements
 ######################################################################
 use strict;
 use warnings;
 use FileHandle;
-#use POSIX qw(strftime);
 use File::Basename;
 use Errno qw(EAGAIN);
 
+######################################################################
+# Global variables
+######################################################################
 my $perl_script = "parser.pl";
+my $verbose     = 0;
 
 ######################################################################
 # Sub-routines
@@ -27,7 +52,7 @@ sub PrintUsage {
   -f                    search for functions  (can be used with -t)
   -t                    search for tasks      (can be used with -f)
   -v                    verbose; print matching functions
-    -vc                 idem, without hash details
+    -c                    verbose clean; without hash details
   -g                    generate the test double file
   -q <qualifiers> --    function qualifiers to search for
 
@@ -35,62 +60,89 @@ sub PrintUsage {
 
   example:
     ${perl_script} -f -q virtual static -- uvm_object.svh           match virtual or static functions
-    ${perl_script} -f -q "extern virtual" -- uvm_object.svh         match "extern virtual" functions
+    ${perl_script} -f -q "extern virtual" -- uvm_object.svh         match exactly "extern virtual" functions
     ${perl_script} -f -q "extern virtual" static -- uvm_object.svh  match "extern virtual" or static functions
-    ${perl_script} -f -t -q extern -- uvm_object.svh                match extern functions or tasks
+    ${perl_script} -ft -q extern -- uvm_object.svh                  match extern functions or tasks
 
 EOF
   exit(1);
 };
 
 #
-# Print the items
-# in : ($rf,        reference to the hash of hashes as defined in ExtractItems()
-#       $clean)     indicates to hide the hash details
-sub PrintItems {
-  my ($rf, $clean) = @_;
-  if((exists $rf->{class}) && ($clean ne 1)) {
-    #if($clean ne 1) {print "class[";}
-    #print $rf->{class};
-    #if($clean ne 1) {print "] ";}
-    print "class[" . $rf->{class} . "] ";
+# Print class items' content
+# in : ($hr,                reference to a class items hash
+#       $clean)             when set, indicates to hide the hash details
+sub PrintClassItems {
+  my ($hr, $clean) = @_;
+  my $str = "";
+  if(exists $hr->{quals}) {
+    $str = $hr->{quals};
+    if($clean) {print "$str ";}
+    else       {print "quals[${str}] ";}
   }
-  if(exists $rf->{group}) {
-    if($clean ne 1) {print "group[";}
-    print $rf->{group};
-    if($clean ne 1) {print "] ";}
+  if(exists $hr->{group}) {
+    $str = $hr->{group};
+    if($clean) {print "$str ";}
+    else       {print "group[${str}] ";}
   }
-  if($clean eq 1) {print " ";}
-  if(exists $rf->{quals}) {
-    if($clean ne 1) {print "qualifiers[";}
-    print $rf->{quals};
-    if($clean ne 1) {print "] ";}
+  if(exists $hr->{rtype}) {
+    $str = $hr->{rtype};
+    if($clean) {print "$str ";}
+    else       {print "rtype[${str}] ";}
   }
-  if($clean eq 1) {print " ";}
-  if(exists $rf->{rtype}) {
-    if($clean ne 1) {print "returned type[";}
-    print $rf->{rtype};
-    if($clean ne 1) {print "] ";}
+  if(exists $hr->{name}) {
+    $str = $hr->{name};
+    if($clean) {print "$str ";}
+    else       {print "name[${str}] ";}
   }
-  if($clean eq 1) {print " ";}
-  if(exists $rf->{name}) {
-    if($clean ne 1) {print "name[";}
-    print $rf->{name};
-    if($clean ne 1) {print "] ";}
-  }
-  if(exists $rf->{args}) {
-    if($clean ne 1) {print "arguments[";} else {print "(";}
-    print $rf->{args};
-    if($clean ne 1) {print "]";} else {print ")";}
+  if(exists $hr->{args}) {
+    print "(";
+    for my $i (0 .. $#{$hr->{args}}) {
+      my $hr_arg = ${$hr->{args}}[$i];
+      if($i > 0) {
+        print ", ";
+      }
+      if($clean) {
+        print $hr_arg->{type} . " " . $hr_arg->{name};
+        if($hr_arg->{default} ne "") {
+          print "=" . $hr_arg->{default};
+        }
+      } else {
+        print "type[" . $hr_arg->{type} . "] ";
+        print "name[" . $hr_arg->{name} . "] ";
+        print "dflt[" . $hr_arg->{default} . "]";
+      }
+    }
+    print ")";
   }
   print "\n";
 }
 
 #
-# Remove extra spaces and/or newlines between each string items 
-# in : ($string)
-# out: ($string)
-sub CleanStringItems {
+# Print the classes' content
+# in : ($hr,                reference to a class hash
+#       $clean)             when set, indicates to hide the hash details
+sub PrintClasses {
+  my ($hr, $clean) = @_;
+  my $str = "";
+  if(exists $hr->{class}) {
+    $str = $hr->{class};
+    if($clean) {print "class ${str} ";}
+    else       {print "class[${str}] ";}
+  }
+  print "\n";
+  foreach my $ar_items (@{$hr->{items}}) {
+    foreach my $hr_item (@$ar_items) {
+      PrintClassItems(\%$hr_item, $clean);
+    }
+  }
+}
+
+#
+# Remove extra spaces and/or newlines between each string elements
+# in : ($string)            string to clean
+# out: ($string)            cleaned string
+sub CleanStrings {
   my ($string) = @_;
   chomp($string);
   my @split_string = split(' ',$string);
@@ -98,23 +150,36 @@ sub CleanStringItems {
   return $string = join(' ',@split_string);
 }
 
-sub ExtractFunctionArguments {
-  my ($function_args) = @_;
+#
+# Extract group arguments as defined in ExtractGroupItems()
+# in : ($group_args)        group arguments to extract
+# out: (\@arguments)        reference to an array of argument hashes
+sub ExtractGroupArguments {
+  my ($group_args) = @_;
+  my @arguments = ();       # array of argument hashes
   # split the arguments (comma separated)
-  my @args = split(',', $function_args);
-  my @args_inst;
-  # find each argument instance name
-  foreach my $arg (@args) {
+  my @group_args = split(',', $group_args);
+  # extract each argument information
+  foreach my $arg (@group_args) {
+    my %args = ();      # argument hashes
     # split at the default value boundary, if any
-    my @items = split('=',$arg);
-    # remove the default value, if any
-    pop(@items) if(scalar @items > 1);
+    my @default = split('=',$arg);
+    # get the default value, if any
+    if(scalar @default > 1) {
+      $args{default} = pop(@default);
+    # ensure default key is initialized even if there is no default value
+    } else {
+      $args{default} = "";
+    }
     # split again at the word boundary
-    @items = split(' ',@items);
-    # keep only the instance name, i.e. last element
-    push @args_inst, $items[$#items];
+    my @words = split(' ',$default[0]);
+    # get the argument name, i.e. last element
+    $args{name} = pop(@words);
+    # get the argument qualifiers
+    $args{type} = join(' ',@words);
+    push @arguments, \%args;
   }
-  return \@args_inst;
+  return \@arguments;
 }
 
 #
@@ -128,62 +193,75 @@ sub ExtractFunctionArguments {
 # |<- qualifiers                                           ->|
 # [extern] [[pure] virtual] [automatic|static|protected|local] task <name> [([args])];
 #
-# hash of hashes structure
+# data structure
+# [] represent an array
+# {} represent a hash
 #
-# %items = (
-#   {
-#     class => "<class>",   # class scope (filled by ExtractGroups)
-#     group => "<group>",   # function/task
-#     quals => "<quals>",   # qualifiers as shown above
-#     rtype => "<rtype>",   # returned type
-#     name  => "<name>",    # function/task identifier
-#     args  => "<args>",    # string of arguments
-#
-#     *** future implementation ***
-#     args  => [            # arguments
-#       { type => "<type>", name => "<name>", default => "<default>" },
-#       { type => "<type>", name => "<name>", default => "<default>" },
-#     ],
-#
-#   },
+# @classes = (
+#   [
+#     {
+#       class => "<class>",   # class scope (filled by ExtractClasses())
+#       items => [
+#         {
+#           group => "<group>",       # function/task
+#           quals => "<quals>",       # qualifiers as shown above
+#           rtype => "<rtype>",       # returned type
+#           name  => "<name>",        # function/task identifier
+#           sargs => "<str args>",    # string of arguments (not broken down)
+#           args  => [                # broken down arguments (filled by ExtractGroupArguments())
+#             { type => "<type>", name => "<name>", default => "<default>" },     # one hash per argument
+#           ],
+#         },
+#       ],
+#     },
+#   ],
 # );
 #
 # in : ($targets,     groups to search for (function, task, function|task)
 #       $prototype)   group prototype, can spread on multiple lines
-# out: (\%items)      reference to the hash of hashes
+# out: (\%items)      reference to a group items hash
 #
-sub ExtractItems {
+sub ExtractGroupItems {
   my ($targets, $prototype) = @_;
   my %items = ();
-  if($prototype =~ /(.*)(${targets})\s*(new|[\w]*)\s*([\w]*)\s*\(([^\)]*)\);/sx) {
+  if($prototype =~ /(.*?)\s*(${targets})\s*(new|[\w]*)\s*([\w]*)\s*\(([^\)]*)\);/sx) {
     $items{group} = $2;
-    $items{quals} = CleanStringItems($1);
-    $items{args}  = CleanStringItems($5);
-    if($2 ne "new") {
+    $items{quals} = CleanStrings($1);
+    $items{sargs} = CleanStrings($5);
+    $items{args}  = ExtractGroupArguments($items{sargs});
+    if($3 ne "new") {
       $items{rtype} = $3;
       $items{name}  = $4;
     } else {
       $items{rtype} = "";
       $items{name}  = $3;
     }
-    #PrintItems(\%items, 0);
   }
   return \%items;
 }
 
 #
-# Extract groups of interest
-# in : ($filename,    file to parse
-#       $targets,     groups to search for (function, task, function|task)
-#       @qualifiers)  groups qualifiers to search for
-# out: (\@group)      reference to an array of hash of hashes as defined by ExtractItems()
-#                     Note: Because the hash of hashes are added to an array, they will be
-#                           listed in this array in the same order as they were found
-sub ExtractGroups {
-  my ($filename, $targets, $qualifiers) = @_;
+# Extract the groups of interest of all class(es) found in the specified file
+# in : ($filename,          file to parse
+#       $ar_targets,        reference of an array of groups to search for (function, task, function|task)
+#       $ar_qualifiers)     reference of an array of group qualifiers to search for (see ExtractGroupItems() header)
+# out: (\@classes)          reference of an array of class hash
+sub ExtractClasses {
+  my ($filename, $ar_targets, $ar_qualifiers) = @_;
   open FH, '<', "${filename}" or die "Can't open ${filename} $!\n";
-  my @groups = ();    # reference to an array of hash of hashes
-  my @classes = ();   # array to keep track of the class scopes
+  my @scope = ();           # array to keep track of the classes scope
+  my @items = ();           # array of a class items hash
+  my @class_names = ();     # array of class names            (@class_names[<index>])
+  my @class_items = ();     # array of arrays of class items  (@class_items[<index>][<items>])
+  # create a target search string based on the specified targets
+  my $target_str = join('|',@$ar_targets);
+  # in order to skip the "end<target>" strings, create an end-targets string based on the specified targets
+  # make a local copy of the targets array to avoid modifying it
+  my @end_targets = @$ar_targets;
+  map($_ = "end$_", @end_targets);
+  my $end_target_str = join('|',@end_targets);
+  # create a qualifier search string based on the specified qualifiers
+  my $qualifier_str = join('|',@$ar_qualifiers);
   {
     local $/ = "";    # paragraph mode
     while(<FH>) {
@@ -191,25 +269,29 @@ sub ExtractGroups {
       # split the paragraph into lines
       my @lines = split(/\n/,$_);
       LINE: for my $line (@lines) {
-        next LINE if(/^\s*\/\//); # skip commented lines
-        next LINE if(/.*::/);     # skip lines with class scope operator "::"
+        next LINE if($line =~ /^\s*\/\//);            # skip commented lines
+        next LINE if($line =~ /.*::/);                # skip lines with class scope operator "::"
+        next LINE if($line =~ /${end_target_str}/);   # skip lines with "end<target>"
         # beginning of a class
         if($line =~ /^(\s|virtual)*class\s*([\w]*)/x) {
-          push @classes, $2;
+          push @scope, $2;
+          print "processing " . join('::', @scope) . "\n" if($verbose);
+          push @class_names, join('::', @scope);
         # end of a class
         } elsif($line =~ /^\s*endclass/) {
-          pop @classes;
+          print "done processing " . join('::', @scope) . " - found " . scalar @items . " item(s)\n" if($verbose);
+          pop @scope;
+          push @class_items, [ @items ];
+          @items = ();
         # content of a class
-        } elsif(scalar @classes ne 0) {
+        } elsif(scalar @scope) {
           # use the flip-flop operator to identify the start/end of a group
-          if(($line =~ /${qualifiers}\s*${targets}/ .. /\s*;/x) || ($prototype ne "")) {
+          if(($line =~ /^\s*(${qualifier_str})\s*(${target_str})/ .. /\s*;/x) || ($prototype ne "")) {
             $prototype .= "$line\n";
             # end of a group
             if($line =~ /;/) {
-              my $items = ExtractItems($targets, $prototype);
-              # add the class scope of where this group was found
-              $items->{class} = join('::', @classes);
-              push @groups, $items;
+              print $prototype if($verbose);
+              push @items, [ ExtractGroupItems($target_str, $prototype) ];
               $prototype = "";
             }
           }
@@ -217,8 +299,20 @@ sub ExtractGroups {
       }
     }
   }
+  # fit both class names and items arrays in an array of hashes
+  # sanity check
+  if(scalar @class_names ne scalar @class_items) {
+    die "Something went wrong!\nNumber of class(es) (" . scalar @class_names . "), doesn't match the number of class items arrays (" . scalar @class_items . ")!\n";
+  }
+  my %class = ();           # class hash (name + items)
+  my @classes = ();         # array of class hashes
+  for my $i (0 .. $#class_names) {
+    $class{class} = $class_names[$i];
+    $class{items} = [ @{$class_items[$i]} ];
+    push @classes, { %class };
+  }
   close(FH);
-  return \@groups;
+  return ( \@classes );
 }
 
 #
@@ -226,57 +320,78 @@ sub ExtractGroups {
 #
 # TODO: Add support for nested classes
 #
+# in : ($name,              nome of the file whose content was extracted
+#       $suffix,            suffix of the file
+#       $ar_classes)        reference to an array of class hash
+# out:
 sub GenerateTestDouble {
-  my ($class, $rgroups) = @_;
-  my $class_name = "test_${class}_double";
-  open(FH, '>', "${class_name}.sv") or die "Can't open ${class_name}.sv $!\n";
-  print FH "`ifndef __" . uc(${class_name}) . "__\n";
-  print FH "`define __" . uc(${class_name}) . "__\n";
+  my ($name, $suffix, $ar_classes) = @_;
+  my $filename = "test_${name}_double";
+  open(FH, '>', "${filename}${suffix}") or die "Can't open ${filename}${suffix} $!\n";
+  print FH "`ifndef __" . uc(${filename}) . "__\n";
+  print FH "`define __" . uc(${filename}) . "__\n";
   print FH "\n";
   print FH "import uvm_pkg::*;\n";
   print FH "`include \"uvm_macros.svh\"\n";
   print FH "\n";
-  print FH "class ${class_name} extends ${class};\n";
-  foreach my $rhgroup (@$rgroups) {
-    print FH "  bit " . ${rhgroup}->{name} . "_called = 0;\n";
-  }
-  print FH "\n";
-  # find if the new function was captured
-  foreach my $rhgroup (@$rgroups) {
-    if(${rhgroup}->{name} eq "new") {
-      print FH "  function new(" . ${rhgroup}->{args} . ");\n";
-      my $rargs_inst = ExtractFunctionArguments(${rhgroup}->{args});
-      print FH "    super.new(";
-      foreach my $arg (@$rargs_inst) {
-        print FH "$arg";
+  for my $i (0 .. $#{$ar_classes}) {
+    my $hr = @$ar_classes[$i];
+    my $dbl_class_name = "test_" . $hr->{class} . "_double";
+    print FH "class ${dbl_class_name} extends " . $hr->{class} . ";\n";
+    # create a variable to keep track if the extracted groups are called
+    foreach my $ar_items (@{$hr->{items}}) {
+      foreach my $hr_item (@$ar_items) {
+        next if(${hr_item}->{name} eq "new");
+        print FH "  bit " . ${hr_item}->{name} . "_called = 0;\n";
       }
-      print FH "\n";
     }
-  }
-  foreach my $rhgroup (@$rgroups) {
-    # test if the keys exists !!! or the error is from the function extraction
-    print FH "  " . ${rhgroup}->{group} . " ". ${rhgroup}->{rtype} . " " . ${rhgroup}->{name} . "(" . ${rhgroup}->{args} . ");\n";
-    print FH "    " . ${rhgroup}->{name} . "_called = 1;\n";
-    my $rtype = ${rhgroup}->{rtype};
-    my $rt = "";
-    if($rtype ne "" && $rtype ne "void") {
-      if($rtype =~ /byte|shortint|int|longint|integer|time/) {
-        $rt = "0";
-      } elsif($rtype =~ /bit|logic|reg/) {
-        $rt = "'0";
-      } elsif($rtype =~ /shortreal|real|realtime/) {
-        $rt = "0.0";
-      } elsif($rtype eq "string") {
-        $rt = "\"\"";
-      } else {
-        $rt = "null";
+    print FH "\n";
+    # create the new function if it was captured
+    foreach my $ar_items (@{$hr->{items}}) {
+      foreach my $hr_item (@$ar_items) {
+        if($hr_item->{name} eq "new") {
+          print FH "  function new(" . $hr_item->{sargs} . ");\n";
+          print FH "    super.new(";
+          for my $i (0 .. $#{$hr_item->{args}}) {
+            my $hr_arg = ${$hr_item->{args}}[$i];
+            if($i > 0) {
+              print FH ", ";
+            }
+            print FH $hr_arg->{name};
+          }
+          print FH ");\n";;
+          print FH "  endfunction\n\n";
+        }
       }
-      print FH "    return ${rt};\n";
     }
-    print FH "  end" . ${rhgroup}->{group} . "\n\n";
+    # create each captured group
+    foreach my $ar_items (@{$hr->{items}}) {
+      foreach my $hr_item (@$ar_items) {
+        next if(${hr_item}->{name} eq "new");
+        print FH "  " . ${hr_item}->{group} . " ". ${hr_item}->{rtype} . " " . ${hr_item}->{name} . "(" . ${hr_item}->{sargs} . ");\n";
+        print FH "    " . ${hr_item}->{name} . "_called = 1;\n";
+        my $rtype = ${hr_item}->{rtype};
+        my $rt = "";
+        if($rtype ne "" && $rtype ne "void") {
+          if($rtype =~ /byte|shortint|int|longint|integer|time/) {
+            $rt = "0";
+          } elsif($rtype =~ /bit|logic|reg/) {
+            $rt = "'0";
+          } elsif($rtype =~ /shortreal|real|realtime/) {
+            $rt = "0.0";
+          } elsif($rtype eq "string") {
+            $rt = "\"\"";
+          } else {
+            $rt = "null";
+          }
+          print FH "    return ${rt};\n";
+        }
+        print FH "  end" . ${hr_item}->{group} . "\n\n";
+      }
+    }
+    print FH "endclass\n";
+    print FH "\n";
   }
-  print FH "endclass\n";
-  print FH "\n";
   print FH "`endif";
   close(FH);
 }
@@ -287,57 +402,57 @@ sub GenerateTestDouble {
 ######################################################################
 STDOUT->autoflush(1);
 
-my $verbose       = 0;
 my $verbose_clean = 0;
 my $gen_test_dbl  = 0;
-my $target_function = 0;
+my $target_func   = 0;
 my $target_task   = 0;
-my @targs;
-my @quals;
-my $targets       = "";
-my $qualifiers    = "";
+my @targets       = ();
+my @qualifiers    = ();
 my $filename      = "";
 
 if(scalar @ARGV > 0) {
-  while($_ = shift(@ARGV)) {
-    if(/--help/) {
+  while(my $arg = shift(@ARGV)) {
+    if($arg =~ /--help/) {
       PrintUsage();
       exit(1);
-    } elsif(/-vc/) {
-      $verbose = 1;
-      $verbose_clean = 1;
-    } elsif(/-v/) {
-      $verbose = 1;
-    } elsif(/-d/) {
-      $gen_test_dbl = 1;
-    } elsif(/-f/) {
-      if($target_function eq 0) {
-        $target_function = 1;
-        push @targs, "function";
-      } else {
-        die "$_ declared more than once!\n";
-      }
-    } elsif(/-t/) {
-      if($target_task eq 0) {
-        $target_task = 1;
-        push @targs, "task";
-      } else {
-        die "$_ declared more than once!\n";
-      }
-    } elsif(/-q/) {
-      while($_ = $ARGV[0]) {
-        if(/[^-]/) {
-          push @quals, $_;
-          shift(@ARGV);
-        } elsif (/--/) {
-          shift(@ARGV);
-          last;
-        } else {
-          last;
+    } elsif($arg =~ /^-([^\s|.]+)/) {
+      my @switches = split('',$1);
+      foreach(@switches) {
+        if(/c/) {
+          $verbose_clean = 1;
+        } elsif(/v/) {
+          $verbose = 1;
+        } elsif(/d/) {
+          $gen_test_dbl = 1;
+        } elsif(/f/) {
+          if(!$target_func) {
+            $target_func = 1;
+            push @targets, "function";
+          }
+        } elsif(/t/) {
+          if(!$target_task) {
+            $target_task = 1;
+            push @targets, "task";
+          }
+        } elsif(/q/) {
+          while($_ = $ARGV[0]) {
+            if(/[^-]/) {
+              push @qualifiers, $_;
+              shift(@ARGV);
+            } elsif (/--/) {
+              shift(@ARGV);
+              last;
+            } else {
+              last;
+            }
+          }
         }
       }
     } elsif($filename eq "") {
-      $filename = $_;
+      $filename = $arg;
+    } else {
+      PrintUsage();
+      exit(1);
     }
   }
 } else {
@@ -345,46 +460,30 @@ if(scalar @ARGV > 0) {
   exit(1);
 }
 
-# sanity checking on the arguments
-if(scalar @targs ne 0) {
-  $targets = join('|',@targs);
-}
-if(scalar @quals ne 0) {
-  $qualifiers = join('|',@quals);
-}
-
-#print "targets:     ${targets}\n";
-#foreach(@targs) {
-#  print "$_\n";
+# debug
+#foreach(@targets) {
+#  print "target         : $_\n";
 #}
-#print "qualifiers:  ${qualifiers}\n";
-#foreach(@quals) {
-#  print "$_\n";
+#foreach(@qualifiers) {
+#  print "qualifier      : $_\n";
 #}
-#print "$filename\n";
+#print "verbose        : $verbose\n";
+#print "verbose_clean  : $verbose_clean\n";
+#print "gen_test_dbl   : $gen_test_dbl\n";
+#print "filename       : $filename\n";
 #exit(1);
 
-my $rgroups = ExtractGroups($filename, $targets, $qualifiers);
+my $ar_classes = ExtractClasses($filename, \@targets, \@qualifiers);
 
-print "Found " . scalar @$rgroups . " \"${targets}\" matching qualifiers: ${qualifiers}\n";
-if($verbose eq 1) {
-  my $first_done = 0;
-  foreach my $rhgroup (@$rgroups) {
-    if($first_done eq 0) {
-      $first_done = 1;
-      print $rhgroup->{class} . "\n";
-    }
-    PrintItems(\%$rhgroup, $verbose_clean);
+if($verbose) {
+  print "\nFound matching \"" . join('|',@{targets}) . "\" and qualifiers \"" . join('|',@{qualifiers}) . "\":\n";
+  for my $i (0 .. $#{$ar_classes}) {
+    PrintClasses($ar_classes->[$i], $verbose_clean);
   }
 }
 
-if($gen_test_dbl eq 1) {
-  my $class = "";
-  my @split_filename = split('/',$filename);
-  $class = $split_filename[$#split_filename];
-  if($class =~ /(.*)\./) {
-    $class = $1;
-  }
-  GenerateTestDouble($class, \@$rgroups);
+if($gen_test_dbl) {
+  my ($name, $path, $suffix) = fileparse($filename, qr/\.[^.]*/);
+  GenerateTestDouble($name, $suffix, $ar_classes);
 }
 
