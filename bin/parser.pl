@@ -64,6 +64,11 @@ sub PrintUsage {
     ${perl_script} -f -q "extern virtual" static -- uvm_object.svh  match "extern virtual" or static functions
     ${perl_script} -ft -q extern -- uvm_object.svh                  match extern functions or tasks
 
+  Notes:
+    -Virtual classes are automatically included in the class search
+    -If qualifier 'extern' is specified, search results will only include extern functions/tasks
+    -If qualifier 'extern' is omitted, search results will include extern and non-extern functions/tasks
+
 EOF
   exit(1);
 };
@@ -224,7 +229,7 @@ sub ExtractGroupArguments {
 sub ExtractGroupItems {
   my ($targets, $prototype) = @_;
   my %items = ();
-  if($prototype =~ /(.*?)\s*(${targets})\s*(new|[\w]*)\s*([\w]*)\s*\(([^\)]*)\);/sx) {
+  if($prototype =~ /([\s|\w]*)(${targets})\s+(new|[\w]*)\s*([\w]*)\s*\(([^\)]*)\);/sx) {
     $items{group} = $2;
     $items{quals} = CleanStrings($1);
     $items{sargs} = CleanStrings($5);
@@ -271,9 +276,9 @@ sub ExtractClasses {
       LINE: for my $line (@lines) {
         next LINE if($line =~ /^\s*\/\//);            # skip commented lines
         next LINE if($line =~ /.*::/);                # skip lines with class scope operator "::"
-        next LINE if($line =~ /${end_target_str}/);   # skip lines with "end<target>"
+        next LINE if($line =~ /^\s*${end_target_str}/x); # skip lines with "end<target>"
         # beginning of a class
-        if($line =~ /^(\s|virtual)*class\s*([\w]*)/x) {
+        if($line =~ /^([\s]*|virtual)\s*class\s*([\w]*)/x) {
           push @scope, $2;
           print "processing " . join('::', @scope) . "\n" if($verbose);
           push @class_names, join('::', @scope);
@@ -286,7 +291,7 @@ sub ExtractClasses {
         # content of a class
         } elsif(scalar @scope) {
           # use the flip-flop operator to identify the start/end of a group
-          if(($line =~ /^\s*(${qualifier_str})\s*(${target_str})/ .. /\s*;/x) || ($prototype ne "")) {
+          if(($line =~ /^([\s|\w]*)(${qualifier_str})\s*(${target_str})/ .. /\s*;/x) || ($prototype ne "")) {
             $prototype .= "$line\n";
             # end of a group
             if($line =~ /;/) {
@@ -323,7 +328,7 @@ sub ExtractClasses {
 # in : ($name,              nome of the file whose content was extracted
 #       $suffix,            suffix of the file
 #       $ar_classes)        reference to an array of class hash
-# out:
+# out: ($filename)          output file name including suffix
 sub GenerateTestDouble {
   my ($name, $suffix, $ar_classes) = @_;
   my $filename = "test_${name}_double";
@@ -341,8 +346,8 @@ sub GenerateTestDouble {
     # create a variable to keep track if the extracted groups are called
     foreach my $ar_items (@{$hr->{items}}) {
       foreach my $hr_item (@$ar_items) {
-        next if(${hr_item}->{name} eq "new");
-        print FH "  bit " . ${hr_item}->{name} . "_called = 0;\n";
+        next if($hr_item->{name} eq "new");
+        print FH "  bit " . $hr_item->{name} . "_called = 0;\n";
       }
     }
     print FH "\n";
@@ -367,10 +372,16 @@ sub GenerateTestDouble {
     # create each captured group
     foreach my $ar_items (@{$hr->{items}}) {
       foreach my $hr_item (@$ar_items) {
-        next if(${hr_item}->{name} eq "new");
-        print FH "  " . ${hr_item}->{group} . " ". ${hr_item}->{rtype} . " " . ${hr_item}->{name} . "(" . ${hr_item}->{sargs} . ");\n";
-        print FH "    " . ${hr_item}->{name} . "_called = 1;\n";
-        my $rtype = ${hr_item}->{rtype};
+        next if($hr_item->{name} eq "new");
+        # remove any 'extern' or 'pure' qualifiers as this generated class has its implementation inline
+        my $quals = $hr_item->{quals};
+        $quals =~ s/extern|pure//g;
+        $quals = CleanStrings($quals);
+        print FH "  ";
+        print FH "$quals " if($quals ne "");
+        print FH $hr_item->{group} . " ". $hr_item->{rtype} . " " . $hr_item->{name} . "(" . $hr_item->{sargs} . ");\n";
+        print FH "    " . $hr_item->{name} . "_called = 1;\n";
+        my $rtype = $hr_item->{rtype};
         my $rt = "";
         if($rtype ne "" && $rtype ne "void") {
           if($rtype =~ /byte|shortint|int|longint|integer|time/) {
@@ -386,7 +397,7 @@ sub GenerateTestDouble {
           }
           print FH "    return ${rt};\n";
         }
-        print FH "  end" . ${hr_item}->{group} . "\n\n";
+        print FH "  end" . $hr_item->{group} . "\n\n";
       }
     }
     print FH "endclass\n";
@@ -394,6 +405,7 @@ sub GenerateTestDouble {
   }
   print FH "`endif";
   close(FH);
+  return "${filename}${suffix}";
 }
 
 
@@ -422,7 +434,7 @@ if(scalar @ARGV > 0) {
           $verbose_clean = 1;
         } elsif(/v/) {
           $verbose = 1;
-        } elsif(/d/) {
+        } elsif(/g/) {
           $gen_test_dbl = 1;
         } elsif(/f/) {
           if(!$target_func) {
@@ -476,7 +488,7 @@ if(scalar @ARGV > 0) {
 my $ar_classes = ExtractClasses($filename, \@targets, \@qualifiers);
 
 if($verbose) {
-  print "\nFound matching \"" . join('|',@{targets}) . "\" and qualifiers \"" . join('|',@{qualifiers}) . "\":\n";
+  print "\nDone parsing $filename for targets (" . join('|',@{targets}) . ") and qualifiers (" . join('|',@{qualifiers}) . "):\n";
   for my $i (0 .. $#{$ar_classes}) {
     PrintClasses($ar_classes->[$i], $verbose_clean);
   }
@@ -484,6 +496,9 @@ if($verbose) {
 
 if($gen_test_dbl) {
   my ($name, $path, $suffix) = fileparse($filename, qr/\.[^.]*/);
-  GenerateTestDouble($name, $suffix, $ar_classes);
+  my $filename = GenerateTestDouble($name, $suffix, $ar_classes);
+  if($verbose) {
+    print "\nDone generating ${filename}\n";
+  }
 }
 
