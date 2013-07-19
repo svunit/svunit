@@ -86,3 +86,7 @@ v2.1
 ----
 * SVTEST_END macro update, parentheses are no longer necessary
 * automated the version update that ends up being displayed in the testrunner pass/fail msg
+
+v2.2
+----
+* README.txt update to fix a SVTEST_END example

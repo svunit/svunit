@@ -76,7 +76,7 @@ OR
     // Unit test: test_mytest
     //===================================
     `SVTEST(test_mytest)
-    `SVTEST_END(test_mytest)
+    `SVTEST_END
 
     `SVUNIT_TESTS_END
 ---
