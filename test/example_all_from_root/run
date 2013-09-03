@@ -1,0 +1,7 @@
+source ../test_functions.bsh
+
+expect_passing_example $SVUNIT_INSTALL/examples QUESTA $SVUNIT_INSTALL/examples &&
+expect_passing_example $SVUNIT_INSTALL/examples IUS $SVUNIT_INSTALL/examples &&
+#expect_passing_example $SVUNIT_INSTALL/examples/uvm/uvm_express VCS
+
+exit 0

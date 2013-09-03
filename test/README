@@ -10,7 +10,7 @@ frmwrk_1:                generate a basic unit test for a class with a different
 frmwrk_2:                test the comment parsing with one basic unit test for a class that has a bunch of comments mixed in. also filtering of 'virtual' keyword (ticket #29)
 frmwrk_3:                test multiple classes (2) in the same file as well as 1 virtual class
 frmwrk_4:                test 2 basic unit tests for a class in different dirs with classes that are in different dirs
-frmwrk_5:                test one basic unit test in a child dir but none in the parent
+frmwrk_5:                DEPRECATED (replaced by example_all)
 frmwrk_6:                testrunner created from 3 levels of test hierarchy
 frmwrk_7:                "no unit tests" message delivered and create_svunit.pl returns 1 for multi-level hierarchy without unit tests (see ticket #5)
 frmwrk_8:                multi-level hierarchy, class unit tests in child dirs but not the test root dir (see ticket #5)
@@ -58,6 +58,8 @@ Example tests
 example_uvm_simple_model       run the uvm simple model example
 example_uvm_uvm_express        run the uvm express example
 example_modules_apb_slave      run the modules apb slave example
+example_all_from_root          run the entire suite of examples from the example dir
+example_all                    run all the examples after generating makefiles from /examples
 
 ----------
 Mock tests

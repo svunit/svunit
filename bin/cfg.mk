@@ -84,7 +84,7 @@ TESTSUITE_ARGS += -out $(notdir $@)
 
 testsuites : $(TESTSUITES)
 
-CLEANFILES += .*testsuite.sv .*testrunner.sv .*svunit_top.sv
+CLEANFILES += `find . -name .*testsuite.sv` `find . -name .*testrunner.sv` `find . -name .*svunit_top.sv`
 clean :
 	rm -rf $(CLEANFILES)
 

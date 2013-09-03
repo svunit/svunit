@@ -36,7 +36,7 @@ golden_testrunner_with_4_testsuites() {
 }
 
 verify_file() {
-  if [ "`diff -bB $1 $2`" != "" ]; then
+  if [ "`diff -wbB $1 $2`" != "" ]; then
     echo $1 failed;
     exit 1;
   fi
@@ -45,8 +45,8 @@ verify_file() {
 verify_testsuite() {
   #PWD=`pwd | sed -e "s/[\/-]/_/g"`
   PWD="_"
-  sed -e "s/PWD/$PWD/g" $1 > .$1
-  verify_file .$1 .${PWD}_testsuite.sv
+  sed -e "s/PWD/$PWD$2/g" $1 > .$1
+  verify_file .$1 .${PWD}${2}_testsuite.sv
 }
 
 verify_testrunner() {
@@ -56,7 +56,9 @@ verify_testrunner() {
     sed -e "s/CHILD1/$2/g" | \
     sed -e "s/CHILD2/$3/g" | \
     sed -e "s/CHILD3/$4/g" > .$1
-  verify_file .testrunner.gold .testrunner.sv
+  verify_file .$1 .testrunner.sv
+#   sed -e "s/CHILD3/$4/g" > $1
+# verify_file $1 .testrunner.sv
 }
 
 expect_file() {
@@ -116,6 +118,8 @@ expect_passing_example() {
 
   cd $1
   create_svunit.pl
+
+  cd $3
 
   # build and run svunit with qverilog
   make SIMULATOR=$2
