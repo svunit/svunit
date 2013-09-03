@@ -94,3 +94,7 @@ v2.2
 v2.3
 ----
 * README.txt update to fix a SVTEST_END example
+
+v2.4
+----
+* updated the ability to run sims from a parent dir that include any/all child unit tests
