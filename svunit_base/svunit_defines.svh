@@ -54,8 +54,10 @@
 `ifndef FAIL_IF_STR_EQUAL
 `define FAIL_IF_STR_EQUAL(a,b) \
   begin \
-    string stra = a; \
-    string strb = b; \
+    string stra; \
+    string strb; \
+    stra = a; \
+    strb = b; \
     if (svunit_ut.fail(`"fail_if_str_equal`", stra.compare(strb)==0, $sformatf(`"\"%s\" == \"%s\"`",stra,strb), `__FILE__, `__LINE__)) begin \
       if (svunit_ut.is_running()) svunit_ut.give_up(); \
     end \
@@ -65,8 +67,10 @@
 `ifndef FAIL_UNLESS_STR_EQUAL
 `define FAIL_UNLESS_STR_EQUAL(a,b) \
   begin \
-    string stra = a; \
-    string strb = b; \
+    string stra; \
+    string strb; \
+    stra = a; \
+    strb = b; \
     if (svunit_ut.fail(`"fail_unless_str_equal`", stra.compare(strb)!=0, $sformatf(`"\"%s\" != \"%s\"`",stra,strb), `__FILE__, `__LINE__)) begin \
       if (svunit_ut.is_running()) svunit_ut.give_up(); \
     end \
