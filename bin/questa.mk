@@ -24,7 +24,7 @@
 # set the simulator executable
 #------------------------------
 ifeq ($(SIM_EXE),)
-	SIM_EXE  := qverilog
+	SIM_EXE  := vlib work; vlog
 endif
 
 
@@ -56,11 +56,13 @@ SIM_INC += +incdir$(subst $(space),,$(foreach DIR,$(INCDIR),+$(DIR)))
 #--------------------------------------------------------------
 SVUNIT_SIM = $(SIM_EXE) \
              $(DEFINES) \
-             $(RUN_LOG) \
              $(SIM_INC) \
              $(ALLPKGS) \
-             $(TESTFILES) \
-             $(SIM_ARGS)
+             $(TESTFILES); \
+						 vsim -c -do 'run -all; quit' \
+             $(SIM_ARGS) \
+             $(RUN_LOG) \
+						testrunner
 
 
 #-----------------------------------------------------------
