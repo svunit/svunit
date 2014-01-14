@@ -102,3 +102,7 @@ v2.4
 v2.5
 ----
 * closed ticket 51
+
+v2.6
+----
+* updates to questa.mk and addition of modelsim.mk (same files)
