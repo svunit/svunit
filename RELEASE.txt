@@ -106,3 +106,7 @@ v2.5
 v2.6
 ----
 * updates to questa.mk and addition of modelsim.mk (same files)
+
+v2.7
+----
+* updates to avoid SIM_ARG and RUN_LOG being cleared
