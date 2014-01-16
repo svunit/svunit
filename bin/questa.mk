@@ -1,22 +1,22 @@
 ################################################################
 #
-#  Licensed to the Apache Software Foundation (ASF) under one
+##  Licensed to the Apache Software Foundation (ASF) under one
 #  or more contributor license agreements.  See the NOTICE file
-#  distributed with this work for additional information
+#  #  distributed with this work for additional information
 #  regarding copyright ownership.  The ASF licenses this file
-#  to you under the Apache License, Version 2.0 (the
+#  #  to you under the Apache License, Version 2.0 (the
 #  "License"); you may not use this file except in compliance
-#  with the License.  You may obtain a copy of the License at
+#  #  with the License.  You may obtain a copy of the License at
 #  
-#  http://www.apache.org/licenses/LICENSE-2.0
+#  #  http://www.apache.org/licenses/LICENSE-2.0
 #  
-#  Unless required by applicable law or agreed to in writing,
+#  #  Unless required by applicable law or agreed to in writing,
 #  software distributed under the License is distributed on an
-#  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+#  #  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 #  KIND, either express or implied.  See the License for the
-#  specific language governing permissions and limitations
+#  #  specific language governing permissions and limitations
 #  under the License.
-#
+#  #
 ################################################################
 
 
@@ -24,15 +24,8 @@
 # set the simulator executable
 #------------------------------
 ifeq ($(SIM_EXE),)
-	SIM_EXE  := vlib work; vlog
+ 	SIM_EXE  := qverilog
 endif
-
-
-#------------------------------
-# simulator command line arguments
-#------------------------------
-RUN_LOG  := -l run.log
-SIM_ARGS :=
 
 
 #----------------------------------------
@@ -40,8 +33,6 @@ SIM_ARGS :=
 # command line friendly. INCDIR has the
 # unformated list of directories
 #----------------------------------------
-space :=
-space +=
 SIM_INC += +incdir$(subst $(space),,$(foreach DIR,$(INCDIR),+$(DIR)))
 
 
@@ -56,18 +47,16 @@ SIM_INC += +incdir$(subst $(space),,$(foreach DIR,$(INCDIR),+$(DIR)))
 #--------------------------------------------------------------
 SVUNIT_SIM = $(SIM_EXE) \
              $(DEFINES) \
+             -l $(RUN_LOG) \
              $(SIM_INC) \
              $(ALLPKGS) \
-             $(TESTFILES); \
-						 vsim -c -do 'run -all; quit' \
-             $(SIM_ARGS) \
-             $(RUN_LOG) \
-						testrunner
+             $(TESTFILES) \
+             $(SIM_ARGS)
 
 
 #-----------------------------------------------------------
 # Files created by the simulator that need to be cleaned up
 #-----------------------------------------------------------
 CLEANFILES += work \
-							run.log \
-							vsim.wlf
+              run.log \
+              vsim.wlf

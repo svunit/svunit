@@ -28,20 +28,11 @@ ifeq ($(SIM_EXE),)
 endif
 
 
-#----------------------------------
-# simulator command line arguments
-#----------------------------------
-RUN_LOG  := -R -sverilog -l run.log
-SIM_ARGS :=
-
-
 #----------------------------------------
 # format the incdir list to be simulator
 # command line friendly. INCDIR has the
 # unformated list of directories
 #----------------------------------------
-space :=
-space +=
 SIM_INC += +incdir$(subst $(space),,$(foreach DIR,$(INCDIR),+$(DIR)))
 
 
@@ -56,7 +47,7 @@ SIM_INC += +incdir$(subst $(space),,$(foreach DIR,$(INCDIR),+$(DIR)))
 #--------------------------------------------------------------
 SVUNIT_SIM = $(SIM_EXE) \
              $(DEFINES) \
-             $(RUN_LOG) \
+             -l $(RUN_LOG) \
              $(SIM_INC) \
              $(ALLPKGS) \
              $(TESTFILES) \

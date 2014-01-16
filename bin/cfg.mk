@@ -38,8 +38,13 @@ TESTFILES  += $(SIM_FLISTS) \
               $(UNITTESTS) \
               $(CHILD_TESTSUITES) \
               $(TESTSUITES) \
-              $(TESTDIR)/.$(TESTRUNNER) \
-
+              $(TESTDIR)/.$(TESTRUNNER)
+ifeq ($(RUN_LOG),)
+  RUN_LOG := run.log
+endif
+SIM_ARGS +=
+space :=
+space +=
 
 
 ############## TARGETS ############## 
@@ -54,7 +59,7 @@ endif
 
 
 sim : .$(TESTRUNNER)
-	@$(SVUNIT_SIM)
+	$(SVUNIT_SIM)
 	@svunit_user_feedback.pl
 
 
