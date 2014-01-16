@@ -1,1 +1,1 @@
-SVUnit v2.6
+SVUnit v2.7
