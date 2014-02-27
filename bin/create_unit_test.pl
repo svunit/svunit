@@ -191,7 +191,7 @@ sub Main() {
 
       if ( $processing_uut == 0 ) {
         if ( $line =~ /^\s*class\s/ ) {
-          $line =~ s/\<virtual\>//g;
+          $line =~ s/\bvirtual\b//g;
           $line =~ s/^\s*class/class/g;
           $line =~ s/\s+/ /g;
           $line =~ s/\W/:/g;
@@ -202,6 +202,8 @@ sub Main() {
         }
         elsif ( $line =~ /^\s*module\s/ ) {
           $line =~ s/^\s*module/module/g;
+          $line =~ s/\bautomatic\b//g;
+          $line =~ s/\bstatic\b//g;
           $line =~ s/\s+/:/g;
           $line =~ s/\W/:/g;
           @items = split(/:/, $line);

@@ -1,0 +1,13 @@
+source ../test_functions.bsh
+
+setup
+
+# remove and create the unit_test
+create_unit_test test_automatic.sv
+create_unit_test test_static.sv
+
+golden_module_unit_test test_automatic test_automatic
+verify_file             test_automatic_unit_test.gold test_automatic_unit_test.sv
+
+golden_module_unit_test test_static test_static
+verify_file             test_static_unit_test.gold test_static_unit_test.sv
