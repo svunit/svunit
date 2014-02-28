@@ -25,9 +25,11 @@ use strict;
 use Cwd;
 use IO::File;
 use IO::Dir;
+use File::Glob;
+use File::Find;
 
 
-my $homeDir = "."; #getcwd;
+my $pwd = ".";
 my $g_found_unit_test = 0;
 
 
@@ -62,142 +64,62 @@ sub CheckArgs() {
 # sub buildTestrunner(@)
 #
 # build/run the testrunner commandline with
-# all the unit tests and testsuites found in
-# processDir
+# all the testsuites
 #############################################
 sub buildTestrunner
 {
-  my $testsuites = shift;
   my $cmd = "create_testrunner.pl -overwrite -out testrunner.sv";
 
-  foreach my $ts (@{$testsuites})
-  {
-    $cmd .= " -add $ts";
-  }
+  find({
+      wanted => sub { $cmd .= " -add $_" if /\..*_testsuite.sv/ },
+      no_chdir => 1
+    }, qw( . ));
 
-  print "$cmd\n";
+print "$cmd\n";
   system($cmd);
   system("mv testrunner.sv .testrunner.sv");
 }
 
 #############################################
-# sub processDir($)
+# sub buildTestsuite($)
 #
 # recursively go through the directory tree,
 # collect all the unit tests and write the
 # Makefiles
 #############################################
-sub processDir
+sub buildTestsuite
 {
   my $dir = shift;
-  my $root_test_dir = shift;
-  my $r_parent_testsuites = shift;
-  my $r_parent_incdir = shift;
-  my $r_parent_unittest = shift;
-  my $DIR;
-  my @incdir;
   my @unittest;
-  my $handle;
-  my @child_unittest;
-  my @child_testsuites;
+  my $parentDir;
 
-  $DIR = IO::Dir->new($dir);
+  my $dirID = $dir;
+  $dirID =~ s/[\/\.-]/_/g;
+  $dirID = "." . $dirID;
 
-  while (defined($handle = $DIR->read))
+  @unittest = <$dir/*_unit_test.sv>;
+
+  # create the testsuite for this directory
+  my $cmd = "create_testsuite.pl -overwrite -out $dir/$dirID\_testsuite.sv";
+  foreach my $unittest (@unittest)
   {
-    # ignore hidden files
-    if ($handle =~ /^\./)
-    {}
-
-    # if it's a unit test, push it to the list of tests for that dir
-    elsif ($handle =~ /.*_unit_test\.sv$/)
-    {
-      push(@unittest, $handle);
-      $g_found_unit_test = 1;
-
-      # add this dir to the incdir list if it hasn't already
-      if (join(@incdir, ":") !~ "$dir")
-      {
-        push(@incdir, "$dir");
-      }
-    }
-
-    # if it's a dir, process it
-    elsif (-d "$dir/$handle")
-    {
-      processDir("$dir/$handle", 0, \@child_testsuites, \@incdir, \@child_unittest);
-    }
+    $cmd .= " -add $unittest";
   }
+print "$cmd\n";
+  system($cmd);
 
-
-  # pass my incdirs back to the parent
-  push(@{$r_parent_incdir}, @incdir);
-  push(@{$r_parent_unittest}, @child_unittest);
-  push(@{$r_parent_testsuites}, @child_testsuites);
-
-
-  # write the Makefile if there are tests in the local dir or
-  # if there are child_testsuites
-  if (@child_testsuites > 0 ||
-      @unittest > 0)
-  {
-    my $fh = IO::File->new();
-    my $dirID = $dir;
-
-    # convert any illegal verilog chars to a '_'
-    $dirID =~ s/[\/\.-]/_/g;
-    $dirID = "." . $dirID;
-
-    if (@child_unittest > 0) {
-      # collect all the unit tests
-      $fh->print("CHILD_UNITTESTS +=");
-      foreach my $ut (@child_unittest) { $fh->print(" $ut"); }
-      $fh->print("\n\n");
+  # recursively do the same through sub-directories
+  foreach (@_ = <$dir/*>) {
+    if (-d "$_" && !m/\.$/) {
+      buildTestsuite("$_");
     }
-    if (@incdir > 0) {
-      # mangle the INCDIRS
-      $fh->print("INCDIR +=");
-      foreach my $d (@incdir) { $fh->print(" $d"); }
-      $fh->print("\n\n");
-    }
-    if (@child_testsuites > 0)
-    {
-      # mangle the CHILD_TESTSUITES
-      $fh->print("CHILD_TESTSUITES =");
-      foreach my $c (@child_testsuites) { $fh->print(" $c"); }
-      $fh->print("\n\n");
-    }
-    if (@unittest > 0)
-    {
-      my $cmd = "create_testsuite.pl -overwrite -out $dirID\_testsuite.sv";
-      foreach my $unittest (@unittest)
-      {
-        $cmd .= " -add $dir/$unittest";
-        push(@{$r_parent_unittest}, "$dir/$unittest");
-      }
-      push(@{$r_parent_testsuites}, "$dir/$dirID\_testsuite.sv");
-      system($cmd);
-    }
-    $fh->print("\n\n-include svunit.mk\n");
-    $fh->print("include \$(SVUNIT_INSTALL)/bin/cfg.mk\n");
-    $fh->close;
-  }
-
-  if ($dir == $homeDir) {
-    buildTestrunner($r_parent_testsuites);
   }
 }
 
 CheckArgs();
-processDir($homeDir, 1);
+buildTestsuite($pwd);
+buildTestrunner();
 
-if ($g_found_unit_test)
-{
   exit 0;
-}
-
-else
-{
-  print "Info: Found no unit tests. No SVUnit framework created.\n";
-  exit 1;
-}
+  #print "Info: Found no unit tests. No SVUnit framework created.\n";
+  #exit 1;

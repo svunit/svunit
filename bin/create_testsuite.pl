@@ -89,6 +89,7 @@ sub ValidArgs() {
   print "\nSVUNIT: Output File: $output_file\n";
   print "\n";
   $class = $output_file;
+  $class =~ s/.*\///g;
   $class =~ s/\.sv//g;
   $class =~ s/\.//g;
 }
