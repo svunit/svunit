@@ -22,36 +22,30 @@
 ################################################################
 
 use strict;
+use Getopt::Long;
+
+use vars qw/ %opt /;
 
 
 ##########################################################################
 # PrintHelp(): Prints the script usage.
 ##########################################################################
-sub PrintHelp() {
-  print "\n";
-  print "Usage:  create_svunit.pl [ -help ]\n\n";
-  print "Where -help               : prints this help screen\n";
-  print "\n";
-  die;
+
+my $cmd;
+my $logfile = "run.log";
+my $simulator;
+my @defines;
+
+GetOptions("l=s" => \$logfile,
+           "s=s" => \$simulator,
+           "d=s" => \@defines);
+
+$cmd = "qverilog -l $logfile -f .svunit.f";
+if (@defines > 0) {
+  $cmd .= " +define+" . join " +define+", @defines;
 }
 
-
-sub CheckArgs() {
-  my $numargs = @ARGV;
-
-  for my $i (0..$numargs-1) {
-    if ( my $skip == 1 ) {
-      $skip = 0;
-    }
-    else {
-      if ( $ARGV[$i] =~ /(-help)|(-h)/ ) {
-        PrintHelp();
-      }
-    }
-  }
-}
-
-my $cmd = "qverilog -l run.log -f .svunit.f";
+print $cmd;
 
 system("buildSVUnit");
 system("$cmd");

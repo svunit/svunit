@@ -1,11 +1,6 @@
 source ../test_functions.bsh
 
-# create the Makefile
-create_svunit.pl
-
-# build and run svunit with qverilog
-make
-
+runSVUnit -s questa
 
 expect_file run.log &&
 
