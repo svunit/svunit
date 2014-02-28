@@ -137,6 +137,7 @@ sub buildTestsuite
 
 $filelist = IO::File->new();
 $filelist->open(">.svunit.f");
+$filelist->print("+incdir+.");
 
 CheckArgs();
 buildTestsuite($pwd);
