@@ -75,7 +75,6 @@ sub buildTestrunner
       no_chdir => 1
     }, qw( . ));
 
-print "$cmd\n";
   system($cmd);
   system("mv testrunner.sv .testrunner.sv");
 }
@@ -100,13 +99,13 @@ sub buildTestsuite
   @unittest = <$dir/*_unit_test.sv>;
 
   # create the testsuite for this directory
-  my $cmd = "create_testsuite.pl -overwrite -out $dir/$dirID\_testsuite.sv";
-  foreach my $unittest (@unittest)
-  {
-    $cmd .= " -add $unittest";
+  if (@unittest > 0) {
+    my $cmd = "create_testsuite.pl -overwrite -out $dir/$dirID\_testsuite.sv";
+    foreach my $unittest (@unittest) {
+      $cmd .= " -add $unittest";
+    }
+    system($cmd);
   }
-print "$cmd\n";
-  system($cmd);
 
   # recursively do the same through sub-directories
   foreach (@_ = <$dir/*>) {
@@ -120,6 +119,6 @@ CheckArgs();
 buildTestsuite($pwd);
 buildTestrunner();
 
-  exit 0;
-  #print "Info: Found no unit tests. No SVUnit framework created.\n";
-  #exit 1;
+exit 0;
+#print "Info: Found no unit tests. No SVUnit framework created.\n";
+#exit 1;

@@ -6,11 +6,8 @@ setup
 create_unit_test test.sv
 cd another_test && create_unit_test test0.sv && cd -
 
-# create the Makefile
-create_svunit.pl
-
-## build the svunit_top
-make .testrunner.sv
+# build the framework
+buildSVUnit
 
 # generate golden reference files
 golden_testrunner_with_2_testsuites

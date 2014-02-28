@@ -13,7 +13,7 @@ frmwrk_4:                test 2 basic unit tests for a class in different dirs w
 frmwrk_5:                DEPRECATED (replaced by example_all)
 frmwrk_6:                testrunner created from 3 levels of test hierarchy
 frmwrk_7:                "no unit tests" message delivered and create_svunit.pl returns 1 for multi-level hierarchy without unit tests (see ticket #5)
-frmwrk_8:                multi-level hierarchy, class unit tests in child dirs but not the test root dir (see ticket #5)
+frmwrk_8:                testrunner created from 3 levels of test hierarchy. no unit tests in root.
 frmwrk_9:                multi-level hierarchy, class unit tests in some but not all child dirs and in the test root dir (see ticket #5)
 frmwrk_10:               generate a basic unit test for a module
 frmwrk_11:               generate a basic unit test for a interface

@@ -31,6 +31,10 @@ golden_testrunner_with_2_testsuites() {
   cp $SVUNIT_INSTALL/test/templates/testrunner_with_2_testsuite.gold testrunner.gold
 }
 
+golden_testrunner_with_3_testsuites() {
+  cp $SVUNIT_INSTALL/test/templates/testrunner_with_3_testsuite.gold testrunner.gold
+}
+
 golden_testrunner_with_4_testsuites() {
   cp $SVUNIT_INSTALL/test/templates/testrunner_with_4_testsuite.gold testrunner.gold
 }
@@ -57,8 +61,6 @@ verify_testrunner() {
     sed -e "s/CHILD2/$3/g" | \
     sed -e "s/CHILD3/$4/g" > .$1
   verify_file .$1 .testrunner.sv
-#   sed -e "s/CHILD3/$4/g" > $1
-# verify_file $1 .testrunner.sv
 }
 
 expect_file() {
