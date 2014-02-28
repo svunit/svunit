@@ -51,6 +51,7 @@ sub CheckArgs() {
   }
 }
 
+my $cmd = "qverilog -l run.log -f .svunit.f";
 
 system("buildSVUnit");
-system("runSVUnitQuesta");
+system("$cmd");

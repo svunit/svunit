@@ -4,13 +4,11 @@ source ../test_functions.bsh
 create_unit_test.pl -overwrite -out dut_unit_test.sv dut.sv
 
 # create the Makefile
-create_svunit.pl
-
-# build and run svunit with qverilog
-make
+runSVUnit -questa
 
 # check the log output for a PASS from the testrunner
-expect_file run.log &&
+expect_file .svunit.f
+expect_file run.log
 expect_testrunner_pass run.log
 
 exit 0

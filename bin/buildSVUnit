@@ -31,7 +31,9 @@ use File::Find;
 
 my $pwd = ".";
 my $g_found_unit_test = 0;
-my $filelist;
+my $FILELIST;
+my $VERSION;
+my $version;
 
 
 ##########################################################################
@@ -75,7 +77,7 @@ sub buildTestrunner
   find({
       wanted => sub {
                       if (/\..*_testsuite.sv/) {
-                        $filelist->print("$_\n");
+                        $FILELIST->print("$_\n");
                         $testsuites .= " -add $_" if /\..*_testsuite.sv/;
                       }
                     },
@@ -90,7 +92,7 @@ sub buildTestrunner
   else {
     system("$cmd$testsuites");
     system("mv testrunner.sv .testrunner.sv");
-    $filelist->print(".testrunner.sv\n");
+    $FILELIST->print(".testrunner.sv\n");
     return 0;
   }
 }
@@ -120,7 +122,7 @@ sub buildTestsuite
   if (@unittest > 0) {
     my $cmd = "create_testsuite.pl -overwrite -out $dir/$dirID\_testsuite.sv";
     foreach (@unittest) {
-      $filelist->print("$_\n");
+      $FILELIST->print("$_\n");
       $cmd .= " -add $_";
     }
     system($cmd);
@@ -134,10 +136,18 @@ sub buildTestsuite
   }
 }
 
+$VERSION = IO::File->new();
+$VERSION->open("$ENV{SVUNIT_INSTALL}/VERSION.txt") || die;
+$version = $VERSION->getline;
+chomp $version;
 
-$filelist = IO::File->new();
-$filelist->open(">.svunit.f");
-$filelist->print("+incdir+.");
+
+$FILELIST = IO::File->new();
+$FILELIST->open(">.svunit.f");
+$FILELIST->print(qq!+define+SVUNIT_VERSION='"$version"'\n!);
+$FILELIST->print("+incdir+.\n");
+$FILELIST->print("+incdir+$ENV{SVUNIT_INSTALL}/svunit_base\n");
+$FILELIST->print("$ENV{SVUNIT_INSTALL}/svunit_base/svunit_pkg.sv\n");
 
 CheckArgs();
 buildTestsuite($pwd);

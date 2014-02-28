@@ -86,7 +86,7 @@ expect_return_code() {
 expect_file_does_contain() {
   grep "$1" $2 >/dev/null
   if [ "$?" != "0" ]; then
-    echo bad result for does contain
+    echo bad result for does contain - $1
     exit 1;
   fi
 }
@@ -94,7 +94,7 @@ expect_file_does_contain() {
 expect_file_does_not_contain() {
   grep "$1" $2 >/dev/null
   if [ "$?" == "0" ]; then
-    echo bad result for does not contain
+    echo bad result for does not contain - $1
     exit 1;
   fi
 }
