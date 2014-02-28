@@ -31,6 +31,7 @@ use File::Find;
 
 my $pwd = ".";
 my $g_found_unit_test = 0;
+my $filelist;
 
 
 ##########################################################################
@@ -72,21 +73,28 @@ sub buildTestrunner
   my $testsuites;
 
   find({
-      wanted => sub { $testsuites .= " -add $_" if /\..*_testsuite.sv/ },
+      wanted => sub {
+                      if (/\..*_testsuite.sv/) {
+                        $filelist->print("$_\n");
+                        $testsuites .= " -add $_" if /\..*_testsuite.sv/;
+                      }
+                    },
       no_chdir => 1
     }, qw( . ));
 
   if (!defined $testsuites) {
-print "BOGUS\n";
+    unlink ".svunit.f";
     return 1;
   }
 
   else {
     system("$cmd$testsuites");
     system("mv testrunner.sv .testrunner.sv");
+    $filelist->print(".testrunner.sv\n");
     return 0;
   }
 }
+
 
 #############################################
 # sub buildTestsuite($)
@@ -95,6 +103,7 @@ print "BOGUS\n";
 # collect all the unit tests and write the
 # Makefiles
 #############################################
+
 sub buildTestsuite
 {
   my $dir = shift;
@@ -110,8 +119,9 @@ sub buildTestsuite
   # create the testsuite for this directory
   if (@unittest > 0) {
     my $cmd = "create_testsuite.pl -overwrite -out $dir/$dirID\_testsuite.sv";
-    foreach my $unittest (@unittest) {
-      $cmd .= " -add $unittest";
+    foreach (@unittest) {
+      $filelist->print("$_\n");
+      $cmd .= " -add $_";
     }
     system($cmd);
   }
@@ -123,6 +133,10 @@ sub buildTestsuite
     }
   }
 }
+
+
+$filelist = IO::File->new();
+$filelist->open(">.svunit.f");
 
 CheckArgs();
 buildTestsuite($pwd);

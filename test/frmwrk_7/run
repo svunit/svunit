@@ -7,7 +7,7 @@ buildSVUnit
 expect_return_code 1
 
 # verify no new files were created
-files=(`ls`)
-expect_eq ${#files[*]} 2
+files=(`ls -a`)
+expect_eq ${#files[*]} 4
 
 exit 0
