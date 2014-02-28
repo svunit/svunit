@@ -69,14 +69,23 @@ sub CheckArgs() {
 sub buildTestrunner
 {
   my $cmd = "create_testrunner.pl -overwrite -out testrunner.sv";
+  my $testsuites;
 
   find({
-      wanted => sub { $cmd .= " -add $_" if /\..*_testsuite.sv/ },
+      wanted => sub { $testsuites .= " -add $_" if /\..*_testsuite.sv/ },
       no_chdir => 1
     }, qw( . ));
 
-  system($cmd);
-  system("mv testrunner.sv .testrunner.sv");
+  if (!defined $testsuites) {
+print "BOGUS\n";
+    return 1;
+  }
+
+  else {
+    system("$cmd$testsuites");
+    system("mv testrunner.sv .testrunner.sv");
+    return 0;
+  }
 }
 
 #############################################
@@ -117,8 +126,5 @@ sub buildTestsuite
 
 CheckArgs();
 buildTestsuite($pwd);
-buildTestrunner();
-
-exit 0;
+exit buildTestrunner;
 #print "Info: Found no unit tests. No SVUnit framework created.\n";
-#exit 1;
