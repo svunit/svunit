@@ -36,16 +36,29 @@ my $logfile = "run.log";
 my $simulator;
 my @defines;
 
+# command line options
 GetOptions("l=s" => \$logfile,
            "s=s" => \$simulator,
-           "d=s" => \@defines);
+           "d=s" => \@defines) or usage();
 
-$cmd = "qverilog -l $logfile -f .svunit.f";
+
+# version
+my $VERSION = IO::File->new();
+$VERSION->open("$ENV{SVUNIT_INSTALL}/VERSION.txt") || die;
+my $version = $VERSION->getline;
+chomp $version;
+push @defines, qq!SVUNIT_VERSION='"$version"'!;
+
+
+# build the command line
+$simulator =~ s/questa/qverilog/;
+$simulator =~ s/ius/irun/;
+$cmd = "$simulator -l $logfile -f .svunit.f";
 if (@defines > 0) {
   $cmd .= " +define+" . join " +define+", @defines;
 }
 
-print $cmd;
 
+# run!!
 system("buildSVUnit");
 system("$cmd");

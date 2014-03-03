@@ -4,4 +4,5 @@ rm -rf .*testsuite.sv \
        INCA_libs \
        .svunit_top.sv \
        .testrunner.sv \
-       ncsc.log
+       ncsc.log \
+       .svunit.f

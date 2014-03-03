@@ -76,7 +76,7 @@ sub buildTestrunner
 
   find({
       wanted => sub {
-                      if (/\..*_testsuite.sv/) {
+                      if (/\..*_testsuite\.sv$/) {
                         $FILELIST->print("$_\n");
                         $testsuites .= " -add $_" if /\..*_testsuite.sv/;
                       }
@@ -136,15 +136,9 @@ sub buildTestsuite
   }
 }
 
-$VERSION = IO::File->new();
-$VERSION->open("$ENV{SVUNIT_INSTALL}/VERSION.txt") || die;
-$version = $VERSION->getline;
-chomp $version;
-
 
 $FILELIST = IO::File->new();
 $FILELIST->open(">.svunit.f");
-$FILELIST->print(qq!+define+SVUNIT_VERSION='"$version"'\n!);
 $FILELIST->print("+incdir+.\n");
 $FILELIST->print("+incdir+$ENV{SVUNIT_INSTALL}/svunit_base\n");
 $FILELIST->print("$ENV{SVUNIT_INSTALL}/svunit_base/svunit_pkg.sv\n");
