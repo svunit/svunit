@@ -1,0 +1,2 @@
+-coverage a
+-covoverwrite

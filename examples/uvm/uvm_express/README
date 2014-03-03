@@ -23,4 +23,5 @@ Don't forget to read the svunit-code/README for instructions on
 how to setup the SVUnit test environment and instructions for
 building your own tests.
 
-runSVUnit -uvm -define CLK_PERIOD=5ns -s <simulator>  # simulator is any of ius, questa, vcs
+runSVUnit -uvm -define CLK_PERIOD=5ns -s ius -f cov.f  # for ius
+runSVUnit -uvm -define CLK_PERIOD=5ns -s <simulator>  # questa or vcs

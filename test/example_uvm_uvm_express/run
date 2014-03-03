@@ -1,7 +1,7 @@
 source ../test_functions.bsh
 
-expect_passing_example $SVUNIT_INSTALL/examples/uvm/uvm_express QUESTA
-expect_passing_example $SVUNIT_INSTALL/examples/uvm/uvm_express IUS
+expect_passing_example $SVUNIT_INSTALL/examples/uvm/uvm_express "IUS -uvm -define CLK_PERIOD=10ns" &&
+expect_passing_example $SVUNIT_INSTALL/examples/uvm/uvm_express "QUESTA -uvm -define CLK_PERIOD=10ns"
 #expect_passing_example $SVUNIT_INSTALL/examples/uvm/uvm_express VCS
 
 exit 0
