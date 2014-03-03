@@ -79,15 +79,14 @@ sub CheckArgs() {
 ##########################################################################
 sub ValidArgs() {
   if ( $output_file eq "" ) {
-    print "\nERROR:  The output file was not specified\n";
+    print "ERROR:  The output file was not specified\n";
     PrintHelp();
   }
   if ( @files_to_add == 0 ) {
-    print "\nERROR:  No unit tests specified\n";
+    print "ERROR:  No unit tests specified\n";
     PrintHelp();
   }
-  print "\nSVUNIT: Output File: $output_file\n";
-  print "\n";
+  print "SVUNIT: Output File: $output_file\n";
   $class = $output_file;
   $class =~ s/.*\///g;
   $class =~ s/\.sv//g;
@@ -170,9 +169,6 @@ sub CreateTestSuite() {
     s/\.sv//g;
     $instance = $_;
     $instance =~ s/_unit_test/_ut/g;
-    if ( $overwrite != 1) {
-      print "\n";
-    }
     push( @class_names , $_ );
     push( @instance_names, $instance );
     $num_tests++;
@@ -180,7 +176,7 @@ sub CreateTestSuite() {
 
   $cnt = 0;
 
-  print "SVUNIT: Creating class $class:\n\n";
+  print "SVUNIT: Creating class $class:\n";
 
   print OUTFILE "import svunit_pkg::\*;\n\n";
   print OUTFILE "module $class;\n";
@@ -199,10 +195,9 @@ sub CreateTestSuite() {
   }
   foreach ( @class_names ) {
     print OUTFILE "  $class_names[$cnt] $instance_names[$cnt]();\n";
-    print "          $class_names[$cnt]\n";
+    print "SVUNIT:    $class_names[$cnt]\n";
     $cnt++;
   }
-  print "\n";
 
   $cnt = 0;
 

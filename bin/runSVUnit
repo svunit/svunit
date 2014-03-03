@@ -61,4 +61,4 @@ if (@defines > 0) {
 
 # run!!
 system("buildSVUnit");
-system("$cmd");
+system("echo $cmd; $cmd");

@@ -79,15 +79,14 @@ sub CheckArgs() {
 ##########################################################################
 sub ValidArgs() {
   if ( $output_file eq "" ) {
-    print "\nERROR:  The output file was not specified\n";
+    print "ERROR:  The output file was not specified\n";
     PrintHelp();
   }
   if ( @files_to_add == 0 ) {
-    print "\nERROR:  No files specified\n";
+    print "ERROR:  No files specified\n";
     PrintHelp();
   }
-  print "\nSVUNIT: Output File: $output_file\n";
-  print "\n";
+  print "SVUNIT: Output File: $output_file\n";
   $class = $output_file;
   $class =~ s/\.sv//g;
 }
@@ -98,7 +97,7 @@ sub ValidArgs() {
 ##########################################################################
 sub OpenFiles() {
   if ( -r $output_file and $overwrite != 1 ) {
-    print "ERROR: The file $output_file already exists, to overwrite, use the -overwrite argument\n\n";
+    print "ERROR: The file $output_file already exists, to overwrite, use the -overwrite argument\n";
     exit 1;
   }
   else {
@@ -137,9 +136,6 @@ sub CreateTestSuite() {
     $item =~ s/\.//;
     $instance = $item;
     $instance =~ s/_testsuite/_ts/g;
-    if ( $overwrite != 1 ) {
-      print "\n";
-    }
     push( @class_names, $item );
     push( @instance_names, $instance );
     $num_suites++;
@@ -148,7 +144,7 @@ sub CreateTestSuite() {
 
   $cnt = 0;
 
-  print "SVUNIT: Creating testrunner $class:\n\n";
+  print "SVUNIT: Creating testrunner $class:\n";
 
   print OUTFILE "import svunit_pkg::\*;\n\n";
   print OUTFILE "`ifdef RUN_SVUNIT_WITH_UVM\n";
@@ -167,10 +163,9 @@ sub CreateTestSuite() {
   print "SVUNIT: Creating instances for:\n";
   foreach $item ( @class_names ) {
     print OUTFILE "  $item $instance_names[$cnt]();\n";
-    print "          $item\n";
+    print "SVUNIT:   $item\n";
     $cnt++;
   }
-  print "\n";
 
   print OUTFILE "\n";
   print OUTFILE "\n";
