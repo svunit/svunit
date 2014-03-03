@@ -1,10 +1,6 @@
 source ../test_functions.bsh
 
-# create the Makefile
-create_svunit.pl
-
-# build and run svunit with vcsi
-make
+runSVUnit -s qverilog
 
 expect_file run.log &&
 expect_string "ERROR: \[0\]\[dut_ut\]: fail_unless_str_equal: \"abd\" != \"abcd\"" run.log &&

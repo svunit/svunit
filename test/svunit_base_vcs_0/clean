@@ -7,4 +7,5 @@ rm -rf .*testsuite.sv \
        ucli.key \
        vc_hdrs.h \
        .svunit_top.sv \
+       .svunit.f \
        .testrunner.sv

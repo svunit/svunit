@@ -128,18 +128,12 @@ expect_passing_example() {
   pushd . >/dev/null
 
   cd $1
-  create_svunit.pl
 
-  cd $3
-
-  # build and run svunit with qverilog
-  make SIMULATOR=$2
+  runSVUnit -s $2
 
   # check the log output for a PASS from the testrunner
   expect_file run.log
   expect_testrunner_pass run.log
-
-  make SIMULATOR=$2 clean
 
   popd >/dev/null
 }

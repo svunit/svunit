@@ -1,10 +1,6 @@
 source ../test_functions.bsh
 
-# create the Makefile
-create_svunit.pl
-
-# build and run svunit with vcsi
-make
+runSVUnit -s ius
 
 expect_file run.log &&
 expect_string "INFO:  \[0\]\[dut_ut\]: Use the INFO macro" run.log &&
