@@ -1,8 +1,0 @@
-pushd . >/dev/null 2>&1
-
-cd $SVUNIT_INSTALL/examples
-
-rm -f `find . -name Makefile`
-rm -f `find . -name svunit.f`
-
-popd >/dev/null 2>&1

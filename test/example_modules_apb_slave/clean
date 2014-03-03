@@ -1,8 +1,6 @@
 pushd . >/dev/null 2>&1
 
 cd $SVUNIT_INSTALL/examples/modules/apb_slave
-make clean >/dev/null 2>&1
-make clean SIMULATOR=VCS >/dev/null 2>&1
-rm -f Makefile
+cleanSVUnit
 
 popd >/dev/null 2>&1

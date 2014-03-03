@@ -1,9 +1,6 @@
 pushd . >/dev/null 2>&1
 
 cd $SVUNIT_INSTALL/examples/uvm/uvm_report_mock
-make clean SIMULATOR=VCS >/dev/null 2>&1
-make clean SIMULATOR=QUESTA >/dev/null 2>&1
-make clean SIMULATOR=IUS >/dev/null 2>&1
-rm -f Makefile svunit.f
+cleanSVUnit
 
 popd >/dev/null 2>&1

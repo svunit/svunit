@@ -1,7 +1,7 @@
 source ../test_functions.bsh
 
-expect_passing_example $SVUNIT_INSTALL/examples/uvm/uvm_report_mock QUESTA $SVUNIT_INSTALL/examples/modules/apb_slave &&
-expect_passing_example $SVUNIT_INSTALL/examples/uvm/uvm_report_mock IUS $SVUNIT_INSTALL/examples/modules/apb_slave &&
+expect_passing_example $SVUNIT_INSTALL/examples/uvm/uvm_report_mock "IUS -uvm -define RUN_SVUNIT_WITH_UVM_REPORT_MOCK" &&
+expect_passing_example $SVUNIT_INSTALL/examples/uvm/uvm_report_mock "QUESTA -uvm -define RUN_SVUNIT_WITH_UVM_REPORT_MOCK"
 #expect_passing_example $SVUNIT_INSTALL/examples/uvm/uvm_report_mock VCS
 
 exit 0
