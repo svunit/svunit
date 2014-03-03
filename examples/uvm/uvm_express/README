@@ -23,14 +23,4 @@ Don't forget to read the svunit-code/README for instructions on
 how to setup the SVUnit test environment and instructions for
 building your own tests.
 
-Step 1: build the svunit framework
->create_svunit.pl
-
-Step 2a: run it with questa
->make SIMULATOR=QUESTA
-
-Step 2b: or run it with vcs
->make SIMULATOR=VCS
-
-Step 2c: or run it with vcs
->make SIMULATOR=IUS
+runSVUnit -uvm -define CLK_PERIOD=5ns -s <simulator>  # simulator is any of ius, questa, vcs

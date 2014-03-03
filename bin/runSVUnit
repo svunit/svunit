@@ -23,6 +23,9 @@
 
 use strict;
 use Getopt::Long;
+use File::Path qw(remove_tree);
+use File::Glob;
+use File::Find;
 
 use vars qw/ %opt /;
 
@@ -35,12 +38,53 @@ my $cmd;
 my $logfile = "run.log";
 my $simulator;
 my @defines;
+my @filelists;
+my $uvm;
+my $clean;
+my $help;
+
+sub usage () {
+  print "Usage:  runSVUnit -s|sim <simulator> [-c|clean -l|log <log> -d|define <macro> -f|filelist <file> -uvm]\n";
+  print "  -s|sim <simulator>     : simulator is either of questa, ius or vcs\n";
+  print "  -l|log <log>           : simulation log file (default: run.log)\n";
+  print "  -d|define <macro>      : appended to the command line as +define+<macro>\n";
+  print "  -f|filelist <file>     : some verilog file list\n";
+  print "  -uvm                   : run SVUnit with UVM\n";
+  print "  -c|clean               : run SVUnit from a clean build\n";
+  print "  -h|help                : prints this help screen\n";
+  print "\n";
+  exit 1;
+}
+
+sub clean () {
+print "BONGO\n";
+  find({
+      wanted => sub {
+                      if (/.*testsuite\.sv$/   or
+                          /.*testrunner\.sv$/
+                      ) {
+                        unlink;
+                      }
+                    }
+    }, qw( . ));
+
+  unlink qw( run.log .svunit.f vsim.wlf ncsc.log irun.key );
+  remove_tree qw( work  INCA_libs );
+}
 
 # command line options
-GetOptions("l=s" => \$logfile,
-           "s=s" => \$simulator,
-           "d=s" => \@defines) or usage();
+GetOptions("l|log=s" => \$logfile,
+           "s|sim=s" => \$simulator,
+           "d|define=s" => \@defines,
+           "f|filelist=s" => \@filelists,
+           "uvm" => \$uvm,
+           "c|clean" => \$clean,
+           "h|help" => \$help
+           ) or usage();
 
+usage() if $help;
+
+clean() if $clean;
 
 # version
 my $VERSION = IO::File->new();
@@ -49,14 +93,31 @@ my $version = $VERSION->getline;
 chomp $version;
 push @defines, qq!SVUNIT_VERSION='"$version"'!;
 
+# filelists
+unshift @filelists, qw( .svunit.f );
 
-# build the command line
+# simulator check
+$simulator =~ tr/A-Z/a-z/;
 $simulator =~ s/questa/qverilog/;
 $simulator =~ s/ius/irun/;
-$cmd = "$simulator -l $logfile -f .svunit.f";
-if (@defines > 0) {
-  $cmd .= " +define+" . join " +define+", @defines;
+usage() if $simulator ne "qverilog" &&
+           $simulator ne "irun" &&
+           $simulator ne "vcs";
+
+# start the command line
+$cmd = "$simulator -l $logfile";
+
+# add the uvm switches if necessary
+if (defined $uvm) {
+  $cmd .= " -uvm" if $simulator eq "irun";
+  $cmd .= " -ntb_opts uvm" if $simulator eq "vcs";
+  $cmd .= " -uvm" if $simulator eq "irun";
+  push @defines, "RUN_SVUNIT_WITH_UVM";
 }
+
+# add the filelists and defines
+$cmd .= " -f " . join "  -f ", @filelists;
+$cmd .= " +define+" . join " +define+", @defines if (@defines > 0);
 
 
 # run!!

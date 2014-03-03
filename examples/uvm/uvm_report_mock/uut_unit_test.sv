@@ -25,6 +25,8 @@
 
 import uvm_pkg::*;
 import svunit_pkg::*;
+
+`include "svunit_uvm_mock_pkg.sv"
 import svunit_uvm_mock_pkg::*;
 
 `include "uut.sv"

@@ -1,3 +1,5 @@
+#!/usr/bin/perl
+
 ################################################################
 #
 #  Licensed to the Apache Software Foundation (ASF) under one
@@ -7,9 +9,9 @@
 #  to you under the Apache License, Version 2.0 (the
 #  "License"); you may not use this file except in compliance
 #  with the License.  You may obtain a copy of the License at
-#
+#  
 #  http://www.apache.org/licenses/LICENSE-2.0
-#
+#  
 #  Unless required by applicable law or agreed to in writing,
 #  software distributed under the License is distributed on an
 #  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -19,30 +21,26 @@
 #
 ################################################################
 
-SIMULATOR := QUESTA
-
-FILELISTS+=svunit.f
-
-ifeq ($(SIMULATOR),VCS)
-SIM_EXE=vcsi
-SVUNIT_F=svunit-vcs.f
-include $(SVUNIT_INSTALL)/bin/vcs.mk
-endif
+use strict;
+use File::Glob;
+use File::Find;
+use File::Path qw(remove_tree);
 
 
-ifeq ($(SIMULATOR),QUESTA)
-SVUNIT_F=svunit-questa.f
-include $(SVUNIT_INSTALL)/bin/questa.mk
-endif
+find({
+    wanted => sub {
+                    if (/.*testsuite\.sv$/   or
+                        /.*testrunner\.sv$/
+                    ) {
+                      unlink;
+                    }
+                  }
+  }, qw( . ));
 
-
-ifeq ($(SIMULATOR),IUS)
-SVUNIT_F=svunit-ius.f
-include $(SVUNIT_INSTALL)/bin/ius.mk
-endif
-
-
-all : svunit.f sim
-
-svunit.f : FORCE
-	ln -sf $(SVUNIT_F) svunit.f
+unlink "run.log";
+unlink ".svunit.f";
+remove_tree "work";
+unlink "vsim.wlf";
+unlink "ncsc.log";
+remove_tree "INCA_libs";
+unlink "irun.key";

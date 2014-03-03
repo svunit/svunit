@@ -29,8 +29,10 @@
 //         so that package is imported instead
 //         of including the svunit_uvm_test.sv
 //-----------------------------------------------
-import svunit_uvm_mock_pkg::*;
 import svunit_pkg::*;
+
+`include "svunit_uvm_mock_pkg.sv"
+import svunit_uvm_mock_pkg::*;
 
 //------------------------------------------
 // include the dut and the transaction type
