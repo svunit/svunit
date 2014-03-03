@@ -1,7 +1,7 @@
 source ../test_functions.bsh
 
-expect_passing_example $SVUNIT_INSTALL/examples QUESTA $SVUNIT_INSTALL/examples &&
-expect_passing_example $SVUNIT_INSTALL/examples IUS $SVUNIT_INSTALL/examples &&
+expect_passing_example $SVUNIT_INSTALL/examples "IUS -uvm -d CLK_PERIOD=10ns -d RUN_SVUNIT_WITH_UVM_REPORT_MOCK -f all.f" &&
+expect_passing_example $SVUNIT_INSTALL/examples "QUESTA -uvm -d CLK_PERIOD=10ns -d RUN_SVUNIT_WITH_UVM_REPORT_MOCK"
 #expect_passing_example $SVUNIT_INSTALL/examples/uvm/uvm_express VCS
 
 exit 0

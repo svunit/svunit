@@ -126,6 +126,7 @@ sub buildTestsuite
       $cmd .= " -add $_";
     }
     system($cmd);
+    $FILELIST->print("+incdir+$dir\n");
   }
 
   # recursively do the same through sub-directories
