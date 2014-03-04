@@ -4,7 +4,7 @@ source ../test_functions.bsh
 create_unit_test.pl -overwrite -out dut_unit_test.sv dut.sv
 
 # create the Makefile
-runSVUnit -s questa -simarg +JOKES -simarg +DUD=busto
+runSVUnit -s questa -u "-R +JOKES +DUD=busto -"
 
 # check the log output for a PASS from the testrunner
 expect_testrunner_pass run.log

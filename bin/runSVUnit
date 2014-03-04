@@ -40,7 +40,7 @@ my $simulator;
 my @defines;
 my @filelists;
 my $uvm;
-my @simargs;
+my $simargs;
 my $clean;
 my $help;
 
@@ -51,7 +51,6 @@ sub usage () {
   print "  -d|define <macro>      : appended to the command line as +define+<macro>\n";
   print "  -f|filelist <file>     : some verilog file list\n";
   print "  -uvm                   : run SVUnit with UVM\n";
-  print "  -simarg                : add a runtime argument to the command line\n";
   print "  -c|clean               : run SVUnit from a clean build\n";
   print "  -h|help                : prints this help screen\n";
   print "\n";
@@ -80,8 +79,8 @@ GetOptions("l|log=s" => \$logfile,
            "d|define=s" => \@defines,
            "f|filelist=s" => \@filelists,
            "uvm" => \$uvm,
-           "simarg=s" => \@simargs,
            "c|clean" => \$clean,
+           "u|userdefined=s" => \$simargs,
            "h|help" => \$help
            ) or usage();
 
@@ -132,7 +131,7 @@ if ($simulator eq "modelsim") {
   $cmd .= qq!; vsim -lib work -c -do "run -all; quit" -l $logfile testrunner! if $simulator eq "modelsim";
 }
 
-$cmd .= " -R " . join (" ", @simargs ) . " -" if (@simargs > 0);
+$cmd .= " " . $simargs if defined $simargs;
 
 # run!!
 system("buildSVUnit");
