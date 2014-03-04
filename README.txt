@@ -58,17 +58,7 @@ Step-by-step instructions to get a first unit test going...
 3) generate the unit test
 >create_unit_test.pl bogus.sv
 
-4) create the svunit makefiles
->create_svunit.pl
-
-5) include one of the the simulator specific make files in your svunit.mk
->echo 'include $(SVUNIT_INSTALL)/bin/vcs.mk' >> svunit.mk
-OR
->echo 'include $(SVUNIT_INSTALL)/bin/questa.mk' >> svunit.mk
-OR
->echo 'include $(SVUNIT_INSTALL)/bin/ius.mk' >> svunit.mk
-
-6) add tests using the helper macros
+4) add tests using the helper macros
 ---
   bogus_unit_test.sv:
     `SVUNIT_TESTS_BEGIN
@@ -81,9 +71,9 @@ OR
     `SVUNIT_TESTS_END
 ---
 
-7) run the unittests
->make
+5) run the unittests
+>runSVUnit -s <simulator> # simulator is ius, questa, modelsim or vcs
 
-8) repeat steps 6 and 7 until done
+6) repeat steps 6 and 7 until done
 
-9) pat self on back
+7) pat self on back
