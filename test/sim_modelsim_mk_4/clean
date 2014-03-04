@@ -7,4 +7,5 @@ rm -rf .*testsuite.sv \
        vsim.wlf \
        work \
        other.log \
+       .svunit.f \
        transcript

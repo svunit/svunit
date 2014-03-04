@@ -102,10 +102,16 @@ $simulator =~ s/questa/qverilog/;
 $simulator =~ s/ius/irun/;
 usage() if $simulator ne "qverilog" &&
            $simulator ne "irun" &&
+           $simulator ne "modelsim" &&
            $simulator ne "vcs";
 
 # start the command line
-$cmd = "$simulator -l $logfile";
+if ($simulator eq "modelsim") {
+  $cmd = "vlib work; ";
+  $cmd .= "vlog ";
+} else {
+  $cmd = "$simulator -l $logfile";
+}
 
 # add the uvm switches if necessary
 if (defined $uvm) {
@@ -119,7 +125,9 @@ if (defined $uvm) {
 $cmd .= " -f " . join "  -f ", @filelists;
 $cmd .= " +define+" . join " +define+", @defines if (@defines > 0);
 
+$cmd .= qq!; vsim -lib work -c -do "run -all; quit" -l $logfile testrunner! if $simulator eq "modelsim";
 
 # run!!
 system("buildSVUnit");
-system("echo $cmd; $cmd");
+print $cmd;
+system("$cmd");

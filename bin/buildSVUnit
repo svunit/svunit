@@ -76,6 +76,15 @@ sub buildTestrunner
 
   find({
       wanted => sub {
+                      if (/\/svunit.f$/) {
+                        $FILELIST->print("-f $_\n");
+                      }
+                    },
+      no_chdir => 1
+    }, qw( . ));
+
+  find({
+      wanted => sub {
                       if (/\..*_testsuite\.sv$/) {
                         $FILELIST->print("$_\n");
                         $testsuites .= " -add $_" if /\..*_testsuite.sv/;
