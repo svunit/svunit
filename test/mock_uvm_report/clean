@@ -6,4 +6,5 @@ rm -rf  \
        vsim.wlf \
        .*testsuite.sv \
        .svunit_top.sv \
-       .testrunner.sv
+       .testrunner.sv \
+       .svunit.f

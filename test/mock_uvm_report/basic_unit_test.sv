@@ -1,4 +1,6 @@
 import svunit_pkg::*;
+
+`include "svunit_uvm_mock_pkg.sv"
 import svunit_uvm_mock_pkg::*;
 
 `include "svunit_defines.svh"
