@@ -42,6 +42,12 @@ include $(SVUNIT_INSTALL)/bin/ius.mk
 endif
 
 
+ifeq ($(SIMULATOR),RIVIERA)
+SVUNIT_F=svunit-riviera.f
+include $(SVUNIT_INSTALL)/bin/riviera.mk
+endif
+
+
 all : svunit.f sim
 
 svunit.f : FORCE

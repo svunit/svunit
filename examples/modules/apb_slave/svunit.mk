@@ -35,3 +35,9 @@ endif
 ifeq ($(SIMULATOR),IUS)
 include $(SVUNIT_INSTALL)/bin/ius.mk
 endif
+
+
+ifeq ($(SIMULATOR),RIVIERA)
+include $(SVUNIT_INSTALL)/bin/riviera.mk
+endif
+
