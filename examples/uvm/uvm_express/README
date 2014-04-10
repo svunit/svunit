@@ -26,11 +26,14 @@ building your own tests.
 Step 1: build the svunit framework
 >create_svunit.pl
 
-Step 2a: run it with questa
->make SIMULATOR=QUESTA
-
-Step 2b: or run it with vcs
+Step 2a: run it with VCS
 >make SIMULATOR=VCS
 
-Step 2c: or run it with vcs
+Step 2b: run it with Questa
+>make SIMULATOR=QUESTA
+
+Step 2c: run it with IUS
 >make SIMULATOR=IUS
+
+Step 2d: run it with Riviera
+>make SIMULATOR=RIVIERA

@@ -67,6 +67,8 @@ OR
 >echo 'include $(SVUNIT_INSTALL)/bin/questa.mk' >> svunit.mk
 OR
 >echo 'include $(SVUNIT_INSTALL)/bin/ius.mk' >> svunit.mk
+OR
+>echo 'include $(SVUNIT_INSTALL)/bin/riviera.mk' >> svunit.mk
 
 6) add tests using the helper macros
 ---

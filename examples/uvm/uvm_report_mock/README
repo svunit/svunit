@@ -34,3 +34,6 @@ Step 2b: run it with Questa
 
 Step 2c: run it with IUS
 >make SIMULATOR=IUS
+
+Step 2d: run it with Riviera
+>make SIMULATOR=RIVIERA
