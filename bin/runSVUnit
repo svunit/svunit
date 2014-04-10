@@ -45,20 +45,19 @@ my $clean;
 my $help;
 
 sub usage () {
-  print "Usage:  runSVUnit -s|sim <simulator> [-c|clean -l|log <log> -d|define <macro> -f|filelist <file> -uvm]\n";
+  print "Usage:  runSVUnit -s|sim <simulator> [-l|log <log> -d|define <macro> -f|filelist <file> -uvm -r|runtime <option>]\n";
   print "  -s|sim <simulator>     : simulator is either of questa, ius or vcs\n";
   print "  -l|log <log>           : simulation log file (default: run.log)\n";
   print "  -d|define <macro>      : appended to the command line as +define+<macro>\n";
   print "  -f|filelist <file>     : some verilog file list\n";
   print "  -uvm                   : run SVUnit with UVM\n";
-  print "  -c|clean               : run SVUnit from a clean build\n";
+  print "  -r|runtime             : specify additional runtime options\n";
   print "  -h|help                : prints this help screen\n";
   print "\n";
   exit 1;
 }
 
 sub clean () {
-print "BONGO\n";
   find({
       wanted => sub {
                       if (/.*testsuite\.sv$/   or
@@ -79,14 +78,13 @@ GetOptions("l|log=s" => \$logfile,
            "d|define=s" => \@defines,
            "f|filelist=s" => \@filelists,
            "uvm" => \$uvm,
-           "c|clean" => \$clean,
-           "u|userdefined=s" => \$simargs,
+           "r|runtime=s" => \$simargs,
            "h|help" => \$help
            ) or usage();
 
 usage() if $help;
 
-clean() if $clean;
+clean();
 
 # version
 my $VERSION = IO::File->new();
@@ -112,7 +110,7 @@ if ($simulator eq "modelsim") {
   $cmd = "vlib work; ";
   $cmd .= "vlog ";
 } else {
-  $cmd = "$simulator -l $logfile";
+  $cmd = "$simulator -l $logfile $simargs";
 }
 
 # add the uvm switches if necessary
@@ -128,12 +126,10 @@ $cmd .= " -f " . join "  -f ", @filelists;
 $cmd .= " +define+" . join " +define+", @defines if (@defines > 0);
 
 if ($simulator eq "modelsim") {
-  $cmd .= qq!; vsim -lib work -c -do "run -all; quit" -l $logfile testrunner! if $simulator eq "modelsim";
+  $cmd .= qq!; vsim $simargs -lib work -c -do "run -all; quit" -l $logfile testrunner! if $simulator eq "modelsim";
 }
-
-$cmd .= " " . $simargs if defined $simargs;
 
 # run!!
 system("buildSVUnit");
-print $cmd;
+print $cmd . "\n";
 system("$cmd");
