@@ -44,6 +44,7 @@ SVUNIT_SIM = vlib work; \
                $(DEFINES) \
                $(SIM_INC) \
                $(ALLPKGS) \
+							 $(foreach FILE,$(FILELISTS), -f $(FILE)) \
                $(TESTFILES); \
 						 vsim \
 							 -c -do 'run -all; quit' \

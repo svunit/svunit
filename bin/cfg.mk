@@ -32,9 +32,7 @@ VERSION    := $(shell cat $(SVUNIT_INSTALL)/VERSION.txt)
 DEFINES    += +define+SVUNIT_VERSION='"$(VERSION)"'
 TESTRUNNER := testrunner.sv
 FILELISTS  += $(wildcard svunit.f)
-SIM_FLISTS += $(foreach FILE,$(FILELISTS), -f $(FILE))
-TESTFILES  += $(SIM_FLISTS) \
-							$(CHILD_UNITTESTS) \
+TESTFILES  += $(CHILD_UNITTESTS) \
               $(UNITTESTS) \
               $(CHILD_TESTSUITES) \
               $(TESTSUITES) \

@@ -49,6 +49,7 @@ SVUNIT_SIM =  $(SIM_EXE) \
               $(DEFINES) \
               $(SIM_INC) \
               $(ALLPKGS) \
+						  $(foreach FILE,$(FILELISTS), -f $(FILE)) \
               $(TESTFILES); \
             vsim \
               -c -do 'run -all; quit' \

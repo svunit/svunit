@@ -50,6 +50,7 @@ SVUNIT_SIM = $(SIM_EXE) \
              -l $(RUN_LOG) \
              $(SIM_INC) \
              $(ALLPKGS) \
+						 $(foreach FILE,$(FILELISTS), -file $(FILE)) \
              $(TESTFILES) \
              $(SIM_ARGS)
 

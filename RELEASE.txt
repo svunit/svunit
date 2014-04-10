@@ -110,3 +110,8 @@ v2.6
 v2.7
 ----
 * updates to avoid SIM_ARG and RUN_LOG being cleared
+
+v2.8
+----
+* closed ticket 56
+* add support for Riviera. I sure hope that works.
