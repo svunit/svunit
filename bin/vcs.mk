@@ -46,6 +46,8 @@ SIM_INC += +incdir$(subst $(space),,$(foreach DIR,$(INCDIR),+$(DIR)))
 #                 .$(SVUNIT_TOP)
 #--------------------------------------------------------------
 SVUNIT_SIM = $(SIM_EXE) \
+						 -R \
+						 -sverilog \
              $(DEFINES) \
              -l $(RUN_LOG) \
              $(SIM_INC) \
