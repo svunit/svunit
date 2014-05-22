@@ -1,0 +1,10 @@
+rm -rf .*testsuite.sv \
+       .testrunner.gold \
+       .testrunner.gold.tmp \
+       .testrunner.sv \
+       .svunit_top.sv \
+       .testsuite.gold \
+       .testsuite.gold.tmp \
+       Makefile \
+       testsuite.gold \
+       testrunner.gold

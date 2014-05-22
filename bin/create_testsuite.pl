@@ -147,6 +147,10 @@ sub getUnitTests() {
           $incomments = 1;
         }
 
+        # filter out the static/automatic keywords
+        s/static//;
+        s/automatic//;
+
         if ( /^\s*module\s*(\w+_unit_test);/ ) {
           push (@unittests, $1);
         }
