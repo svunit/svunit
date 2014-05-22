@@ -26,6 +26,7 @@ frmwrk_17:               verify class unit test templates can be generated witho
 frmwrk_18:               verify module unit test templates can be generated without an input file (i.e. generate a template from a name)
 frmwrk_19:               verify interface unit test templates can be generated without an input file (i.e. generate a template from a name)
 frmwrk_20:               generate basic unit tests for modules with static and automatic qualifiers
+frmwrk_21:               the SVUNIT_VERSION doesn't need to be defined
 
 ---------------------------------
 Tests for the simulator makefiles
