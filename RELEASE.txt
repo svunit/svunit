@@ -119,3 +119,7 @@ v2.8
 v2.9
 ----
 * vcs was broken without the sverilog/R switches. now it's fixed.
+
+v2.10
+-----
+* fixes for tickets 56 and 58
