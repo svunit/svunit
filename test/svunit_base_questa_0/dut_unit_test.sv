@@ -44,8 +44,6 @@ module dut_unit_test;
   task teardown();
     svunit_ut.teardown();
     /* Place Teardown Code Here */
-
-    `FAIL_IF(1);
   endtask
 
 
@@ -65,6 +63,23 @@ module dut_unit_test;
   `SVUNIT_TESTS_BEGIN
 
   `SVTEST(strictly_so_the_teardown_is_called)
+
+  `SVTEST(fail_if)
+    `FAIL_IF(1);
+  `SVTEST_END
+
+  `SVTEST(fail_unless)
+    `FAIL_UNLESS(0);
+  `SVTEST_END
+
+  `SVTEST(fail_if_equal)
+    `FAIL_IF_EQUAL(1, 1'hx);
+  `SVTEST_END
+
+  `SVTEST(fail_unless_equal)
+    `FAIL_UNLESS_EQUAL(1, 1'hx);
+  `SVTEST_END
+
   `SVTEST_END
 
   `SVUNIT_TESTS_END

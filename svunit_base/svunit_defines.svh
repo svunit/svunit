@@ -32,7 +32,7 @@
 
 `ifndef FAIL_IF_EQUAL
 `define FAIL_IF_EQUAL(a,b) \
-  if (svunit_ut.fail(`"fail_if_equal`", (a==b), `"a == b`", `__FILE__, `__LINE__)) begin \
+  if (svunit_ut.fail(`"fail_if_equal`", (a===b), `"a === b`", `__FILE__, `__LINE__)) begin \
     if (svunit_ut.is_running()) svunit_ut.give_up(); \
   end
 `endif
@@ -46,7 +46,7 @@
 
 `ifndef FAIL_UNLESS_EQUAL
 `define FAIL_UNLESS_EQUAL(a,b) \
-  if (svunit_ut.fail(`"fail_unless_equal`", (a!=b), `"a != b`", `__FILE__, `__LINE__)) begin \
+  if (svunit_ut.fail(`"fail_unless_equal`", (a!==b), `"a !== b`", `__FILE__, `__LINE__)) begin \
     if (svunit_ut.is_running()) svunit_ut.give_up(); \
   end
 `endif
