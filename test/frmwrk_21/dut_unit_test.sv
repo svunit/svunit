@@ -1,10 +1,8 @@
 `include "svunit_defines.svh"
 `include "dut.sv"
 
-import svunit_pkg::*;
-
-
 module dut_unit_test;
+  import svunit_pkg::svunit_testcase;
 
   string name = "dut_ut";
   svunit_testcase svunit_ut;

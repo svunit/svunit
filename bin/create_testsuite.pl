@@ -185,8 +185,8 @@ sub CreateTestSuite() {
 
   print "SVUNIT: Creating class $class:\n\n";
 
-  print OUTFILE "import svunit_pkg::\*;\n\n";
   print OUTFILE "module $class;\n";
+  print OUTFILE "  import svunit_pkg::svunit_testsuite;\n\n";
   $inst = $class;
   $inst =~ s/_testsuite/_ts/g;
   print OUTFILE "  string name = \"$inst\";\n";

@@ -19,7 +19,6 @@
 //
 //###############################################################
 
-import svunit_pkg::*;
 import svunit_uvm_mock_pkg::*;
 
 `include "svunit_defines.svh"
@@ -29,6 +28,7 @@ import svunit_uvm_mock_pkg::*;
 
 
 module apb_mon_unit_test;
+  import svunit_pkg::svunit_testcase;
 
   string name = "apb_mon_ut";
   svunit_testcase svunit_ut;

@@ -30,7 +30,6 @@
 //         of including the svunit_uvm_test.sv
 //-----------------------------------------------
 import svunit_uvm_mock_pkg::*;
-import svunit_pkg::*;
 
 //------------------------------------------
 // include the dut and the transaction type
@@ -40,6 +39,7 @@ import svunit_pkg::*;
 
 
 module simple_model_unit_test;
+  import svunit_pkg::svunit_testcase;
 
   string name = "simple_model_ut";
   svunit_testcase svunit_ut;

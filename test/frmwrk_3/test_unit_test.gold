@@ -1,9 +1,9 @@
 `include "svunit_defines.svh"
 `include "test.sv"
 
-import svunit_pkg::*;
-
 module test0_unit_test;
+  import svunit_pkg::svunit_testcase;
+
   string name = "test0_ut";
   svunit_testcase svunit_ut;
 
@@ -65,9 +65,9 @@ module test0_unit_test;
 endmodule
 
 
-import svunit_pkg::*;
-
 module test1_unit_test;
+  import svunit_pkg::svunit_testcase;
+
   string name = "test1_ut";
   svunit_testcase svunit_ut;
 

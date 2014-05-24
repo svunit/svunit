@@ -1,9 +1,9 @@
 `include "svunit_defines.svh"
 `include "FILE.sv"
 
-import svunit_pkg::*;
-
 module MYNAME_unit_test;
+  import svunit_pkg::svunit_testcase;
+
   string name = "MYNAME_ut";
   svunit_testcase svunit_ut;
 

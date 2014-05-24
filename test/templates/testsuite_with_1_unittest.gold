@@ -1,6 +1,6 @@
-import svunit_pkg::*;
-
 module PWD_testsuite;
+  import svunit_pkg::svunit_testsuite;
+
   string name = "PWD_ts";
   svunit_testsuite svunit_ts;
 

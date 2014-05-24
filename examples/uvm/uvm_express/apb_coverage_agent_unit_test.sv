@@ -19,7 +19,6 @@
 //
 //###############################################################
 
-import svunit_pkg::*;
 import svunit_uvm_mock_pkg::*;
 
 `include "svunit_defines.svh"
@@ -27,6 +26,7 @@ import svunit_uvm_mock_pkg::*;
 `include "apb_if.sv"
 
 module apb_coverage_agent_unit_test;
+  import svunit_pkg::svunit_testcase;
 
   string name = "apb_coverage_agent_ut";
   svunit_testcase svunit_ut;
