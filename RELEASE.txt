@@ -126,4 +126,5 @@ v2.10
 
 v2.11
 -----
-* fix for ticket 53
+* update for ticket 53
+* update for ticket 50
