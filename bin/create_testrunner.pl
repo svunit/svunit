@@ -152,11 +152,14 @@ sub CreateTestSuite() {
 
   print OUTFILE "`ifdef RUN_SVUNIT_WITH_UVM\n";
   print OUTFILE "  import uvm_pkg::*;\n";
-  print OUTFILE "  import svunit_uvm_mock_pkg::*;\n";
   print OUTFILE "`endif\n";
   print OUTFILE "\n";
   print OUTFILE "module $class();\n";
-  print OUTFILE "  import svunit_pkg::svunit_testrunner;\n\n";
+  print OUTFILE "  import svunit_pkg::svunit_testrunner;\n";
+  print OUTFILE "`ifdef RUN_SVUNIT_WITH_UVM\n";
+  print OUTFILE "  import svunit_uvm_mock_pkg::svunit_uvm_test_inst;\n";
+  print OUTFILE "  import svunit_uvm_mock_pkg::uvm_report_mock;\n";
+  print OUTFILE "`endif\n\n";
   print OUTFILE "  string name = \"$class\";\n";
   print OUTFILE "  svunit_testrunner svunit_tr;\n\n\n";
   print OUTFILE "  //==================================\n";

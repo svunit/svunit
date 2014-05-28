@@ -24,12 +24,12 @@
 `include "svunit_defines.svh"
 
 import uvm_pkg::*;
-import svunit_uvm_mock_pkg::*;
 
 `include "uut.sv"
 
 module uut_unit_test;
   import svunit_pkg::svunit_testcase;
+  import svunit_uvm_mock_pkg::*;
 
   string name = "uut_ut";
   svunit_testcase svunit_ut;

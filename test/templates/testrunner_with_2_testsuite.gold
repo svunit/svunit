@@ -1,10 +1,13 @@
 `ifdef RUN_SVUNIT_WITH_UVM
   import uvm_pkg::*;
-  import svunit_uvm_mock_pkg::*;
 `endif
 
 module testrunner();
   import svunit_pkg::svunit_testrunner;
+  `ifdef RUN_SVUNIT_WITH_UVM
+  import svunit_uvm_mock_pkg::svunit_uvm_test_inst;
+  import svunit_uvm_mock_pkg::uvm_report_mock;
+  `endif
 
   string name = "testrunner";
   svunit_testrunner svunit_tr;
