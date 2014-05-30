@@ -1,7 +1,6 @@
 rm -rf .*testsuite.sv \
        Makefile \
        qverilog.log \
-       dut_unit_test.sv \
        .svunit_top.sv \
        .testrunner.sv \
        vsim.wlf \

@@ -40,7 +40,7 @@ my $simulator;
 my @defines;
 my @filelists;
 my $uvm;
-my $simargs;
+my @simargs;
 my $clean;
 my $help;
 
@@ -50,8 +50,9 @@ sub usage () {
   print "  -l|log <log>           : simulation log file (default: run.log)\n";
   print "  -d|define <macro>      : appended to the command line as +define+<macro>\n";
   print "  -f|filelist <file>     : some verilog file list\n";
+  print "  -r|r_arg               : specify additional runtime options\n";
+  print "  -c|c_arg               : specify additional compile options\n";
   print "  -uvm                   : run SVUnit with UVM\n";
-  print "  -r|runtime             : specify additional runtime options\n";
   print "  -h|help                : prints this help screen\n";
   print "\n";
   exit 1;
@@ -78,7 +79,7 @@ GetOptions("l|log=s" => \$logfile,
            "d|define=s" => \@defines,
            "f|filelist=s" => \@filelists,
            "uvm" => \$uvm,
-           "r|runtime=s" => \$simargs,
+           "r|r_arg=s" => \@simargs,
            "h|help" => \$help
            ) or usage();
 
@@ -110,7 +111,7 @@ if ($simulator eq "modelsim") {
   $cmd = "vlib work; ";
   $cmd .= "vlog ";
 } else {
-  $cmd = "$simulator -l $logfile $simargs";
+  $cmd = "$simulator -l $logfile";
 }
 
 # add the uvm switches if necessary
@@ -126,7 +127,11 @@ $cmd .= " -f " . join "  -f ", @filelists;
 $cmd .= " +define+" . join " +define+", @defines if (@defines > 0);
 
 if ($simulator eq "modelsim") {
-  $cmd .= qq!; vsim $simargs -lib work -c -do "run -all; quit" -l $logfile testrunner! if $simulator eq "modelsim";
+  $cmd .= qq!; vsim @simargs -lib work -c -do "run -all; quit" -l $logfile testrunner! if $simulator eq "modelsim";
+} elsif ($simulator eq "qverilog") {
+  $cmd .= " -R @simargs -";
+} else {
+  $cmd .= " @simargs";
 }
 
 # run!!
