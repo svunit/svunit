@@ -41,6 +41,7 @@ my @defines;
 my @filelists;
 my $uvm;
 my @simargs;
+my @compileargs;
 my $clean;
 my $help;
 
@@ -80,6 +81,7 @@ GetOptions("l|log=s" => \$logfile,
            "f|filelist=s" => \@filelists,
            "uvm" => \$uvm,
            "r|r_arg=s" => \@simargs,
+           "c|c_arg=s" => \@compileargs,
            "h|help" => \$help
            ) or usage();
 
@@ -129,9 +131,9 @@ $cmd .= " +define+" . join " +define+", @defines if (@defines > 0);
 if ($simulator eq "modelsim") {
   $cmd .= qq!; vsim @simargs -lib work -c -do "run -all; quit" -l $logfile testrunner! if $simulator eq "modelsim";
 } elsif ($simulator eq "qverilog") {
-  $cmd .= " -R @simargs -";
+  $cmd .= " @compileargs -R @simargs -";
 } else {
-  $cmd .= " @simargs";
+  $cmd .= " @compileargs @simargs";
 }
 
 # run!!
