@@ -129,7 +129,7 @@ $cmd .= " -f " . join "  -f ", @filelists;
 $cmd .= " +define+" . join " +define+", @defines if (@defines > 0);
 
 if ($simulator eq "modelsim") {
-  $cmd .= qq!; vsim @simargs -lib work -c -do "run -all; quit" -l $logfile testrunner! if $simulator eq "modelsim";
+  $cmd .= qq! @compileargs; vsim @simargs -lib work -c -do "run -all; quit" -l $logfile testrunner! if $simulator eq "modelsim";
 } elsif ($simulator eq "qverilog") {
   $cmd .= " @compileargs -R @simargs -";
 } else {
