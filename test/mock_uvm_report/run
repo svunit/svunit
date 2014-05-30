@@ -1,5 +1,5 @@
 source ../test_functions.bsh
 
-runSVUnit -sim questa -uvm -clean -define RUN_SVUNIT_WITH_UVM_REPORT_MOCK
+runSVUnit -sim questa -uvm -define RUN_SVUNIT_WITH_UVM_REPORT_MOCK
 
 expect_testrunner_pass run.log
