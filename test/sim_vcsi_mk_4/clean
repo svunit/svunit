@@ -1,11 +1,2 @@
-rm -rf .*testsuite.sv \
-       csrc \
-       Makefile \
-       other.log \
-       simv \
-       simv.daidir \
-       vc_hdrs.h \
-       ucli.key \
-       .svunit_top.sv \
-       .svunit.f \
-       .testrunner.sv
+cleanSVUnit
+rm -rf other.log

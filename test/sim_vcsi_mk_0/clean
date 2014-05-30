@@ -1,11 +1,2 @@
-rm -rf .*testsuite.sv \
-       csrc \
-       Makefile \
-       run.log \
-       dut_unit_test.sv \
-       simv \
-       simv.daidir \
-       ucli.key \
-       .svunit_top.sv \
-       .svunit.f \
-       .testrunner.sv
+cleanSVUnit
+rm -rf dut_unit_test.sv

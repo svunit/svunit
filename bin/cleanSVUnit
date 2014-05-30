@@ -44,3 +44,6 @@ unlink "vsim.wlf";
 unlink "ncsc.log";
 remove_tree "INCA_libs";
 unlink "irun.key";
+remove_tree "csrc";
+unlink "simv";
+remove_tree "simv.daidir";

@@ -1,11 +1,6 @@
 source ../test_functions.bsh
 
-# create the Makefile
-create_svunit.pl
-
-# build and run svunit with qverilog
-make
-
+runSVUnit -s vcs
 
 expect_file run.log &&
 
@@ -13,11 +8,17 @@ expect_string "INFO:  \[0\]\[dut_ut\]: RUNNING" run.log &&
 expect_string "INFO:  \[0\]\[dut_ut\]: first_test::RUNNING" run.log &&
 expect_string "INFO:  \[0\]\[dut_ut\]: first_test::PASSED" run.log &&
 expect_string "INFO:  \[0\]\[dut_ut\]: second_test::RUNNING" run.log &&
-expect_string "ERROR: \[0\]\[dut_ut\]: fail_if: 1 (at .*dut_unit_test.sv line:66): FAIL" run.log &&
+expect_string "ERROR: \[0\]\[dut_ut\]: fail_if: 1 (at .*dut_unit_test.sv line:66)" run.log &&
 expect_string "INFO:  \[0\]\[dut_ut\]: second_test::FAILED" run.log &&
 expect_string "INFO:  \[0\]\[dut_ut\]: third_test::RUNNING" run.log &&
-expect_string "ERROR: \[0\]\[dut_ut\]: fail_unless: beam == 1 (at .*dut_unit_test.sv line:73): FAIL" run.log &&
+expect_string "ERROR: \[0\]\[dut_ut\]: fail_unless: beam == 1 (at .*dut_unit_test.sv line:73)" run.log &&
 expect_string "INFO:  \[0\]\[dut_ut\]: third_test::FAILED" run.log &&
+expect_string "INFO:  \[0\]\[dut_ut\]: fourth_test::RUNNING" run.log &&
+expect_string "ERROR: \[0\]\[dut_ut\]: fail_if_equal: 'hf === 15 (at .*dut_unit_test.sv line:80)" run.log &&
+expect_string "INFO:  \[0\]\[dut_ut\]: fourth_test::FAILED" run.log &&
+expect_string "INFO:  \[0\]\[dut_ut\]: fifth_test::RUNNING" run.log &&
+expect_string "ERROR: \[0\]\[dut_ut\]: fail_unless_equal: 15 !== 'ha (at .*dut_unit_test.sv line:86)" run.log &&
+expect_string "INFO:  \[0\]\[dut_ut\]: fifth_test::FAILED" run.log &&
 expect_string "INFO:  \[0\]\[dut_ut\]: FAILED" run.log &&
 expect_string "INFO:  \[0\]\[testrunner\]: FAILED" run.log
 

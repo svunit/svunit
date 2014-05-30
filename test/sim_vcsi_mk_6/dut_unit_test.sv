@@ -3,7 +3,9 @@
 
 import svunit_pkg::*;
 
+
 module dut_unit_test;
+
   string name = "dut_ut";
   svunit_testcase svunit_ut;
 
@@ -56,37 +58,23 @@ module dut_unit_test;
   //   `SVTEST_END
   //===================================
   `SVUNIT_TESTS_BEGIN
-    // this should have the "running" and "pass" logged
-    `SVTEST(first_test)
-    `SVTEST_END
 
+  `SVTEST(get_args)
+    bit jokes, bozo;
 
-    // this should have the "running" and "fail" logged w/1 error
-    `SVTEST(second_test)
-      `FAIL_IF(1);
-    `SVTEST_END
+`ifdef JOKES
+    jokes=1;
+`endif
+`ifdef BOZO
+    bozo=1;
+`endif
 
+    `FAIL_UNLESS(jokes);
+    `FAIL_UNLESS(bozo);
+    `FAIL_UNLESS(`DUD == 4);
+  `SVTEST_END
 
-    // this should have the "running" and "fail" logged w/1 error
-    `SVTEST(third_test)
-      static int beam = 4;
-      `FAIL_UNLESS(beam == 1);
-      `FAIL_IF(beam != 2);
-    `SVTEST_END
-
-    // this should fail on the second test only
-    `SVTEST(fourth_test)
-      `FAIL_IF_EQUAL('ha,15)
-      `FAIL_IF_EQUAL('hf,15)
-    `SVTEST_END
-
-    // this should fail on the second test only
-    `SVTEST(fifth_test)
-      `FAIL_UNLESS_EQUAL(10,'ha)
-      `FAIL_UNLESS_EQUAL(15,'ha)
-    `SVTEST_END
 
   `SVUNIT_TESTS_END
-
 
 endmodule

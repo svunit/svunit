@@ -112,6 +112,8 @@ usage() if $simulator ne "qverilog" &&
 if ($simulator eq "modelsim") {
   $cmd = "vlib work; ";
   $cmd .= "vlog ";
+} elsif ($simulator eq "vcs") {
+  $cmd = "$simulator -R -sverilog -l $logfile";
 } else {
   $cmd = "$simulator -l $logfile";
 }

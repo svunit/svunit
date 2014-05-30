@@ -1,7 +1,7 @@
 source ../test_functions.bsh
 
 # create the Makefile
-runSVUnit -s vcs -r "+JOKES +DUD=4" -r_arg "+BOZO"
+runSVUnit -s vcs -c "+define+JOKES +define+DUD=4" -c_arg "+define+BOZO"
 
 # check the log output for a PASS from the testrunner
 expect_testrunner_pass run.log
