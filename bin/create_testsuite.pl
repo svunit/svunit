@@ -66,6 +66,11 @@ sub CheckArgs() {
         $skip = 1;
         push(@files_to_add, $ARGV[$i]);
       }
+      elsif ( @ARGV[$i] =~ /-inst/ ) {
+        $i++;
+        $skip = 1;
+        push(@inst_to_add, $ARGV[$i]);
+      }
       elsif ( @ARGV[$i] =~ /-overwrite/ ) {
         $overwrite = 1;
       }
@@ -173,6 +178,18 @@ sub CreateTestSuite() {
     s/\.sv//g;
     $instance = $_;
     $instance =~ s/_unit_test/_ut/g;
+    if ( $overwrite != 1) {
+      print "\n";
+    }
+    push( @class_names , $_ );
+    push( @instance_names, $instance );
+    $num_tests++;
+  }
+
+  foreach ( @inst_to_add ) {
+    $instance = $_;
+    $instance =~ s/_type_test/_tt/g;
+    $instance =~ s/[#()"]/_/g;
     if ( $overwrite != 1) {
       print "\n";
     }

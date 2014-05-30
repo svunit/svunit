@@ -72,11 +72,14 @@ sub processDir
   my $r_parent_testsuites = shift;
   my $r_parent_incdir = shift;
   my $r_parent_unittest = shift;
+  my $r_parent_typetest = shift;
   my $DIR;
   my @incdir;
   my @unittest;
+  my @typetest;
   my $handle;
   my @child_unittest;
+  my @child_typetest;
   my @child_testsuites;
 
   $DIR = IO::Dir->new($dir);
@@ -100,10 +103,21 @@ sub processDir
       }
     }
 
+    elsif ($handle =~ /.*_type_test\.sv$/)
+    {
+      push(@typetest, $handle);
+
+      # add this dir to the incdir list if it hasn't already
+      if (join(@incdir, ":") !~ "$dir")
+      {
+        push(@incdir, "$dir");
+      }
+    }
+
     # if it's a dir, process it
     elsif (-d "$dir/$handle")
     {
-      processDir("$dir/$handle", 0, \@child_testsuites, \@incdir, \@child_unittest);
+      processDir("$dir/$handle", 0, \@child_testsuites, \@incdir, \@child_unittest, \@child_typetest);
     }
   }
 
@@ -111,6 +125,7 @@ sub processDir
   # pass my incdirs back to the parent
   push(@{$r_parent_incdir}, @incdir);
   push(@{$r_parent_unittest}, @child_unittest);
+  push(@{$r_parent_typetest}, @child_typetest);
   push(@{$r_parent_testsuites}, @child_testsuites);
 
 
@@ -133,6 +148,12 @@ sub processDir
         # collect all the unit tests
         $fh->print("CHILD_UNITTESTS +=");
         foreach my $ut (@child_unittest) { $fh->print(" $ut"); }
+        $fh->print("\n\n");
+      }
+      if (@child_typetest > 0) {
+        # collect all the unit tests
+        $fh->print("CHILD_TYPETESTS +=");
+        foreach my $ut (@child_typetest) { $fh->print(" $ut"); }
         $fh->print("\n\n");
       }
       if (@incdir > 0) {
@@ -159,6 +180,22 @@ sub processDir
           push(@{$r_parent_unittest}, "$dir/$unittest");
         }
         push(@{$r_parent_testsuites}, "$dir/$dirID\_testsuite.sv");
+      }
+      if (@typetest > 0)
+      {
+        if (@unittest == 0) {
+          $fh->print("\nTESTSUITES = ./$dirID\_testsuite.sv\n");
+        }
+        #$fh->print("$dirID\_UNITTESTS = ");
+        $fh->print("\nTYPETESTS = ");
+        foreach my $typetest (@typetest)
+        {
+          $fh->print("$typetest ");
+          push(@{$r_parent_typetest}, "$dir/$typetest");
+        }
+        if (@unittest == 0) {
+          push(@{$r_parent_testsuites}, "$dir/$dirID\_testsuite.sv");
+        }
       }
       $fh->print("\n\n-include svunit.mk\n");
       $fh->print("include \$(SVUNIT_INSTALL)/bin/cfg.mk\n");
