@@ -2,6 +2,5 @@ source ../test_functions.bsh
 
 expect_passing_example $SVUNIT_INSTALL/examples/uvm/simple_model "IUS -uvm" &&
 expect_passing_example $SVUNIT_INSTALL/examples/uvm/simple_model "QUESTA -uvm"
-#expect_passing_example $SVUNIT_INSTALL/examples/uvm/simple_model VCS
 
 exit 0

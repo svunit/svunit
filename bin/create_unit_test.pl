@@ -288,9 +288,9 @@ sub CreateUnitTest() {
     $includes_already_printed = 1;
   }
   print OUTFILE "\n";
-  print OUTFILE "import svunit_pkg::\*;\n\n";
+  print OUTFILE "module $uut\_unit_test;\n";
+  print OUTFILE "  import svunit_pkg::svunit_testcase;\n";
   print OUTFILE "\n";
-  print OUTFILE "module $uut\_unit_test;\n\n";
   print OUTFILE "  string name = \"$uut\_ut\";\n";
   print OUTFILE "  svunit_testcase svunit_ut;\n";
   print OUTFILE "\n";

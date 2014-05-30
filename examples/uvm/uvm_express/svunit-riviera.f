@@ -19,19 +19,8 @@
 //
 //###############################################################
 
-`include "svunit_defines.svh"
-
-package svunit_pkg;
-
-`ifdef SVUNIT_VERSION
-  const string svunit_version = `SVUNIT_VERSION;
-`else
-  const string svunit_version = "For SVUnit Version info, see: $SVUNIT_INSTALL/VERSION.txt";
-`endif
-
-  `include "svunit_types.svh"
-  `include "svunit_base.sv"
-  `include "svunit_testcase.sv"
-  `include "svunit_testsuite.sv"
-  `include "svunit_testrunner.sv"
-endpackage
+$SVUNIT_INSTALL/svunit_base/uvm-mock/svunit_uvm_mock_pkg.sv
++incdir+$SVUNIT_INSTALL/svunit_base/uvm-mock
++define+CLK_PERIOD=5
++define+RUN_SVUNIT_WITH_UVM
+-uvm

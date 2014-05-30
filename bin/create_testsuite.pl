@@ -66,6 +66,11 @@ sub CheckArgs() {
         $skip = 1;
         push(@files_to_add, $ARGV[$i]);
       }
+      elsif ( @ARGV[$i] =~ /-inst/ ) {
+        $i++;
+        $skip = 1;
+        push(@inst_to_add, $ARGV[$i]);
+      }
       elsif ( @ARGV[$i] =~ /-overwrite/ ) {
         $overwrite = 1;
       }
@@ -147,6 +152,10 @@ sub getUnitTests() {
           $incomments = 1;
         }
 
+        # filter out the static/automatic keywords
+        s/static//;
+        s/automatic//;
+
         if ( /^\s*module\s*(\w+_unit_test);/ ) {
           push (@unittests, $1);
         }
@@ -174,12 +183,24 @@ sub CreateTestSuite() {
     $num_tests++;
   }
 
+  foreach ( @inst_to_add ) {
+    $instance = $_;
+    $instance =~ s/_type_test/_tt/g;
+    $instance =~ s/[#()"]/_/g;
+    if ( $overwrite != 1) {
+      print "\n";
+    }
+    push( @class_names , $_ );
+    push( @instance_names, $instance );
+    $num_tests++;
+  }
+
   $cnt = 0;
 
   print "SVUNIT: Creating class $class:\n";
 
-  print OUTFILE "import svunit_pkg::\*;\n\n";
   print OUTFILE "module $class;\n";
+  print OUTFILE "  import svunit_pkg::svunit_testsuite;\n\n";
   $inst = $class;
   $inst =~ s/_testsuite/_ts/g;
   print OUTFILE "  string name = \"$inst\";\n";

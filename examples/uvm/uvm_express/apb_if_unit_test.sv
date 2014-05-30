@@ -19,8 +19,6 @@
 //
 //###############################################################
 
-import svunit_pkg::*;
-
 `define MST_EXPECT(ADDR,WRITE,SEL,ENABLE,DATA) \
   `FAIL_IF(my_apb_slv_if.paddr   !== ADDR); \
   `FAIL_IF(my_apb_slv_if.pwrite  !== WRITE); \
@@ -45,6 +43,7 @@ import svunit_pkg::*;
 
 
 module apb_if_unit_test;
+  import svunit_pkg::svunit_testcase;
 
   string name = "apb_if_ut";
   svunit_testcase svunit_ut;

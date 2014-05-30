@@ -19,15 +19,13 @@
 //
 //###############################################################
 
-import svunit_pkg::*;
-
 `include "svunit_uvm_mock_pkg.sv"
-import svunit_uvm_mock_pkg::*;
-
 `include "svunit_defines.svh"
 `include "apb_coverage.sv"
 
 module apb_coverage_unit_test;
+  import svunit_pkg::svunit_testcase;
+  import svunit_uvm_mock_pkg::*;
 
   string name = "apb_coverage_ut";
   svunit_testcase svunit_ut;

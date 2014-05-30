@@ -24,7 +24,7 @@
 # set the simulator executable
 #------------------------------
 ifeq ($(SIM_EXE),)
-	SIM_EXE  := vcs
+	SIM_EXE  := vlib work; vlog
 endif
 
 
@@ -45,25 +45,23 @@ SIM_INC += +incdir$(subst $(space),,$(foreach DIR,$(INCDIR),+$(DIR)))
 #                 .$(TESTRUNNER) \
 #                 .$(SVUNIT_TOP)
 #--------------------------------------------------------------
-SVUNIT_SIM = $(SIM_EXE) \
-						 -R \
-						 -sverilog \
-             $(DEFINES) \
-             -l $(RUN_LOG) \
-             $(SIM_INC) \
-             $(ALLPKGS) \
-						 $(foreach FILE,$(FILELISTS), -file $(FILE)) \
-             $(TESTFILES) \
-             $(SIM_ARGS)
+SVUNIT_SIM =  $(SIM_EXE) \
+              $(DEFINES) \
+              $(SIM_INC) \
+              $(ALLPKGS) \
+						  $(foreach FILE,$(FILELISTS), -f $(FILE)) \
+              $(TESTFILES); \
+            vsim \
+              -c -do 'run -all; quit' \
+              $(SIM_ARGS) \
+              -l $(RUN_LOG) \
+              testrunner
 
 
 #-----------------------------------------------------------
 # Files created by the simulator that need to be cleaned up
 #-----------------------------------------------------------
-CLEANFILES += csrc \
-							run.log \
-							simv \
-							simv.* \
-							ucli.key \
-              vc_hdrs.h
-
+CLEANFILES += work \
+              run.log \
+              library.cfg \
+              dataset.asdb \

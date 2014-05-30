@@ -32,10 +32,10 @@ VERSION    := $(shell cat $(SVUNIT_INSTALL)/VERSION.txt)
 DEFINES    += +define+SVUNIT_VERSION='"$(VERSION)"'
 TESTRUNNER := testrunner.sv
 FILELISTS  += $(wildcard svunit.f)
-SIM_FLISTS += $(foreach FILE,$(FILELISTS), -file $(FILE))
-TESTFILES  += $(SIM_FLISTS) \
-							$(CHILD_UNITTESTS) \
+TESTFILES  += $(CHILD_UNITTESTS) \
               $(UNITTESTS) \
+              $(CHILD_TYPETESTS) \
+              $(TYPETESTS) \
               $(CHILD_TESTSUITES) \
               $(TESTSUITES) \
               $(TESTDIR)/.$(TESTRUNNER)
@@ -83,9 +83,10 @@ $(CHILD_TESTSUITES) :
 
 TESTSUITE_ARGS += -overwrite
 TESTSUITE_ARGS +=  $(foreach UNITTEST, $(UNITTESTS), -add $(UNITTEST))
+TESTSUITE_ARGS +=  $(foreach TYPETESTINST, $(TYPETESTINST), -inst $(TYPETESTINST))
 TESTSUITE_ARGS += -out $(notdir $@)
 %testsuite.sv : $(UNITTESTS)
-	@create_testsuite.pl $(TESTSUITE_ARGS)
+	create_testsuite.pl $(TESTSUITE_ARGS)
 
 testsuites : $(TESTSUITES)
 

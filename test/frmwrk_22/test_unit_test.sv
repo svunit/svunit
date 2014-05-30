@@ -1,12 +1,12 @@
 `include "svunit_defines.svh"
-`include "dut.sv"
+`include "test.sv"
 
 import svunit_pkg::*;
 
 
-module dut_unit_test;
+module static automatic test_unit_test;
 
-  string name = "dut_ut";
+  string name = "test_ut";
   svunit_testcase svunit_ut;
 
 
@@ -14,7 +14,7 @@ module dut_unit_test;
   // This is the UUT that we're 
   // running the Unit Tests on
   //===================================
-  dut my_dut();
+  test my_test;
 
 
   //===================================
@@ -22,6 +22,8 @@ module dut_unit_test;
   //===================================
   function void build();
     svunit_ut = new(name);
+
+    my_test = new(/* New arguments if needed */);
   endfunction
 
 

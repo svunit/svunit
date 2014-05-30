@@ -22,10 +22,8 @@
 `include "svunit_defines.svh"
 `include "apb_slave.sv"
 
-import svunit_pkg::*;
-
-
 module apb_slave_unit_test;
+  import svunit_pkg::svunit_testcase;
 
   string name = "apb_slave_ut";
   svunit_testcase svunit_ut;

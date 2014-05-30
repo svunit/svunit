@@ -32,7 +32,7 @@
 
 `ifndef FAIL_IF_EQUAL
 `define FAIL_IF_EQUAL(a,b) \
-  if (svunit_ut.fail(`"fail_if_equal`", (a==b), `"a == b`", `__FILE__, `__LINE__)) begin \
+  if (svunit_ut.fail(`"fail_if_equal`", (a===b), `"a === b`", `__FILE__, `__LINE__)) begin \
     if (svunit_ut.is_running()) svunit_ut.give_up(); \
   end
 `endif
@@ -46,7 +46,7 @@
 
 `ifndef FAIL_UNLESS_EQUAL
 `define FAIL_UNLESS_EQUAL(a,b) \
-  if (svunit_ut.fail(`"fail_unless_equal`", (a!=b), `"a != b`", `__FILE__, `__LINE__)) begin \
+  if (svunit_ut.fail(`"fail_unless_equal`", (a!==b), `"a !== b`", `__FILE__, `__LINE__)) begin \
     if (svunit_ut.is_running()) svunit_ut.give_up(); \
   end
 `endif
@@ -85,23 +85,8 @@
   Parameters: 
     msg - string to display
 */
-`ifdef VMM
-  `define INFO(msg) \
-    `vmm_note(log, msg);
-`else
-  `ifdef AVM
-    `define INFO(msg) \
-      avm_report_info(msg);
-  `else
-    `ifdef OVM
-      `define INFO(msg) \
-        ovm_report_info(msg);
-    `else
-      `define INFO(msg) \
-        $display("INFO:  [%0t][%0s]: %s", $time, name, msg) 
-    `endif
-  `endif
-`endif
+`define INFO(msg) \
+  $display("INFO:  [%0t][%0s]: %s", $time, name, msg) 
 
 
 /*
@@ -111,23 +96,8 @@
   Parameters: 
     msg - string to display
 */
-`ifdef VMM
-  `define ERROR(msg) \
-    `vmm_error(log, msg);
-`else
-  `ifdef AVM
-    `define ERROR(msg) \
-      avm_report_error(msg);
-  `else
-    `ifdef OVM
-      `define ERROR(msg) \
-        ovm_report_error(msg);
-    `else
-      `define ERROR(msg) \
-        $display("ERROR: [%0t][%0s]: %s", $time, name, msg)
-    `endif
-  `endif
-`endif
+`define ERROR(msg) \
+  $display("ERROR: [%0t][%0s]: %s", $time, name, msg)
 
 
 /*
