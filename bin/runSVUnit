@@ -46,13 +46,13 @@ my $clean;
 my $help;
 
 sub usage () {
-  print "Usage:  runSVUnit -s|sim <simulator> [-l|log <log> -d|define <macro> -f|filelist <file> -uvm -r|runtime <option>]\n";
-  print "  -s|sim <simulator>     : simulator is either of questa, ius or vcs\n";
+  print "Usage:  runSVUnit -s|sim <simulator> [-l|log <log> -d|define <macro> -f|filelist <file> -uvm -r|r_arg <option> -c|c_arg <option>]\n";
+  print "  -s|sim <simulator>     : simulator is either of questa, modelsim, riviera, ius or vcs\n";
   print "  -l|log <log>           : simulation log file (default: run.log)\n";
   print "  -d|define <macro>      : appended to the command line as +define+<macro>\n";
   print "  -f|filelist <file>     : some verilog file list\n";
-  print "  -r|r_arg               : specify additional runtime options\n";
-  print "  -c|c_arg               : specify additional compile options\n";
+  print "  -r|r_arg <option>      : specify additional runtime options\n";
+  print "  -c|c_arg <option>      : specify additional compile options\n";
   print "  -uvm                   : run SVUnit with UVM\n";
   print "  -h|help                : prints this help screen\n";
   print "\n";
@@ -97,7 +97,7 @@ chomp $version;
 push @defines, qq!SVUNIT_VERSION='"$version"'!;
 
 # filelists
-unshift @filelists, qw( .svunit.f );
+push @filelists, qw( .svunit.f );
 
 # simulator check
 $simulator =~ tr/A-Z/a-z/;
@@ -106,10 +106,11 @@ $simulator =~ s/ius/irun/;
 usage() if $simulator ne "qverilog" &&
            $simulator ne "irun" &&
            $simulator ne "modelsim" &&
+           $simulator ne "riviera" &&
            $simulator ne "vcs";
 
 # start the command line
-if ($simulator eq "modelsim") {
+if ($simulator eq "modelsim" or $simulator eq "riviera") {
   $cmd = "vlib work; ";
   $cmd .= "vlog ";
 } elsif ($simulator eq "vcs") {
@@ -130,8 +131,8 @@ if (defined $uvm) {
 $cmd .= " -f " . join "  -f ", @filelists;
 $cmd .= " +define+" . join " +define+", @defines if (@defines > 0);
 
-if ($simulator eq "modelsim") {
-  $cmd .= qq! @compileargs; vsim @simargs -lib work -c -do "run -all; quit" -l $logfile testrunner! if $simulator eq "modelsim";
+if ($simulator eq "modelsim" or $simulator eq "riviera") {
+  $cmd .= qq! @compileargs; vsim @simargs -lib work -c -do "run -all; quit" -l $logfile testrunner!;
 } elsif ($simulator eq "qverilog") {
   $cmd .= " @compileargs -R @simargs -";
 } else {
