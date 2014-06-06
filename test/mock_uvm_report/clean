@@ -1,5 +1,4 @@
 rm -rf  \
-       Makefile \
        run.log \
        work \
        run.log \

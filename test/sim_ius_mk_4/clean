@@ -1,5 +1,4 @@
 rm -rf .*testsuite.sv \
-       Makefile \
        other.log \
        INCA_libs \
        .svunit_top.sv \

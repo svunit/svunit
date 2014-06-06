@@ -2,7 +2,6 @@ source ../test_functions.bsh
 
 setup
 
-# create the Makefile
 create_svunit.pl
 
 # build the testrunner

@@ -5,6 +5,5 @@ rm -rf .*testsuite.sv \
        .svunit_top.sv \
        .testsuite.gold \
        .testsuite.gold.tmp \
-       Makefile \
        testsuite.gold \
        testrunner.gold

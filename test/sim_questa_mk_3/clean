@@ -1,6 +1,5 @@
 rm -rf .*testsuite.sv \
        csrc \
-       Makefile \
        run.log \
        vsim.wlf \
        work \

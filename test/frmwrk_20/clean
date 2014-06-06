@@ -5,7 +5,6 @@ rm -rf .*testsuite.sv \
        .svunit_top.sv \
        .testsuite.gold \
        .testsuite.gold.tmp \
-       Makefile \
        test_automatic_unit_test.sv \
        test_automatic_unit_test.gold \
        test_static_unit_test.sv \

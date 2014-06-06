@@ -1,5 +1,4 @@
 rm -rf .*testsuite.sv \
-       Makefile \
        qverilog.log \
        .svunit_top.sv \
        .testrunner.sv \

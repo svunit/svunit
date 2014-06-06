@@ -1,6 +1,5 @@
 rm -rf .*testsuite.sv \
        csrc \
-       Makefile \
        run.log \
        dut_unit_test.sv \
        simv \

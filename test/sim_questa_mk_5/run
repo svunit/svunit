@@ -1,6 +1,5 @@
 source ../test_functions.bsh
 
-# create the Makefile
 runSVUnit -s questa -r "+JOKES +DUD=4" -r_arg "+BOZO"
 
 # check the log output for a PASS from the testrunner

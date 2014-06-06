@@ -112,7 +112,7 @@ sub buildTestrunner
 #
 # recursively go through the directory tree,
 # collect all the unit tests and write the
-# Makefiles
+# fileslist
 #############################################
 
 sub buildTestsuite
