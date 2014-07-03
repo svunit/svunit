@@ -128,3 +128,7 @@ v2.11
 -----
 * update for ticket 53
 * update for ticket 50
+
+v2.12
+-----
+* rm the docs
