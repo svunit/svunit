@@ -1,1 +1,0 @@
-the documentation in the this directory is incredibly out-of-date. embarrassingly out-of-date in fact. for the latest information, refer to the README files throughout the release package and to www.AgileSoC.com.
