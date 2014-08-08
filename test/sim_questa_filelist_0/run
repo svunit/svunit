@@ -1,9 +1,6 @@
 source ../test_functions.bsh
 
-# remove and create the unit_test
-create_unit_test.pl -overwrite -out dut_unit_test.sv dut.sv
-
-runSVUnit -s questa -f my_filelist.f
+runSVUnit -s questa -f my_filelist.f --filelist a_filelist.f
 
 # check the log output for a PASS from the testrunner
 expect_file run.log &&

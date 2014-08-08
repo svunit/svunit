@@ -1,6 +1,6 @@
 source ../test_functions.bsh
 
-runSVUnit -s modelsim -r "+JOKES +DUD=4" -r_arg "+BOZO"
+runSVUnit -s modelsim -r "+JOKES +DUD=4" --r_arg "+BOZO"
 
 # check the log output for a PASS from the testrunner
 expect_testrunner_pass run.log

@@ -1,6 +1,6 @@
 source ../test_functions.bsh
 
-runSVUnit -s ius -c "+define+JOKES +define+DUD=4" -c_arg "+define+BOZO"
+runSVUnit -s ius -c "+define+JOKES +define+DUD=4" --c_arg "+define+BOZO"
 
 # check the log output for a PASS from the testrunner
 expect_testrunner_pass run.log
