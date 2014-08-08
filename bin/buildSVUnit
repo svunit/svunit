@@ -63,6 +63,18 @@ sub CheckArgs() {
   }
 }
 
+sub getFilelists
+{
+  find({
+      wanted => sub {
+                      if (/\/svunit.f$/) {
+                        $FILELIST->print("-f $_\n");
+                      }
+                    },
+      no_chdir => 1
+    }, qw( . ));
+}
+
 #############################################
 # sub buildTestrunner(@)
 #
@@ -73,15 +85,6 @@ sub buildTestrunner
 {
   my $cmd = "create_testrunner.pl -overwrite -out testrunner.sv";
   my $testsuites;
-
-  find({
-      wanted => sub {
-                      if (/\/svunit.f$/) {
-                        $FILELIST->print("-f $_\n");
-                      }
-                    },
-      no_chdir => 1
-    }, qw( . ));
 
   find({
       wanted => sub {
@@ -155,6 +158,7 @@ $FILELIST->print("+incdir+$ENV{SVUNIT_INSTALL}/svunit_base/uvm-mock\n");
 $FILELIST->print("$ENV{SVUNIT_INSTALL}/svunit_base/svunit_pkg.sv\n");
 
 CheckArgs();
+getFilelists;
 buildTestsuite($pwd);
 exit buildTestrunner;
 #print "Info: Found no unit tests. No SVUnit framework created.\n";

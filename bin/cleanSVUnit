@@ -24,7 +24,6 @@
 use strict;
 use File::Glob;
 use File::Find;
-use File::Path qw(remove_tree);
 
 
 find({
@@ -39,11 +38,11 @@ find({
 
 unlink "run.log";
 unlink ".svunit.f";
-remove_tree "work";
+system("rm -rf work");
 unlink "vsim.wlf";
 unlink "ncsc.log";
-remove_tree "INCA_libs";
+system("rm -rf INCA_libs");
 unlink "irun.key";
-remove_tree "csrc";
+system("rm -rf csrc");
 unlink "simv";
-remove_tree "simv.daidir";
+system("rm -rf simv.daidir");
