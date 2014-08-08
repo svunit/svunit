@@ -39,10 +39,9 @@ tar cvf svunit-$ver.tar svunit-code/bin \
 gzip svunit-$ver.tar
 mv svunit-$ver.tar.gz svunit-code
 cd -
-git add svunit-$ver.tar.gz
-git commit -m "release svunit-$ver.tar.gz"
 git tag -a $ver -m "$ver"
 git push --tags
 git push
 scp svunit-$ver.tar.gz nosnhojn@frs.sourceforge.net:/home/frs/project/svunit
 scp README.txt nosnhojn@frs.sourceforge.net:/home/frs/project/svunit
+rm svunit-$ver.tar.gz

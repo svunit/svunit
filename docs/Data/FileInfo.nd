@@ -1,8 +1,0 @@
-1.35
-systemverilog
-/home/rsaxe/work/svunit/svunit_base/svunit_testsuite.sv	1229456961	1	svunit_testsuite
-/home/rsaxe/work/svunit/svunit_base/svunit_defines.svh	1229445677	1	/home/rsaxe/work/svunit/svunit_base/svunit_defines.svh
-/home/rsaxe/work/svunit/svunit_base/svunit_testrunner.sv	1229452472	1	svunit_testrunner
-/home/rsaxe/work/svunit/svunit_base/svunit_testcase.sv	1229454942	1	svunit_testcase
-/home/rsaxe/work/svunit/svunit_base/svunit_test_results.sv	1227894423	0	/home/rsaxe/work/svunit/svunit_base/svunit_test_results.sv
-/home/rsaxe/work/svunit/svunit_base/svunit_pkg.sv	1229372842	0	/home/rsaxe/work/svunit/svunit_base/svunit_pkg.sv
