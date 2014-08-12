@@ -1,3 +1,4 @@
+cleanSVUnit
 rm -rf .*testsuite.sv \
        csrc \
        run.log \

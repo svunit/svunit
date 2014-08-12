@@ -73,7 +73,7 @@ and start a class-under-test
 ---
 
 5) run the unittests
->runSVUnit -s <simulator> # simulator is ius, questa, modelsim or vcs
+>runSVUnit -s <simulator> # simulator is ius, questa, modelsim, riviera or vcs
 
 6) repeat steps 6 and 7 until done
 
