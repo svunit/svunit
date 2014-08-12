@@ -132,3 +132,7 @@ v2.11
 v2.12
 -----
 * rm the docs
+
+v3.1
+----
+* major scripting update
