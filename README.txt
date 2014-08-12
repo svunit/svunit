@@ -48,7 +48,8 @@ Step-by-step instructions to get a first unit test going...
 1b) or you can source the Setup.csh (if you use the csh shell)
 >source Setup.csh
 
-2) go somewhere and start a class-under-test
+2) go somewhere outside SVUNIT_INTALL (i.e. where you are right now)
+and start a class-under-test
 ---
   bogus.sv:
     class bogus;
