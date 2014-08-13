@@ -136,3 +136,7 @@ v2.12
 v3.1
 ----
 * major scripting update
+
+v3.2
+----
+* fix perl IO::File in runSVUnit

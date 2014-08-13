@@ -25,6 +25,7 @@ use strict;
 use Getopt::Long;
 use File::Glob;
 use File::Find;
+use IO::File;
 
 use vars qw/ %opt /;
 
