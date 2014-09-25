@@ -29,6 +29,7 @@ use File::Glob;
 use File::Find;
 
 
+my $cwd = getcwd;
 my $pwd = ".";
 my $outdir = ".";
 my $g_found_unit_test = 0;
@@ -89,7 +90,7 @@ sub getFilelists
 #############################################
 sub buildTestrunner
 {
-  my $cmd = "create_testrunner.pl -overwrite -out $outdir/testrunner.sv";
+  my $cmd = "cd $outdir; create_testrunner.pl -overwrite -out testrunner.sv";
   my $testsuites;
 
   find({
@@ -99,7 +100,7 @@ sub buildTestrunner
                         $testsuites .= " -add $_" if /\..*_testsuite.sv/;
                       }
                     },
-      no_chdir => 1
+      no_chdir => 0
     }, qw( . ));
 
   if (!defined $testsuites) {
@@ -140,11 +141,11 @@ sub buildTestsuite
   if (@unittest > 0) {
     my $cmd = "create_testsuite.pl -overwrite -out $outdir/$dirID\_testsuite.sv";
     foreach (@unittest) {
-      $FILELIST->print("$_\n");
+      $FILELIST->print("$cwd/$_\n");
       $cmd .= " -add $_";
     }
     system($cmd);
-    $FILELIST->print("+incdir+$dir\n");
+    $FILELIST->print("+incdir+$cwd/$dir\n");
   }
 
   # recursively do the same through sub-directories
@@ -156,18 +157,19 @@ sub buildTestsuite
 }
 
 
+CheckArgs();
+
+if (! -e $outdir ) {
+  system("mkdir $outdir");
+}
 $FILELIST = IO::File->new();
-$FILELIST->open(">.svunit.f");
-$FILELIST->print("+incdir+.\n");
+$FILELIST->open(">$outdir/.svunit.f");
+$FILELIST->print("+incdir+$cwd\n");
 $FILELIST->print("+incdir+$ENV{SVUNIT_INSTALL}/svunit_base\n");
 $FILELIST->print("+incdir+$ENV{SVUNIT_INSTALL}/svunit_base/uvm-mock\n");
 $FILELIST->print("$ENV{SVUNIT_INSTALL}/svunit_base/svunit_pkg.sv\n");
 
-CheckArgs();
 getFilelists;
-if (! -e $outdir ) {
-  system("mkdir $outdir");
-}
 buildTestsuite($pwd);
 exit buildTestrunner;
 #print "Info: Found no unit tests. No SVUnit framework created.\n";
