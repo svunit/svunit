@@ -140,3 +140,8 @@ v3.1
 v3.2
 ----
 * fix perl IO::File in runSVUnit
+
+v3.3
+----
+* update for ticket 61
+* update for ticket 62
