@@ -75,7 +75,7 @@ sub getFilelists
   find({
       wanted => sub {
                       if (/\/svunit.f$/) {
-                        $FILELIST->print("-f $_\n");
+                        $FILELIST->print("-f $cwd/$_\n");
                       }
                     },
       no_chdir => 1

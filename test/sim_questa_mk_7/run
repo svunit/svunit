@@ -1,0 +1,10 @@
+source ../test_functions.bsh
+
+setup
+
+runSVUnit -s questa --out rundir
+
+# check the log output for a PASS from the testrunner
+expect_testrunner_pass rundir/run.log
+
+exit 0

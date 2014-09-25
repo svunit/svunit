@@ -1,0 +1,9 @@
+rm -rf .*testsuite.sv \
+       qverilog.log \
+       .svunit_top.sv \
+       .testrunner.sv \
+       vsim.wlf \
+       work \
+       .svunit.f \
+       run.log \
+       bozo
