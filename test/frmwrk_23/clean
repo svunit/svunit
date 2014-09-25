@@ -1,0 +1,33 @@
+rm -rf .*testsuite.sv \
+       .testrunner.gold \
+       .testrunner.gold.tmp \
+       .testrunner.sv \
+       .svunit_top.sv \
+       .testsuite.gold \
+       .testsuite.gold.tmp \
+       test_unit_test.sv \
+       testrunner.gold \
+       .svunit.f
+
+rm -rf rundir
+
+
+cd subdir0 && \
+rm -rf .*testsuite.sv \
+       .testsuite.gold \
+       subdir0_unit_test.sv \
+&& cd - > /dev/null 2>&1
+
+
+cd subdir1 && \
+rm -rf .*testsuite.sv \
+       .testsuite.gold \
+       subdir1_unit_test.sv \
+&& cd - >/dev/null 2>&1
+
+
+cd subdir1/subdir1a && \
+rm -rf .*testsuite.sv \
+       .testsuite.gold \
+       subdir1a_unit_test.sv \
+&& cd - >/dev/null 2>&1

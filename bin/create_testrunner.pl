@@ -87,8 +87,7 @@ sub ValidArgs() {
     PrintHelp();
   }
   print "SVUNIT: Output File: $output_file\n";
-  $class = $output_file;
-  $class =~ s/\.sv//g;
+  $class = "testrunner";
 }
 
 

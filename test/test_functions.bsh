@@ -55,12 +55,16 @@ verify_testsuite() {
 
 verify_testrunner() {
   #PWD=`pwd | sed -e "s/[\/-]/_/g"`
+  tr=.testrunner.sv
+  if [ "$5" != "" ]; then
+    tr=$5
+  fi
   PWD="_"
   sed -e "s/PWD/$PWD/g" $1 | \
     sed -e "s/CHILD1/$2/g" | \
     sed -e "s/CHILD2/$3/g" | \
     sed -e "s/CHILD3/$4/g" > .$1
-  verify_file .$1 .testrunner.sv
+  verify_file .$1 $tr
 }
 
 expect_file() {

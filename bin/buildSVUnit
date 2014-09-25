@@ -30,6 +30,7 @@ use File::Find;
 
 
 my $pwd = ".";
+my $outdir = ".";
 my $g_found_unit_test = 0;
 my $FILELIST;
 my $VERSION;
@@ -59,6 +60,11 @@ sub CheckArgs() {
       if ( $ARGV[$i] =~ /(-help)|(-h)/ ) {
         PrintHelp();
       }
+      elsif ( @ARGV[$i] =~ /-o/ ) {
+        $i++;
+        $skip = 1;
+        $outdir = $ARGV[$i];
+      }
     }
   }
 }
@@ -83,7 +89,7 @@ sub getFilelists
 #############################################
 sub buildTestrunner
 {
-  my $cmd = "create_testrunner.pl -overwrite -out testrunner.sv";
+  my $cmd = "create_testrunner.pl -overwrite -out $outdir/testrunner.sv";
   my $testsuites;
 
   find({
@@ -103,7 +109,7 @@ sub buildTestrunner
 
   else {
     system("$cmd$testsuites");
-    system("mv testrunner.sv .testrunner.sv");
+    system("mv $outdir/testrunner.sv $outdir/.testrunner.sv");
     $FILELIST->print(".testrunner.sv\n");
     return 0;
   }
@@ -132,7 +138,7 @@ sub buildTestsuite
 
   # create the testsuite for this directory
   if (@unittest > 0) {
-    my $cmd = "create_testsuite.pl -overwrite -out $dir/$dirID\_testsuite.sv";
+    my $cmd = "create_testsuite.pl -overwrite -out $outdir/$dirID\_testsuite.sv";
     foreach (@unittest) {
       $FILELIST->print("$_\n");
       $cmd .= " -add $_";
@@ -159,6 +165,9 @@ $FILELIST->print("$ENV{SVUNIT_INSTALL}/svunit_base/svunit_pkg.sv\n");
 
 CheckArgs();
 getFilelists;
+if (! -e $outdir ) {
+  system("mkdir $outdir");
+}
 buildTestsuite($pwd);
 exit buildTestrunner;
 #print "Info: Found no unit tests. No SVUnit framework created.\n";

@@ -28,6 +28,7 @@ frmwrk_19:               verify interface unit test templates can be generated w
 frmwrk_20:               generate basic unit tests for modules with static and automatic qualifiers
 frmwrk_21:               the SVUNIT_VERSION doesn't need to be defined
 frmwrk_22:               unit test files can be declared static or automatic
+frmwrk_23:               same structure as frmwrk_6 except dump all the generated file in a different dir with the -o switch
 
 ---------------------------------
 Tests for the simulator makefiles
