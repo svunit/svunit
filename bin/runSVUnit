@@ -26,6 +26,7 @@ use Getopt::Long;
 use File::Glob;
 use File::Find;
 use IO::File;
+use Cwd 'abs_path';
 
 use vars qw/ %opt /;
 
@@ -99,9 +100,6 @@ my $version = $VERSION->getline;
 chomp $version;
 push @defines, qq!SVUNIT_VERSION='"$version"'!;
 
-# filelists
-push @filelists, qw( .svunit.f );
-
 # simulator check
 $simulator =~ tr/A-Z/a-z/;
 $simulator =~ s/questa/qverilog/;
@@ -131,7 +129,13 @@ if (defined $uvm) {
 }
 
 # add the filelists and defines
-$cmd .= " -f " . join "  -f ", @filelists;
+foreach (@filelists) {
+  my $f = abs_path($_);
+  $cmd .= " -f " . join "  -f ", $f;
+}
+$cmd .= " -f .svunit.f";
+
+# defines
 $cmd .= " +define+" . join " +define+", @defines if (@defines > 0);
 
 if ($simulator eq "modelsim" or $simulator eq "riviera") {
