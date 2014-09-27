@@ -6,4 +6,4 @@ rm -rf .*testsuite.sv \
        work \
        .svunit.f \
        run.log \
-       bozo
+       /tmp/bozo

@@ -9,7 +9,7 @@ rm -rf .*testsuite.sv \
        testrunner.gold \
        .svunit.f
 
-rm -rf rundir
+rm -rf /tmp/rundir
 
 
 cd subdir0 && \

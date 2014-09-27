@@ -1,10 +1,10 @@
 source ../test_functions.bsh
 
-mkdir bozo
-runSVUnit -s questa -f my_filelist.f --filelist a_filelist.f -out bozo
+mkdir /tmp/bozo
+runSVUnit -s questa -f my_filelist.f --filelist a_filelist.f -out /tmp/bozo
 
 # check the log output for a PASS from the testrunner
-expect_file bozo/run.log &&
-expect_testrunner_pass bozo/run.log
+expect_file /tmp/bozo/run.log &&
+expect_testrunner_pass /tmp/bozo/run.log
 
 exit 0

@@ -9,12 +9,12 @@ create_unit_test.pl -overwrite -out ./subdir1/subdir1_unit_test.sv ./subdir1/sub
 create_unit_test.pl -overwrite -out ./subdir1/subdir1a/subdir1a_unit_test.sv ./subdir1/subdir1a/subdir1a.sv
 
 # build the framework
-buildSVUnit -o rundir
+buildSVUnit -o /tmp/rundir
 
 # generate golden reference files
 golden_testrunner_with_4_testsuites
 
 # verify the output
-verify_testrunner testrunner.gold subdir0 subdir1 subdir1_subdir1a ./rundir/.testrunner.sv
+verify_testrunner testrunner.gold subdir1_subdir1a subdir0 subdir1 /tmp/rundir/.testrunner.sv
 
 exit 0

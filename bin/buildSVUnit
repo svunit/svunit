@@ -101,7 +101,7 @@ sub buildTestrunner
                       }
                     },
       no_chdir => 0
-    }, qw( . ));
+    }, $outdir);
 
   if (!defined $testsuites) {
     unlink ".svunit.f";

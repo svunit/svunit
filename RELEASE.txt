@@ -145,3 +145,11 @@ v3.3
 ----
 * update for ticket 61
 * update for ticket 62
+
+v3.4
+----
+* can have absolute or relative path for -f <file>
+
+v3.5
+----
+* .testrunner.sv build properly in outdir now (ticket 61 safe to close now)
