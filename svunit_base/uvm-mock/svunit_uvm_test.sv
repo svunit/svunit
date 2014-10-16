@@ -155,18 +155,15 @@ task svunit_uvm_test_inst(string test_name = "svunit_uvm_test");
     fork
       begin
         uvm_root top;
-        uvm_component test;
 
         top = uvm_root::get();
         void'(svunit_idle_uvm_domain::get_common_domain());
-
-        test = top.get_child("uvm_test_top");
 
         //--------------------------------------------------------------------------------------
         // if no test is running yet (i.e this is the first call to svunit_uvm_test_inst), setup
         // the svunit_idle_uvm_domain and invoke the svunit_uvm_test. Breeze by this otherwise.
         //--------------------------------------------------------------------------------------
-        if (test == null) begin
+        if (!top.has_child("uvm_test_top")) begin
           top.run_test("svunit_uvm_test");
         end
       end

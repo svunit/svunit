@@ -60,6 +60,9 @@ module uut_unit_test;
     svunit_ut.setup();
 
     uvm_report_mock::setup();
+
+    svunit_activate_uvm_component(my_uut);
+    svunit_uvm_test_start();
   endtask
 
 
@@ -70,6 +73,9 @@ module uut_unit_test;
   task teardown();
     svunit_ut.teardown();
     /* Place Teardown Code Here */
+
+    svunit_uvm_test_finish();
+    svunit_deactivate_uvm_component(my_uut);
   endtask
 
 
