@@ -153,3 +153,7 @@ v3.4
 v3.5
 ----
 * .testrunner.sv build properly in outdir now (ticket 61 safe to close now)
+
+v3.6
+----
+* swapped the get_child for has_child to get rid of the NOCHILD warning
