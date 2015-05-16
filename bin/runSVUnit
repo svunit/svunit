@@ -45,10 +45,11 @@ my @simargs;
 my @compileargs;
 my $outdir = ".";
 my $clean;
+my @tests;
 my $help;
 
 sub usage () {
-  print "Usage:  runSVUnit -s|--sim <simulator> [-l|--log <log> -d|--define <macro> -f|--filelist <file> -U|-uvm -r|--r_arg <option> -c|--c_arg <option> -o|--out <dir>]\n";
+  print "Usage:  runSVUnit -s|--sim <simulator> [-l|--log <log> -d|--define <macro> -f|--filelist <file> -U|-uvm -r|--r_arg <option> -c|--c_arg <option> -o|--out <dir> -t|--test <test>]\n";
   print "  -s|--sim <simulator>     : simulator is either of questa, modelsim, riviera, ius or vcs\n";
   print "  -l|--log <log>           : simulation log file (default: run.log)\n";
   print "  -d|--define <macro>      : appended to the command line as +define+<macro>\n";
@@ -57,6 +58,7 @@ sub usage () {
   print "  -c|--c_arg <option>      : specify additional compile options\n";
   print "  -U|--uvm                 : run SVUnit with UVM\n";
   print "  -o|--out                 : output directory for tmp and simulation files\n";
+  print "  -t|--test                : specifies a unit test to run (multiple can be given)\n";
   print "  -h|--help                : prints this help screen\n";
   print "\n";
   exit 1;
@@ -86,6 +88,7 @@ GetOptions("l|log=s" => \$logfile,
            "r|r_arg=s" => \@simargs,
            "c|c_arg=s" => \@compileargs,
            "o|out=s" => \$outdir,
+           "t|test=s" => \@tests,
            "h|help" => \$help
            ) or usage();
 
@@ -146,7 +149,12 @@ if ($simulator eq "modelsim" or $simulator eq "riviera") {
   $cmd .= " @compileargs @simargs";
 }
 
+my $build_cmd = "buildSVUnit -o $outdir";
+foreach (@tests) {
+  $build_cmd .= " -t $_";
+}
+
 # run!!
-system("buildSVUnit -o $outdir");
+system("$build_cmd");
 print $cmd . "\n";
 system("$cmd");

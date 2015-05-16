@@ -23,6 +23,7 @@
 
 use strict;
 use Cwd;
+use Getopt::Long;
 use IO::File;
 use IO::Dir;
 use File::Glob;
@@ -36,39 +37,25 @@ my $g_found_unit_test = 0;
 my $FILELIST;
 my $VERSION;
 my $version;
+my $outdir = ".";
+my @tests;
+my $help;
+
 
 
 ##########################################################################
-# PrintHelp(): Prints the script usage.
+# usage(): Prints the script usage.
 ##########################################################################
-sub PrintHelp() {
+sub usage() {
   print "\n";
-  print "Usage:  create_svunit.pl [ -help ]\n\n";
-  print "Where -help               : prints this help screen\n";
+  print "Usage:  buildSVUnit [ -t <test> -h|--help ]\n\n";
+  print "  -o|--out                 : output directory for tmp and simulation files\n";
+  print "  -t|--test                : specifies a unit test to run (multiple can be given)\n";
+  print "  -h|--help                : prints this help screen\n";
   print "\n";
-  die;
+  exit 1;
 }
 
-
-sub CheckArgs() {
-  my $numargs = @ARGV;
-
-  for my $i (0..$numargs-1) {
-    if ( my $skip == 1 ) {
-      $skip = 0;
-    }
-    else {
-      if ( $ARGV[$i] =~ /(-help)|(-h)/ ) {
-        PrintHelp();
-      }
-      elsif ( @ARGV[$i] =~ /-o/ ) {
-        $i++;
-        $skip = 1;
-        $outdir = $ARGV[$i];
-      }
-    }
-  }
-}
 
 sub getFilelists
 {
@@ -135,7 +122,7 @@ sub buildTestsuite
   $dirID =~ s/[\/\.-]/_/g;
   $dirID = "." . $dirID;
 
-  @unittest = <$dir/*_unit_test.sv>;
+  @unittest = getUnittests($dir);
 
   # create the testsuite for this directory
   if (@unittest > 0) {
@@ -149,15 +136,43 @@ sub buildTestsuite
   }
 
   # recursively do the same through sub-directories
-  foreach (@_ = <$dir/*>) {
-    if (-d "$_" && !m/\.$/) {
-      buildTestsuite("$_");
+  if (@tests == 0) {
+    foreach (@_ = <$dir/*>) {
+      if (-d "$_" && !m/\.$/) {
+        buildTestsuite("$_");
+      }
     }
   }
 }
 
 
-CheckArgs();
+sub getUnittests {
+  my $dir = shift;
+  my @unittests;
+  if (@tests) {
+    foreach (@tests) {
+      if (-e "$dir/$_") {
+        push(@unittests, "$dir/$_");
+      }
+      else {
+        print "WARNING: Unit test '$_' could not be found in directory $dir\n";
+      }
+    }
+  }
+  else {
+    @unittests = <$dir/*_unit_test.sv>;
+  }
+  return @unittests;
+}
+
+
+
+GetOptions("o|out=s" => \$outdir,
+           "t|test=s" => \@tests,
+           "h|help" => \$help
+           ) or usage();
+
+usage() if $help;
 
 if (! -e $outdir ) {
   system("mkdir $outdir");
