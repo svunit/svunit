@@ -1,0 +1,38 @@
+module PWD_testsuite;
+  import svunit_pkg::svunit_testsuite;
+
+  string name = "PWD_ts";
+  svunit_testsuite svunit_ts;
+
+
+  //===================================
+  // These are the unit tests that we
+  // want included in this testsuite
+  //===================================
+  MYNAME1_unit_test MYNAME1_ut();
+  MYNAME2_unit_test MYNAME2_ut();
+
+
+  //===================================
+  // Build
+  //===================================
+  function void build();
+    MYNAME1_ut.build();
+    MYNAME2_ut.build();
+    svunit_ts = new(name);
+    svunit_ts.add_testcase(MYNAME1_ut.svunit_ut);
+    svunit_ts.add_testcase(MYNAME2_ut.svunit_ut);
+  endfunction
+
+
+  //===================================
+  // Run
+  //===================================
+  task run();
+    svunit_ts.run();
+    MYNAME1_ut.run();
+    MYNAME2_ut.run();
+    svunit_ts.report();
+  endtask
+
+endmodule

@@ -23,6 +23,11 @@ golden_testsuite_with_1_unittest() {
   sed -e "s/MYNAME/$1/g" $SVUNIT_INSTALL/test/templates/testsuite_with_1_unittest.gold > testsuite.gold
 }
 
+golden_testsuite_with_2_unittest() {
+  sed -e "s/MYNAME1/$1/g" $SVUNIT_INSTALL/test/templates/testsuite_with_2_unittest.gold > testsuite.gold
+  sed -i "s/MYNAME2/$2/g" testsuite.gold
+}
+
 golden_testrunner_with_1_testsuite() {
   cp $SVUNIT_INSTALL/test/templates/testrunner_with_1_testsuite.gold testrunner.gold
 }
