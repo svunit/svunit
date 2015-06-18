@@ -162,3 +162,4 @@ v3.7
 ----
 * update for ticket 57
 * update for ticket 63
+* re-added svunit user feedback that continues counting

@@ -45,10 +45,8 @@ sub main() {
           printLo();
         }
 
-        if ($_ <= $HI_MSG_THRESHOLD) {
-          seek FB, 0, 0;
-          print FB ++$_ . "\n";
-        }
+        seek FB, 0, 0;
+        print FB ++$_ . "\n";
       }
     }
 
