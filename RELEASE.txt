@@ -157,3 +157,8 @@ v3.5
 v3.6
 ----
 * swapped the get_child for has_child to get rid of the NOCHILD warning
+
+v3.7
+----
+* update for ticket 57
+* update for ticket 63

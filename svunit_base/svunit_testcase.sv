@@ -55,7 +55,7 @@ class svunit_testcase extends svunit_base;
   extern function integer get_error_count();
   extern task give_up();
 
-  extern function bit fail(string c, bit b, string s, string f, int l);
+  extern function bit fail(string c, bit b, string s, string f, int l, string d = "");
 
   extern function void start();
   extern function void stop();
@@ -122,13 +122,18 @@ endtask
     s - string to pass to pass or fail task
     f - file name of the failure
     l - line number of the failure
+    d - user specified debug info
 
     return 1 if fail else 0
 */
-function bit svunit_testcase::fail(string c, bit b, string s, string f, int l);
+function bit svunit_testcase::fail(string c, bit b, string s, string f, int l, string d = "");
+  string _d;
   if (b) begin
     error_count++;
-    `ERROR($sformatf("%s: %s (at %s line:%0d)",c,s,f,l));
+    if (d != "") begin
+      $sformat(_d, "[ %s ] ", d);
+    end
+    `ERROR($sformatf("%s: %s %s(at %s line:%0d)",c,s,_d,f,l));
     return 1;
   end
   else begin

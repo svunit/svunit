@@ -86,6 +86,19 @@ module dut_unit_test;
       `FAIL_UNLESS_EQUAL(15,'ha)
     `SVTEST_END
 
+    // verify the extra log string output
+    `SVTEST(sixth_test)
+      static int bozo = 4;
+      static string gum = "gum is wrong";
+      `FAIL_UNLESS_LOG(bozo == 1, "bozo is wrong");
+    `SVTEST_END
+
+    `SVTEST(seventh_test)
+      static int bozo = 4;
+      static string gum = "gum is wrong";
+      `FAIL_IF_LOG(bozo != 2, $psprintf("%s %0d", gum, bozo));
+    `SVTEST_END
+
   `SVUNIT_TESTS_END
 
 

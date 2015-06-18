@@ -30,6 +30,13 @@
   end
 `endif
 
+`ifndef FAIL_IF_LOG
+`define FAIL_IF_LOG(exp,msg) \
+  if (svunit_ut.fail(`"fail_if`", (exp), `"exp`", `__FILE__, `__LINE__, msg)) begin \
+    if (svunit_ut.is_running()) svunit_ut.give_up(); \
+  end
+`endif
+
 `ifndef FAIL_IF_EQUAL
 `define FAIL_IF_EQUAL(a,b) \
   if (svunit_ut.fail(`"fail_if_equal`", (a===b), `"a === b`", `__FILE__, `__LINE__)) begin \
@@ -40,6 +47,13 @@
 `ifndef FAIL_UNLESS
 `define FAIL_UNLESS(exp) \
   if (svunit_ut.fail(`"fail_unless`", !(exp), `"exp`", `__FILE__, `__LINE__)) begin \
+    if (svunit_ut.is_running()) svunit_ut.give_up(); \
+  end
+`endif
+
+`ifndef FAIL_UNLESS_LOG
+`define FAIL_UNLESS_LOG(exp,msg) \
+  if (svunit_ut.fail(`"fail_unless`", !(exp), `"exp`", `__FILE__, `__LINE__, msg)) begin \
     if (svunit_ut.is_running()) svunit_ut.give_up(); \
   end
 `endif

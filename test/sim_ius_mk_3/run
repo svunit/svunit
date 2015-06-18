@@ -20,6 +20,12 @@ expect_string "INFO:  \[0\]\[dut_ut\]: fifth_test::RUNNING" run.log &&
 expect_string "ERROR: \[0\]\[dut_ut\]: fail_unless_equal: 15 !== 'ha (at .*dut_unit_test.sv line:86)" run.log &&
 expect_string "INFO:  \[0\]\[dut_ut\]: fifth_test::FAILED" run.log &&
 expect_string "INFO:  \[0\]\[dut_ut\]: FAILED" run.log &&
+expect_string "INFO:  \[0\]\[dut_ut\]: sixth_test::RUNNING" run.log &&
+expect_string "ERROR: \[0\]\[dut_ut\]: fail_unless: bozo == 1 \[ bozo is wrong \] (at .*dut_unit_test.sv line:93)" run.log &&
+expect_string "INFO:  \[0\]\[dut_ut\]: sixth_test::FAILED" run.log &&
+expect_string "INFO:  \[0\]\[dut_ut\]: seventh_test::RUNNING" run.log &&
+expect_string "ERROR: \[0\]\[dut_ut\]: fail_if: bozo != 2 \[ gum is wrong 4 \] (at .*dut_unit_test.sv line:99)" run.log &&
+expect_string "INFO:  \[0\]\[dut_ut\]: seventh_test::FAILED" run.log &&
 expect_string "INFO:  \[0\]\[testrunner\]: FAILED" run.log
 
 exit 0
