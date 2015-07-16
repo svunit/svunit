@@ -1,5 +1,7 @@
 source ../test_functions.bsh
 
+setup
+
 # remove and create the unit_test
 create_unit_test.pl -overwrite -out dut_unit_test.sv dut.sv
 

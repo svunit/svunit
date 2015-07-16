@@ -1,5 +1,7 @@
 source ../test_functions.bsh
 
+setup
+
 runSVUnit -s ius
 
 expect_file run.log &&

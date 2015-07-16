@@ -5,6 +5,11 @@ create_unit_test() {
 
 setup() {
   ./clean
+  module load > /dev/null 2>&1
+  if [ "$?" == "0" ]; then
+    module load ius
+    module load questa
+  fi
 }
 
 golden_module_unit_test() {

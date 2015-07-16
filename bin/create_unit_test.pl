@@ -36,14 +36,13 @@ my $includes_already_printed = 0;
 # PrintHelp(): Prints the script usage.
 ##########################################################################
 sub PrintHelp() {
-  print "\n";
-  print "Usage:  create_unit_test.pl [ -help | -out <file> | -i | -overwrite | uut.sv ]\n\n";
+  print "Usage:  create_unit_test.pl [ -help | -out <file> | -overwrite ] [ -class_name <name> -module_name <name> -if_name <name>  uut.sv ]\n\n";
   print "Where -help                : prints this help screen\n";
   print "      -out <file>          : specifies a new default output file\n";
   print "      -overwrite           : overwrites the output file if it already exists\n";
-  #print "      -class_name <name>   : generate a unit test template for a class <name>\n";
-  #print "      -module_name <name>  : generate a unit test template for a module <name>\n";
-  #print "      -if_name <name>      : generate a unit test template for an interface <name>\n";
+  print "      -class_name <name>   : generate a unit test template for a class <name>\n";
+  print "      -module_name <name>  : generate a unit test template for a module <name>\n";
+  print "      -if_name <name>      : generate a unit test template for an interface <name>\n";
   print "      uut.sv               : the file with the unit under test\n";
   print "\n";
 }
@@ -64,6 +63,7 @@ sub CheckArgs() {
     else {
       if ( @ARGV[$i] =~ /-help/ ) {
         PrintHelp();
+        exit;
       }
       elsif ( @ARGV[$i] =~ /-out/ ) {
         $i++;

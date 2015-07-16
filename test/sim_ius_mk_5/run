@@ -1,5 +1,7 @@
 source ../test_functions.bsh
 
+setup
+
 runSVUnit -s ius -r "+JOKES +DUD=4" --r_arg "+BOZO"
 
 # check the log output for a PASS from the testrunner

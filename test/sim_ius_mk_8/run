@@ -1,0 +1,12 @@
+source ../test_functions.bsh
+
+setup
+
+module load > /dev/null 2>&1
+if [ "$?" == "0" ]; then
+  module unload ius
+  runSVUnit -s ius > /dev/null 2>&1
+  expect_return_code 1
+fi
+
+exit 0

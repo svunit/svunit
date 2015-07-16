@@ -25,6 +25,7 @@ use strict;
 use Getopt::Long;
 use File::Glob;
 use File::Find;
+use File::Which;
 use IO::File;
 use Cwd 'abs_path';
 
@@ -49,7 +50,8 @@ my @tests;
 my $help;
 
 sub usage () {
-  print "Usage:  runSVUnit -s|--sim <simulator> [-l|--log <log> -d|--define <macro> -f|--filelist <file> -U|-uvm -r|--r_arg <option> -c|--c_arg <option> -o|--out <dir> -t|--test <test>]\n";
+  print "Usage:  runSVUnit -s|--sim <simulator> [-l|--log <log> -d|--define <macro> -f|--filelist <file> -U|-uvm\n";
+  print "                  -r|--r_arg <option> -c|--c_arg <option> -o|--out <dir> -t|--test <test>]\n";
   print "  -s|--sim <simulator>     : simulator is either of questa, modelsim, riviera, ius or vcs\n";
   print "  -l|--log <log>           : simulation log file (default: run.log)\n";
   print "  -d|--define <macro>      : appended to the command line as +define+<macro>\n";
@@ -112,6 +114,11 @@ usage() if $simulator ne "qverilog" &&
            $simulator ne "modelsim" &&
            $simulator ne "riviera" &&
            $simulator ne "vcs";
+if ( (not defined which($simulator) and $simulator ne "modelsim") or
+     (not defined which('vlib') and $simulator eq "modelsim") ) {
+  print "Error: Simulator '$simulator' specified but not found. Please add '$simulator' to your PATH\n";
+  exit 1;
+}
 
 # start the command line
 $cmd = "cd $outdir; ";
