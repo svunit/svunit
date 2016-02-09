@@ -1,0 +1,6 @@
+source ../test_functions.bsh
+
+expect_uvm_passing_example $SVUNIT_INSTALL/examples/uvm/simple_model simple_model.sv "IUS -uvm" &&
+expect_uvm_passing_example $SVUNIT_INSTALL/examples/uvm/simple_model simple_model.sv "QUESTA -uvm"
+
+exit 0

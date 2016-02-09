@@ -152,6 +152,25 @@ expect_passing_example() {
   popd >/dev/null
 }
 
+expect_uvm_passing_example() {
+  pushd . >/dev/null
+
+  mkdir temp
+  cp $1/* temp
+  cd temp
+  cleanSVUnit
+
+  create_unit_test.pl -overwrite -uvm $2
+  runSVUnit -uvm -s $3
+
+  # check the log output for a PASS from the testrunner
+  expect_file run.log
+  expect_testrunner_pass run.log
+
+  popd >/dev/null
+  rm -rf temp
+}
+
 clean() {
 rm -f `find . -name *testsuite*`
 rm -f `find . -name *testrunner*`

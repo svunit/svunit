@@ -20,6 +20,10 @@
 #  under the License.
 #
 ################################################################
+#
+# Modifications to make build and connect phases visible.
+#
+################################################################
 
 use File::Basename;
 
@@ -36,8 +40,10 @@ my $includes_already_printed = 0;
 # PrintHelp(): Prints the script usage.
 ##########################################################################
 sub PrintHelp() {
-  print "Usage:  create_unit_test.pl [ -help | -out <file> | -overwrite ] [ -class_name <name> -module_name <name> -if_name <name>  uut.sv ]\n\n";
+  print "\n";
+  print "Usage:  create_unit_test.pl [ -help | -uvm | -out <file> | -i | -overwrite | uut.sv ]\n\n";
   print "Where -help                : prints this help screen\n";
+  print "      -uvm                 : generate a uvm test template\n";
   print "      -out <file>          : specifies a new default output file\n";
   print "      -overwrite           : overwrites the output file if it already exists\n";
   print "      -class_name <name>   : generate a unit test template for a class <name>\n";
@@ -63,7 +69,10 @@ sub CheckArgs() {
     else {
       if ( @ARGV[$i] =~ /-help/ ) {
         PrintHelp();
-        exit;
+      }
+      elsif ( @ARGV[$i] =~ /-uvm/ ) {
+        $i++;
+        $uvm_test = 1;
       }
       elsif ( @ARGV[$i] =~ /-out/ ) {
         $i++;
@@ -281,13 +290,23 @@ sub Main() {
 ##########################################################################
 sub CreateUnitTest() {
   $in_list = 0;
+  $uvm_class_name = join "", $uut,"_uvm_wrapper";
 
   if (!$includes_already_printed) {
     print OUTFILE "`include \"svunit_defines.svh\"\n";
+    if ($uvm_test) {
+      print OUTFILE "`include \"svunit_uvm_mock_pkg.sv\"\n";
+    } 
     print OUTFILE qq|`include \"$testfilename\"\n|;
     $includes_already_printed = 1;
   }
+  if ($uvm_test) {
+    print OUTFILE "  import svunit_uvm_mock_pkg::*;\n";
+  } 
   print OUTFILE "\n";
+  if ($uvm_test) {
+    CreateUvmClassForTest();
+  }
   print OUTFILE "module $uut\_unit_test;\n";
   print OUTFILE "  import svunit_pkg::svunit_testcase;\n";
   print OUTFILE "\n";
@@ -300,9 +319,17 @@ sub CreateUnitTest() {
   print OUTFILE "  // running the Unit Tests on\n";
   print OUTFILE "  //===================================\n";
   if ($processing_class) {
-    print OUTFILE "  $uut my_$uut;\n\n\n";
+    if ($uvm_test) {
+      print OUTFILE "  $uvm_class_name my_$uut;\n\n\n";
+    } else {
+      print OUTFILE "  $uut my_$uut;\n\n\n";
+    }  
   } else {
-    print OUTFILE "  $uut my_$uut();\n\n\n";
+      if ($uvm_test) {
+        print OUTFILE " $uvm_class_name  my_$uut();\n\n\n";
+      } else {
+          print OUTFILE "  $uut my_$uut();\n\n\n";
+      }    
   }
   print OUTFILE "  //===================================\n";
   print OUTFILE "  // Build\n";
@@ -311,7 +338,12 @@ sub CreateUnitTest() {
   print OUTFILE "    svunit_ut = new(name);\n";
   if ($processing_class) {
     print OUTFILE "\n";
-    print OUTFILE "    my_$uut = new(\/\* New arguments if needed \*\/);\n";
+    if ($uvm_test) {
+      print OUTFILE "    my_$uut = $uvm_class_name\:\:type_id\:\:create(\"\"\, null);\n";
+      print OUTFILE "\n    svunit_deactivate_uvm_component(my_$uut);\n";
+    } else { 
+      print OUTFILE "    my_$uut = new(\/\* New arguments if needed \*\/);\n";
+    }  
   }
   print OUTFILE "  endfunction\n\n\n";
   print OUTFILE "  //===================================\n";
@@ -319,14 +351,31 @@ sub CreateUnitTest() {
   print OUTFILE "  //===================================\n";
   print OUTFILE "  task setup();\n";
   print OUTFILE "    svunit_ut.setup();\n";
-  print OUTFILE "    \/\* Place Setup Code Here \*\/\n  endtask\n\n\n";
+  print OUTFILE "    \/\* Place Setup Code Here \*\/\n\n";
+  if ($uvm_test) {
+    print OUTFILE "    svunit_activate_uvm_component(my_$uut);\n\n";
+    print OUTFILE "    //-----------------------------\n";
+    print OUTFILE "    // start the testing phase\n";
+    print OUTFILE "    //-----------------------------\n";
+    print OUTFILE "    svunit_uvm_test_start();\n\n\n\n";
+  }  
+  print OUTFILE "  endtask\n\n\n";
   print OUTFILE "  //===================================\n";
   print OUTFILE "  // Here we deconstruct anything we \n";
   print OUTFILE "  // need after running the Unit Tests\n";
   print OUTFILE "  //===================================\n";
   print OUTFILE "  task teardown();\n";
   print OUTFILE "    svunit_ut.teardown();\n";
-  print OUTFILE "    \/\* Place Teardown Code Here \*\/\n";
+  if ($uvm_test) {
+    print OUTFILE "    //-----------------------------\n";
+    print OUTFILE "    // terminate the testing phase \n";
+    print OUTFILE "    //-----------------------------\n";
+    print OUTFILE "    svunit_uvm_test_finish();\n\n";
+  }  
+  print OUTFILE "    \/\* Place Teardown Code Here \*\/\n\n";
+  if ($uvm_test) {
+    print OUTFILE "    svunit_deactivate_uvm_component(my_$uut);\n";
+  }   
   print OUTFILE "  endtask\n\n\n";
   print OUTFILE "  //===================================\n";
   print OUTFILE "  // All tests are defined between the\n";
@@ -347,6 +396,33 @@ sub CreateUnitTest() {
   print OUTFILE "endmodule\n";
 }
 
+##########################################################################
+# CreateUvmClassForTest(): This creates a wrapper to allow for uvm phase
+#                   connections. 
+##########################################################################
+sub CreateUvmClassForTest(){
+  print OUTFILE "class $uvm_class_name extends $uut;\n\n";
+  print OUTFILE "  `uvm_component_utils($uvm_class_name)\n";
+  print OUTFILE "  function new(string name = \"$uvm_class_name\", uvm_component parent);\n";
+  print OUTFILE "    super.new(name, parent);\n";
+  print OUTFILE "  endfunction\n\n";
+  print OUTFILE "  //===================================\n";
+  print OUTFILE "  // Build\n";
+  print OUTFILE "  //===================================\n";
+  print OUTFILE "  function void build_phase(uvm\_phase phase);\n";
+  print OUTFILE "     super.build_phase(phase);\n";
+  print OUTFILE "    \/\* Place Build Code Here \*\/\n";
+  print OUTFILE "  endfunction\n\n";
+  print OUTFILE "  //==================================\n";
+  print OUTFILE "  // Connect\n";
+  print OUTFILE "  //=================================\n";
+  print OUTFILE "  function void connect_phase(uvm_phase phase);\n";
+  print OUTFILE "    super.connect_phase(phase);\n";
+  print OUTFILE "    \/\* Place Connection Code Here \*\/\n";
+  print OUTFILE "  endfunction\n";
+
+  print OUTFILE "endclass\n\n";
+}
 
 ##########################################################################
 # This is the main run flow of the script
