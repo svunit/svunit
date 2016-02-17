@@ -163,3 +163,7 @@ v3.7
 * update for ticket 57
 * update for ticket 63
 * re-added svunit user feedback that continues counting
+
+v3.8
+----
+* add support for 'create_unit_test.pl -uvm' to generate uvm test case templates
