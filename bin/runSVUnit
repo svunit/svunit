@@ -25,7 +25,6 @@ use strict;
 use Getopt::Long;
 use File::Glob;
 use File::Find;
-use File::Which;
 use IO::File;
 use Cwd 'abs_path';
 
@@ -114,11 +113,6 @@ usage() if $simulator ne "qverilog" &&
            $simulator ne "modelsim" &&
            $simulator ne "riviera" &&
            $simulator ne "vcs";
-if ( (not defined which($simulator) and $simulator ne "modelsim") or
-     (not defined which('vlib') and $simulator eq "modelsim") ) {
-  print "Error: Simulator '$simulator' specified but not found. Please add '$simulator' to your PATH\n";
-  exit 1;
-}
 
 # start the command line
 $cmd = "cd $outdir; ";
