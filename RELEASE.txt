@@ -167,3 +167,8 @@ v3.7
 v3.8
 ----
 * add support for 'create_unit_test.pl -uvm' to generate uvm test case templates
+
+v3.9
+----
+* remove File::Which dependancy
+* improved create_unit_test.pl help for -uvm
