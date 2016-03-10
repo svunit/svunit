@@ -43,7 +43,8 @@ sub PrintHelp() {
   print "\n";
   print "Usage:  create_unit_test.pl [ -help | -uvm | -out <file> | -i | -overwrite | uut.sv ]\n\n";
   print "Where -help                : prints this help screen\n";
-  print "      -uvm                 : generate a uvm test template\n";
+  print "      -uvm                 : generate a uvm component test template\n";
+  print "                             IMPORTANT: do not use '-uvm' unless the UUT is derived from a uvm_component\n";
   print "      -out <file>          : specifies a new default output file\n";
   print "      -overwrite           : overwrites the output file if it already exists\n";
   print "      -class_name <name>   : generate a unit test template for a class <name>\n";

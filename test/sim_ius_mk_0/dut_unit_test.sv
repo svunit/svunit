@@ -31,6 +31,7 @@ module dut_unit_test;
   task setup();
     svunit_ut.setup();
     /* Place Setup Code Here */
+
   endtask
 
 
@@ -41,6 +42,7 @@ module dut_unit_test;
   task teardown();
     svunit_ut.teardown();
     /* Place Teardown Code Here */
+
   endtask
 
 
