@@ -95,6 +95,11 @@ sub CheckArgs() {
         $skip = 1;
         $if_name = $ARGV[$i];
       }
+      elsif ( @ARGV[$i] =~ /-p/ ) {
+        $i++;
+        $skip = 1;
+        $package = $ARGV[$i];
+      }
       elsif ( @ARGV[$i] =~ /-overwrite/ ) {
         $overwrite = 1;
       }
@@ -297,8 +302,10 @@ sub CreateUnitTest() {
     print OUTFILE "`include \"svunit_defines.svh\"\n";
     if ($uvm_test) {
       print OUTFILE "`include \"svunit_uvm_mock_pkg.sv\"\n";
-    } 
-    print OUTFILE qq|`include \"$testfilename\"\n|;
+    }
+    if (!defined($package)) {
+      print OUTFILE qq|`include \"$testfilename\"\n|;
+    }
     $includes_already_printed = 1;
   }
   if ($uvm_test) {
@@ -310,6 +317,9 @@ sub CreateUnitTest() {
   }
   print OUTFILE "module $uut\_unit_test;\n";
   print OUTFILE "  import svunit_pkg::svunit_testcase;\n";
+  if (defined($package)) {
+    print OUTFILE "  import $package;\n";
+  }
   print OUTFILE "\n";
   print OUTFILE "  string name = \"$uut\_ut\";\n";
   print OUTFILE "  svunit_testcase svunit_ut;\n";

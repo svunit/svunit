@@ -1,0 +1,14 @@
+source ../test_functions.bsh
+
+setup
+
+# remove and create the unit_test
+create_unit_test.pl -p a_pkg::* test.sv
+
+# generate golden reference files
+golden_class_unit_test              test test
+cat test_unit_test.gold | sed -e 's/`include "test.sv"//' | sed -e 's/import svunit_pkg::svunit_testcase;/import svunit_pkg::svunit_testcase;\n  import a_pkg::*;/' > tmp
+mv tmp test_unit_test.gold
+
+# verify the output
+verify_file                         test_unit_test.gold test_unit_test.sv
