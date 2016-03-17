@@ -24,7 +24,6 @@
 
 `include "uvm_macros.svh"
 `include "simple_xaction.sv"
-import uvm_pkg::*;
 
 
 //------------------------------------------------------

@@ -302,8 +302,11 @@ sub CreateUnitTest() {
     print OUTFILE "`include \"svunit_defines.svh\"\n";
     if ($uvm_test) {
       print OUTFILE "`include \"svunit_uvm_mock_pkg.sv\"\n";
+      print OUTFILE "import uvm_pkg::*;\n";
     }
-    if (!defined($package)) {
+    if (defined($package)) {
+      print OUTFILE "  import $package;\n";
+    } else {
       print OUTFILE qq|`include \"$testfilename\"\n|;
     }
     $includes_already_printed = 1;
@@ -317,9 +320,6 @@ sub CreateUnitTest() {
   }
   print OUTFILE "module $uut\_unit_test;\n";
   print OUTFILE "  import svunit_pkg::svunit_testcase;\n";
-  if (defined($package)) {
-    print OUTFILE "  import $package;\n";
-  }
   print OUTFILE "\n";
   print OUTFILE "  string name = \"$uut\_ut\";\n";
   print OUTFILE "  svunit_testcase svunit_ut;\n";
