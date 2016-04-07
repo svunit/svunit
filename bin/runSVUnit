@@ -45,11 +45,12 @@ my @simargs;
 my @compileargs;
 my $outdir = ".";
 my $clean;
+my $vhdlfile;
 my @tests;
 my $help;
 
 sub usage () {
-  print "Usage:  runSVUnit -s|--sim <simulator> [-l|--log <log> -d|--define <macro> -f|--filelist <file> -U|-uvm\n";
+  print "Usage:  runSVUnit -s|--sim <simulator> [-l|--log <log> -d|--define <macro> -f|--filelist <file> -U|-uvm -m|-mixedsim <vhdlfile>\n";
   print "                  -r|--r_arg <option> -c|--c_arg <option> -o|--out <dir> -t|--test <test>]\n";
   print "  -s|--sim <simulator>     : simulator is either of questa, modelsim, riviera, ius or vcs\n";
   print "  -l|--log <log>           : simulation log file (default: run.log)\n";
@@ -60,6 +61,7 @@ sub usage () {
   print "  -U|--uvm                 : run SVUnit with UVM\n";
   print "  -o|--out                 : output directory for tmp and simulation files\n";
   print "  -t|--test                : specifies a unit test to run (multiple can be given)\n";
+  print "  -m|--mixedsim <vhdlfile> : specifies vhdl file in mixed (verilog and vhdl) environment\n";
   print "  -h|--help                : prints this help screen\n";
   print "\n";
   exit 1;
@@ -89,6 +91,7 @@ GetOptions("l|log=s" => \$logfile,
            "r|r_arg=s" => \@simargs,
            "c|c_arg=s" => \@compileargs,
            "o|out=s" => \$outdir,
+           "m|mixedsim=s" => \$vhdlfile,
            "t|test=s" => \@tests,
            "h|help" => \$help
            ) or usage();
@@ -116,9 +119,12 @@ usage() if $simulator ne "qverilog" &&
 
 # start the command line
 $cmd = "cd $outdir; ";
+# add the vdhl switches if necessary
+$cmd .= "vcom -mixedsvvh -work work $vhdlfile; " if $vhdlfile;
 if ($simulator eq "modelsim" or $simulator eq "riviera") {
   $cmd .= "vlib work; ";
   $cmd .= "vlog ";
+  $cmd .= "-mixedsvvh " if $vhdlfile;
 } elsif ($simulator eq "vcs") {
   $cmd .= "$simulator -R -sverilog -l $logfile";
 } else {

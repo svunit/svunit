@@ -41,10 +41,11 @@ my $includes_already_printed = 0;
 ##########################################################################
 sub PrintHelp() {
   print "\n";
-  print "Usage:  create_unit_test.pl [ -help | -uvm | -out <file> | -i | -overwrite | uut.sv ]\n\n";
+  print "Usage:  create_unit_test.pl [ -help | -uvm | -out <file> | -vhdl | -i | -overwrite | uut.sv ]\n\n";
   print "Where -help                : prints this help screen\n";
   print "      -uvm                 : generate a uvm component test template\n";
   print "                             IMPORTANT: do not use '-uvm' unless the UUT is derived from a uvm_component\n";
+  print "      -vhdl                : specifies source a vhdl file\n";
   print "      -out <file>          : specifies a new default output file\n";
   print "      -overwrite           : overwrites the output file if it already exists\n";
   print "      -class_name <name>   : generate a unit test template for a class <name>\n";
@@ -79,6 +80,10 @@ sub CheckArgs() {
         $i++;
         $skip = 1;
         $output_file = $ARGV[$i];
+      }
+      elsif ( @ARGV[$i] =~ /-vhdl/ ) {
+        $i++;
+        $vhdl_file = 1;
       }
       elsif ( @ARGV[$i] =~ /-class_name/ ) {
         $i++;
@@ -197,6 +202,8 @@ sub Main() {
    
       # filter // comments
       $line =~ s|//.*||;
+      # filter -- comments (vhdl)
+      $line =~ s|--.*||;
 
       # filter /* comments that go past the end of a line
       if ( $line =~ /\/\*/) {
@@ -237,6 +244,16 @@ sub Main() {
           $processing_if = 1;
           $processing_uut = 1;
         }
+        elsif ( $line =~ /^\s*entity\s/ ) {
+          $line =~ s/^\s*entity/entity/g;
+          $line =~ s/\s+/:/g;
+          $line =~ s/\W/:/g;
+          @items = split(/:/, $line);
+          $uut = $items[1];
+          $uut = lc $uut;
+          $processing_entity = 1;
+          $processing_uut = 1;
+        }
       }
       else {
         if ( $processing_class && $line =~ /^\s*endclass/ ) {
@@ -263,6 +280,14 @@ sub Main() {
           $total_tests = $total_tests + $num_tests;
           $num_tests = 0;
           $processing_if = 0;
+          $processing_uut = 0;
+        }
+        elsif ( $processing_entity && $line =~ /^\s*end/ ) {
+          $testfilename = basename ($testname);
+          CreateUnitTest();
+          $total_tests = $total_tests + $num_tests;
+          $num_tests = 0;
+          $processing_entity = 0;
           $processing_uut = 0;
         }
       }
@@ -304,7 +329,7 @@ sub CreateUnitTest() {
       print OUTFILE "`include \"svunit_uvm_mock_pkg.sv\"\n";
     }
     if (!defined($package)) {
-      print OUTFILE qq|`include \"$testfilename\"\n|;
+      if (!vhdl_file) {print OUTFILE qq|`include \"$testfilename\"\n|; }
     }
     $includes_already_printed = 1;
   }
