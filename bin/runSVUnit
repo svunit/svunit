@@ -37,6 +37,7 @@ use vars qw/ %opt /;
 
 my $cmd;
 my $logfile = "run.log";
+my $vlogfile = "compile.log";
 my $simulator;
 my @defines;
 my @filelists;
@@ -120,10 +121,10 @@ usage() if $simulator ne "qverilog" &&
 # start the command line
 $cmd = "cd $outdir; ";
 # add the vdhl switches if necessary
-$cmd .= "vcom -mixedsvvh -work work $vhdlfile; " if $vhdlfile;
+$cmd .= "vcom -mixedsvvh -work work $vhdlfile ; " if $vhdlfile;
 if ($simulator eq "modelsim" or $simulator eq "riviera") {
   $cmd .= "vlib work; ";
-  $cmd .= "vlog ";
+  $cmd .= "vlog -l $vlogfile ";
   $cmd .= "-mixedsvvh " if $vhdlfile;
 } elsif ($simulator eq "vcs") {
   $cmd .= "$simulator -R -sverilog -l $logfile";
