@@ -51,6 +51,7 @@ sub PrintHelp() {
   print "      -class_name <name>   : generate a unit test template for a class <name>\n";
   print "      -module_name <name>  : generate a unit test template for a module <name>\n";
   print "      -if_name <name>      : generate a unit test template for an interface <name>\n";
+  print "      -entity_name <name>  : generate a unit test template for an entity <name>\n";
   print "      uut.sv               : the file with the unit under test\n";
   print "\n";
 }
@@ -100,6 +101,11 @@ sub CheckArgs() {
         $skip = 1;
         $if_name = $ARGV[$i];
       }
+      elsif ( @ARGV[$i] =~ /-entity_name/ ) {
+        $i++;
+        $skip = 1;
+        $entity_name = $ARGV[$i];
+      }
       elsif ( @ARGV[$i] =~ /-p/ ) {
         $i++;
         $skip = 1;
@@ -122,7 +128,7 @@ sub CheckArgs() {
 # ValidArgs(): This checks to see if the arguments provided make sense.
 ##########################################################################
 sub ValidArgs() {
-  if ( not defined($testname) and not defined($class_name) and not defined($module_name) and not defined($if_name)) {
+  if ( not defined($testname) and not defined($class_name) and not defined($module_name) and not defined($if_name) and not defined($entity_name)) {
     print "\nERROR:  The testfile was either not specified, does not exist or is not readable\n";
     PrintHelp();
     return 1;
@@ -137,6 +143,10 @@ sub ValidArgs() {
   }
   elsif (defined ($if_name)) {
     $output_file = $if_name;
+    $output_file .= "_unit_test.sv";
+  }
+  elsif (defined ($entity_name)) {
+    $output_file = $entity_name;
     $output_file .= "_unit_test.sv";
   }
   elsif ($output_file eq "") {
@@ -306,10 +316,10 @@ sub Main() {
     $testfilename = "$module_name.sv";
     CreateUnitTest();
   }
-  elsif (defined ($if_name)) {
+  elsif (defined ($entity_name)) {
     $processing_if = 1;
-    $uut = $if_name;
-    $testfilename = "$if_name.sv";
+    $uut = $entity_name;
+    $testfilename = "$entity_name.sv";
     CreateUnitTest();
   }
 }
