@@ -1,5 +1,5 @@
 `define CLK_RESET_FIXTURE(CLK_HPERIOD,RST_PERIOD) \
-parameter clkHPeriod = CLK_PERIOD; \
+parameter clkHPeriod = CLK_HPERIOD; \
 logic clk; \
 logic rst_n; \
 initial begin \
