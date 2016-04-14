@@ -1,0 +1,5 @@
+source ../test_functions.bsh
+
+setup
+
+runSVUnit -s questa
