@@ -1,5 +1,6 @@
 `include "svunit_defines.svh"
 `include "rtl.v"
+`include "clk_and_reset.svh"
 
 module rtl_unit_test;
   import svunit_pkg::svunit_testcase;
@@ -12,7 +13,12 @@ module rtl_unit_test;
   // This is the UUT that we're 
   // running the Unit Tests on
   //===================================
-  rtl my_rtl();
+
+  `CLK_RESET_FIXTURE(5, 11)
+
+  reg a, b;
+  wire ab, Qab;
+  rtl my_rtl(.*);
 
 
   //===================================
@@ -30,6 +36,7 @@ module rtl_unit_test;
     svunit_ut.setup();
     /* Place Setup Code Here */
 
+    reset();
   endtask
 
 
@@ -59,7 +66,61 @@ module rtl_unit_test;
   //===================================
   `SVUNIT_TESTS_BEGIN
 
+  //---------------------------------
+  // verify the combinational output
+  //---------------------------------
+  `SVTEST(ab_output_is_1)
+    a = 1;
+    b = 1;
 
+    pause();
+    
+    `FAIL_IF(ab !== 1);
+  `SVTEST_END
+
+  `SVTEST(ab_output_is_0)
+    a = 0;
+    b = 1;
+
+    pause();
+
+    `FAIL_IF(ab !== 0);
+  `SVTEST_END
+
+  //---------------------------
+  // verify the flopped output
+  //---------------------------
+  `SVTEST(Qab_output_is_1)
+    a = 1;
+    b = 1;
+
+    step();
+    nextSamplePoint();
+
+    `FAIL_IF(Qab !== 1);
+  `SVTEST_END
+
+  `SVTEST(Qab_output_is_0)
+    a = 1;
+    b = 0;
+
+    step();
+    nextSamplePoint();
+
+    `FAIL_IF(Qab !== 0);
+  `SVTEST_END
+
+
+  //------------------------------------
+  // verify the reset state of the flop
+  //------------------------------------
+  `SVTEST(reset_state)
+    rst_n = 0;
+
+    nextSamplePoint();
+
+    `FAIL_IF(Qab !== 0);
+  `SVTEST_END
 
   `SVUNIT_TESTS_END
 

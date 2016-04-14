@@ -22,4 +22,7 @@ task reset(); \
   step(RST_PERIOD); \
   rst_n = 1; \
   step(1); \
+endtask \
+task pause(); \
+  #0; \
 endtask
