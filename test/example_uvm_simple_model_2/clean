@@ -1,5 +1,6 @@
 pushd . >/dev/null 2>&1
 
+rm -rf temp
 cd $SVUNIT_INSTALL/examples/uvm/simple_model
 cleanSVUnit
 

@@ -5,4 +5,5 @@ rm -rf .*testsuite.sv \
        vsim.wlf \
        work \
        run.log \
-       .svunit.f
+       .svunit.f \
+      compile.log

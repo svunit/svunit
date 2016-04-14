@@ -41,7 +41,7 @@ my $includes_already_printed = 0;
 ##########################################################################
 sub PrintHelp() {
   print "\n";
-  print "Usage:  create_unit_test.pl [ -help | -uvm | -out <file> | -i | -overwrite | uut.sv ]\n\n";
+  print "Usage:  create_unit_test.pl [ -help | -uvm | -out <file> | -overwrite | uut.sv ]\n\n";
   print "Where -help                : prints this help screen\n";
   print "      -uvm                 : generate a uvm component test template\n";
   print "                             IMPORTANT: do not use '-uvm' unless the UUT is derived from a uvm_component\n";
@@ -304,6 +304,7 @@ sub CreateUnitTest() {
       print OUTFILE "`include \"svunit_uvm_mock_pkg.sv\"\n";
       print OUTFILE "import uvm_pkg::*;\n";
     }
+
     if (defined($package)) {
       print OUTFILE "  import $package;\n";
     } else {
