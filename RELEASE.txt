@@ -172,3 +172,8 @@ v3.9
 ----
 * remove File::Which dependancy
 * improved create_unit_test.pl help for -uvm
+
+v3.10
+-----
+* add the clk_and_reset.svh
+* beta support for vhdl file lists
