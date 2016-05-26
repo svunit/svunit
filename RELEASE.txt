@@ -177,3 +177,7 @@ v3.10
 -----
 * add the clk_and_reset.svh
 * beta support for vhdl file lists
+
+v3.11
+-----
+* uvm 1.2 support
