@@ -1,0 +1,9 @@
+rm -rf  \
+       run.log \
+       work \
+       run.log \
+       vsim.wlf \
+       .*testsuite.sv \
+       .svunit_top.sv \
+       .testrunner.sv \
+       .svunit.f

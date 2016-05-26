@@ -1,0 +1,5 @@
+source ../test_functions.bsh
+
+runSVUnit -sim ius -uvm -define UVM_NO_DEPRECATED -define RUN_SVUNIT_WITH_UVM_REPORT_MOCK
+
+expect_testrunner_pass run.log
