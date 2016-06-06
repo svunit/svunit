@@ -1,0 +1,9 @@
+This example shows some Mockito style testing between a client (the UUT) and a
+server (the mock).
+
+
+Don't forget to read the svunit-code/README for instructions on
+how to setup the SVUnit test environment and instructions for
+building your own tests.
+
+runSVUnit -s <simulator>  # ius, questa or vcs

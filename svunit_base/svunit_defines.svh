@@ -7,9 +7,9 @@
 //  to you under the Apache License, Version 2.0 (the
 //  "License"); you may not use this file except in compliance
 //  with the License.  You may obtain a copy of the License at
-//  
+//
 //  http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 //  Unless required by applicable law or agreed to in writing,
 //  software distributed under the License is distributed on an
 //  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -25,43 +25,43 @@
 */
 `ifndef FAIL_IF
 `define FAIL_IF(exp) \
-  if (svunit_ut.fail(`"fail_if`", (exp), `"exp`", `__FILE__, `__LINE__)) begin \
-    if (svunit_ut.is_running()) svunit_ut.give_up(); \
+  if (svunit_pkg::current_tc.fail(`"fail_if`", (exp), `"exp`", `__FILE__, `__LINE__)) begin \
+    if (svunit_pkg::current_tc.is_running()) svunit_pkg::current_tc.give_up(); \
   end
 `endif
 
 `ifndef FAIL_IF_LOG
 `define FAIL_IF_LOG(exp,msg) \
-  if (svunit_ut.fail(`"fail_if`", (exp), `"exp`", `__FILE__, `__LINE__, msg)) begin \
-    if (svunit_ut.is_running()) svunit_ut.give_up(); \
+  if (svunit_pkg::current_tc.fail(`"fail_if`", (exp), `"exp`", `__FILE__, `__LINE__, msg)) begin \
+    if (svunit_pkg::current_tc.is_running()) svunit_pkg::current_tc.give_up(); \
   end
 `endif
 
 `ifndef FAIL_IF_EQUAL
 `define FAIL_IF_EQUAL(a,b) \
-  if (svunit_ut.fail(`"fail_if_equal`", (a===b), `"a === b`", `__FILE__, `__LINE__)) begin \
-    if (svunit_ut.is_running()) svunit_ut.give_up(); \
+  if (svunit_pkg::current_tc.fail(`"fail_if_equal`", (a===b), `"a === b`", `__FILE__, `__LINE__)) begin \
+    if (svunit_pkg::current_tc.is_running()) svunit_pkg::current_tc.give_up(); \
   end
 `endif
 
 `ifndef FAIL_UNLESS
 `define FAIL_UNLESS(exp) \
-  if (svunit_ut.fail(`"fail_unless`", !(exp), `"exp`", `__FILE__, `__LINE__)) begin \
-    if (svunit_ut.is_running()) svunit_ut.give_up(); \
+  if (svunit_pkg::current_tc.fail(`"fail_unless`", !(exp), `"exp`", `__FILE__, `__LINE__)) begin \
+    if (svunit_pkg::current_tc.is_running()) svunit_pkg::current_tc.give_up(); \
   end
 `endif
 
 `ifndef FAIL_UNLESS_LOG
 `define FAIL_UNLESS_LOG(exp,msg) \
-  if (svunit_ut.fail(`"fail_unless`", !(exp), `"exp`", `__FILE__, `__LINE__, msg)) begin \
-    if (svunit_ut.is_running()) svunit_ut.give_up(); \
+  if (svunit_pkg::current_tc.fail(`"fail_unless`", !(exp), `"exp`", `__FILE__, `__LINE__, msg)) begin \
+    if (svunit_pkg::current_tc.is_running()) svunit_pkg::current_tc.give_up(); \
   end
 `endif
 
 `ifndef FAIL_UNLESS_EQUAL
 `define FAIL_UNLESS_EQUAL(a,b) \
-  if (svunit_ut.fail(`"fail_unless_equal`", (a!==b), `"a !== b`", `__FILE__, `__LINE__)) begin \
-    if (svunit_ut.is_running()) svunit_ut.give_up(); \
+  if (svunit_pkg::current_tc.fail(`"fail_unless_equal`", (a!==b), `"a !== b`", `__FILE__, `__LINE__)) begin \
+    if (svunit_pkg::current_tc.is_running()) svunit_pkg::current_tc.give_up(); \
   end
 `endif
 
@@ -72,8 +72,8 @@
     string strb; \
     stra = a; \
     strb = b; \
-    if (svunit_ut.fail(`"fail_if_str_equal`", stra.compare(strb)==0, $sformatf(`"\"%s\" == \"%s\"`",stra,strb), `__FILE__, `__LINE__)) begin \
-      if (svunit_ut.is_running()) svunit_ut.give_up(); \
+    if (svunit_pkg::current_tc.fail(`"fail_if_str_equal`", stra.compare(strb)==0, $sformatf(`"\"%s\" == \"%s\"`",stra,strb), `__FILE__, `__LINE__)) begin \
+      if (svunit_pkg::current_tc.is_running()) svunit_pkg::current_tc.give_up(); \
     end \
   end
 `endif
@@ -85,8 +85,8 @@
     string strb; \
     stra = a; \
     strb = b; \
-    if (svunit_ut.fail(`"fail_unless_str_equal`", stra.compare(strb)!=0, $sformatf(`"\"%s\" != \"%s\"`",stra,strb), `__FILE__, `__LINE__)) begin \
-      if (svunit_ut.is_running()) svunit_ut.give_up(); \
+    if (svunit_pkg::current_tc.fail(`"fail_unless_str_equal`", stra.compare(strb)!=0, $sformatf(`"\"%s\" != \"%s\"`",stra,strb), `__FILE__, `__LINE__)) begin \
+      if (svunit_pkg::current_tc.is_running()) svunit_pkg::current_tc.give_up(); \
     end \
   end
 `endif
@@ -96,18 +96,18 @@
   Macro: `INFO
   Displays info message to screen and in log file
 
-  Parameters: 
+  Parameters:
     msg - string to display
 */
 `define INFO(msg) \
-  $display("INFO:  [%0t][%0s]: %s", $time, name, msg) 
+  $display("INFO:  [%0t][%0s]: %s", $time, name, msg)
 
 
 /*
   Macro: `ERROR
   Displays error message to screen and in log file
 
-  Parameters: 
+  Parameters:
     msg - string to display
 */
 `define ERROR(msg) \
@@ -116,7 +116,7 @@
 
 /*
   Macro: `LF
-  Displays a blank line in log file  
+  Displays a blank line in log file
 */
 `define LF $display("");
 
@@ -151,6 +151,7 @@
 \
     `INFO($sformatf(`"%s::RUNNING`", _testName)); \
     setup(); \
+    svunit_pkg::current_tc = svunit_ut; \
     svunit_ut.start(); \
     fork \
       begin \
@@ -169,6 +170,7 @@
             end \
           end \
         join_any \
+        #0; \
         disable fork; \
       end \
     join \
