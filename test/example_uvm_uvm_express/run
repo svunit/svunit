@@ -1,6 +1,7 @@
 source ../test_functions.bsh
 
-expect_passing_example $SVUNIT_INSTALL/examples/uvm/uvm_express "IUS -U --filelist cov.f -define CLK_PERIOD=10ns"
-expect_passing_example $SVUNIT_INSTALL/examples/uvm/uvm_express "QUESTA -U -define CLK_PERIOD=10ns"
+expect_passing_example $SVUNIT_INSTALL/examples/uvm/uvm_express "$1 -U --filelist cov.f -define CLK_PERIOD=10ns"
+
+#expect_passing_example $SVUNIT_INSTALL/examples/uvm/uvm_express "QUESTA -U -define CLK_PERIOD=10ns"
 
 exit 0

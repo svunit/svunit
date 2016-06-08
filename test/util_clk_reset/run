@@ -2,6 +2,6 @@ source ../test_functions.bsh
 
 setup
 
-runSVUnit -s questa
+runSVUnit -s $1
 
 expect_testrunner_pass run.log

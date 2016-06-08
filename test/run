@@ -1,48 +1,94 @@
+#!/bin/env bash
+
+opts=`getopt -o s: --long sim: -n '$0' -- "$@"`
+eval set -- "$opts"
+
+all_sims=(ius questa vcs)
+sims=()
+
+while true; do
+  case "$1" in
+    -s|--sim)
+      # TODO Add error checking
+      sims=(${sims[@]} "$2")
+      shift 2
+      ;;
+
+    --)
+      shift
+      break
+      ;;
+
+    *)
+      echo "Internal error!"
+      exit 1
+      ;;
+  esac
+done
+
+if [ ${#sims[@]} -eq 0 ]; then
+  sims=${all_sims[@]}
+fi
+
 echo ----------------------------------
 echo Running SVUNIT Regression Suite...
 echo ----------------------------------
-
-# define the individual test groupings
-declare -a frmwrk_tests
-frmwrk_tests=`ls -d frmwrk_*`
-
-declare -a sim_tests
-sim_tests=`ls -d sim_*`
-
-declare -a svunit_base_tests
-svunit_base_tests=`ls -d svunit_base_*`
- 
-declare -a example_tests
-example_tests=`ls -d example_*`
-
-declare -a mock_tests
-mock_tests=`ls -d mock_*`
-
-declare -a util_tests
-util_tests=`ls -d util_*`
+echo
+echo Selected simulators: ${sims[@]}
+echo
 
 
-# define the concatentated master list
-declare -a testlist
-testlist=( ${frmwrk_tests[@]} ${sim_tests[@]} ${svunit_base_tests[@]} ${example_tests[@]} ${mock_tests[@]} ${util_tests[@]})
 
-
-# loop through the master testlist and invoke each test
 pass=1
-for test in ${testlist[@]}; do
-  printf "Running %s... " $test
-  cd $test && ./run > /dev/null 2>&1
-  if [ "$?" != "0" ]; then
-    printf "FAILED\n"
-    pass=0
-  else
-    printf "PASSED\n"
-  fi
 
-  ./clean > /dev/null 2>&1
+function run_testlist {
+  declare -a testlist=("${!1}")
+  local sim=$2
 
-  cd - > /dev/null 2>&1
+  for test in ${testlist[@]}; do
+    printf "Running %s... " $test
+    cd $test && ./run $sim > /dev/null 2>&1
+    if [ "$?" != "0" ]; then
+      printf "FAILED\n"
+      pass=0
+    else
+      printf "PASSED\n"
+    fi
+
+    ./clean > /dev/null 2>&1
+
+    cd - > /dev/null 2>&1
+  done
+}
+
+
+# run the individual test groupings
+declare -a frmwrk_tests
+frmwrk_tests=`ls -v -d frmwrk_*`
+run_testlist frmwrk_tests[@]
+
+for sim in "${sims[@]}"; do
+  declare -a sim_tests
+  sim_tests=`ls -v -d sim_${sim}*`
+  run_testlist sim_tests[@]
+
+  declare -a svunit_base_tests
+  svunit_base_tests=`ls -v -d svunit_base_${sim}_*`
+  run_testlist svunit_base_tests[@]
+
+  declare -a example_tests
+  example_tests=`ls -d example_*`
+  run_testlist example_tests[@] $sim
+
+  declare -a mock_tests
+  mock_tests=`ls -d mock_*_${sim}*`
+  run_testlist mock_tests[@] $sim
+
+  declare -a util_tests
+  util_tests=`ls -d util_*`
+  run_testlist util_tests[@] $sim
 done
+
 
 if [ "$pass" == "1" ]; then
   echo ----------------------------------
