@@ -19,20 +19,26 @@
 //
 //###############################################################
 
-`include "svunit_defines.svh"
 
-package svunit_pkg;
+class client;
+  local server s;
 
-`ifdef SVUNIT_VERSION
-  const string svunit_version = `SVUNIT_VERSION;
-`else
-  const string svunit_version = "For SVUnit Version info, see: $SVUNIT_INSTALL/VERSION.txt";
-`endif
+  function new(server s);
+    this.s = s;
+  endfunction
 
-  `include "svunit_types.svh"
-  `include "svunit_base.sv"
-  `include "svunit_testcase.sv"
-  `include "svunit_testsuite.sv"
-  `include "svunit_testrunner.sv"
-  `include "svunit_globals.svh"
-endpackage
+  function void do_something();
+    // ...
+    // Should call:
+    //s.perform(server::ACTION0);
+  endfunction
+
+  function void do_something_else(bit is_cool);
+    int value;
+    // ...
+    // Computes value wrong:
+    value = is_cool ? 1000 : 0;
+    // ...
+    s.perform(server::ACTION1, value);
+  endfunction
+endclass
