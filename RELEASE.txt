@@ -181,3 +181,8 @@ v3.10
 v3.11
 -----
 * uvm 1.2 support
+
+v3.12
+-----
+* calling FAIL macros outside the testcase
+* update for issue #4

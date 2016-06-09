@@ -31,9 +31,11 @@ module dut_unit_test;
   //===================================
   // Setup for running the Unit Tests
   //===================================
+  bit fail;
   task setup();
     svunit_ut.setup();
     /* Place Setup Code Here */
+    fail = 0;
   endtask
 
 
@@ -44,6 +46,7 @@ module dut_unit_test;
   task teardown();
     svunit_ut.teardown();
     /* Place Teardown Code Here */
+    `FAIL_IF(fail);
   endtask
 
 
@@ -63,6 +66,8 @@ module dut_unit_test;
   `SVUNIT_TESTS_BEGIN
 
   `SVTEST(strictly_so_the_teardown_is_called)
+    fail = 1;
+  `SVTEST_END
 
   `SVTEST(fail_if)
     `FAIL_IF(1);
@@ -78,8 +83,6 @@ module dut_unit_test;
 
   `SVTEST(fail_unless_equal)
     `FAIL_UNLESS_EQUAL(1, 1'hx);
-  `SVTEST_END
-
   `SVTEST_END
 
   `SVUNIT_TESTS_END
