@@ -1,8 +1,10 @@
 source ../test_functions.bsh
 
-runSVUnit -sim ius \
-  -uvm -define UVM_NO_DEPRECATED \
-  -c_arg '-uvmhome $INCISIV_HOME/tools/methodology/UVM/CDNS-1.2/sv' \
-  -define RUN_SVUNIT_WITH_UVM_REPORT_MOCK
+if [ "$INCISIV_HOME" != "" ]; then
+  runSVUnit -sim ius \
+    -uvm -define UVM_NO_DEPRECATED \
+    -c_arg '-uvmhome $INCISIV_HOME/tools/methodology/UVM/CDNS-1.2/sv' \
+    -define RUN_SVUNIT_WITH_UVM_REPORT_MOCK
 
-expect_testrunner_pass run.log
+  expect_testrunner_pass run.log
+fi

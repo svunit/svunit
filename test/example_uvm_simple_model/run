@@ -1,16 +1,6 @@
 source ../test_functions.bsh
 
-pushd . >/dev/null
-
-cd $SVUNIT_INSTALL/examples/uvm/simple_model
-
-runSVUnit -s IUS -uvm -define UVM_NO_DEPRECATED -c_arg '-uvmhome $INCISIV_HOME/tools/methodology/UVM/CDNS-1.2/sv'
-
-# check the log output for a PASS from the testrunner
-expect_file run.log
-expect_testrunner_pass run.log
-
-popd >/dev/null
+expect_passing_example $SVUNIT_INSTALL/examples/uvm/simple_model "IUS -uvm"
 expect_passing_example $SVUNIT_INSTALL/examples/uvm/simple_model "QUESTA -uvm"
 
 exit 0

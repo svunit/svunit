@@ -17,10 +17,10 @@ module testrunner();
   // These are the test suites that we
   // want included in this testrunner
   //==================================
-  PWD_testsuite PWD_ts();
-  PWD_CHILD1_testsuite PWD_CHILD1_ts();
-  PWD_CHILD2_testsuite PWD_CHILD2_ts();
-  PWD_CHILD3_testsuite PWD_CHILD3_ts();
+  TS0_testsuite TS0_ts();
+  TS1_testsuite TS1_ts();
+  TS2_testsuite TS2_ts();
+  TS3_testsuite TS3_ts();
 
 
   //===================================
@@ -45,14 +45,14 @@ module testrunner();
   //===================================
   function void build();
     svunit_tr = new(name);
-    PWD_ts.build();
-    svunit_tr.add_testsuite(PWD_ts.svunit_ts);
-    PWD_CHILD1_ts.build();
-    svunit_tr.add_testsuite(PWD_CHILD1_ts.svunit_ts);
-    PWD_CHILD2_ts.build();
-    svunit_tr.add_testsuite(PWD_CHILD2_ts.svunit_ts);
-    PWD_CHILD3_ts.build();
-    svunit_tr.add_testsuite(PWD_CHILD3_ts.svunit_ts);
+    TS0_ts.build();
+    svunit_tr.add_testsuite(TS0_ts.svunit_ts);
+    TS1_ts.build();
+    svunit_tr.add_testsuite(TS1_ts.svunit_ts);
+    TS2_ts.build();
+    svunit_tr.add_testsuite(TS2_ts.svunit_ts);
+    TS3_ts.build();
+    svunit_tr.add_testsuite(TS3_ts.svunit_ts);
   endfunction
 
 
@@ -60,10 +60,10 @@ module testrunner();
   // Run
   //===================================
   task run();
-    PWD_ts.run();
-    PWD_CHILD1_ts.run();
-    PWD_CHILD2_ts.run();
-    PWD_CHILD3_ts.run();
+    TS0_ts.run();
+    TS1_ts.run();
+    TS2_ts.run();
+    TS3_ts.run();
     svunit_tr.report();
   endtask
 
