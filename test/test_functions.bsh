@@ -59,16 +59,14 @@ verify_testsuite() {
 }
 
 verify_testrunner() {
-  #PWD=`pwd | sed -e "s/[\/-]/_/g"`
   tr=.testrunner.sv
-  if [ "$5" != "" ]; then
-    tr=$5
+  if [ "$6" != "" ]; then
+    tr=$6
   fi
-  PWD="_"
-  sed -e "s/PWD/$PWD/g" $1 | \
-    sed -e "s/CHILD1/$2/g" | \
-    sed -e "s/CHILD2/$3/g" | \
-    sed -e "s/CHILD3/$4/g" > .$1
+  sed -e "s/TS0/$2/g" $1 | \
+    sed -e "s/TS1/$3/g" | \
+    sed -e "s/TS2/$4/g" | \
+    sed -e "s/TS3/$5/g" > .$1
   verify_file .$1 $tr
 }
 

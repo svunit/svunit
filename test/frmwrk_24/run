@@ -14,4 +14,4 @@ golden_testrunner_with_1_testsuite
 
 # verify the output
 verify_testsuite                    testsuite.gold &&
-verify_testrunner                   testrunner.gold .
+verify_testrunner                   testrunner.gold _ .

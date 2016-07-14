@@ -130,7 +130,7 @@ sub CreateTestSuite() {
     }
   }
 
-  foreach $item ( @list ) {
+  foreach $item ( sort (@list) ) {
     $item =~ s/\.sv//g;
     $item =~ s/\.//;
     $instance = $item;

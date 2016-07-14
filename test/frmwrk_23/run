@@ -15,6 +15,6 @@ buildSVUnit -o /tmp/rundir
 golden_testrunner_with_4_testsuites
 
 # verify the output
-verify_testrunner testrunner.gold subdir1_subdir1a subdir0 subdir1 /tmp/rundir/.testrunner.sv
+verify_testrunner testrunner.gold __subdir0 __subdir1_subdir1a __subdir1 _ /tmp/rundir/.testrunner.sv
 
 exit 0

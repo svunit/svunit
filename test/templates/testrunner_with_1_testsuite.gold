@@ -17,7 +17,7 @@ module testrunner();
   // These are the test suites that we
   // want included in this testrunner
   //==================================
-  PWD_testsuite PWD_ts();
+  TS0_testsuite TS0_ts();
 
 
   //===================================
@@ -42,8 +42,8 @@ module testrunner();
   //===================================
   function void build();
     svunit_tr = new(name);
-    PWD_ts.build();
-    svunit_tr.add_testsuite(PWD_ts.svunit_ts);
+    TS0_ts.build();
+    svunit_tr.add_testsuite(TS0_ts.svunit_ts);
   endfunction
 
 
@@ -51,7 +51,7 @@ module testrunner();
   // Run
   //===================================
   task run();
-    PWD_ts.run();
+    TS0_ts.run();
     svunit_tr.report();
   endtask
 

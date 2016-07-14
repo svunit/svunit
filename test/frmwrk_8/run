@@ -14,6 +14,6 @@ buildSVUnit
 golden_testrunner_with_3_testsuites
 
 # verify the output
-verify_testrunner testrunner.gold subdir0 subdir1 subdir1_subdir1a 
+verify_testrunner testrunner.gold __subdir0 __subdir1_subdir1a __subdir1
 
 exit 0

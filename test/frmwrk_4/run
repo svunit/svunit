@@ -13,4 +13,4 @@ buildSVUnit
 golden_testrunner_with_2_testsuites
 
 # verify the output
-verify_testrunner testrunner.gold another_test
+verify_testrunner testrunner.gold __another_test _
