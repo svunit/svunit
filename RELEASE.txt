@@ -186,3 +186,7 @@ v3.12
 -----
 * calling FAIL macros outside the testcase
 * update for issue #4
+
+v3.13
+-----
+* testsuite specific updates
