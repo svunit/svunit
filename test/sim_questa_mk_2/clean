@@ -1,9 +1,0 @@
-rm -rf .*testsuite.sv \
-       qverilog.log \
-       dut_unit_test.sv \
-       .svunit_top.sv \
-       .testrunner.sv \
-       vsim.wlf \
-       work \
-       run.log \
-       .svunit.f
