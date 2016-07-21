@@ -1,15 +1,12 @@
 `include "svunit_defines.svh"
 `include "dut.sv"
 
-import a_pkg::*;
-
 module dut_unit_test;
   import svunit_pkg::svunit_testcase;
 
   string name = "dut_ut";
   svunit_testcase svunit_ut;
 
-  a_class a_c;
 
   //===================================
   // This is the UUT that we're 
@@ -32,6 +29,7 @@ module dut_unit_test;
   task setup();
     svunit_ut.setup();
     /* Place Setup Code Here */
+
   endtask
 
 
@@ -42,6 +40,7 @@ module dut_unit_test;
   task teardown();
     svunit_ut.teardown();
     /* Place Teardown Code Here */
+
   endtask
 
 
