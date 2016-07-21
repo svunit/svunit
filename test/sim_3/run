@@ -5,7 +5,7 @@ setup
 set_simulators
 
 for s in ${SVUNIT_SIMULATORS[@]}; do
-  runSVUnit -s questa
+  runSVUnit -s $s
 
   expect_string "INFO:  \[0\]\[dut_ut\]: RUNNING" run.log &&
   expect_string "INFO:  \[0\]\[dut_ut\]: first_test::RUNNING" run.log &&

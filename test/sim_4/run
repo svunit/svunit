@@ -8,7 +8,7 @@ set_simulators
 create_unit_test.pl -overwrite -out dut_unit_test.sv dut.sv
 
 for s in ${SVUNIT_SIMULATORS[@]}; do
-  runSVUnit --sim ius --log other.log --define DIDLEY_SQUAT -d FIDDLE_FADDLE='"junk"'
+  runSVUnit --sim $s --log other.log --define DIDLEY_SQUAT -d FIDDLE_FADDLE='"junk"'
 
   # check the log output for a PASS from the testrunner
   expect_file other.log
