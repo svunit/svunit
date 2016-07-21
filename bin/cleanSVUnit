@@ -37,6 +37,7 @@ find({
   }, qw( . ));
 
 unlink "run.log";
+unlink "compile.log";
 unlink ".svunit.f";
 system("rm -rf work");
 unlink "vsim.wlf";
