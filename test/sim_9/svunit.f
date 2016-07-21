@@ -1,1 +1,1 @@
-${SVUNIT_INSTALL}/test/sim_questa_filelist_1/a_pkg.sv
+${SVUNIT_INSTALL}/test/sim_9/a_pkg.sv
