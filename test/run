@@ -2,10 +2,9 @@ echo ----------------------------------
 echo Running SVUNIT Regression Suite...
 echo ----------------------------------
 
-if [ ! `which irun` ] && [ ! `which qverilog` ] && [ ! `which vcs` ]; then
-  echo None of irun, qverilog or vcs are in your path. You need at least 1 simulator to regress svunit-code!
-  exit 1
-fi
+source test_functions.bsh
+
+set_simulators
 
 # define the individual test groupings
 declare -a frmwrk_tests

@@ -1,8 +1,0 @@
-rm -rf .*testsuite.sv \
-       csrc \
-       run.log \
-       vsim.wlf \
-       work \
-       .svunit_top.sv \
-       .testrunner.sv \
-       .svunit.f

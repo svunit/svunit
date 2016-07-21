@@ -17,6 +17,11 @@ set_simulators() {
   if [ `which vlog` ]; then
     SVUNIT_SIMULATORS[${#SVUNIT_SIMULATORS[*]}]="modelsim"
   fi
+
+  if [ "${#SVUNIT_SIMULATORS[*]}" == "0" ]; then
+    echo None of irun, qverilog or vcs are in your path. You need at least 1 simulator to regress svunit-code!
+    exit 1
+  fi
 }
 
 setup() {
