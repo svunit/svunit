@@ -1,7 +1,0 @@
-rm -rf .*testsuite.sv \
-       INCA_libs \
-       run.log \
-       .svunit_top.sv \
-       .testrunner.sv \
-       .svunit.f \
-       ncsc.log
