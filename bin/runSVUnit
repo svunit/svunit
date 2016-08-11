@@ -78,7 +78,7 @@ sub clean () {
                         unlink;
                       }
                     }
-    }, qw( . ));
+    }, $outdir);
 
   unlink qw( run.log .svunit.f vsim.wlf ncsc.log irun.key );
   system("rm -rf work INCA_libs");
