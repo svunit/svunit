@@ -3,6 +3,27 @@ create_unit_test() {
   create_unit_test.pl $1
 }
 
+declare -a SVUNIT_SIMULATORS
+set_simulators() {
+  if [ `which irun` ]; then
+    SVUNIT_SIMULATORS[${#SVUNIT_SIMULATORS[*]}]="irun"
+  fi
+  if [ `which vcs` ]; then
+    SVUNIT_SIMULATORS[${#SVUNIT_SIMULATORS[*]}]="vcs"
+  fi
+  if [ `which qverilog` ]; then
+    SVUNIT_SIMULATORS[${#SVUNIT_SIMULATORS[*]}]="qverilog"
+  fi
+  if [ `which vlog` ]; then
+    SVUNIT_SIMULATORS[${#SVUNIT_SIMULATORS[*]}]="modelsim"
+  fi
+
+  if [ "${#SVUNIT_SIMULATORS[*]}" == "0" ]; then
+    echo None of irun, qverilog or vcs are in your path. You need at least 1 simulator to regress svunit-code!
+    exit 1
+  fi
+}
+
 setup() {
   ./clean
 }

@@ -1,2 +1,0 @@
-cleanSVUnit
-rm -rf dut_unit_test.sv

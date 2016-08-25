@@ -1,6 +1,11 @@
 source ../test_functions.bsh
 
-expect_passing_example $SVUNIT_INSTALL/examples/uvm/uvm_report_mock "IUS -uvm -define RUN_SVUNIT_WITH_UVM_REPORT_MOCK" &&
-expect_passing_example $SVUNIT_INSTALL/examples/uvm/uvm_report_mock "QUESTA -uvm -define RUN_SVUNIT_WITH_UVM_REPORT_MOCK"
+setup
+
+set_simulators
+
+for s in ${SVUNIT_SIMULATORS[@]}; do
+  expect_passing_example $SVUNIT_INSTALL/examples/uvm/uvm_report_mock "$s -uvm -define RUN_SVUNIT_WITH_UVM_REPORT_MOCK"
+done
 
 exit 0

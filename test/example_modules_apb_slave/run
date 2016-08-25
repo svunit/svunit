@@ -1,7 +1,11 @@
 source ../test_functions.bsh
 
-expect_passing_example $SVUNIT_INSTALL/examples/modules/apb_slave IUS &&
-expect_passing_example $SVUNIT_INSTALL/examples/modules/apb_slave QUESTA
-#expect_passing_example $SVUNIT_INSTALL/examples/modules/apb_slave VCS
+setup
+
+set_simulators
+
+for s in ${SVUNIT_SIMULATORS[@]}; do
+  expect_passing_example $SVUNIT_INSTALL/examples/modules/apb_slave $s
+done
 
 exit 0

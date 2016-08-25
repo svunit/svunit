@@ -1,6 +1,11 @@
 source ../test_functions.bsh
 
-expect_passing_example $SVUNIT_INSTALL/examples/uvm/simple_model "IUS -uvm"
-expect_passing_example $SVUNIT_INSTALL/examples/uvm/simple_model "QUESTA -uvm"
+setup
+
+set_simulators
+
+for s in ${SVUNIT_SIMULATORS[@]}; do
+  expect_passing_example $SVUNIT_INSTALL/examples/uvm/simple_model "$s -uvm"
+done
 
 exit 0
