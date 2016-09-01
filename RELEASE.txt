@@ -197,4 +197,9 @@ v3.14
 * udpate for issue #12
 
 v3.15
+-----
 * update for issue #7
+
+v3.16
+-----
+* pull https://github.com/tudortimi/svunit-code.git select_sim_for_tests
