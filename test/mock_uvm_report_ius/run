@@ -1,5 +1,14 @@
 source ../test_functions.bsh
 
-runSVUnit -sim ius -uvm -define UVM_NO_DEPRECATED -define RUN_SVUNIT_WITH_UVM_REPORT_MOCK
+setup
 
-expect_testrunner_pass run.log
+set_simulators
+
+for s in ${SVUNIT_SIMULATORS[@]}; do
+  if [ "$s" == "irun" ]; then
+    runSVUnit -sim $s -uvm -define UVM_NO_DEPRECATED -define RUN_SVUNIT_WITH_UVM_REPORT_MOCK
+    expect_testrunner_pass run.log
+  fi
+done
+
+exit 0
