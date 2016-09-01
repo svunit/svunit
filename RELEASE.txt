@@ -195,3 +195,6 @@ v3.14
 -----
 * test generalizing to make the regression suite easier/more robust
 * udpate for issue #12
+
+v3.15
+* update for issue #7
