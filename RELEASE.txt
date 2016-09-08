@@ -203,3 +203,7 @@ v3.15
 v3.16
 -----
 * pull https://github.com/tudortimi/svunit-code.git select_sim_for_tests
+
+v3.17
+-----
+* vhdl support via -m switch

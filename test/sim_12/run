@@ -5,7 +5,7 @@ setup
 set_simulators
 
 for s in ${SVUNIT_SIMULATORS[@]}; do
-  runSVUnit -s $s -m vcom.f
+  runSVUnit -s $s -m vhdl.f
 
   expect_testrunner_pass run.log
 done
