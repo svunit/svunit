@@ -111,10 +111,9 @@ push @defines, qq!SVUNIT_VERSION='"$version"'!;
 
 # simulator check
 $simulator =~ tr/A-Z/a-z/;
-$simulator =~ s/questa/qverilog/;
+$simulator =~ s/questa/modelsim/;
 $simulator =~ s/ius/irun/;
-usage() if $simulator ne "qverilog" &&
-           $simulator ne "irun" &&
+usage() if $simulator ne "irun" &&
            $simulator ne "modelsim" &&
            $simulator ne "riviera" &&
            $simulator ne "vcs";
@@ -122,15 +121,16 @@ usage() if $simulator ne "qverilog" &&
 # start the command line
 $cmd = "cd $outdir; ";
 # add the vdhl switches if necessary
-$cmd .= "vcom -mixedsvvh -work work $vhdlfile ; " if $vhdlfile;
 if ($simulator eq "modelsim" or $simulator eq "riviera") {
   $cmd .= "vlib work; ";
+  $cmd .= "vcom -work work -f $vhdlfile ; " if $vhdlfile;
   $cmd .= "vlog -l $vlogfile ";
-  $cmd .= "-mixedsvvh " if $vhdlfile;
 } elsif ($simulator eq "vcs") {
   $cmd .= "$simulator -R -sverilog -l $logfile";
+  $cmd .= "-f $vhdlfile " if $vhdlfile;
 } else {
-  $cmd .= "$simulator -l $logfile";
+  $cmd .= "$simulator -l $logfile ";
+  $cmd .= "-f $vhdlfile " if $vhdlfile;
 }
 
 # add the uvm switches if necessary
@@ -152,8 +152,6 @@ $cmd .= " +define+" . join " +define+", @defines if (@defines > 0);
 
 if ($simulator eq "modelsim" or $simulator eq "riviera") {
   $cmd .= qq! @compileargs; vsim @simargs -lib work -c -do "run -all; quit" -l $logfile testrunner!;
-} elsif ($simulator eq "qverilog") {
-  $cmd .= " @compileargs -R @simargs -";
 } else {
   $cmd .= " @compileargs @simargs";
 }
