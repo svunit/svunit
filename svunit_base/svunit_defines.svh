@@ -183,3 +183,19 @@
     svunit_ut.update_exit_status(); \
   end
 
+/*
+  Macro: `SVUNIT_CLK_GEN(_clk_variable, _half_period)
+  Generate a clock that runs only while this unit test
+  is running.
+*/
+`define SVUNIT_CLK_GEN(_clk_variable, _half_period) \
+    initial begin \
+        _clk_variable = 0; \
+        wait(svunit_ut != null); \
+        forever begin \
+            if( svunit_ut.is_running() ) \
+                #_half_period _clk_variable = !_clk_variable; \
+            else \
+                wait( svunit_ut.is_running() ); \
+        end \
+    end   
