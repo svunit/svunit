@@ -150,9 +150,9 @@
     int lineNumber; \
 \
     `INFO($sformatf(`"%s::RUNNING`", _testName)); \
-    setup(); \
     svunit_pkg::current_tc = svunit_ut; \
     svunit_ut.start(); \
+    setup(); \    
     fork \
       begin \
         fork \
