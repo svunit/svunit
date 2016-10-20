@@ -100,7 +100,7 @@
     msg - string to display
 */
 `define INFO(msg) \
-  $display("INFO:  [%0t][%0s]: %s", $time, name, msg)
+  $display("INFO:  [%0t][%0s]: %s", $time, name, msg);
 
 
 /*
@@ -111,7 +111,7 @@
     msg - string to display
 */
 `define ERROR(msg) \
-  $display("ERROR: [%0t][%0s]: %s", $time, name, msg)
+  $display("ERROR: [%0t][%0s]: %s", $time, name, msg);
 
 
 /*
@@ -177,9 +177,9 @@
     svunit_ut.stop(); \
     teardown(); \
     if (svunit_ut.get_error_count() == local_error_count) \
-      `INFO($sformatf(`"%s::PASSED`", _testName)); \
+      `INFO($sformatf(`"%s::PASSED`", _testName)) \
     else \
-      `INFO($sformatf(`"%s::FAILED`", _testName)); \
+      `INFO($sformatf(`"%s::FAILED`", _testName)) \
     svunit_ut.update_exit_status(); \
   end
 
