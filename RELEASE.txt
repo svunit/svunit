@@ -207,3 +207,8 @@ v3.16
 v3.17
 -----
 * vhdl support via -m switch
+
+v3.18
+----
+* update for issue #17,#18
+* pull https://github.com/jesseprusi/svunit-code.git master
