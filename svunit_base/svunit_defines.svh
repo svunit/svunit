@@ -100,7 +100,7 @@
     msg - string to display
 */
 `define INFO(msg) \
-  $display("INFO:  [%0t][%0s]: %s", $time, name, msg)
+  $display("INFO:  [%0t][%0s]: %s", $time, name, msg);
 
 
 /*
@@ -111,7 +111,7 @@
     msg - string to display
 */
 `define ERROR(msg) \
-  $display("ERROR: [%0t][%0s]: %s", $time, name, msg)
+  $display("ERROR: [%0t][%0s]: %s", $time, name, msg);
 
 
 /*
@@ -150,9 +150,9 @@
     int lineNumber; \
 \
     `INFO($sformatf(`"%s::RUNNING`", _testName)); \
-    setup(); \
     svunit_pkg::current_tc = svunit_ut; \
     svunit_ut.start(); \
+    setup(); \    
     fork \
       begin \
         fork \
@@ -177,9 +177,25 @@
     svunit_ut.stop(); \
     teardown(); \
     if (svunit_ut.get_error_count() == local_error_count) \
-      `INFO($sformatf(`"%s::PASSED`", _testName)); \
+      `INFO($sformatf(`"%s::PASSED`", _testName)) \
     else \
-      `INFO($sformatf(`"%s::FAILED`", _testName)); \
+      `INFO($sformatf(`"%s::FAILED`", _testName)) \
     svunit_ut.update_exit_status(); \
   end
 
+/*
+  Macro: `SVUNIT_CLK_GEN(_clk_variable, _half_period)
+  Generate a clock that runs only while this unit test
+  is running.
+*/
+`define SVUNIT_CLK_GEN(_clk_variable, _half_period) \
+    initial begin \
+        _clk_variable = 0; \
+        wait(svunit_ut != null); \
+        forever begin \
+            if( svunit_ut.is_running() ) \
+                #_half_period _clk_variable = !_clk_variable; \
+            else \
+                wait( svunit_ut.is_running() ); \
+        end \
+    end   
