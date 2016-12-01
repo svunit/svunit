@@ -169,6 +169,7 @@
               svunit_ut.wait_for_error(); \
             end \
           end \
+          `SVUNIT_FUSE \
         join_any \
         #0; \
         disable fork; \
@@ -182,6 +183,15 @@
       `INFO($sformatf(`"%s::FAILED`", _testName)); \
     svunit_ut.update_exit_status(); \
   end
+
+`define SVUNIT_FUSE \
+`ifdef SVUNIT_TIMEOUT \
+begin \
+  bit svunit_timeout = 1; \
+  #(`SVUNIT_TIMEOUT); \
+  `FAIL_IF(svunit_timeout) \
+end \
+`endif
 
 /*
   Macro: `SVUNIT_CLK_GEN(_clk_variable, _half_period)

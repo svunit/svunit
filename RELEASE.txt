@@ -212,3 +212,7 @@ v3.18
 ----
 * update for issue #17,#18
 * pull https://github.com/jesseprusi/svunit-code.git master
+
+v3.19
+-----
+* add a timeout when SVUNIT_TIMEOUT is defined
