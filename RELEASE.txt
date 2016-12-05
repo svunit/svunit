@@ -216,3 +216,7 @@ v3.18
 v3.19
 -----
 * add a timeout when SVUNIT_TIMEOUT is defined
+
+v3.20
+-----
+* add vcs top to runSVUnit command line
