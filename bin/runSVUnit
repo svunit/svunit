@@ -71,8 +71,8 @@ sub usage () {
 sub clean () {
   find({
       wanted => sub {
-                      if (/.*testsuite\.sv$/   or
-                          /.*testrunner\.sv$/
+                      if (/^\..*testsuite\.sv$/   or
+                          /^\..*testrunner\.sv$/
                       ) {
                         unlink;
                       }
