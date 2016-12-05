@@ -220,3 +220,7 @@ v3.19
 v3.20
 -----
 * add vcs top to runSVUnit command line
+
+v3.21
+-----
+* pull https://github.com/chris-n-johnson/svunit-code.git fix-regex-used-for-cleanup
