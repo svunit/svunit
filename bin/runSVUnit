@@ -93,7 +93,7 @@ GetOptions("l|log=s" => \$logfile,
            "c|c_arg=s" => \@compileargs,
            "o|out=s" => \$outdir,
            "m|mixedsim=s" => \$vhdlfile,
-           "t|test=s" => \@tests,
+           "t|test=s{,}" => \@tests,
            "h|help" => \$help
            ) or usage();
 
