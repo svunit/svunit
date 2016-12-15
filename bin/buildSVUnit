@@ -155,7 +155,8 @@ sub getUnittests {
         push(@unittests, "$dir/$_");
       }
       else {
-        print "WARNING: Unit test '$_' could not be found in directory $dir\n";
+        print "ERROR: Unit test '$_' could not be found in directory $dir\n";
+        exit 1;
       }
     }
   }

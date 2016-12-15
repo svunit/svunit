@@ -166,7 +166,9 @@ foreach (@tests) {
 }
 
 # run!!
-system("$build_cmd");
+if (system("$build_cmd")) {
+  exit -1;
+}
 print $cmd . "\n";
 system("$cmd");
 system("svunit_user_feedback.pl")

@@ -1,0 +1,10 @@
+# Test that the 'runSVUnit' script passes all '-t' arguments to 'buildSVUnit.
+
+source ../test_functions.bsh
+
+setup
+
+# build the framework only for 'test_unit_test.sv' and 'test_unit_test.sv'
+runSVUnit -s questa -t blunt_object_unit_test.sv
+
+expect_return_code 255
