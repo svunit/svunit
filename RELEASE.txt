@@ -224,3 +224,7 @@ v3.20
 v3.21
 -----
 * pull https://github.com/chris-n-johnson/svunit-code.git fix-regex-used-for-cleanup
+
+v3.22
+-----
+* pull https://github.com/jesseprusi/svunit-code.git patch-2
