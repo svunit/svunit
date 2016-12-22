@@ -39,7 +39,7 @@
 
 `ifndef FAIL_IF_EQUAL
 `define FAIL_IF_EQUAL(a,b) \
-  if (svunit_pkg::current_tc.fail(`"fail_if_equal`", (a===b), `"a === b`", `__FILE__, `__LINE__)) begin \
+  if (svunit_pkg::current_tc.fail(`"fail_if_equal`", ((a)===(b)), `"(a) === (b)`", `__FILE__, `__LINE__)) begin \
     if (svunit_pkg::current_tc.is_running()) svunit_pkg::current_tc.give_up(); \
   end
 `endif
@@ -60,7 +60,7 @@
 
 `ifndef FAIL_UNLESS_EQUAL
 `define FAIL_UNLESS_EQUAL(a,b) \
-  if (svunit_pkg::current_tc.fail(`"fail_unless_equal`", (a!==b), `"a !== b`", `__FILE__, `__LINE__)) begin \
+  if (svunit_pkg::current_tc.fail(`"fail_unless_equal`", ((a)!==(b)), `"(a) !== (b)`", `__FILE__, `__LINE__)) begin \
     if (svunit_pkg::current_tc.is_running()) svunit_pkg::current_tc.give_up(); \
   end
 `endif
