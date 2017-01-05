@@ -99,6 +99,37 @@ module dut_unit_test;
       `FAIL_IF_LOG(bozo != 2, $psprintf("%s %0d", gum, bozo));
     `SVTEST_END
 
+    // verify FAIL_IF_EQUAL works with ternary operator (should pass)
+    `SVTEST(eighth_test)
+      static logic [3:0] data_a = 4'h7;
+      static logic [3:0] data_b = 4'hf;
+      static logic       select = 0;
+      `FAIL_IF_EQUAL(data_a, select ? data_a : data_b);
+    `SVTEST_END
+
+    // verify FAIL_IF_EQUAL works with ternary operator (should pass)
+    `SVTEST(ninth_test)
+      static logic [3:0] data_a = 4'h7;
+      static logic [3:0] data_b = 4'hf;
+      static logic       select = 1;
+      `FAIL_IF_EQUAL(select ? data_a : data_b, data_b);
+    `SVTEST_END
+
+    // verify FAIL_UNLESS_EQUAL works with ternary operator (should pass)
+    `SVTEST(tenth_test)
+      static logic [3:0] data_a = 4'h7;
+      static logic [3:0] data_b = 4'hf;
+      static logic       select = 0;
+      `FAIL_UNLESS_EQUAL(data_b, select ? data_a : data_b);
+    `SVTEST_END
+
+    // verify FAIL_UNLESS_EQUAL works with ternary operator (should pass)
+    `SVTEST(eleventh_test)
+      static logic [3:0] data_a = 4'h7;
+      static logic [3:0] data_b = 4'hf;
+      static logic       select = 1;
+      `FAIL_UNLESS_EQUAL(select ? data_a : data_b, data_a);
+    `SVTEST_END
   `SVUNIT_TESTS_END
 
 
