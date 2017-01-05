@@ -1,13 +1,8 @@
-rm -rf .*testsuite.sv \
-       .testrunner.gold \
+cleanSVUnit
+rm -rf .testrunner.gold \
        .testrunner.gold.tmp \
-       .testrunner.sv \
-       .svunit_top.sv \
        .testsuite.gold \
        .testsuite.gold.tmp \
        test_unit_test.gold \
        testsuite.gold \
-       testrunner.gold \
-       .svunit.f \
-       work \
-       run.log
+       testrunner.gold
