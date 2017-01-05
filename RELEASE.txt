@@ -236,3 +236,7 @@ v3.23
 v3.24
 -----
 * update for issue #20
+
+v3.25
+-----
+* pull https://github.com/chris-n-johnson/svunit-code.git fail_macro_argument_grouping
