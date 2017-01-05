@@ -240,3 +240,7 @@ v3.24
 v3.25
 -----
 * pull https://github.com/chris-n-johnson/svunit-code.git fail_macro_argument_grouping
+
+v3.26
+-----
+* pull https://github.com/jesseprusi/svunit-code.git patch-3
