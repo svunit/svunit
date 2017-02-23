@@ -154,10 +154,8 @@ if ($simulator eq "modelsim" or $simulator eq "riviera") {
     push @simargs, "-c";
   }
   $cmd .= qq! @compileargs; vsim @simargs -lib work -do "run -all; quit" -l $logfile testrunner!;
-} elsif ($simulator eq "vcs") {
-  $cmd .= " @compileargs @simargs -top testrunner";
 } else {
-  $cmd .= " @compileargs @simargs";
+  $cmd .= " @compileargs @simargs -top testrunner";
 }
 
 my $build_cmd = "buildSVUnit -o $outdir";
