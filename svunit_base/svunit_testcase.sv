@@ -44,6 +44,13 @@ class svunit_testcase extends svunit_base;
     1 is somewhere between setup and teardown, 0 otherwise
   */
   local bit running = 0;
+  
+  
+  /*
+    Variable: testcase_running
+    1 is when this test case is executing its tests (including each tests setup and teardown), 0 otherwise
+  */
+  local bit testcase_running = 0;
 
 
   /*
@@ -60,6 +67,12 @@ class svunit_testcase extends svunit_base;
   extern function void start();
   extern function void stop();
   extern function bit  is_running();
+  
+  extern task wait_for_testcase_start();
+  extern task wait_for_testcase_stop();
+  extern function void start_testcase();
+  extern function void stop_testcase();
+  extern function bit  is_testcase_running();
 
   extern function void update_exit_status();
   extern function void report();
@@ -167,6 +180,51 @@ endfunction
 */
 function bit svunit_testcase::is_running();
   return running;
+endfunction
+
+
+/*
+  Method: wait_for_testcase_start
+  Waits until the test case has started execution
+*/
+task svunit_testcase::wait_for_testcase_start();
+  wait(testcase_running == 1);
+endtask
+
+
+/*
+  Method: wait_for_testcase_stop
+  Waits until the test case has stopped execution
+*/
+task svunit_testcase::wait_for_testcase_stop();
+  wait(testcase_running == 0);
+endtask
+
+
+/*
+  Method: start_testcase
+  Changes the execution status of the test case to running
+*/
+function void svunit_testcase::start_testcase();
+  testcase_running = 1;
+endfunction
+
+
+/*
+  Method: stop_testcase
+  Changes the execution status of the test case to stopped
+*/
+function void svunit_testcase::stop_testcase();
+  testcase_running = 0;
+endfunction
+
+
+/*
+  Method: is_testcase_running
+  Returns the execution status of the test case
+*/
+function bit svunit_testcase::is_testcase_running();
+  return testcase_running;
 endfunction
 
 

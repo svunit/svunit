@@ -127,13 +127,16 @@
 */
 `define SVUNIT_TESTS_BEGIN \
   task automatic run(); \
-    `INFO("RUNNING");
+    `INFO("RUNNING"); \
+    svunit_ut.start_testcase();
 
 /*
   Macro: `SVUNIT_TESTS_END
   END a block of unit tests
 */
-`define SVUNIT_TESTS_END endtask
+`define SVUNIT_TESTS_END \
+    svunit_ut.stop_testcase(); \
+    endtask
 
 
 /*
@@ -202,10 +205,10 @@ end \
     initial begin \
         _clk_variable = 0; \
         wait(svunit_ut != null); \
-        forever begin \
-            if( svunit_ut.is_running() ) \
-                #_half_period _clk_variable = !_clk_variable; \
-            else \
-                wait( svunit_ut.is_running() ); \
-        end \
-    end   
+        svunit_ut.wait_for_testcase_start(); \
+        fork \
+          svunit_ut.wait_for_testcase_stop(); \
+          forever begin #_half_period _clk_variable = !_clk_variable; end \
+        join_any \
+        disable fork; \
+    end
