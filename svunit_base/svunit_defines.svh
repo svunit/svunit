@@ -151,8 +151,8 @@
 \
     `INFO($sformatf(`"%s::RUNNING`", _testName)); \
     svunit_pkg::current_tc = svunit_ut; \
-    svunit_ut.start(); \
     setup(); \
+    svunit_ut.start(); \
     fork \
       begin \
         fork \
