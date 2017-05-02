@@ -40,10 +40,10 @@ class svunit_testcase extends svunit_base;
 
 
   /*
-    Variable: running
+    Variable: test_running
     1 is somewhere between setup and teardown, 0 otherwise
   */
-  local bit running = 0;
+  local bit test_running = 0;
   
   
   /*
@@ -64,9 +64,9 @@ class svunit_testcase extends svunit_base;
 
   extern function bit fail(string c, bit b, string s, string f, int l, string d = "");
 
-  extern function void start();
-  extern function void stop();
-  extern function bit  is_running();
+  extern function void start_test();
+  extern function void stop_test();
+  extern function bit  is_test_running();
   
   extern task wait_for_testcase_start();
   extern task wait_for_testcase_stop();
@@ -156,30 +156,30 @@ endfunction
 
 
 /*
-  Method: start
+  Method: start_test
   Changes the execution status of the test to running and increment the test count
 */
-function void svunit_testcase::start();
-  running = 1;
+function void svunit_testcase::start_test();
+  test_running = 1;
   test_count++;
 endfunction
 
 
 /*
-  Method: stop
+  Method: stop_test
   Changes the execution status of the test to stopped
 */
-function void svunit_testcase::stop();
-  running = 0;
+function void svunit_testcase::stop_test();
+  test_running = 0;
 endfunction
 
 
 /*
-  Method: is_running
+  Method: is_test_running
   Returns the execution status of the test
 */
-function bit svunit_testcase::is_running();
-  return running;
+function bit svunit_testcase::is_test_running();
+  return test_running;
 endfunction
 
 
