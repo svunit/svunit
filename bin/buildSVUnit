@@ -39,6 +39,7 @@ my $VERSION;
 my $version;
 my $outdir = ".";
 my @tests;
+my $mock;
 my $help;
 
 
@@ -51,6 +52,7 @@ sub usage() {
   print "Usage:  buildSVUnit [ -t <test> -h|--help ]\n\n";
   print "  -o|--out                 : output directory for tmp and simulation files\n";
   print "  -t|--test                : specifies a unit test to run (multiple can be given)\n";
+  print "  -m|--mock                : includes the uvm_mock_pkg to the final build file\n";
   print "  -h|--help                : prints this help screen\n";
   print "\n";
   exit 1;
@@ -170,6 +172,7 @@ sub getUnittests {
 
 GetOptions("o|out=s" => \$outdir,
            "t|test=s" => \@tests,
+           "m|mock" => \$mock,
            "h|help" => \$help
            ) or usage();
 
@@ -184,6 +187,9 @@ $FILELIST->print("+incdir+$cwd\n");
 $FILELIST->print("+incdir+$ENV{SVUNIT_INSTALL}/svunit_base\n");
 $FILELIST->print("+incdir+$ENV{SVUNIT_INSTALL}/svunit_base/uvm-mock\n");
 $FILELIST->print("$ENV{SVUNIT_INSTALL}/svunit_base/svunit_pkg.sv\n");
+if (defined $mock) {
+  $FILELIST->print("$ENV{SVUNIT_INSTALL}/svunit_base/uvm_mock/svunit_uvm_mock_pkg.sv\n");
+}
 
 getFilelists;
 buildTestsuite($pwd);
