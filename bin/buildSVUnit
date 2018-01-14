@@ -188,7 +188,7 @@ $FILELIST->print("+incdir+$ENV{SVUNIT_INSTALL}/svunit_base\n");
 $FILELIST->print("+incdir+$ENV{SVUNIT_INSTALL}/svunit_base/uvm-mock\n");
 $FILELIST->print("$ENV{SVUNIT_INSTALL}/svunit_base/svunit_pkg.sv\n");
 if (defined $mock) {
-  $FILELIST->print("$ENV{SVUNIT_INSTALL}/svunit_base/uvm_mock/svunit_uvm_mock_pkg.sv\n");
+  $FILELIST->print("$ENV{SVUNIT_INSTALL}/svunit_base/uvm-mock/svunit_uvm_mock_pkg.sv\n");
 }
 
 getFilelists;
