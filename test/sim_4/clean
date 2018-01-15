@@ -1,3 +1,2 @@
 cleanSVUnit
-rm -f dut_unit_test.sv \
-      other.log
+rm -f other.log
