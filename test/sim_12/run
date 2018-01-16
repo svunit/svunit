@@ -5,6 +5,12 @@ setup
 set_simulators
 
 for s in ${SVUNIT_SIMULATORS[@]}; do
+  if [[ "$s" -eq "vcs" ]]; then
+    echo "WARNING: VCS mixed language simulation requires multistage compilation."
+    echo "         Unfortunately, it has not been implemented yet."
+    echo "         Skipping the test..."
+    continue
+  fi
   runSVUnit -s $s -m vhdl.f
 
   expect_testrunner_pass run.log
