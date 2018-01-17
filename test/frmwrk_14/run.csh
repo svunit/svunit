@@ -1,5 +1,7 @@
 #!/usr/bin/csh
 
+set sim = $argv[1]
+
 # source the setup file
 cd ../..
 source Setup.csh
@@ -10,7 +12,7 @@ rm -rf dut_unit_test.sv;
 create_unit_test.pl -overwrite -out dut_unit_test.sv dut.sv
 
 # build the framework
-runSVUnit -sim questa
+runSVUnit -sim $sim
 
 if ( ! -e run.log ) exit 1
 

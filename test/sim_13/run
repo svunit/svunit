@@ -7,7 +7,7 @@ set_simulators
 for s in ${SVUNIT_SIMULATORS[@]}; do
   runSVUnit -s $s
 
-  expect_string "ERROR: \[50\]\[dut_ut\]: fail_if: svunit_timeout (at /scratch/user/njohnson/svunit-code/test/sim_13/./dut_unit_test.sv line:62)" run.log &&
+  expect_string "ERROR: \[50\]\[dut_ut\]: fail_if: svunit_timeout" run.log &&
   expect_string "INFO:  \[99\]\[dut_ut\]: no_timeout::PASSED" run.log
 done
 
