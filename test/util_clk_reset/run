@@ -1,7 +1,10 @@
 source ../test_functions.bsh
 
 setup
+set_simulators
 
-runSVUnit -s questa
+for sim in ${SVUNIT_SIMULATORS[@]}; do
+  runSVUnit -s $sim
 
-expect_testrunner_pass run.log
+  expect_testrunner_pass run.log
+done
