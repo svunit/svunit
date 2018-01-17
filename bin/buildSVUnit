@@ -9,9 +9,9 @@
 #  to you under the Apache License, Version 2.0 (the
 #  "License"); you may not use this file except in compliance
 #  with the License.  You may obtain a copy of the License at
-#  
+#
 #  http://www.apache.org/licenses/LICENSE-2.0
-#  
+#
 #  Unless required by applicable law or agreed to in writing,
 #  software distributed under the License is distributed on an
 #  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -39,6 +39,7 @@ my $VERSION;
 my $version;
 my $outdir = ".";
 my @tests;
+my $uvm;
 my $help;
 
 
@@ -51,6 +52,7 @@ sub usage() {
   print "Usage:  buildSVUnit [ -t <test> -h|--help ]\n\n";
   print "  -o|--out                 : output directory for tmp and simulation files\n";
   print "  -t|--test                : specifies a unit test to run (multiple can be given)\n";
+  print "  -U|--uvm                 : build SVUnit with UVM\n";
   print "  -h|--help                : prints this help screen\n";
   print "\n";
   exit 1;
@@ -170,6 +172,7 @@ sub getUnittests {
 
 GetOptions("o|out=s" => \$outdir,
            "t|test=s" => \@tests,
+           "U|uvm" => \$uvm,
            "h|help" => \$help
            ) or usage();
 
@@ -182,8 +185,12 @@ $FILELIST = IO::File->new();
 $FILELIST->open(">$outdir/.svunit.f");
 $FILELIST->print("+incdir+$cwd\n");
 $FILELIST->print("+incdir+$ENV{SVUNIT_INSTALL}/svunit_base\n");
-$FILELIST->print("+incdir+$ENV{SVUNIT_INSTALL}/svunit_base/uvm-mock\n");
 $FILELIST->print("$ENV{SVUNIT_INSTALL}/svunit_base/svunit_pkg.sv\n");
+
+if ($uvm) {
+  $FILELIST->print("+incdir+$ENV{SVUNIT_INSTALL}/svunit_base/uvm-mock\n");
+  $FILELIST->print("$ENV{SVUNIT_INSTALL}/svunit_base/uvm-mock/svunit_uvm_mock_pkg.sv\n");
+}
 
 getFilelists;
 buildTestsuite($pwd);

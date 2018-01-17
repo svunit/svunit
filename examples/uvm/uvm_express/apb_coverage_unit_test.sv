@@ -19,7 +19,6 @@
 //
 //###############################################################
 
-`include "svunit_uvm_mock_pkg.sv"
 `include "svunit_defines.svh"
 `include "apb_coverage.sv"
 
@@ -32,7 +31,7 @@ module apb_coverage_unit_test;
 
 
   //===================================
-  // This is the UUT that we're 
+  // This is the UUT that we're
   // running the Unit Tests on
   //===================================
   apb_coverage my_apb_coverage;
@@ -72,7 +71,7 @@ module apb_coverage_unit_test;
 
 
   //===================================
-  // Here we deconstruct anything we 
+  // Here we deconstruct anything we
   // need after running the Unit Tests
   //===================================
   task teardown();
@@ -143,14 +142,14 @@ module apb_coverage_unit_test;
 
     a = apb_xaction::type_id::create();
     void'(a.randomize() with { addr == 'hfc;
-                               data == 0; 
+                               data == 0;
                                kind == WRITE;
                              });
 
     my_apb_coverage.write(a);
 
     `FAIL_IF(my_apb_coverage.cg.addr_max_cp.get_coverage() != 100);
- 
+
   `SVTEST_END
 
   //-------------------------------------
@@ -164,7 +163,7 @@ module apb_coverage_unit_test;
 
     a = apb_xaction::type_id::create();
     void'(a.randomize() with { addr == 1;
-                               data == 0; 
+                               data == 0;
                                kind == WRITE;
                              });
 
@@ -181,7 +180,7 @@ module apb_coverage_unit_test;
     end
 
     `FAIL_IF(my_apb_coverage.cg.addr_bins_cp.get_coverage() != 100);
- 
+
   `SVTEST_END
 
   //-------------------------------------
@@ -200,7 +199,7 @@ module apb_coverage_unit_test;
     my_apb_coverage.write(a);
 
     `FAIL_IF(my_apb_coverage.cg.data_max_cp.get_coverage() != 100);
- 
+
   `SVTEST_END
 
   //-------------------------------------
@@ -249,7 +248,7 @@ module apb_coverage_unit_test;
     my_apb_coverage.write(a);
 
     `FAIL_IF(my_apb_coverage.cg.kind_cp.get_coverage() != 100);
- 
+
   `SVTEST_END
 
 

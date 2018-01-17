@@ -19,7 +19,6 @@
 //
 //###############################################################
 
-`include "svunit_uvm_mock_pkg.sv"
 `include "svunit_defines.svh"
 `include "apb_coverage_agent.sv"
 `include "apb_if.sv"
@@ -41,7 +40,7 @@ module apb_coverage_agent_unit_test;
   virtual apb_if.mstr bfm_mstr;
 
   //===================================
-  // This is the UUT that we're 
+  // This is the UUT that we're
   // running the Unit Tests on
   //===================================
   apb_coverage_agent my_apb_coverage_agent;
@@ -87,7 +86,7 @@ module apb_coverage_agent_unit_test;
 
 
   //===================================
-  // Here we deconstruct anything we 
+  // Here we deconstruct anything we
   // need after running the Unit Tests
   //===================================
   task teardown();

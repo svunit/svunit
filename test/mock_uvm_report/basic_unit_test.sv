@@ -1,6 +1,5 @@
 import svunit_pkg::*;
 
-`include "svunit_uvm_mock_pkg.sv"
 import svunit_uvm_mock_pkg::*;
 
 `include "svunit_defines.svh"
@@ -18,7 +17,7 @@ module basic_unit_test;
 
 
   //===================================
-  // This is the UUT that we're 
+  // This is the UUT that we're
   // running the Unit Tests on
   //===================================
   basic my_basic;
@@ -46,7 +45,7 @@ module basic_unit_test;
 
 
   //===================================
-  // Here we deconstruct anything we 
+  // Here we deconstruct anything we
   // need after running the Unit Tests
   //===================================
   task teardown();
@@ -95,7 +94,7 @@ module basic_unit_test;
     my_basic.actual_fatal;
     uvm_report_mock::expect_fatal();
     uvm_report_mock::expect_error();
-    `FAIL_IF(uvm_report_mock::verify_complete()); 
+    `FAIL_IF(uvm_report_mock::verify_complete());
   `SVTEST_END
 
 
@@ -104,7 +103,7 @@ module basic_unit_test;
     my_basic.actual_fatal;
     uvm_report_mock::expect_error("my_basic", "error message");
     uvm_report_mock::expect_fatal("my_basic", "fatal message");
-    `FAIL_IF(!uvm_report_mock::verify_complete()); 
+    `FAIL_IF(!uvm_report_mock::verify_complete());
   `SVTEST_END
 
 
@@ -123,7 +122,7 @@ module basic_unit_test;
     dump_exp = { dump_exp , "     ACTUAL   =>      UVM_ERROR                     \"\" \"\"\n" };
 
     dump_act = uvm_report_mock::dump();
- 
+
     `FAIL_IF(dump_act != dump_exp);
   `SVTEST_END
 
@@ -136,7 +135,7 @@ module basic_unit_test;
     dump_exp = { dump_exp , "     ACTUAL   =>    UVM_WARNING            \"ID actual\" \"MSG actual\"\n" };
 
     dump_act = uvm_report_mock::dump();
- 
+
     `FAIL_IF(dump_act != dump_exp);
   `SVTEST_END
 
@@ -147,9 +146,9 @@ module basic_unit_test;
     dump_exp = dump_header();
     dump_exp = { dump_exp , "0:   EXPECTED =>    UVM_WARNING          \"ID expected\" \"MSG expected\"\n" };
     dump_exp = { dump_exp , "     ACTUAL   =>    UVM_WARNING            \"ID actual\" \"MSG actual\"\n" };
- 
+
     dump_act = uvm_report_mock::dump();
- 
+
     `FAIL_IF(dump_act != dump_exp);
   `SVTEST_END
 
@@ -164,9 +163,9 @@ module basic_unit_test;
     dump_exp = { dump_exp , "     ACTUAL   =>    UVM_WARNING              \"ID act0\" \"MSG act0\"\n" };
     dump_exp = { dump_exp , "1:   EXPECTED =>      UVM_ERROR              \"ID exp1\" \"MSG exp1\"\n" };
     dump_exp = { dump_exp , "     ACTUAL   =>      UVM_ERROR              \"ID act1\" \"MSG act1\"\n" };
- 
+
     dump_act = uvm_report_mock::dump();
- 
+
     `FAIL_IF(dump_act != dump_exp);
   `SVTEST_END
 
@@ -176,7 +175,7 @@ module basic_unit_test;
     dump_exp = dump_header();
     dump_exp = { dump_exp , "0:   EXPECTED =>    UVM_WARNING              \"ID exp0\" \"MSG exp0\"\n" };
     dump_exp = { dump_exp , "     ACTUAL   =>  None reported                        \n" };
- 
+
     dump_act = uvm_report_mock::dump();
 
     `FAIL_IF(dump_act != dump_exp);
@@ -188,7 +187,7 @@ module basic_unit_test;
     dump_exp = dump_header();
     dump_exp = { dump_exp , "0:   EXPECTED =>  None reported                        \n" };
     dump_exp = { dump_exp , "     ACTUAL   =>      UVM_FATAL              \"ID exp0\" \"MSG exp0\"\n" };
- 
+
     dump_act = uvm_report_mock::dump();
 
     `FAIL_IF(dump_act != dump_exp);
@@ -200,7 +199,7 @@ module basic_unit_test;
     dump_exp = dump_header();
     dump_exp = { dump_exp , "0:   EXPECTED =>  None reported                        \n" };
     dump_exp = { dump_exp , "     ACTUAL   =>      UVM_FATAL \"ID exp0jfl sj ls jsl\" \"MSG exp0\"\n" };
- 
+
     dump_act = uvm_report_mock::dump();
 
     `FAIL_IF(dump_act != dump_exp);
@@ -212,7 +211,7 @@ module basic_unit_test;
     dump_exp = dump_header();
     dump_exp = { dump_exp , "0:   EXPECTED =>      UVM_FATAL \"ID exp0jfl sj ls jsl\" \"*\"\n" };
     dump_exp = { dump_exp , "     ACTUAL   =>  None reported                        \n" };
- 
+
     dump_act = uvm_report_mock::dump();
 
     `FAIL_IF(dump_act != dump_exp);
@@ -220,7 +219,7 @@ module basic_unit_test;
 
   `SVTEST(info_are_ignored)
     uvm_report_info("", "");
-    `FAIL_IF(!uvm_report_mock::verify_complete()); 
+    `FAIL_IF(!uvm_report_mock::verify_complete());
   `SVTEST_END
 
 
