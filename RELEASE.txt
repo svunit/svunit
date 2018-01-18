@@ -252,3 +252,7 @@ v3.27
 v3.28
 -----
 * pull https://github.com/B00Ze/svunit-code.git tests_fix
+
+v3.29
+-----
+* pull https://github.com/jesseprusi/svunit-code.git patch-4
