@@ -5,7 +5,7 @@ setup
 set_simulators
 
 # remove and create the unit_test
-create_unit_test.pl -overwrite -out dut_unit_test.sv dut.sv
+# create_unit_test.pl -overwrite -out dut_unit_test.sv dut.sv
 
 for s in ${SVUNIT_SIMULATORS[@]}; do
   runSVUnit --sim $s --log other.log --define DIDLEY_SQUAT -d FIDDLE_FADDLE='"junk"'

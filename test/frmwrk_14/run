@@ -2,14 +2,22 @@ NEWPATH=`echo $PATH | sed -e "s/svunit-code\/bin//"`
 export PATH=$NEWPATH
 export SVUNIT_INSTALL=
 
-csh run.csh
-if [ "$?" != "0" ]; then
-  exit 1
-fi
+source ../test_functions.bsh
 
-tcsh run.csh
-if [ "$?" != "0" ]; then
-  exit 1
-fi
+setup
+
+set_simulators
+
+for s in ${SVUNIT_SIMULATORS[@]}; do
+  csh run.csh $s
+  if [ "$?" != "0" ]; then
+    exit 1
+  fi
+
+  tcsh run.csh $s
+  if [ "$?" != "0" ]; then
+    exit 1
+  fi
+done
 
 exit 0
