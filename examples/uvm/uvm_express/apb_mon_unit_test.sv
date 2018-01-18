@@ -19,7 +19,6 @@
 //
 //###############################################################
 
-`include "svunit_uvm_mock_pkg.sv"
 `include "svunit_defines.svh"
 `include "apb_mon.sv"
 `include "apb_xaction.sv"
@@ -46,7 +45,7 @@ module apb_mon_unit_test;
   uvm_tlm_analysis_fifo #(apb_xaction) af;
 
   //===================================
-  // This is the UUT that we're 
+  // This is the UUT that we're
   // running the Unit Tests on
   //===================================
   apb_mon my_apb_mon;
@@ -97,7 +96,7 @@ module apb_mon_unit_test;
 
 
   //===================================
-  // Here we deconstruct anything we 
+  // Here we deconstruct anything we
   // need after running the Unit Tests
   //===================================
   task teardown();
