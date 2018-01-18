@@ -256,3 +256,7 @@ v3.28
 v3.29
 -----
 * pull https://github.com/jesseprusi/svunit-code.git patch-4
+
+v3.30
+-----
+* pull https://github.com/tudortimi/svunit-code.git fix_uvm_build
