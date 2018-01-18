@@ -248,3 +248,7 @@ v3.26
 v3.27
 -----
 * pull https://github.com/tudortimi/svunit-code.git tudortimi-add_gitignore
+
+v3.28
+-----
+* pull https://github.com/B00Ze/svunit-code.git tests_fix
