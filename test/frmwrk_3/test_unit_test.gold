@@ -31,6 +31,7 @@ module test0_unit_test;
   task setup();
     svunit_ut.setup();
     /* Place Setup Code Here */
+
   endtask
 
 
@@ -41,6 +42,7 @@ module test0_unit_test;
   task teardown();
     svunit_ut.teardown();
     /* Place Teardown Code Here */
+
   endtask
 
 
@@ -60,10 +62,10 @@ module test0_unit_test;
   `SVUNIT_TESTS_BEGIN
 
 
+
   `SVUNIT_TESTS_END
 
 endmodule
-
 
 module test1_unit_test;
   import svunit_pkg::svunit_testcase;
@@ -95,6 +97,7 @@ module test1_unit_test;
   task setup();
     svunit_ut.setup();
     /* Place Setup Code Here */
+
   endtask
 
 
@@ -105,6 +108,7 @@ module test1_unit_test;
   task teardown();
     svunit_ut.teardown();
     /* Place Teardown Code Here */
+
   endtask
 
 
@@ -122,6 +126,7 @@ module test1_unit_test;
   //   `SVTEST_END
   //===================================
   `SVUNIT_TESTS_BEGIN
+
 
 
   `SVUNIT_TESTS_END

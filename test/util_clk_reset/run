@@ -2,6 +2,10 @@ source ../test_functions.bsh
 
 setup
 
-runSVUnit -s questa
+set_simulators
+
+for s in ${SVUNIT_SIMULATORS[@]}; do
+  runSVUnit -s $s
+done
 
 expect_testrunner_pass run.log

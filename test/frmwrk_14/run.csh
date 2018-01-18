@@ -10,7 +10,7 @@ rm -rf dut_unit_test.sv;
 create_unit_test.pl -overwrite -out dut_unit_test.sv dut.sv
 
 # build the framework
-runSVUnit -sim questa
+runSVUnit -s $1
 
 if ( ! -e run.log ) exit 1
 
