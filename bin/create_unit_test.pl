@@ -9,9 +9,9 @@
 #  to you under the Apache License, Version 2.0 (the
 #  "License"); you may not use this file except in compliance
 #  with the License.  You may obtain a copy of the License at
-#  
+#
 #  http://www.apache.org/licenses/LICENSE-2.0
-#  
+#
 #  Unless required by applicable law or agreed to in writing,
 #  software distributed under the License is distributed on an
 #  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -112,7 +112,7 @@ sub CheckArgs() {
   }
 }
 
-  
+
 ##########################################################################
 # ValidArgs(): This checks to see if the arguments provided make sense.
 ##########################################################################
@@ -194,7 +194,7 @@ sub Main() {
     if (!$incomments) {
       # filter full /* */ comments
       $line =~ s|/\*.*?\*/||g;
-   
+
       # filter // comments
       $line =~ s|//.*||;
 
@@ -301,7 +301,6 @@ sub CreateUnitTest() {
   if (!$includes_already_printed) {
     print OUTFILE "`include \"svunit_defines.svh\"\n";
     if ($uvm_test) {
-      print OUTFILE "`include \"svunit_uvm_mock_pkg.sv\"\n";
       print OUTFILE "import uvm_pkg::*;\n";
     }
 
@@ -314,7 +313,7 @@ sub CreateUnitTest() {
   }
   if ($uvm_test) {
     print OUTFILE "  import svunit_uvm_mock_pkg::*;\n";
-  } 
+  }
   print OUTFILE "\n";
   if ($uvm_test) {
     CreateUvmClassForTest();
@@ -335,13 +334,13 @@ sub CreateUnitTest() {
       print OUTFILE "  $uvm_class_name my_$uut;\n\n\n";
     } else {
       print OUTFILE "  $uut my_$uut;\n\n\n";
-    }  
+    }
   } else {
       if ($uvm_test) {
         print OUTFILE " $uvm_class_name  my_$uut();\n\n\n";
       } else {
           print OUTFILE "  $uut my_$uut();\n\n\n";
-      }    
+      }
   }
   print OUTFILE "  //===================================\n";
   print OUTFILE "  // Build\n";
@@ -353,9 +352,9 @@ sub CreateUnitTest() {
     if ($uvm_test) {
       print OUTFILE "    my_$uut = $uvm_class_name\:\:type_id\:\:create(\"\"\, null);\n";
       print OUTFILE "\n    svunit_deactivate_uvm_component(my_$uut);\n";
-    } else { 
+    } else {
       print OUTFILE "    my_$uut = new(\/\* New arguments if needed \*\/);\n";
-    }  
+    }
   }
   print OUTFILE "  endfunction\n\n\n";
   print OUTFILE "  //===================================\n";
@@ -370,7 +369,7 @@ sub CreateUnitTest() {
     print OUTFILE "    // start the testing phase\n";
     print OUTFILE "    //-----------------------------\n";
     print OUTFILE "    svunit_uvm_test_start();\n\n\n\n";
-  }  
+  }
   print OUTFILE "  endtask\n\n\n";
   print OUTFILE "  //===================================\n";
   print OUTFILE "  // Here we deconstruct anything we \n";
@@ -383,11 +382,11 @@ sub CreateUnitTest() {
     print OUTFILE "    // terminate the testing phase \n";
     print OUTFILE "    //-----------------------------\n";
     print OUTFILE "    svunit_uvm_test_finish();\n\n";
-  }  
+  }
   print OUTFILE "    \/\* Place Teardown Code Here \*\/\n\n";
   if ($uvm_test) {
     print OUTFILE "    svunit_deactivate_uvm_component(my_$uut);\n";
-  }   
+  }
   print OUTFILE "  endtask\n\n\n";
   print OUTFILE "  //===================================\n";
   print OUTFILE "  // All tests are defined between the\n";
@@ -410,7 +409,7 @@ sub CreateUnitTest() {
 
 ##########################################################################
 # CreateUvmClassForTest(): This creates a wrapper to allow for uvm phase
-#                   connections. 
+#                   connections.
 ##########################################################################
 sub CreateUvmClassForTest(){
   print OUTFILE "class $uvm_class_name extends $uut;\n\n";
@@ -443,5 +442,5 @@ CheckArgs();
 if ( ValidArgs() == 0) {
   OpenFiles();
   Main();
-  CloseFiles(); 
+  CloseFiles();
 }

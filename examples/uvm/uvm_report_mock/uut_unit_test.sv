@@ -25,7 +25,6 @@
 
 import uvm_pkg::*;
 
-`include "svunit_uvm_mock_pkg.sv"
 `include "uut.sv"
 
 module uut_unit_test;
@@ -37,7 +36,7 @@ module uut_unit_test;
 
 
   //===================================
-  // This is the UUT that we're 
+  // This is the UUT that we're
   // running the Unit Tests on
   //===================================
   uut my_uut;
@@ -67,7 +66,7 @@ module uut_unit_test;
 
 
   //===================================
-  // Here we deconstruct anything we 
+  // Here we deconstruct anything we
   // need after running the Unit Tests
   //===================================
   task teardown();
@@ -140,9 +139,9 @@ module uut_unit_test;
 
   //--------------------------------------------
   // test: gt_100_is_a_warning
-  // desc: when 100 is passed in to 
+  // desc: when 100 is passed in to
   //       warn_arg_is_gt_100, we expect that
-  //       warning by first calling the 
+  //       warning by first calling the
   //       uvm_report_mock::expect_error().
   //--------------------------------------------
   `SVTEST(gt_100_is_a_warning)
