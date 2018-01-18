@@ -1,11 +1,11 @@
 #!/bin/bash
 
-################################################################
-#  Use this to release a new version of svunit to sourceforge  #
-#                                                              #
-#  eg. release.bsh 5                                           #
-#       - release version 0.5 of svunit                        #
-################################################################
+###########################################################
+#  Use this to release a new version of svunit to github  #
+#                                                         #
+#  eg. release.bsh 5                                      #
+#       - release version 0.5 of svunit                   #
+###########################################################
 
 if [ "$1" == "" ]; then
   echo "Error: No release specified"
@@ -16,32 +16,8 @@ ver="v3.$1"
 
 # update the release number in the svunit_defines.svh file
 
-if [ -e svunit-$ver.tar.gz ]; then
-  echo "Error: svunit-$ver.tar.gz already exists"
-  exit 1
-fi
-
 echo "SVUnit $ver" > VERSION.txt
 git add VERSION.txt
-
-cd ..
-tar cvf svunit-$ver.tar svunit-code/bin \
-                         svunit-code/docs \
-                         svunit-code/examples \
-                         svunit-code/header.txt \
-                         svunit-code/RELEASE.txt \
-                         svunit-code/LICENSE.txt \
-                         svunit-code/README.txt \
-                         svunit-code/VERSION.txt \
-                         svunit-code/Setup.bsh \
-                         svunit-code/Setup.csh \
-                         svunit-code/svunit_base
-gzip svunit-$ver.tar
-mv svunit-$ver.tar.gz svunit-code
-cd -
 git tag -a $ver -m "$ver"
 git push --tags
 git push
-scp svunit-$ver.tar.gz nosnhojn@frs.sourceforge.net:/home/frs/project/svunit
-scp README.txt nosnhojn@frs.sourceforge.net:/home/frs/project/svunit
-rm svunit-$ver.tar.gz
