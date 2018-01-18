@@ -244,3 +244,7 @@ v3.25
 v3.26
 -----
 * pull https://github.com/jesseprusi/svunit-code.git patch-3
+
+v3.27
+-----
+* pull https://github.com/tudortimi/svunit-code.git tudortimi-add_gitignore
