@@ -1,0 +1,14 @@
+# Framework files
+.__testsuite.sv
+.svunit.f
+.testrunner.sv
+run.log
+
+# IUS specific files
+INCA_libs
+run.history
+*.history
+
+# test specific files
+test/frmwrk_3/.testsuite.gold
+test/frmwrk_3/test_unit_test.sv
