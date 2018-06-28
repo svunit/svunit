@@ -1,0 +1,19 @@
+
+properties([parameters([string(defaultValue: '/home2/rhotchkiss/work/svunit/svunit-code/bin/svunit_ci_integration/svunit_ci_integration', description: 'path to SVUnit exec directory from repo root', name: 'SVUNIT_EXEC_DIR', trim: false)])])
+node {
+    stage('Checkout') {
+        checkout scm
+    }
+    stage('Build') {
+        if (isUnix()) {
+            sh '''
+                cd \$SVUNIT_EXEC_DIR;
+                runSVUnit -U 
+               '''
+        }
+    }
+    stage('Results') {
+        junit '\$SVUNIT_EXEC_DIR/results.xml'
+    }
+}     
+    
