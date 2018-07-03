@@ -48,11 +48,14 @@ my $outdir = ".";
 my $clean;
 my $vhdlfile;
 my @tests;
+my $jenkinsfile;
+my $junit;
 my $help;
+my $runsvunit_cmdline = join " ", "runSVUnit", @ARGV;
 
 sub usage () {
   print "Usage:  runSVUnit -s|--sim <simulator> [-l|--log <log> -d|--define <macro> -f|--filelist <file> -U|-uvm -m|-mixedsim <vhdlfile>\n";
-  print "                  -r|--r_arg <option> -c|--c_arg <option> -o|--out <dir> -t|--test <test>]\n";
+  print "                  -r|--r_arg <option> -c|--c_arg <option> -o|--out <dir> -p|--jenkinsfile -j|junit -t|--test <test>]\n";
   print "  -s|--sim <simulator>     : simulator is either of questa, modelsim, riviera, ius or vcs\n";
   print "  -l|--log <log>           : simulation log file (default: run.log)\n";
   print "  -d|--define <macro>      : appended to the command line as +define+<macro>\n";
@@ -63,6 +66,8 @@ sub usage () {
   print "  -o|--out                 : output directory for tmp and simulation files\n";
   print "  -t|--test                : specifies a unit test to run (multiple can be given)\n";
   print "  -m|--mixedsim <vhdlfile> : consolidated file list with VHDL files and command line switches\n";
+  print "  -p|--jenkinsfile         : create a Jenkins Pipeline script\n";
+  print "  -j|--junit               : parse the logs to generate a JUnit results.xml file\n";
   print "  -h|--help                : prints this help screen\n";
   print "\n";
   exit 1;
@@ -94,6 +99,8 @@ GetOptions("l|log=s" => \$logfile,
            "o|out=s" => \$outdir,
            "m|mixedsim=s" => \$vhdlfile,
            "t|test=s{,}" => \@tests,
+           "p|jenkinsfile" => \$jenkinsfile,
+           "j|junit" => \$junit,
            "h|help" => \$help
            ) or usage();
 
@@ -175,4 +182,37 @@ if (system("$build_cmd")) {
 }
 print $cmd . "\n";
 system("$cmd");
+
+# parse the logs to generate the junit results.xml
+if (defined $junit) {
+
+  my $script_path = "$ENV{'SVUNIT_INSTALL'}/bin/svunit_ci_integration/svunit_ci_integration";
+  $cmd = "python $script_path/svunit_junit_xml.py";
+  $cmd .= " --sim_logfile=$outdir/$logfile";
+  $cmd .= " --comp_logfile=$outdir/$vlogfile";    
+  $cmd .= " --junit_outfile=$outdir/results.xml";
+  $cmd .= " --simulator=IRUN" if $simulator eq "irun";
+  $cmd .= " --simulator=VCS" if $simulator eq "vcs";
+  $cmd .= " --simulator=QUESTA" if $simulator eq "modelsim";
+
+  if ($simulator eq "riviera") {
+    print("riviera compile log processing not yet supported");
+  } else {
+    print $cmd . "\n";
+    system("$cmd");
+  }
+}
+
+# generate a Jenkinsfile 
+if (defined $jenkinsfile) {
+
+  my $script_path = "$ENV{'SVUNIT_INSTALL'}/bin/svunit_ci_integration/svunit_ci_integration";
+  $cmd = "python $script_path/svunit_gen_jenkinsfile.py";
+  $runsvunit_cmdline =~ s/--jenkinsfile//g;
+  $runsvunit_cmdline =~ s/-p//g;
+  $cmd .= " --cmdline=\"$runsvunit_cmdline\"";
+  print $cmd . "\n";
+  system("$cmd");
+}
+
 system("svunit_user_feedback.pl")
