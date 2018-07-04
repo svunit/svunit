@@ -58,9 +58,15 @@ class svunit_testsuite:
       error_timestamp - int - simulation time of error
       error_msg - string - error message captured from the simulation log
     """
+    # only add the first error
     if (testname in self.test_case_dict):
-      self.test_case_dict[testname].add_error_info(error_msg)
-      self.test_case_dict[testname].timestamp = error_timestamp
+      if (self.test_case_dict[testname].is_error()):
+        self.logger.debug("skipping error: error already captured")
+      else:
+        self.test_case_dict[testname].add_error_info(error_msg)
+        self.test_case_dict[testname].timestamp = error_timestamp
+    else:
+      self.logger.debug("skipping error: testname not found")
 
   def finalize_testcase(self, testname, result):
     """
