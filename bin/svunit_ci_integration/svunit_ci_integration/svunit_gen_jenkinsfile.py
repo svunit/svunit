@@ -45,7 +45,7 @@ class svunit_gen_jenkinsfile():
     """
     """
     self.script_string = """
-properties([parameters([string(defaultValue: '%s', description: 'path to SVUnit exec directory from repo root', name: 'SVUNIT_EXEC_DIR', trim: false)])])
+properties([parameters([string(defaultValue: '%s', description: 'path to SVUnit exec directory from repo root <<Please review default value>>', name: 'SVUNIT_EXEC_DIR', trim: false)])])
 node {
     stage('Checkout') {
         checkout scm
@@ -53,6 +53,7 @@ node {
     stage('Build') {
         if (isUnix()) {
             sh '''
+                #<< Edit to add setup as required by SVUnit>>
                 cd \$SVUNIT_EXEC_DIR;
                 %s
                '''

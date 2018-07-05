@@ -208,9 +208,13 @@ if (defined $jenkinsfile) {
 
   my $script_path = "$ENV{'SVUNIT_INSTALL'}/bin/svunit_ci_integration/svunit_ci_integration";
   $cmd = "python $script_path/svunit_gen_jenkinsfile.py";
+  # remove jenkinsfile generation from command, so we don't overwrite in the CI job
   $runsvunit_cmdline =~ s/--jenkinsfile//g;
   $runsvunit_cmdline =~ s/-p//g;
-  $cmd .= " --cmdline=\"$runsvunit_cmdline\"";
+  # remove the junit call if it is there, so we can add it back cleanly
+  $runsvunit_cmdline =~ s/--junit//g;
+  $runsvunit_cmdline =~ s/-j//g;
+  $cmd .= " --junit --cmdline=\"$runsvunit_cmdline\"";
   print $cmd . "\n";
   system("$cmd");
 }
