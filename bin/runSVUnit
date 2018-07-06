@@ -195,6 +195,11 @@ if (defined $junit) {
   $cmd .= " --simulator=VCS" if $simulator eq "vcs";
   $cmd .= " --simulator=QUESTA" if $simulator eq "modelsim";
 
+  if (scalar @tests != 0) {
+    my $dut_name = join("__", @tests);
+    $cmd .= " --dut_name=$dut_name"
+  }
+
   if ($simulator eq "riviera") {
     print("riviera compile log processing not yet supported");
   } else {

@@ -21,6 +21,8 @@
 
 import logging, sys, argparse
 from svunit_sim_log_parser.svunit_sim_log_parser import svunit_sim_log_parser
+from svunit_sim_log_parser.svunit_questa_sim_log_parser import svunit_questa_sim_log_parser
+from svunit_sim_log_parser.svunit_ius_sim_log_parser import svunit_ius_sim_log_parser
 from svunit_comp_log_parser.svunit_comp_log_parser import svunit_comp_log_parser
 from svunit_comp_log_parser.svunit_questa_comp_log_parser import svunit_questa_comp_log_parser
 from svunit_comp_log_parser.svunit_ius_comp_log_parser import svunit_ius_comp_log_parser
@@ -47,6 +49,7 @@ def _get_verbosity_level(verbosity_str):
 def process_svunit_logs(sim_logfile="run.log",
                         comp_logfile="compile.log",
                         junit_outfile="results.xml",
+                        dut_name="",
                         simulator="QUESTA",
                         verbosity="WARN"):
   """
@@ -62,11 +65,14 @@ def process_svunit_logs(sim_logfile="run.log",
   #---------------------------------------------------------
   if (simulator == "QUESTA"):
     comp_parser = svunit_questa_comp_log_parser(verbosity_level)
+    simlog_parser = svunit_questa_sim_log_parser(dut_name, verbosity_level)
   elif (simulator == "IRUN"):
     comp_logfile = sim_logfile
     comp_parser = svunit_ius_comp_log_parser(verbosity_level)
+    simlog_parser = svunit_ius_sim_log_parser(dut_name, verbosity_level)
   elif (simulator == "VCS"):
     comp_parser = svunit_comp_log_parser(verbosity_level)
+    simlog_parser = svunit_sim_log_parser(dut_name, verbosity_level)
 
   if (comp_parser.process_logfile(comp_logfile) == False):
     comp_parser.save_junit_xml(junit_outfile)
@@ -75,8 +81,6 @@ def process_svunit_logs(sim_logfile="run.log",
   # parse the simulator log
   #---------------------------------------------------------
   else:
-    simlog_parser = svunit_sim_log_parser(verbosity_level)
-
     simlog_parser.process_logfile(sim_logfile)
     simlog_parser.save_junit_xml(junit_outfile)
 
@@ -99,6 +103,9 @@ if __name__ == "__main__":
   parser.add_argument('--junit_outfile',
                       default="results.xml",
                       help='JUnit XML output file name')
+  parser.add_argument('--dut_name',
+                      default="",
+                      help='DUT name used in error messages')
   parser.add_argument('--simulator', '-s',
                       default="QUESTA",
                       choices=['QUESTA','IRUN','VCS'],
@@ -116,5 +123,6 @@ if __name__ == "__main__":
   process_svunit_logs(sim_logfile=args.sim_logfile,
                       comp_logfile=args.comp_logfile,
                       junit_outfile=args.junit_outfile,
+                      dut_name=args.dut_name,
                       simulator=args.simulator,
                       verbosity=args.verbosity)

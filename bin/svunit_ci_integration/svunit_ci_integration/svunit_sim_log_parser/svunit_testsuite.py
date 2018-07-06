@@ -47,9 +47,12 @@ class svunit_testsuite:
     
     Parameter: testname - string - unique test name
     """
-    self.test_case_dict[testname] = TestCase(testname)
+    if (testname not in self.test_case_dict):
+      self.test_case_dict[testname] = TestCase(testname)
+    else:
+      self.logger.warn("duplicate test name : "+testname)
 
-  def add_testcase_error(self, testname, error_timestamp, error_msg):
+  def add_testcase_error(self, testname, error_timestamp, error_msg, _file=None, _line=None):
     """
     Updates the error info of a test case
     
@@ -65,6 +68,9 @@ class svunit_testsuite:
       else:
         self.test_case_dict[testname].add_error_info(error_msg)
         self.test_case_dict[testname].timestamp = error_timestamp
+        self.test_case_dict[testname].file = "test file name"
+        self.test_case_dict[testname].line = 2352
+        
     else:
       self.logger.debug("skipping error: testname not found")
 

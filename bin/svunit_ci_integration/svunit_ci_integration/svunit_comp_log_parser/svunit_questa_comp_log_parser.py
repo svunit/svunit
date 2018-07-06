@@ -45,10 +45,13 @@ class svunit_questa_comp_log_parser(svunit_comp_log_parser):
     """
     Compiles the regular expressions that are used to parse the logfile
     """
-    self.regex_items['ERROR_MSG'] = re.compile('^\*\*\s+Error:\s+\((\S+)\).+\/(\w+\.\w+)\((\d+)\):\s*(.+)')
-    self.regex_items['FATAL_MSG'] = re.compile('^\*\*\s+Fatal:\s+\((\S+)\)(.+)')
+    self.regex_items['ERROR_MSG'] = re.compile('^\*\*\s+Error:\s*(.+)')
+    self.regex_items['FATAL_MSG'] = re.compile('^\*\*\s+Fatal:\s*(.+)')
     self.regex_items['COMPILE_RESULT'] = re.compile('^Errors:\s+(\d+),\s+Warnings:\s+(\d+)$')
 
+    # Error string sub-string parsing
+    self.regex_items['ERROR_IN_FILE_MSG'] = re.compile('.+\/(\w+\.\w+)\((\d+)\):\s*(.+)')
+    self.regex_items['ERROR_FILE_NOT_FOUND_MSG'] = re.compile('Failed to open .+ file \"(\S+)\" in read mode.')
   #-------------------------------------------------------------------
   # __init__
   #---------------------------------------------------------
@@ -69,7 +72,9 @@ class svunit_questa_comp_log_parser(svunit_comp_log_parser):
     parsing the log file.  The compile result ends the parsing
     for questa logs.
     """
-    self.error_message = "Build fatal message %s : %s" % (regex_search_result.group(1),regex_search_result.group(2))
+    
+    
+    self.error_message = "Build fatal message: %s" % (regex_search_result.group(1))
     return True
 
   #-------------------------------------------------------------------
@@ -83,7 +88,8 @@ class svunit_questa_comp_log_parser(svunit_comp_log_parser):
     parsing the log file.  The compile result ends the parsing
     for questa logs.
     """
-    self.error_message = "Build error message %s in file %s line %s : %s" % (regex_search_result.group(1),regex_search_result.group(2),regex_search_result.group(3),regex_search_result.group(4))
+    self.error_message = "Build error message: %s" %(regex_search_result.group(1))
+    #self.error_message = "Build error message %s in file %s line %s : %s" % (regex_search_result.group(1),regex_search_result.group(2),regex_search_result.group(3),regex_search_result.group(4))
     return True
 
   #-------------------------------------------------------------------

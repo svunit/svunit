@@ -60,6 +60,9 @@ class svunit_sim_log_parser:
 
     self.regex_items['SVUNIT_END'] = re.compile('^.*INFO:\s+\[\d+\]\[(\w+)\]:\s+(\w+)\s+\((\d+)\s+of\s+(\d+)\s+suites\s+passing\).+')
 
+    self.regex_items['SIM_FATAL'] = re.compile('^<<REPLACE WITH TOOL SPECIFIC REGEX FOR FATAL MESSAGES>>')
+    self.regex_items['UVM_FATAL'] = re.compile('^.*UVM_FATAL\s*(.+)')
+
   #-------------------------------------------------------------------
   # _setup_logger
   #---------------------------------------------------------
@@ -87,7 +90,7 @@ class svunit_sim_log_parser:
   #-------------------------------------------------------------------
   # __init__
   #---------------------------------------------------------
-  def __init__(self, debug_level=logging.WARN):
+  def __init__(self, _dut_name, _debug_level=logging.WARN):
     self.regex_items = {}
     self.regex_result = None
     self.test_suites = []
@@ -96,9 +99,10 @@ class svunit_sim_log_parser:
     self.current_test = ""
     self.suites_name = ""
     self.suites_errors = 0
+    self.dut_name = _dut_name
 
 
-    self._setup_logger(debug_level)
+    self._setup_logger(_debug_level)
     self._compile_regexs()
 
   #-------------------------------------------------------------------
@@ -125,13 +129,13 @@ class svunit_sim_log_parser:
     processing the simulation log occurs
     """
 
-    fake_test_case = TestCase(name='post_run_processing') # log?
+    fake_test_case = TestCase(name='post_run_processing '+self.dut_name) # log?
 
     if (failure_message == ""):
       failure_message = "Unknown failure, please check logs"
     fake_test_case.add_failure_info(failure_message)
 
-    self.test_suites = [TestSuite("SVUnit_post_processing", [fake_test_case])]
+    self.test_suites.append(TestSuite("SVUnit_post_processing "+self.dut_name, [fake_test_case]))
 
   #-------------------------------------------------------------------
   # _create_svunit_testsuite
@@ -163,14 +167,30 @@ class svunit_sim_log_parser:
     """
     Helper method to check the results reported by SVUnit match those captured in the testsuite
     """
-    if (_suite_name in self.testsuite_dict):
-      if (self.testsuite_dict[_suite_name].check_results(_suite_result, _passing_count, _total_count)):
-        test_case_list = self.testsuite_dict[_suite_name].get_testcases()
-        self.test_suites.append(TestSuite(_suite_name, test_case_list))
+    if (_suite_name not in self.testsuite_dict):
+      fake_test_name = "svunit_log_error"
+      self._create_svunit_testsuite(_suite_name)
+      self._create_testcase(_suite_name, fake_test_name)
+      self._add_testcase_error(_error_msg="Suite end message arrived for an unrecognised suite")
+      self._finalise_testcase(_suite_name=_suite_name, _test_name=fake_test_name, _test_result="FAILED")
 
-        # TODO: should we remove the items from the dictionary?
-      else:
-        self.logger.error("Test count results do not match for '%s'", _suite_name)
+    if (_suite_name in self.testsuite_dict):
+      if (self.testsuite_dict[_suite_name].check_results(_suite_result, _passing_count, _total_count) == False):
+        err_msg = "Test count results do not match for '%s'" % _suite_name
+        self.logger.info(err_msg)
+        
+        if (self.current_test != ""):
+          self._add_testcase_error(_error_msg="SVUNIT Log error: End of test not detected.")
+          self._finalise_testcase(_suite_name=_suite_name, _test_name=self.current_test, _test_result="FAILED")
+
+        self.current_test = "svunit_log_error"
+        self._create_testcase(_suite_name, self.current_test)
+        self._add_testcase_error(_error_msg=err_msg)
+        self._finalise_testcase(_suite_name=_suite_name, _test_name=self.current_test, _test_result="FAILED")
+
+      test_case_list = self.testsuite_dict[_suite_name].get_testcases()
+      self.test_suites.append(TestSuite(_suite_name, test_case_list))
+
     else:
       self.logger.error("Unregistered test suite '%s' reported finshed", _suite_name)
 
@@ -222,7 +242,7 @@ class svunit_sim_log_parser:
     if (curr_suite == ""):
       self.logger.debug("Error arrived outside an active suite. Using suites name")
       # Outside a suite, so we need to make a fake one
-      curr_suite = self.suites_name
+      curr_suite = self.dut_name
 
       if (curr_suite not in self.testsuite_dict):
         self._create_svunit_testsuite(curr_suite)
@@ -238,7 +258,9 @@ class svunit_sim_log_parser:
       self.testsuite_dict[curr_suite].add_testcase_error(testname=curr_test,
                                                          error_timestamp=_error_timestamp,
                                                          error_msg=_error_msg)
-    
+    if (self.current_test == ""):
+      self._finalise_testcase(_suite_name=curr_suite, _test_name=curr_test, _test_result="FAILED")
+
 
   #-------------------------------------------------------------------
   # _process_suites_register
@@ -352,7 +374,41 @@ class svunit_sim_log_parser:
     self.logger.debug("End of processing")
 
   #-------------------------------------------------------------------
-  # process_logfile
+  # _process_sim_fatal
+  #---------------------------------------------------------
+  def _process_sim_fatal(self, _regex_result):
+    """
+    Method to process the SIM_FATAL regex results
+    """
+    fatal_msg = "Simulator fatal message seen: %s" % (_regex_result.group(1))
+    self.logger.debug(fatal_msg)
+    self._add_testcase_error(fatal_msg)
+
+    if (self.current_suite != ""):
+      self._finalise_test_suite(_suite_name=self.current_suite,
+                                _suite_result="FAILED", 
+                                _passing_count=0, 
+                                _total_count=0)
+
+  #-------------------------------------------------------------------
+  # _process_uvm_fatal
+  #---------------------------------------------------------
+  def _process_uvm_fatal(self, _regex_result):
+    """
+    Method to process the UVM_FATAL regex results
+    """
+    fatal_msg = "UVM fatal message seen: %s" % (_regex_result.group(1))
+    self.logger.debug(fatal_msg)
+    self._add_testcase_error(fatal_msg)
+
+    if (self.current_suite != ""):
+      self._finalise_test_suite(_suite_name=self.current_suite,
+                                _suite_result="FAILED", 
+                                _passing_count=0, 
+                                _total_count=0)
+
+  #-------------------------------------------------------------------
+  # _parse_sim_logfile
   #---------------------------------------------------------
   def _parse_sim_logfile(self, fh):
     """
@@ -390,19 +446,31 @@ class svunit_sim_log_parser:
         self._process_svunit_end(self.regex_result)
         break
 
+      elif (self._parse_line(line, 'SIM_FATAL')):
+        self._process_sim_fatal(self.regex_result)
+        break
+
+      elif (self._parse_line(line, 'UVM_FATAL')):
+        self._process_uvm_fatal(self.regex_result)
+        break
+
   #-------------------------------------------------------------------
   # process_logfile
   #---------------------------------------------------------
-  def process_logfile(self, logfile):
+  def process_logfile(self, _logfile):
     """
     opens the logfile, processes the contents to populates the junit_xml classes
     """
     try:
-      with open(logfile, 'rU') as fh:
+      with open(_logfile, 'rU') as fh:
         self._parse_sim_logfile(fh)
 
     except IOError as exception:
-      error_msg = "Exception on opening the logfile '%s': %s" % (logfile, exception)
+      dut_name = self.dut_name
+      if (dut_name != ""):
+        dut_name = dut_name + " "
+      error_msg = "Exception on opening the %slogfile '%s': %s" % (dut_name, _logfile, exception)
+      
       self.logger.debug(error_msg)
       self._create_fake_results(error_msg)
 

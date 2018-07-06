@@ -67,7 +67,7 @@ class svunit_ius_comp_log_parser(svunit_comp_log_parser):
     captures the error message in a class variable, then returns false
     to stop the script from processing any further
     """
-    self.error_message = "Build fatal message %s : %s" % (regex_search_result.group(1),regex_search_result.group(2))
+    self.error_message = "Build fatal message: %s" % (regex_search_result.group(1))
     self.failure_message = "Build fatal messages found"
     return False
 
@@ -75,7 +75,7 @@ class svunit_ius_comp_log_parser(svunit_comp_log_parser):
   # _process_error_msg
   #---------------------------------------------------------
   def _process_error_msg(self, regex_search_result):
-    self.error_message = "Build error message %s : %s" % (regex_search_result.group(1),regex_search_result.group(2))
+    self.error_message = "Build error message: %s" % (regex_search_result.group(1))
     self.failure_message = "Build error messages found"
     return False
 
