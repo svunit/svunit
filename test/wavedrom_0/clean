@@ -1,4 +1,4 @@
-rm my_task.svh
+rm -rf my_task.svh
 rm -rf .*testsuite.sv \
        .testrunner.gold \
        .testrunner.gold.tmp \

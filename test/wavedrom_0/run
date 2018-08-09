@@ -1,9 +1,4 @@
-source ../test_functions.bsh
-
-setup
-
 # build the framework
-buildSVUnit
-
-# test the json output
-verify_file my_task.svh my_task.svh.gold
+#buildSVUnit
+#python $SVUNIT_INSTALL/bin/wavedrom.py
+python wavedrom-test.py
