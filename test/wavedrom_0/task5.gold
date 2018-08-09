@@ -1,0 +1,18 @@
+task task5(input logic [7:0] addr);
+  step();
+  nextSamplePoint();
+  psel = 'h0;
+  pwdata = 'hx;
+  paddr = 'hx;
+  step();
+  nextSamplePoint();
+  psel = 'h1;
+  pwdata = something;
+  paddr = addr;
+  step();
+  nextSamplePoint();
+  paddr = 'hx;
+  step();
+  nextSamplePoint();
+  pwdata = whack;
+endtask

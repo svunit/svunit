@@ -27,6 +27,7 @@ class WDMethod:
         self.name = ''
         self.clk = ''
         self.signal = []
+        self.input = []
         self.rawData = {}
         self.parse()
 
@@ -43,13 +44,21 @@ class WDMethod:
         # signals are anything that don't match 'p' in the wave
         self.signal = [ signal for signal in self.rawData['signal'] if not re.match('p', signal['wave']) ]
 
+        try:
+            self.input = self.rawData['input']
+        except KeyError:
+            pass
+
     def writeOutput(self):
         cycles = []
 
         ofile = open(self.ofile, 'w')
 
         # header
-        cycles.append('task %s();' % self.name)
+        if len(self.input) > 0:
+            cycles.append('task %s(%s);' % (self.name, ','.join( [ "input %s %s" % (_input['type'], _input['name']) for _input in self.input ] )))
+        else:
+            cycles.append('task %s();' % self.name)
 
         # build each clock cycle
         for i in range( 0, len(self.clk['wave']) ):
@@ -58,7 +67,9 @@ class WDMethod:
             # if a signal has a new value for this cycle, assign it
             for s in self.signal:
                 if self.isBinary(s['wave'][i]):
-                    thisCycle += "\n  %s = %s;" % (s['name'], s['wave'][i])
+                    thisCycle += "\n  %s = 'h%s;" % (s['name'], s['wave'][i])
+                elif self.isValue(s['wave'][i]):
+                    thisCycle += "\n  %s = %s;" % (s['name'], self.nextValue(s, i))
 
             cycles.append(thisCycle)
 
@@ -70,4 +81,10 @@ class WDMethod:
         ofile.close()
 
     def isBinary(self, value):
-        return value in [ "0", "1" ]
+        return value in [ "0", "1", "x", "X" ]
+
+    def isValue(self, value):
+        return value in [ "=" ]
+
+    def nextValue(self, signal, index):
+        return signal['data'].pop(0)

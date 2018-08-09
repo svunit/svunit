@@ -1,0 +1,8 @@
+{
+  "name": "task4",
+  "signal": [
+    {"name": "clk", "wave": "p..." },
+    {"name": "psel", "wave": "01.."},
+    {"name": "pwdata", "wave": "x=.=", "data": ["something", "whack"] }
+  ]
+}

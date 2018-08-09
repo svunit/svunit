@@ -8,8 +8,6 @@ from wavedromSVUnit import WD
 import re
 
 class BaseTest (unittest.TestCase):
-    ofile = ''
-
     def getWD(self, name):
         _wd = [ wd for wd in self.wd.method if re.match(name, wd.name) ]
         return _wd[0]
@@ -53,69 +51,39 @@ class ParseTests (BaseTest):
         assert self.getWave('task1', 'clk') == None
 
 class OutputTests (BaseTest):
-    tf = None
+    numOutputs = 99
 
     def fileAsArray(self, f):
         return [ l for l in f.read().split('\n') if l != '' ]
 
     def setUp(self):
         super().setUp()
-        if os.path.isfile('wavedrom.svh'):
-            self.ofile = open('wavedrom.svh', 'r')
 
-    def tearDown(self):
-        super().tearDown()
-        if os.path.isfile('wavedrom.svh'):
-            self.ofile.close()
-        if self.tf:
-            self.tf.close()
+        # figure out how many gold files there are
+        self.numOutputs = len([ f for f in os.listdir('.') if re.match('.*\.gold$', f) ])
 
     def testIncludeFileCreated(self):
-        assert self.ofile
+        assert os.path.isfile('wavedrom.svh')
 
-    def testFilesIncluded(self):
+        self.ofile = open('wavedrom.svh', 'r')
         includes = self.fileAsArray(self.ofile)
         includes.sort()
-        assert includes == ['`include "task0.svh"', '`include "task1.svh"', '`include "task2.svh"']
+        self.ofile.close()
 
-    def testTask0_noSignals(self):
-        self.tf = open('task0.svh', 'r')
-        tfStr = self.fileAsArray(self.tf)
+        assert includes == [ '`include "task%d.svh"' % i for i in range (0, self.numOutputs) ]
 
-        assert tfStr == [ "task task0();",
-                          "  step();",
-                          "  nextSamplePoint();",
-                          "  step();",
-                          "  nextSamplePoint();",
-                          "endtask" ]
+    def testGoldenTests(self):
+        for i in range(0, self.numOutputs):
+            with self.subTest(i = i):
+                tf = open('task%0d.svh' % i, 'r')
+                tfStr = self.fileAsArray(tf)
+                tf.close()
 
-    def testTask1_oneSignal(self):
-        self.tf = open('task1.svh', 'r')
-        tfStr = self.fileAsArray(self.tf)
- 
-        assert tfStr == [ "task task1();",
-                          "  step();",
-                          "  nextSamplePoint();",
-                          "  psel = 0;",
-                          "  step();",
-                          "  nextSamplePoint();",
-                          "  psel = 1;",
-                          "endtask" ]
+                tg = open('task%0d.gold' % i, 'r')
+                tfGold = self.fileAsArray(tg)
+                tg.close()
 
-    def testTask2_signalWithNoChange(self):
-        self.tf = open('task2.svh', 'r')
-        tfStr = self.fileAsArray(self.tf)
- 
-        assert tfStr == [ "task task2();",
-                          "  step();",
-                          "  nextSamplePoint();",
-                          "  psel = 0;",
-                          "  step();",
-                          "  nextSamplePoint();",
-                          "  psel = 1;",
-                          "  step();",
-                          "  nextSamplePoint();",
-                          "endtask" ]
+                assert tfStr == tfGold
         
 
 if __name__ == "__main__":

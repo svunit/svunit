@@ -1,0 +1,10 @@
+task task2();
+  step();
+  nextSamplePoint();
+  psel = 'h0;
+  step();
+  nextSamplePoint();
+  psel = 'h1;
+  step();
+  nextSamplePoint();
+endtask
