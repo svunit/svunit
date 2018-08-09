@@ -1,6 +1,0 @@
-{
-  name: 'my_task',
-  signal: [
-    {name: 'clk', wave: 'p.' },
-  ],
-}
