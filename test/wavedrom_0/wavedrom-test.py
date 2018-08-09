@@ -8,6 +8,8 @@ from wavedromSVUnit import WD
 import re
 
 class BaseTest (unittest.TestCase):
+    ofile = ''
+
     def getWD(self, name):
         _wd = [ wd for wd in self.wd.method if re.match(name, wd.name) ]
         return _wd[0]
@@ -23,8 +25,9 @@ class BaseTest (unittest.TestCase):
         return [ wd for wd in self.wd.method if re.match(name, wd.name) ][0]
 
     def setUp(self):
+        if os.path.isfile('wavedrom.svh'):
+            os.remove('wavedrom.svh')
         self.wd = WD()
-        self.wd.process()
 
     def tearDown(self):
         pass
@@ -39,6 +42,7 @@ class ParseTests (BaseTest):
         assert self.getWD('task0') != None
 
     def testGetSignalWave(self):
+        # wavedrom1 has name: 'task1'
         assert len(self.getWave('task1', 'psel')) == 2
         assert self.getWave('task1', 'psel') == '01'
 
@@ -47,6 +51,56 @@ class ParseTests (BaseTest):
 
     def testClockNotASignal(self):
         assert self.getWave('task1', 'clk') == None
+
+class OutputTests (BaseTest):
+    tf = None
+
+    def fileAsArray(self, f):
+        return [ l for l in f.read().split('\n') if l != '' ]
+
+    def setUp(self):
+        super().setUp()
+        if os.path.isfile('wavedrom.svh'):
+            self.ofile = open('wavedrom.svh', 'r')
+
+    def tearDown(self):
+        super().tearDown()
+        if os.path.isfile('wavedrom.svh'):
+            self.ofile.close()
+        if self.tf:
+            self.tf.close()
+
+    def testIncludeFileCreated(self):
+        assert self.ofile
+
+    def testFilesIncluded(self):
+        includes = self.fileAsArray(self.ofile)
+        includes.sort()
+        assert includes == ['`include "task0.svh"', '`include "task1.svh"']
+
+    def testTask0(self):
+        self.tf = open('task0.svh', 'r')
+        tfStr = self.fileAsArray(self.tf)
+
+        assert tfStr[0] == "task task0();"
+        assert tfStr[1] == "  step();"
+        assert tfStr[2] == "  nextSamplePoint();"
+        assert tfStr[3] == "  step();"
+        assert tfStr[4] == "  nextSamplePoint();"
+        assert tfStr[5] == "endtask"
+
+#   def testTask1(self):
+#       self.tf = open('task1.svh', 'r')
+#       tfStr = self.fileAsArray(self.tf)
+#
+#       assert tfStr[0] == "task task0();"
+#       assert tfStr[1] == "  step();"
+#       assert tfStr[2] == "  nextSamplePoint();"
+#       assert tfStr[3] == "  psel = 0;"
+#       assert tfStr[4] == "  step();"
+#       assert tfStr[5] == "  nextSamplePoint();"
+#       assert tfStr[6] == "  psel = 1;"
+#       assert tfStr[7] == "endtask"
         
 
 if __name__ == "__main__":
