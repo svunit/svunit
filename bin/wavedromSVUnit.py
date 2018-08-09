@@ -54,6 +54,12 @@ class WDMethod:
         # build each clock cycle
         for i in range( 0, len(self.clk['wave']) ):
             thisCycle = '  step();\n  nextSamplePoint();'
+
+            # if a signal has a new value for this cycle, assign it
+            for s in self.signal:
+                if self.isBinary(s['wave'][i]):
+                    thisCycle += "\n  %s = %s;" % (s['name'], s['wave'][i])
+
             cycles.append(thisCycle)
 
         # footer
@@ -62,3 +68,6 @@ class WDMethod:
         ofile.write('\n'.join(cycles))
 
         ofile.close()
+
+    def isBinary(self, value):
+        return value in [ "0", "1" ]

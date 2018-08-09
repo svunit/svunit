@@ -76,31 +76,46 @@ class OutputTests (BaseTest):
     def testFilesIncluded(self):
         includes = self.fileAsArray(self.ofile)
         includes.sort()
-        assert includes == ['`include "task0.svh"', '`include "task1.svh"']
+        assert includes == ['`include "task0.svh"', '`include "task1.svh"', '`include "task2.svh"']
 
-    def testTask0(self):
+    def testTask0_noSignals(self):
         self.tf = open('task0.svh', 'r')
         tfStr = self.fileAsArray(self.tf)
 
-        assert tfStr[0] == "task task0();"
-        assert tfStr[1] == "  step();"
-        assert tfStr[2] == "  nextSamplePoint();"
-        assert tfStr[3] == "  step();"
-        assert tfStr[4] == "  nextSamplePoint();"
-        assert tfStr[5] == "endtask"
+        assert tfStr == [ "task task0();",
+                          "  step();",
+                          "  nextSamplePoint();",
+                          "  step();",
+                          "  nextSamplePoint();",
+                          "endtask" ]
 
-#   def testTask1(self):
-#       self.tf = open('task1.svh', 'r')
-#       tfStr = self.fileAsArray(self.tf)
-#
-#       assert tfStr[0] == "task task0();"
-#       assert tfStr[1] == "  step();"
-#       assert tfStr[2] == "  nextSamplePoint();"
-#       assert tfStr[3] == "  psel = 0;"
-#       assert tfStr[4] == "  step();"
-#       assert tfStr[5] == "  nextSamplePoint();"
-#       assert tfStr[6] == "  psel = 1;"
-#       assert tfStr[7] == "endtask"
+    def testTask1_oneSignal(self):
+        self.tf = open('task1.svh', 'r')
+        tfStr = self.fileAsArray(self.tf)
+ 
+        assert tfStr == [ "task task1();",
+                          "  step();",
+                          "  nextSamplePoint();",
+                          "  psel = 0;",
+                          "  step();",
+                          "  nextSamplePoint();",
+                          "  psel = 1;",
+                          "endtask" ]
+
+    def testTask2_signalWithNoChange(self):
+        self.tf = open('task2.svh', 'r')
+        tfStr = self.fileAsArray(self.tf)
+ 
+        assert tfStr == [ "task task2();",
+                          "  step();",
+                          "  nextSamplePoint();",
+                          "  psel = 0;",
+                          "  step();",
+                          "  nextSamplePoint();",
+                          "  psel = 1;",
+                          "  step();",
+                          "  nextSamplePoint();",
+                          "endtask" ]
         
 
 if __name__ == "__main__":
