@@ -27,7 +27,7 @@ class WDMethod:
         self.name = ''
         self.clk = ''
         self.signal = []
-        self.arg = []
+        self.input = []
         self.rawData = {}
         self.parse()
 
@@ -45,7 +45,7 @@ class WDMethod:
         self.signal = [ signal for signal in self.rawData['signal'] if not re.match('p', signal['wave']) ]
 
         try:
-            self.arg = self.rawData['arg']
+            self.input = self.rawData['input']
         except KeyError:
             pass
 
@@ -56,8 +56,8 @@ class WDMethod:
         ofile = open(self.ofile, 'w')
 
         # header
-        if len(self.arg) > 0:
-            cycles.append('task %s(%s);' % (self.name, ','.join( [ "input %s %s" % (_arg['type'], _arg['name']) for _arg in self.arg ] )))
+        if len(self.input) > 0:
+            cycles.append('task %s(%s);' % (self.name, ','.join( [ "input %s %s" % (_input['type'], _input['name']) for _input in self.input ] )))
         else:
             cycles.append('task %s();' % self.name)
 

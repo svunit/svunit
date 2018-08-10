@@ -7,7 +7,7 @@
     {"name": "paddr",   "wave": "x|=x.|x"  , "data": ["addr"] },
     {"name": "pready",  "wave": "0|...10"  , "input": "True"}
   ],
-  "arg": [
+  "input": [
     {"name": "addr", "type": "logic [7:0]"}
   ]
 }

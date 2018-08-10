@@ -6,7 +6,7 @@
     {"name": "pwdata", "wave": "x|=.=", "data": ["something", "whack"] },
     {"name": "paddr", "wave": "x|=x.", "data": ["addr"] }
   ],
-  "arg": [
+  "input": [
     {"name": "addr", "type": "logic [7:0]"}
   ]
 }
