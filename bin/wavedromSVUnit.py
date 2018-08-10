@@ -52,7 +52,6 @@ class WDMethod:
     def writeOutput(self):
         cycles = []
         lastStep = False
-        skipStep = 0
 
         ofile = open(self.ofile, 'w')
 
@@ -72,25 +71,22 @@ class WDMethod:
                     thisCycle += self.step("$urandom_range(%s,%s)" % (bounds[0], bounds[1]))
                 elif self.isConditionDelay(self.clk['wait'][0]):
                     thisCycle += self.step("!(%s)" % self.clk['wait'].pop(0)['condition'], 'while')
-                    skipStep = 2
             else:
-                if lastStep or skipStep > 0:
+                if lastStep:
                     lastStep = False
-                    skipStep -= int(skipStep > 0)
                 else:
                     thisCycle += self.step()
 
                 # if a signal has a new value for this cycle, assign it
-                if skipStep == 0:
-                    for s in self.signal:
-                        if 'input' in s:
-                            if s['input']:
-                                break
+                for s in self.signal:
+                    if 'input' in s:
+                        if s['input']:
+                            break
 
-                        if self.isBinary(s['wave'][i]):
-                            thisCycle += "\n  %s = 'h%s;" % (s['name'], s['wave'][i])
-                        elif self.isValue(s['wave'][i]):
-                            thisCycle += "\n  %s = %s;" % (s['name'], s['data'].pop(0))
+                    if self.isBinary(s['wave'][i]):
+                        thisCycle += "\n  %s = 'h%s;" % (s['name'], s['wave'][i])
+                    elif self.isValue(s['wave'][i]):
+                        thisCycle += "\n  %s = %s;" % (s['name'], s['data'].pop(0))
 
             if thisCycle != '':
                 cycles.append(thisCycle)
