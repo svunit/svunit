@@ -1,0 +1,17 @@
+{
+  "name": "write",
+  "signal": [
+    {"name": "clk", "wave": "p..|."  , "wait": [ {"condition":"pready==1"} ] },
+
+    {"name": "psel", "wave": "01.|0"},
+    {"name": "penable", "wave": "0.1|0"},
+    {"name": "paddr", "wave": "x=.|x", "data": ["paddr"] },
+    {"name": "pwrite", "wave": "x1.|x"},
+    {"name": "pwdata", "wave": "x=.|x", "data": ["pwdata"] },
+    {"name": "pready", "wave": "0..10", "input": "True"}
+  ],
+  "arg": [
+    {"name": "paddr", "type": "logic [7:0]"},
+    {"name": "pwdata", "type": "logic [31:0]"}
+  ]
+}
