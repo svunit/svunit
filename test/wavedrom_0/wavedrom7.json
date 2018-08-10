@@ -1,0 +1,13 @@
+{
+  "name": "task7",
+  "signal": [
+    {"name": "clk", "wave": "p|...|..", "wait": [ {"delay": ["8", "12"]}, {"condition":"pready==1"} ] },
+    {"name": "psel", "wave": "0|1..|.0"},
+    {"name": "pwdata", "wave": "x|=.=|.x", "data": ["something", "whack"] },
+    {"name": "paddr", "wave": "x|=x.|.x", "data": ["addr"] },
+    {"name": "pready", "wave": "0|...|10", "input": "True"}
+  ],
+  "arg": [
+    {"name": "addr", "type": "logic [7:0]"}
+  ]
+}

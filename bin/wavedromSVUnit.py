@@ -27,7 +27,7 @@ class WDMethod:
         self.name = ''
         self.clk = ''
         self.signal = []
-        self.input = []
+        self.arg = []
         self.rawData = {}
         self.parse()
 
@@ -45,33 +45,55 @@ class WDMethod:
         self.signal = [ signal for signal in self.rawData['signal'] if not re.match('p', signal['wave']) ]
 
         try:
-            self.input = self.rawData['input']
+            self.arg = self.rawData['arg']
         except KeyError:
             pass
 
     def writeOutput(self):
         cycles = []
+        lastStep = False
+        skipStep = 0
 
         ofile = open(self.ofile, 'w')
 
         # header
-        if len(self.input) > 0:
-            cycles.append('task %s(%s);' % (self.name, ','.join( [ "input %s %s" % (_input['type'], _input['name']) for _input in self.input ] )))
+        if len(self.arg) > 0:
+            cycles.append('task %s(%s);' % (self.name, ','.join( [ "input %s %s" % (_arg['type'], _arg['name']) for _arg in self.arg ] )))
         else:
             cycles.append('task %s();' % self.name)
 
         # build each clock cycle
         for i in range( 0, len(self.clk['wave']) ):
-            thisCycle = '  step();\n  nextSamplePoint();'
+            thisCycle = ''
+            if self.isWait(self.clk['wave'][i]):
+                lastStep = True
+                if self.isRangeDelay(self.clk['wait'][0]):
+                    bounds = self.clk['wait'].pop(0)['delay']
+                    thisCycle += self.step("$urandom_range(%s,%s)" % (bounds[0], bounds[1]))
+                elif self.isConditionDelay(self.clk['wait'][0]):
+                    thisCycle += self.step("!(%s)" % self.clk['wait'].pop(0)['condition'], 'while')
+                    skipStep = 2
+            else:
+                if lastStep or skipStep > 0:
+                    lastStep = False
+                    skipStep -= int(skipStep > 0)
+                else:
+                    thisCycle += self.step()
 
-            # if a signal has a new value for this cycle, assign it
-            for s in self.signal:
-                if self.isBinary(s['wave'][i]):
-                    thisCycle += "\n  %s = 'h%s;" % (s['name'], s['wave'][i])
-                elif self.isValue(s['wave'][i]):
-                    thisCycle += "\n  %s = %s;" % (s['name'], self.nextValue(s, i))
+                # if a signal has a new value for this cycle, assign it
+                if skipStep == 0:
+                    for s in self.signal:
+                        if 'input' in s:
+                            if s['input']:
+                                break
 
-            cycles.append(thisCycle)
+                        if self.isBinary(s['wave'][i]):
+                            thisCycle += "\n  %s = 'h%s;" % (s['name'], s['wave'][i])
+                        elif self.isValue(s['wave'][i]):
+                            thisCycle += "\n  %s = %s;" % (s['name'], s['data'].pop(0))
+
+            if thisCycle != '':
+                cycles.append(thisCycle)
 
         # footer
         cycles.append('endtask')
@@ -86,5 +108,22 @@ class WDMethod:
     def isValue(self, value):
         return value in [ "=" ]
 
-    def nextValue(self, signal, index):
-        return signal['data'].pop(0)
+    def isWait(self, value):
+        return value in [ "|" ]
+
+    def step(self, num='1', loop='repeat'):
+        step = ''
+        step += '%sstep();\n' % ('  ' * (1 + int(num != '1')))
+        step += '%snextSamplePoint();' % ('  ' * (1 + int(num != '1')))
+        if num != '1':
+            step = '  %s (%s) begin\n' % (loop, num) + step + '\n  end'
+        return step
+
+    def isRangeDelay(self, wait):
+        if list(wait.keys())[0] == 'delay':
+            return len(wait['delay']) == 2
+        else:
+            return False
+
+    def isConditionDelay(self, wait):
+        return list(wait.keys())[0] == 'condition'

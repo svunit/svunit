@@ -1,12 +1,12 @@
 {
-  "name": "task5",
+  "name": "task6",
   "signal": [
-    {"name": "clk", "wave": "p|...", "delay":[ ["8", "12"] ] },
+    {"name": "clk", "wave": "p|...", "wait": [ {"delay": ["8", "12"]} ] },
     {"name": "psel", "wave": "0|1.."},
     {"name": "pwdata", "wave": "x|=.=", "data": ["something", "whack"] },
     {"name": "paddr", "wave": "x|=x.", "data": ["addr"] }
   ],
-  "input": [
+  "arg": [
     {"name": "addr", "type": "logic [7:0]"}
   ]
 }
