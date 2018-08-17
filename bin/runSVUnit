@@ -42,6 +42,7 @@ my $simulator;
 my @defines;
 my @filelists;
 my $uvm;
+my $wavedrom;
 my @simargs;
 my @compileargs;
 my $outdir = ".";
@@ -63,6 +64,7 @@ sub usage () {
   print "  -o|--out                 : output directory for tmp and simulation files\n";
   print "  -t|--test                : specifies a unit test to run (multiple can be given)\n";
   print "  -m|--mixedsim <vhdlfile> : consolidated file list with VHDL files and command line switches\n";
+  print "  -w|--wavedrom            : process json files as wavedrom output\n";
   print "  -h|--help                : prints this help screen\n";
   print "\n";
   exit 1;
@@ -94,6 +96,7 @@ GetOptions("l|log=s" => \$logfile,
            "o|out=s" => \$outdir,
            "m|mixedsim=s" => \$vhdlfile,
            "t|test=s{,}" => \@tests,
+           "w|wavedrom" => \$wavedrom,
            "h|help" => \$help
            ) or usage();
 
@@ -163,6 +166,7 @@ foreach (@tests) {
   $build_cmd .= " -t $_";
 }
 $build_cmd .= " --uvm" if $uvm;
+$build_cmd .= " --wavedrom" if $wavedrom;
 
 # include mock package for UVM compilation
 if (defined $uvm) {

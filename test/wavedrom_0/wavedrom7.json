@@ -1,13 +1,14 @@
 {
   "name": "task7",
   "signal": [
-    {"name": "clk",     "wave": "p|...|."  , "wait": [ {"delay": ["8", "12"]}, {"condition":"pready==1"} ] },
+    {"name": "clk",     "wave": "p|...|."  , "node": ".ab...d"},
     {"name": "psel",    "wave": "0|1..|0"   },
     {"name": "pwdata",  "wave": "x|=.=|x"  , "data": ["something", "whack"] },
     {"name": "paddr",   "wave": "x|=x.|x"  , "data": ["addr"] },
-    {"name": "pready",  "wave": "0|...10"  , "input": "True"}
+    {"name": "pready",  "wave": "0|...10"  , "input": "True", "node": ".....c"}
   ],
   "input": [
     {"name": "addr", "type": "logic [7:0]"}
-  ]
+  ],
+  "edge": ["a->b 8,12", "c->d pready==1"]
 }

@@ -28,6 +28,7 @@ class WDMethod:
         self.clk = ''
         self.signal = []
         self.input = []
+        self.edge = []
         self.rawData = {}
         self.parse()
 
@@ -49,6 +50,11 @@ class WDMethod:
         except KeyError:
             pass
 
+        try:
+            self.edge = self.rawData['edge']
+        except KeyError:
+            pass
+
     def writeOutput(self):
         cycles = []
         lastStep = False
@@ -66,11 +72,7 @@ class WDMethod:
             thisCycle = ''
             if self.isWait(self.clk['wave'][i]):
                 lastStep = True
-                if self.isRangeDelay(self.clk['wait'][0]):
-                    bounds = self.clk['wait'].pop(0)['delay']
-                    thisCycle += self.step("$urandom_range(%s,%s)" % (bounds[0], bounds[1]))
-                elif self.isConditionDelay(self.clk['wait'][0]):
-                    thisCycle += self.step("!(%s)" % self.clk['wait'].pop(0)['condition'], 'while')
+                thisCycle += self.getWaitFor(i)
             else:
                 if lastStep:
                     lastStep = False
@@ -123,3 +125,19 @@ class WDMethod:
 
     def isConditionDelay(self, wait):
         return list(wait.keys())[0] == 'condition'
+
+    def getWaitFor(self, nodeIdx):
+        if self.clk['node'][nodeIdx] == '.':
+            cond = [ e for e in self.edge if re.match('.->%s' % self.clk['node'][nodeIdx+1], e) ][0]
+            cond = re.sub('.* ', '', cond)
+            return self.step("!(%s)" % cond, 'while')
+        else:
+            cond = [ e for e in self.edge if re.match('.->%s' % self.clk['node'][nodeIdx+1], e) ][0]
+            cond = re.sub('.* ', '', cond)
+            return self.step("$urandom_range(%s)" % cond)
+
+        
+
+if __name__ == "__main__":
+    print ("Info: Writing wavedrom output.")
+    wd = WD()

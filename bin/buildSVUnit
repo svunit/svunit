@@ -41,6 +41,7 @@ my $outdir = ".";
 my @tests;
 my $mock;
 my $uvm;
+my $wavedrom;
 my $help;
 
 
@@ -55,6 +56,7 @@ sub usage() {
   print "  -t|--test                : specifies a unit test to run (multiple can be given)\n";
   print "  -m|--mock                : includes the uvm_mock_pkg to the final build file\n";
   print "  -U|--uvm                 : build SVUnit with UVM\n";
+  print "  -w|--wavedrom            : process json files as wavedrom output\n";
   print "  -h|--help                : prints this help screen\n";
   print "\n";
   exit 1;
@@ -176,6 +178,7 @@ GetOptions("o|out=s" => \$outdir,
            "t|test=s" => \@tests,
            "m|mock" => \$mock,
            "U|uvm" => \$uvm,
+           "w|wavedrom" => \$wavedrom,
            "h|help" => \$help
            ) or usage();
 
@@ -196,6 +199,9 @@ if (defined $mock) {
 if ($uvm) {
   $FILELIST->print("+incdir+$ENV{SVUNIT_INSTALL}/svunit_base/uvm-mock\n");
   $FILELIST->print("$ENV{SVUNIT_INSTALL}/svunit_base/uvm-mock/svunit_uvm_mock_pkg.sv\n");
+}
+if ($wavedrom) {
+  system("python3 $ENV{SVUNIT_INSTALL}/bin/wavedromSVUnit.py");
 }
 
 getFilelists;
