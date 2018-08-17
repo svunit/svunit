@@ -10,5 +10,5 @@
   "input": [
     {"name": "addr", "type": "logic [7:0]"}
   ],
-  "edge": ["a->b 8,12", "c->d pready==1"]
+  "edge": ["a~>b 8,12", "c<-|d pready==1"]
 }

@@ -29,6 +29,7 @@ class WDMethod:
         self.signal = []
         self.input = []
         self.edge = []
+        self.edgeTypes = '[<>~\-|]+'
         self.rawData = {}
         self.parse()
 
@@ -57,7 +58,6 @@ class WDMethod:
 
     def writeOutput(self):
         cycles = []
-        lastStep = False
 
         ofile = open(self.ofile, 'w')
 
@@ -70,26 +70,26 @@ class WDMethod:
         # build each clock cycle
         for i in range( 0, len(self.clk['wave']) ):
             thisCycle = ''
-            if self.isWait(self.clk['wave'][i]):
-                lastStep = True
+
+            waitThisCycle = self.isWait(self.clk['wave'][i])
+            waitLastCycle = self.isWait(self.clk['wave'][i-1])
+            waitBothCycles = waitThisCycle and waitLastCycle
+            waitNeitherCycle = not (waitThisCycle or waitLastCycle)
+
+            if not (waitThisCycle or waitLastCycle):
+                thisCycle += self.step()
+                thisCycle += self.writeSignals(i)
+
+            elif waitThisCycle and not waitLastCycle:
                 thisCycle += self.getWaitFor(i)
-            else:
-                if lastStep:
-                    lastStep = False
-                else:
-                    thisCycle += self.step()
 
-                # if a signal has a new value for this cycle, assign it
-                for s in self.signal:
-                    if 'input' in s:
-                        if s['input']:
-                            break
+            elif waitLastCycle and not waitThisCycle:
+                thisCycle += self.writeSignals(i)
 
-                    if self.isBinary(s['wave'][i]):
-                        thisCycle += "\n  %s = 'h%s;" % (s['name'], s['wave'][i])
-                    elif self.isValue(s['wave'][i]):
-                        thisCycle += "\n  %s = %s;" % (s['name'], s['data'].pop(0))
-
+            elif waitLastCycle and waitThisCycle:
+                thisCycle += self.writeSignals(i)
+                thisCycle += self.getWaitFor(i)
+ 
             if thisCycle != '':
                 cycles.append(thisCycle)
 
@@ -99,6 +99,21 @@ class WDMethod:
         ofile.write('\n'.join(cycles))
 
         ofile.close()
+
+    def writeSignals(self, idx):
+        _thisCycle = ''
+        # if a signal has a new value for this cycle, assign it
+        for s in self.signal:
+            if 'input' in s:
+                if s['input']:
+                    break
+
+            if self.isBinary(s['wave'][idx]):
+                _thisCycle += "\n  %s = 'h%s;" % (s['name'], s['wave'][idx])
+            elif self.isValue(s['wave'][idx]):
+                _thisCycle += "\n  %s = %s;" % (s['name'], s['data'].pop(0))
+
+        return _thisCycle
 
     def isBinary(self, value):
         return value in [ "0", "1", "x", "X" ]
@@ -117,23 +132,12 @@ class WDMethod:
             step = '  %s (%s) begin\n' % (loop, num) + step + '\n  end'
         return step
 
-    def isRangeDelay(self, wait):
-        if list(wait.keys())[0] == 'delay':
-            return len(wait['delay']) == 2
-        else:
-            return False
-
-    def isConditionDelay(self, wait):
-        return list(wait.keys())[0] == 'condition'
-
     def getWaitFor(self, nodeIdx):
+        cond = [ e for e in self.edge if re.match('.%s%s' % (self.edgeTypes, self.clk['node'][nodeIdx+1]), e) ][0]
+        cond = re.sub('.* ', '', cond)
         if self.clk['node'][nodeIdx] == '.':
-            cond = [ e for e in self.edge if re.match('.->%s' % self.clk['node'][nodeIdx+1], e) ][0]
-            cond = re.sub('.* ', '', cond)
             return self.step("!(%s)" % cond, 'while')
         else:
-            cond = [ e for e in self.edge if re.match('.->%s' % self.clk['node'][nodeIdx+1], e) ][0]
-            cond = re.sub('.* ', '', cond)
             return self.step("$urandom_range(%s)" % cond)
 
         
