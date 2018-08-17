@@ -1,4 +1,5 @@
 rm -rf my_task.svh \
        *.svh \
-       run.history
+       run.history \
+       write.svh
 cleanSVUnit

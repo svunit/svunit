@@ -63,9 +63,9 @@ class WDMethod:
 
         # header
         if len(self.input) > 0:
-            cycles.append('task %s(%s);' % (self.name, ','.join( [ "input %s %s" % (_input['type'], _input['name']) for _input in self.input ] )))
+            cycles.append('task %s(%s);\n' % (self.name, ','.join( [ "input %s %s" % (_input['type'], _input['name']) for _input in self.input ] )))
         else:
-            cycles.append('task %s();' % self.name)
+            cycles.append('task %s();\n' % self.name)
 
         # build each clock cycle
         for i in range( 0, len(self.clk['wave']) ):
@@ -96,7 +96,7 @@ class WDMethod:
         # footer
         cycles.append('endtask')
 
-        ofile.write('\n'.join(cycles))
+        ofile.write(''.join(cycles))
 
         ofile.close()
 
@@ -109,9 +109,9 @@ class WDMethod:
                     break
 
             if self.isBinary(s['wave'][idx]):
-                _thisCycle += "\n  %s = 'h%s;" % (s['name'], s['wave'][idx])
+                _thisCycle += "  %s = 'h%s;\n" % (s['name'], s['wave'][idx])
             elif self.isValue(s['wave'][idx]):
-                _thisCycle += "\n  %s = %s;" % (s['name'], s['data'].pop(0))
+                _thisCycle += "  %s = %s;\n" % (s['name'], s['data'].pop(0))
 
         return _thisCycle
 
@@ -127,9 +127,9 @@ class WDMethod:
     def step(self, num='1', loop='repeat'):
         step = ''
         step += '%sstep();\n' % ('  ' * (1 + int(num != '1')))
-        step += '%snextSamplePoint();' % ('  ' * (1 + int(num != '1')))
+        step += '%snextSamplePoint();\n' % ('  ' * (1 + int(num != '1')))
         if num != '1':
-            step = '  %s (%s) begin\n' % (loop, num) + step + '\n  end'
+            step = '  %s (%s) begin\n' % (loop, num) + step + '  end\n'
         return step
 
     def getWaitFor(self, nodeIdx):
