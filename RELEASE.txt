@@ -260,3 +260,7 @@ v3.29
 v3.30
 -----
 * pull https://github.com/tudortimi/svunit-code.git fix_uvm_build
+
+v3.31
+-----
+* merge wavedrom
