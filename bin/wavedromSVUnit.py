@@ -28,6 +28,7 @@ class WDMethod:
         self.clk = ''
         self.signal = []
         self.input = []
+        self.output = []
         self.edge = []
         self.edgeTypes = '[<>~\-|]+'
         self.rawData = {}
@@ -52,6 +53,11 @@ class WDMethod:
             pass
 
         try:
+            self.output = self.rawData['output']
+        except KeyError:
+            pass
+
+        try:
             self.edge = self.rawData['edge']
         except KeyError:
             pass
@@ -62,8 +68,14 @@ class WDMethod:
         ofile = open(self.ofile, 'w')
 
         # header
-        if len(self.input) > 0:
-            cycles.append('task %s(%s);\n' % (self.name, ','.join( [ "input %s %s" % (_input['type'], _input['name']) for _input in self.input ] )))
+        if len(self.input) + len(self.output) > 0:
+            if len(self.input) > 0:
+              io = [ "input %s %s" % (_input['type'], _input['name']) for _input in self.input ]
+
+            if len(self.output) > 0:
+              io += [ "output %s %s" % (_output['type'], _output['name']) for _output in self.output ]
+
+            cycles.append('task %s(%s);\n' % (self.name, ','.join(io)))
         else:
             cycles.append('task %s();\n' % self.name)
 
