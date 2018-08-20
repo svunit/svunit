@@ -53,6 +53,10 @@ declare -a util_tests
 util_tests=`ls -d util_*`
 run_testlist util_tests[@]
 
+declare -a wavedrom_tests
+wavedrom_tests=`ls -d wavedrom_*`
+run_testlist wavedrom_tests[@]
+
 
 if [ "$pass" == "1" ]; then
   echo ----------------------------------
