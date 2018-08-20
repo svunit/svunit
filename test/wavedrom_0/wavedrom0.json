@@ -1,0 +1,6 @@
+{
+  "name": "task0",
+  "signal": [
+    {"name": "clk", "wave": "p." }
+  ]
+}

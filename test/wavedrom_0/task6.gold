@@ -1,0 +1,20 @@
+task task6(input logic [7:0] addr);
+  step();
+  nextSamplePoint();
+  psel = 'h0;
+  pwdata = 'hx;
+  paddr = 'hx;
+  repeat ($urandom_range(8,12)) begin
+    step();
+    nextSamplePoint();
+  end
+  psel = 'h1;
+  pwdata = something;
+  paddr = addr;
+  step();
+  nextSamplePoint();
+  paddr = 'hx;
+  step();
+  nextSamplePoint();
+  pwdata = whack;
+endtask

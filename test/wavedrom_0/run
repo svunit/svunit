@@ -1,0 +1,4 @@
+# build the framework
+#buildSVUnit
+#python $SVUNIT_INSTALL/bin/wavedrom.py
+python3 wavedrom-test.py

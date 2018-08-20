@@ -1,0 +1,15 @@
+task task4();
+  step();
+  nextSamplePoint();
+  psel = 'h0;
+  pwdata = 'hx;
+  step();
+  nextSamplePoint();
+  psel = 'h1;
+  pwdata = something;
+  step();
+  nextSamplePoint();
+  step();
+  nextSamplePoint();
+  pwdata = whack;
+endtask

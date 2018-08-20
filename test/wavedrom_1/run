@@ -1,0 +1,14 @@
+source ../test_functions.bsh
+
+setup
+
+set_simulators
+
+for s in ${SVUNIT_SIMULATORS[@]}; do
+  runSVUnit -s $s -w
+
+  # check the log output for a PASS from the testrunner
+  expect_testrunner_pass run.log
+done
+
+exit 0
