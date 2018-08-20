@@ -17,7 +17,7 @@ task task9(input logic [7:0] addr, output logic [31:0] data);
     step();
     nextSamplePoint();
   end
+  data = prdata;
   psel = 'h0;
   paddr = 'hx;
-  data = prdata;
 endtask

@@ -75,7 +75,7 @@ class WDMethod:
             if len(self.output) > 0:
               io += [ "output %s %s" % (_output['type'], _output['name']) for _output in self.output ]
 
-            cycles.append('task %s(%s);\n' % (self.name, ','.join(io)))
+            cycles.append('task %s(%s);\n' % (self.name, ', '.join(io)))
         else:
             cycles.append('task %s();\n' % self.name)
 
@@ -101,6 +101,8 @@ class WDMethod:
             elif waitLastCycle and waitThisCycle:
                 thisCycle += self.writeSignals(i)
                 thisCycle += self.getWaitFor(i)
+
+            thisCycle += self.captureOutputs(i)
  
             if thisCycle != '':
                 cycles.append(thisCycle)
@@ -116,14 +118,24 @@ class WDMethod:
         _thisCycle = ''
         # if a signal has a new value for this cycle, assign it
         for s in self.signal:
-            if 'input' in s:
-                if s['input']:
-                    break
+            if 'input' in s and s['input']:
+              break
 
-            if self.isBinary(s['wave'][idx]):
-                _thisCycle += "  %s = 'h%s;\n" % (s['name'], s['wave'][idx])
-            elif self.isValue(s['wave'][idx]):
-                _thisCycle += "  %s = %s;\n" % (s['name'], s['data'].pop(0))
+            else:
+              if self.isBinary(s['wave'][idx]):
+                  _thisCycle += "  %s = 'h%s;\n" % (s['name'], s['wave'][idx])
+              elif self.isValue(s['wave'][idx]):
+                  _thisCycle += "  %s = %s;\n" % (s['name'], s['data'].pop(0))
+
+        return _thisCycle
+
+    def captureOutputs(self, idx):
+        _thisCycle = ''
+
+        for s in self.signal:
+            if 'output' in s and s['output']:
+                if self.isValue(s['wave'][idx]):
+                    _thisCycle += "  %s = %s;\n" % (s['data'].pop(0), s['name'])
 
         return _thisCycle
 
