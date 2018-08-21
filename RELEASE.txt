@@ -268,3 +268,7 @@ v3.31
 v3.32
 -----
 * updated the license headers b/c they were from a bad initial copy paste
+
+v3.33
+-----
+* wavedrom update to handle task outputs
