@@ -264,3 +264,7 @@ v3.30
 v3.31
 -----
 * merge wavedrom
+
+v3.32
+-----
+* updated the license headers b/c they were from a bad initial copy paste
