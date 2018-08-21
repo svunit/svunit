@@ -134,7 +134,7 @@ class WDMethod:
 
         for s in self.signal:
             if 'output' in s and s['output']:
-                if self.isValue(s['wave'][idx]):
+                if self.isValue(s['wave'][idx-1]):
                     _thisCycle += "  %s = %s;\n" % (s['data'].pop(0), s['name'])
 
         return _thisCycle
