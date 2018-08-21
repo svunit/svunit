@@ -1,0 +1,17 @@
+{
+  "name": "task10",
+  "signal": [
+    {"name": "clk",     "wave": "p|....."  , "node": ".ab"},
+    {"name": "psel",    "wave": "0.1...0"   },  
+    {"name": "paddr",   "wave": "x.=...x"  , "data": ["addr"] },
+    {"name": "pready",  "wave": "0....10"  , "input": "True"},
+    {"name": "prdata",  "wave": "x....=x"  , "output": "True", "data": ["data"] }
+  ],  
+  "input": [
+    {"name": "addr", "type": "logic [7:0]"}
+  ],
+  "output": [
+    {"name": "data", "type": "logic [31:0]"}
+  ],  
+  "edge": ["a~>b 8,12"]
+}
