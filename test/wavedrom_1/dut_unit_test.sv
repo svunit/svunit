@@ -20,11 +20,14 @@ module dut_unit_test;
   logic [7:0] paddr;
   logic pwrite;
   logic [31:0] pwdata;
+  logic [31:0] prdata;
   logic pready;
 
   dut uut();
 
   `include "write.svh"
+  `include "read.svh"
+  `include "readish.svh"
 
   //===================================
   // Build
@@ -41,6 +44,7 @@ module dut_unit_test;
     svunit_ut.setup();
     /* Place Setup Code Here */
     pready = 0;
+    prdata = 'hx;
   endtask
 
 
@@ -55,7 +59,7 @@ module dut_unit_test;
   endtask
 
   always @(negedge clk) begin
-    $display("%0b %0b 0x%0x %0b 0x%0x %0b", psel, penable, paddr, pwrite, pwdata, pready);
+    $display("%0b %0b 0x%0x %0b 0x%0x 0x%0x %0b", psel, penable, paddr, pwrite, pwdata, prdata, pready);
   end
 
   //===================================
@@ -77,7 +81,7 @@ module dut_unit_test;
     fork
       begin
         write('h11, 'h99);
-        step(10);
+        step(5);
       end
       begin
         #1;
@@ -89,6 +93,54 @@ module dut_unit_test;
         #1 pready = 1;
         @(posedge clk);
         #1 pready = 0;
+      end
+    join
+  `SVTEST_END
+
+  `SVTEST(_read)
+    logic [31:0] data;
+    fork
+      begin
+        read('h11, data);
+        `FAIL_UNLESS(data === 'h99);
+        step(5);
+      end
+      begin
+        #1;
+        while ((penable && psel) !== 1) begin
+          @(posedge clk);
+          #1;
+        end
+        @(posedge clk);
+        #1 pready = 1;
+           prdata = 'h99;
+        @(posedge clk);
+        #1 pready = 0;
+           prdata = 'hx;
+      end
+    join
+  `SVTEST_END
+
+  `SVTEST(_readish)
+    logic [31:0] data;
+    fork
+      begin
+        readish('h11, data);
+        `FAIL_UNLESS(data === 'h88);
+        step(5);
+      end
+      begin
+        #1;
+        while ((penable && psel) !== 1) begin
+          @(posedge clk);
+          #1;
+        end
+        repeat (2) @(posedge clk);
+        #1 pready = 1;
+           prdata = 'h88;
+        @(posedge clk);
+        #1 pready = 0;
+           prdata = 'hx;
       end
     join
   `SVTEST_END
