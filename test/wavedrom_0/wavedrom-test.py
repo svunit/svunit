@@ -70,7 +70,10 @@ class OutputTests (BaseTest):
         includes.sort()
         self.ofile.close()
 
-        assert includes == [ '`include "task%d.svh"' % i for i in range (0, self.numOutputs) ]
+        actuals = [ '`include "task%d.svh"' % i for i in range (0, self.numOutputs) ]
+        actuals.sort()
+
+        assert includes == actuals
 
     def testGoldenTests(self):
         for i in range(0, self.numOutputs):
