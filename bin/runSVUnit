@@ -3,13 +3,13 @@
 ############################################################################
 #
 #  Copyright 2011 XtremeEDA Corp.
-#  
+#
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
 #  You may obtain a copy of the License at
-#  
+#
 #      http://www.apache.org/licenses/LICENSE-2.0
-#  
+#
 #  Unless required by applicable law or agreed to in writing, software
 #  distributed under the License is distributed on an "AS IS" BASIS,
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -51,7 +51,7 @@ my $help;
 sub usage () {
   print "Usage:  runSVUnit -s|--sim <simulator> [-l|--log <log> -d|--define <macro> -f|--filelist <file> -U|-uvm -m|-mixedsim <vhdlfile>\n";
   print "                  -r|--r_arg <option> -c|--c_arg <option> -o|--out <dir> -t|--test <test>]\n";
-  print "  -s|--sim <simulator>     : simulator is either of questa, modelsim, riviera, ius or vcs\n";
+  print "  -s|--sim <simulator>     : simulator is either of questa, modelsim, riviera, ius, xcelium or vcs\n";
   print "  -l|--log <log>           : simulation log file (default: run.log)\n";
   print "  -d|--define <macro>      : appended to the command line as +define+<macro>\n";
   print "  -f|--filelist <file>     : some verilog file list\n";
@@ -112,7 +112,9 @@ push @defines, qq!SVUNIT_VERSION='"$version"'!;
 $simulator =~ tr/A-Z/a-z/;
 $simulator =~ s/questa/modelsim/;
 $simulator =~ s/ius/irun/;
-usage() if $simulator ne "irun" &&
+$simulator =~ s/xcelium/xrun/;
+usage() if $simulator ne "xrun" &&
+           $simulator ne "irun" &&
            $simulator ne "modelsim" &&
            $simulator ne "riviera" &&
            $simulator ne "vcs";
@@ -134,7 +136,7 @@ if ($simulator eq "modelsim" or $simulator eq "riviera") {
 
 # add the uvm switches if necessary
 if (defined $uvm) {
-  $cmd .= " -uvm" if $simulator eq "irun";
+  $cmd .= " -uvm" if ($simulator eq "xrun" or $simulator eq "irun");
   $cmd .= " -ntb_opts uvm" if $simulator eq "vcs";
   push @defines, "RUN_SVUNIT_WITH_UVM";
 }
