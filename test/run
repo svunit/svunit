@@ -18,7 +18,13 @@ function run_testlist {
 
   for test in ${testlist[@]}; do
     printf "Running %s... " $test
-    cd $test && ./run > /dev/null 2>&1
+
+    if ls $test/test*.py 1> /dev/null 2>&1; then
+      printf '(pytest) '
+      cd $test && pytest > /dev/null 2>&1
+    else
+      cd $test && ./run > /dev/null 2>&1
+    fi
     if [ "$?" != "0" ]; then
       printf "FAILED\n"
       pass=0
