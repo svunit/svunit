@@ -1,5 +1,7 @@
 *.log
 
+__pycache__
+
 # Framework files
 .__testsuite.sv
 .svunit.f
