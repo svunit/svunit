@@ -1,6 +1,11 @@
-import os
 import pathlib
 import subprocess
+import sys
+
+sys.path.append('..')
+
+from test_utils import *
+
 
 
 def setup_module():
@@ -26,21 +31,3 @@ def test_dummy():
     golden_class_unit_test('test', 'test0')
 
     verify_file('test_unit_test.gold', 'test_unit_test.sv')
-
-
-def create_unit_test(name):
-    subprocess.check_call(['create_unit_test.pl', name])
-
-
-def golden_class_unit_test(FILE, MYNAME):
-    template = open('{}/test/templates/class_unit_test.gold'.format(os.environ['SVUNIT_INSTALL']))
-    with open('{}_unit_test.gold'.format(FILE), 'w') as output:
-        for line in template:
-            output.write(line.replace('FILE', FILE).replace('MYNAME', MYNAME))
-
-
-def verify_file(file0, file1):
-    result = subprocess.run(['diff', '-wbB', file0, file1], stdout=subprocess.PIPE)
-    assert result.returncode in [0, 1]
-    if result.returncode == 1:
-        assert result.stdout == b''
