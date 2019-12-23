@@ -1,4 +1,3 @@
-import pathlib
 import subprocess
 import sys
 
@@ -8,7 +7,7 @@ from test_utils import *
 
 
 def setup_module():
-    rm_paths = [
+    clean_paths([
         '.*testsuite.sv',
         '.testrunner.gold',
         '.testrunner.gold.tmp',
@@ -21,10 +20,7 @@ def setup_module():
         'testsuite.gold',
         'testrunner.gold',
         '.svunit.f',
-        ]
-    for rm_path in rm_paths:
-        for p in pathlib.Path('.').glob(rm_path):
-            p.unlink()
+        ])
 
 
 def test_dummy():

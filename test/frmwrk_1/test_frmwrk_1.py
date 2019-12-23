@@ -9,7 +9,7 @@ from test_utils import *
 
 
 def setup_module():
-    rm_paths = [
+    clean_paths([
         '.*testsuite.sv',
         '.testrunner.gold',
         '.testrunner.gold.tmp',
@@ -19,10 +19,7 @@ def setup_module():
         '.testsuite.gold.tmp',
         'test_unit_test.sv',
         'test_unit_test.gold',
-        ]
-    for rm_path in rm_paths:
-        for p in pathlib.Path('.').glob(rm_path):
-            p.unlink()
+        ])
 
 
 def test_dummy():

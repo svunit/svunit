@@ -1,5 +1,12 @@
 import os
+import pathlib
 import subprocess
+
+
+def clean_paths(rm_paths):
+    for rm_path in rm_paths:
+        for p in pathlib.Path('.').glob(rm_path):
+            p.unlink()
 
 
 def create_unit_test(name):
@@ -11,7 +18,6 @@ def golden_class_unit_test(FILE, MYNAME):
     with open('{}_unit_test.gold'.format(FILE), 'w') as output:
         for line in template:
             output.write(line.replace('FILE', FILE).replace('MYNAME', MYNAME))
-
 
 def golden_testsuite_with_1_unittest(MYNAME):
     template = open('{}/test/templates/testsuite_with_1_unittest.gold'.format(os.environ['SVUNIT_INSTALL']))
