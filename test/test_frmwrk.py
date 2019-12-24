@@ -41,3 +41,17 @@ def test_frmwrk_2(datafiles):
         golden_class_unit_test('test', 'virtual_test')
 
         verify_file('test_unit_test.gold', 'test_unit_test.sv')
+
+
+@pytest.mark.datafiles(
+        os.path.join(FIXTURE_DIR, 'frmwrk_3', 'test.sv'),
+        os.path.join(FIXTURE_DIR, 'frmwrk_3', 'test_unit_test.gold'),
+        os.path.join(FIXTURE_DIR, 'frmwrk_3', 'testsuite.gold'),
+        )
+def test_frmwrk_3(datafiles):
+    with datafiles.as_cwd():
+        create_unit_test('test.sv')
+        subprocess.check_call(['buildSVUnit'])
+
+        verify_file('test_unit_test.gold', 'test_unit_test.sv')
+        verify_testsute('testsuite.gold')
