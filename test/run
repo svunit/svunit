@@ -18,13 +18,7 @@ function run_testlist {
 
   for test in ${testlist[@]}; do
     printf "Running %s... " $test
-
-    if ls $test/test*.py 1> /dev/null 2>&1; then
-      printf '(pytest) '
-      cd $test && pytest > /dev/null 2>&1
-    else
-      cd $test && ./run > /dev/null 2>&1
-    fi
+    cd $test && ./run > /dev/null 2>&1
     if [ "$?" != "0" ]; then
       printf "FAILED\n"
       pass=0
@@ -40,7 +34,11 @@ function run_testlist {
 
 # run the individual test groupings
 declare -a frmwrk_tests
-frmwrk_tests=`ls -v -d frmwrk_*`
+for test_dir in `ls -v -d frmwrk_*`; do
+  if [ -f "$test_dir/run" ]; then
+    frmwrk_tests+=($test_dir)
+  fi
+done
 run_testlist frmwrk_tests[@]
 
 declare -a sim_tests
