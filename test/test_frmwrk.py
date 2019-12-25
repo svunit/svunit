@@ -92,3 +92,12 @@ def test_frmwrk_6(datafiles):
         golden_testrunner_with_4_testsuites()
 
         verify_testrunner('testrunner.gold', '__subdir0', '__subdir1_subdir1a', '__subdir1', '_')
+
+
+def test_frmwrk_7(tmpdir):
+    with tmpdir.as_cwd():
+        return_code = subprocess.call(['buildSVUnit'])
+        assert return_code == 1
+
+        # verify no new files were created
+        assert not tmpdir.listdir()
