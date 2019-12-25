@@ -119,3 +119,20 @@ def test_frmwrk_8(datafiles):
         golden_testrunner_with_3_testsuites()
 
         verify_testrunner('testrunner.gold', '__subdir0', '__subdir1_subdir1a', '__subdir1')
+
+
+@pytest.mark.datafiles(
+        os.path.join(FIXTURE_DIR, 'frmwrk_9', 'test.sv'),
+        os.path.join(FIXTURE_DIR, 'frmwrk_9', 'subdir1'),
+        keep_top_dir=True,
+        )
+def test_frmwrk_9(datafiles):
+    with datafiles.as_cwd():
+        subprocess.check_call(['create_unit_test.pl', '-overwrite', '-out', './test_unit_test.sv', 'test.sv'])
+        subprocess.check_call(['create_unit_test.pl', '-overwrite', '-out', './subdir1/subdir1a/subdir1a_unit_test.sv', './subdir1/subdir1a/subdir1a.sv'])
+
+        subprocess.check_call(['buildSVUnit'])
+
+        golden_testrunner_with_2_testsuites()
+
+        verify_testrunner('testrunner.gold', '__subdir1_subdir1a', '_')
