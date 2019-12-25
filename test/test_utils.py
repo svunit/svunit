@@ -37,6 +37,12 @@ def golden_testrunner_with_2_testsuites():
         for line in template:
             output.write(line)
 
+def golden_testrunner_with_3_testsuites():
+    template = open('{}/test/templates/testrunner_with_3_testsuite.gold'.format(os.environ['SVUNIT_INSTALL']))
+    with open('testrunner.gold', 'w') as output:
+        for line in template:
+            output.write(line)
+
 def golden_testrunner_with_4_testsuites():
     template = open('{}/test/templates/testrunner_with_4_testsuite.gold'.format(os.environ['SVUNIT_INSTALL']))
     with open('testrunner.gold', 'w') as output:

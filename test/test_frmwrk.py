@@ -101,3 +101,21 @@ def test_frmwrk_7(tmpdir):
 
         # verify no new files were created
         assert not tmpdir.listdir()
+
+
+@pytest.mark.datafiles(
+        os.path.join(FIXTURE_DIR, 'frmwrk_8', 'subdir0'),
+        os.path.join(FIXTURE_DIR, 'frmwrk_8', 'subdir1'),
+        keep_top_dir=True,
+        )
+def test_frmwrk_8(datafiles):
+    with datafiles.as_cwd():
+        subprocess.check_call(['create_unit_test.pl', '-overwrite', '-out', './subdir0/subdir0_unit_test.sv', './subdir0/subdir0.sv'])
+        subprocess.check_call(['create_unit_test.pl', '-overwrite', '-out', './subdir1/subdir1_unit_test.sv', './subdir1/subdir1.sv'])
+        subprocess.check_call(['create_unit_test.pl', '-overwrite', '-out', './subdir1/subdir1a/subdir1a_unit_test.sv', './subdir1/subdir1a/subdir1a.sv'])
+
+        subprocess.check_call(['buildSVUnit'])
+
+        golden_testrunner_with_3_testsuites()
+
+        verify_testrunner('testrunner.gold', '__subdir0', '__subdir1_subdir1a', '__subdir1')
