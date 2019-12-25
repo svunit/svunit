@@ -19,6 +19,12 @@ def golden_class_unit_test(FILE, MYNAME):
         for line in template:
             output.write(line.replace('FILE', FILE).replace('MYNAME', MYNAME))
 
+def golden_module_unit_test(FILE, MYNAME):
+    template = open('{}/test/templates/module_unit_test.gold'.format(os.environ['SVUNIT_INSTALL']))
+    with open('{}_unit_test.gold'.format(FILE), 'w') as output:
+        for line in template:
+            output.write(line.replace('FILE', FILE).replace('MYNAME', MYNAME))
+
 def golden_testsuite_with_1_unittest(MYNAME):
     template = open('{}/test/templates/testsuite_with_1_unittest.gold'.format(os.environ['SVUNIT_INSTALL']))
     with open('testsuite.gold', 'w') as output:

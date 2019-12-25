@@ -136,3 +136,13 @@ def test_frmwrk_9(datafiles):
         golden_testrunner_with_2_testsuites()
 
         verify_testrunner('testrunner.gold', '__subdir1_subdir1a', '_')
+
+
+@pytest.mark.datafiles(os.path.join(FIXTURE_DIR, 'frmwrk_10', 'test.sv'))
+def test_frmwrk_10(datafiles):
+    with datafiles.as_cwd():
+        subprocess.check_call(['create_unit_test.pl', 'test.sv'])
+
+        golden_module_unit_test('test', 'test')
+
+        verify_file('test_unit_test.gold', 'test_unit_test.sv')
