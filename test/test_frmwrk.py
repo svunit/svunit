@@ -146,3 +146,13 @@ def test_frmwrk_10(datafiles):
         golden_module_unit_test('test', 'test')
 
         verify_file('test_unit_test.gold', 'test_unit_test.sv')
+
+
+@pytest.mark.datafiles(os.path.join(FIXTURE_DIR, 'frmwrk_11', 'test_if.sv'))
+def test_frmwrk_11(datafiles):
+    with datafiles.as_cwd():
+        subprocess.check_call(['create_unit_test.pl', '-overwrite', 'test_if.sv'])
+
+        golden_if_unit_test('test_if', 'test_if')
+
+        verify_file('test_if_unit_test.gold', 'test_if_unit_test.sv')

@@ -1,9 +1,0 @@
-rm -rf .*testsuite.sv \
-       .testrunner.gold \
-       .testrunner.gold.tmp \
-       .testrunner.sv \
-       .svunit_top.sv \
-       .testsuite.gold \
-       .testsuite.gold.tmp \
-       test_if_unit_test.sv \
-       test_if_unit_test.gold
