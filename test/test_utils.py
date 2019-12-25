@@ -37,6 +37,12 @@ def golden_testrunner_with_2_testsuites():
         for line in template:
             output.write(line)
 
+def golden_testrunner_with_4_testsuites():
+    template = open('{}/test/templates/testrunner_with_4_testsuite.gold'.format(os.environ['SVUNIT_INSTALL']))
+    with open('testrunner.gold', 'w') as output:
+        for line in template:
+            output.write(line)
+
 
 def verify_file(file0, file1):
     result = subprocess.run(['diff', '-wbB', file0, file1], stdout=subprocess.PIPE)
