@@ -2,6 +2,9 @@
 
 __pycache__
 
+# Not sure what these are, but they appear when interrupting the test script
+.bpad
+
 # Framework files
 .__testsuite.sv
 .svunit.f
