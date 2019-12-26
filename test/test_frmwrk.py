@@ -171,6 +171,30 @@ def test_frmwrk_11(datafiles):
 def test_frmwrk_12(datafiles):
     with datafiles.as_cwd():
         for file in datafiles.listdir():
-            print(file)
+            subprocess.check_call(['create_unit_test.pl', file])
+            assert pathlib.Path(file.purebasename + '_unit_test.sv').is_file()
+
+
+@pytest.mark.datafiles(
+        os.path.join(FIXTURE_DIR, 'frmwrk_13', 'test-hij.sv'),
+        os.path.join(FIXTURE_DIR, 'frmwrk_13', 'test.sv.abc'),
+        os.path.join(FIXTURE_DIR, 'frmwrk_13', 'test1'),
+        os.path.join(FIXTURE_DIR, 'frmwrk_13', 'test2.sv'),
+        os.path.join(FIXTURE_DIR, 'frmwrk_13', 'test3.v'),
+        os.path.join(FIXTURE_DIR, 'frmwrk_13', 'second_dir'),
+        keep_top_dir=True,
+        )
+def test_frmwrk_13(datafiles):
+    with datafiles.as_cwd():
+        for file in (datafiles / 'second_dir').listdir():
+            if not file.check(file=1):
+                continue
+            subprocess.check_call(['create_unit_test.pl', file])
+            assert pathlib.Path(file.purebasename + '_unit_test.sv').is_file()
+
+    with (datafiles / 'second_dir').as_cwd():
+        for file in datafiles.listdir():
+            if not file.check(file=1):
+                continue
             subprocess.check_call(['create_unit_test.pl', file])
             assert pathlib.Path(file.purebasename + '_unit_test.sv').is_file()
