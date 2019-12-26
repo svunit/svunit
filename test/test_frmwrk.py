@@ -156,3 +156,21 @@ def test_frmwrk_11(datafiles):
         golden_if_unit_test('test_if', 'test_if')
 
         verify_file('test_if_unit_test.gold', 'test_if_unit_test.sv')
+
+
+@pytest.mark.datafiles(
+        os.path.join(FIXTURE_DIR, 'frmwrk_12', 'test-hij.sv'),
+        os.path.join(FIXTURE_DIR, 'frmwrk_12', 'test-xyz.abc'),
+        os.path.join(FIXTURE_DIR, 'frmwrk_12', 'test.sv.abc'),
+        os.path.join(FIXTURE_DIR, 'frmwrk_12', 'test.xyz'),
+        os.path.join(FIXTURE_DIR, 'frmwrk_12', 'test.xyz.abc'),
+        os.path.join(FIXTURE_DIR, 'frmwrk_12', 'test1'),
+        os.path.join(FIXTURE_DIR, 'frmwrk_12', 'test2.sv'),
+        os.path.join(FIXTURE_DIR, 'frmwrk_12', 'test3.v'),
+        )
+def test_frmwrk_12(datafiles):
+    with datafiles.as_cwd():
+        for file in datafiles.listdir():
+            print(file)
+            subprocess.check_call(['create_unit_test.pl', file])
+            assert pathlib.Path(file.purebasename + '_unit_test.sv').is_file()
