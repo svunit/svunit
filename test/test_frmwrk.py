@@ -155,7 +155,6 @@ def test_frmwrk_13(datafiles):
         for file in (datafiles / 'second_dir').listdir():
             if not file.check(file=1):
                 continue
-            print(file)
             subprocess.check_call(['create_unit_test.pl', file])
             assert pathlib.Path(file.purebasename + '_unit_test.sv').is_file()
 
@@ -181,3 +180,30 @@ def test_frmwrk_14(datafiles):
         for simulator in simulators:
             subprocess.check_call(['csh', 'run.csh', simulator], env=new_env)
             subprocess.check_call(['tcsh', 'run.csh', simulator], env=new_env)
+
+
+@all_files_in_dir('frmwrk_15')
+def test_frmwrk_15(datafiles):
+    with datafiles.as_cwd():
+        os.mkdir('third_dir')
+        for file in (datafiles / 'second_dir').listdir():
+            if not file.check(file=1):
+                continue
+            destfile = os.path.join('third_dir', file.purebasename + '_unit_test.sv')
+            subprocess.check_call(['create_unit_test.pl', file, '-out', destfile])
+            assert pathlib.Path(destfile).is_file()
+
+    with (datafiles / 'second_dir').as_cwd():
+        for file in (datafiles / 'second_dir').listdir():
+            if not file.check(file=1):
+                continue
+            destfile = os.path.join('..', file.purebasename + '_unit_test.sv')
+            subprocess.check_call(['create_unit_test.pl', file, '-out', destfile])
+            assert pathlib.Path(destfile).is_file()
+
+    with datafiles.as_cwd():
+        subprocess.check_call(['create_unit_test.pl', '-out', 'dud_unit_test.v', 'test2.sv'])
+        assert not pathlib.Path('dud_unit_test.v').is_file()
+
+        subprocess.check_call(['create_unit_test.pl', '-out', 'dud.v', 'test2.sv'])
+        assert not pathlib.Path('dud.v').is_file()
