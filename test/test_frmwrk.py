@@ -1,14 +1,18 @@
 import subprocess
+import pathlib
 import pytest
 from test_utils import *
 
 
-FIXTURE_DIR = os.path.join(
-    os.path.dirname(os.path.realpath(__file__)),
-    )
+def all_files_in_dir(dirname):
+    dirpath = os.path.join(os.path.dirname(os.path.realpath(__file__)), dirname)
+    return pytest.mark.datafiles(
+            *pathlib.Path(dirpath).iterdir(),
+            keep_top_dir=True,
+            )
 
 
-@pytest.mark.datafiles(os.path.join(FIXTURE_DIR, 'frmwrk_0', 'test.sv') )
+@all_files_in_dir('frmwrk_0')
 def test_frmwrk_0(datafiles):
     with datafiles.as_cwd():
         create_unit_test('test.sv')
@@ -23,7 +27,7 @@ def test_frmwrk_0(datafiles):
         verify_testrunner('testrunner.gold', '_')
 
 
-@pytest.mark.datafiles(os.path.join(FIXTURE_DIR, 'frmwrk_1', 'test.sv') )
+@all_files_in_dir('frmwrk_1')
 def test_frmwrk_1(datafiles):
     with datafiles.as_cwd():
         create_unit_test('test.sv')
@@ -33,7 +37,7 @@ def test_frmwrk_1(datafiles):
         verify_file('test_unit_test.gold', 'test_unit_test.sv')
 
 
-@pytest.mark.datafiles(os.path.join(FIXTURE_DIR, 'frmwrk_2', 'test.sv') )
+@all_files_in_dir('frmwrk_2')
 def test_frmwrk_2(datafiles):
     with datafiles.as_cwd():
         create_unit_test('test.sv')
@@ -43,11 +47,7 @@ def test_frmwrk_2(datafiles):
         verify_file('test_unit_test.gold', 'test_unit_test.sv')
 
 
-@pytest.mark.datafiles(
-        os.path.join(FIXTURE_DIR, 'frmwrk_3', 'test.sv'),
-        os.path.join(FIXTURE_DIR, 'frmwrk_3', 'test_unit_test.gold'),
-        os.path.join(FIXTURE_DIR, 'frmwrk_3', 'testsuite.gold'),
-        )
+@all_files_in_dir('frmwrk_3')
 def test_frmwrk_3(datafiles):
     with datafiles.as_cwd():
         create_unit_test('test.sv')
@@ -57,11 +57,7 @@ def test_frmwrk_3(datafiles):
         verify_testsute('testsuite.gold')
 
 
-@pytest.mark.datafiles(
-        os.path.join(FIXTURE_DIR, 'frmwrk_4', 'test.sv'),
-        os.path.join(FIXTURE_DIR, 'frmwrk_4', 'another_test'),
-        keep_top_dir=True,
-        )
+@all_files_in_dir('frmwrk_4')
 def test_frmwrk_4(datafiles):
     with datafiles.as_cwd():
         create_unit_test('test.sv')
@@ -74,12 +70,7 @@ def test_frmwrk_4(datafiles):
         verify_testrunner('testrunner.gold', '__another_test', '_')
 
 
-@pytest.mark.datafiles(
-        os.path.join(FIXTURE_DIR, 'frmwrk_6', 'test.sv'),
-        os.path.join(FIXTURE_DIR, 'frmwrk_6', 'subdir0'),
-        os.path.join(FIXTURE_DIR, 'frmwrk_6', 'subdir1'),
-        keep_top_dir=True,
-        )
+@all_files_in_dir('frmwrk_6')
 def test_frmwrk_6(datafiles):
     with datafiles.as_cwd():
         subprocess.check_call(['create_unit_test.pl', '-overwrite', '-out', './test_unit_test.sv', 'test.sv'])
@@ -103,11 +94,7 @@ def test_frmwrk_7(tmpdir):
         assert not tmpdir.listdir()
 
 
-@pytest.mark.datafiles(
-        os.path.join(FIXTURE_DIR, 'frmwrk_8', 'subdir0'),
-        os.path.join(FIXTURE_DIR, 'frmwrk_8', 'subdir1'),
-        keep_top_dir=True,
-        )
+@all_files_in_dir('frmwrk_8')
 def test_frmwrk_8(datafiles):
     with datafiles.as_cwd():
         subprocess.check_call(['create_unit_test.pl', '-overwrite', '-out', './subdir0/subdir0_unit_test.sv', './subdir0/subdir0.sv'])
@@ -121,11 +108,7 @@ def test_frmwrk_8(datafiles):
         verify_testrunner('testrunner.gold', '__subdir0', '__subdir1_subdir1a', '__subdir1')
 
 
-@pytest.mark.datafiles(
-        os.path.join(FIXTURE_DIR, 'frmwrk_9', 'test.sv'),
-        os.path.join(FIXTURE_DIR, 'frmwrk_9', 'subdir1'),
-        keep_top_dir=True,
-        )
+@all_files_in_dir('frmwrk_9')
 def test_frmwrk_9(datafiles):
     with datafiles.as_cwd():
         subprocess.check_call(['create_unit_test.pl', '-overwrite', '-out', './test_unit_test.sv', 'test.sv'])
@@ -138,7 +121,7 @@ def test_frmwrk_9(datafiles):
         verify_testrunner('testrunner.gold', '__subdir1_subdir1a', '_')
 
 
-@pytest.mark.datafiles(os.path.join(FIXTURE_DIR, 'frmwrk_10', 'test.sv'))
+@all_files_in_dir('frmwrk_10')
 def test_frmwrk_10(datafiles):
     with datafiles.as_cwd():
         subprocess.check_call(['create_unit_test.pl', 'test.sv'])
@@ -148,7 +131,7 @@ def test_frmwrk_10(datafiles):
         verify_file('test_unit_test.gold', 'test_unit_test.sv')
 
 
-@pytest.mark.datafiles(os.path.join(FIXTURE_DIR, 'frmwrk_11', 'test_if.sv'))
+@all_files_in_dir('frmwrk_11')
 def test_frmwrk_11(datafiles):
     with datafiles.as_cwd():
         subprocess.check_call(['create_unit_test.pl', '-overwrite', 'test_if.sv'])
@@ -158,16 +141,7 @@ def test_frmwrk_11(datafiles):
         verify_file('test_if_unit_test.gold', 'test_if_unit_test.sv')
 
 
-@pytest.mark.datafiles(
-        os.path.join(FIXTURE_DIR, 'frmwrk_12', 'test-hij.sv'),
-        os.path.join(FIXTURE_DIR, 'frmwrk_12', 'test-xyz.abc'),
-        os.path.join(FIXTURE_DIR, 'frmwrk_12', 'test.sv.abc'),
-        os.path.join(FIXTURE_DIR, 'frmwrk_12', 'test.xyz'),
-        os.path.join(FIXTURE_DIR, 'frmwrk_12', 'test.xyz.abc'),
-        os.path.join(FIXTURE_DIR, 'frmwrk_12', 'test1'),
-        os.path.join(FIXTURE_DIR, 'frmwrk_12', 'test2.sv'),
-        os.path.join(FIXTURE_DIR, 'frmwrk_12', 'test3.v'),
-        )
+@all_files_in_dir('frmwrk_12')
 def test_frmwrk_12(datafiles):
     with datafiles.as_cwd():
         for file in datafiles.listdir():
@@ -175,20 +149,13 @@ def test_frmwrk_12(datafiles):
             assert pathlib.Path(file.purebasename + '_unit_test.sv').is_file()
 
 
-@pytest.mark.datafiles(
-        os.path.join(FIXTURE_DIR, 'frmwrk_13', 'test-hij.sv'),
-        os.path.join(FIXTURE_DIR, 'frmwrk_13', 'test.sv.abc'),
-        os.path.join(FIXTURE_DIR, 'frmwrk_13', 'test1'),
-        os.path.join(FIXTURE_DIR, 'frmwrk_13', 'test2.sv'),
-        os.path.join(FIXTURE_DIR, 'frmwrk_13', 'test3.v'),
-        os.path.join(FIXTURE_DIR, 'frmwrk_13', 'second_dir'),
-        keep_top_dir=True,
-        )
+@all_files_in_dir('frmwrk_13')
 def test_frmwrk_13(datafiles):
     with datafiles.as_cwd():
         for file in (datafiles / 'second_dir').listdir():
             if not file.check(file=1):
                 continue
+            print(file)
             subprocess.check_call(['create_unit_test.pl', file])
             assert pathlib.Path(file.purebasename + '_unit_test.sv').is_file()
 
