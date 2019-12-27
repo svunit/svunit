@@ -1,5 +1,6 @@
 import os
 import pathlib
+import shutil
 import subprocess
 
 
@@ -11,6 +12,25 @@ def clean_paths(rm_paths):
 
 def create_unit_test(name):
     subprocess.check_call(['create_unit_test.pl', name])
+
+
+def get_simulators():
+    result = []
+
+    if shutil.which('irun'):
+        result.append('irun')
+    if shutil.which('vcs'):
+        result.append('vcs')
+    if shutil.which('vlog'):
+        result.append('modelsim')
+
+    assert result, 'None of irun, modelsim or vcs are in your path. You need at least 1 simulator to regress svunit-code!'
+
+    return result
+
+
+def get_svunit_root():
+    return os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 
 
 def golden_class_unit_test(FILE, MYNAME):

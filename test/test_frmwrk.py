@@ -165,3 +165,19 @@ def test_frmwrk_13(datafiles):
                 continue
             subprocess.check_call(['create_unit_test.pl', file])
             assert pathlib.Path(file.purebasename + '_unit_test.sv').is_file()
+
+
+@pytest.mark.skip(reason='Setup.csh is busted')
+@all_files_in_dir('frmwrk_14')
+def test_frmwrk_14(datafiles):
+    new_env = os.environ.copy()
+    path_entries = new_env['PATH'].split(':')
+    new_path_entries = [path_entry for path_entry in path_entries if not 'svunit-code' in path_entry]
+    new_env['PATH'] = ':'.join(new_path_entries)
+    new_env['SVUNIT_ROOT'] = get_svunit_root()
+
+    with datafiles.as_cwd():
+        simulators = get_simulators()
+        for simulator in simulators:
+            subprocess.check_call(['csh', 'run.csh', simulator], env=new_env)
+            subprocess.check_call(['tcsh', 'run.csh', simulator], env=new_env)
