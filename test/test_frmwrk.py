@@ -1,3 +1,4 @@
+import fileinput
 import subprocess
 import pathlib
 import pytest
@@ -364,3 +365,15 @@ def test_frmwrk_29(datafiles):
 
         verify_testsuite('testsuite.gold')
         verify_testrunner('testrunner.gold', '_', '.')
+
+
+@all_files_in_dir('frmwrk_30')
+def test_frmwrk_30(datafiles):
+    with datafiles.as_cwd():
+        subprocess.check_call(['create_unit_test.pl', '-p', 'a_pkg::*', 'test.sv'])
+
+        golden_class_unit_test('test', 'test')
+        for line in fileinput.input(files=('test_unit_test.gold'), inplace=True):
+            print(line.replace('`include "test.sv"', 'import a_pkg::*;'), end='')
+
+        verify_file('test_unit_test.gold', 'test_unit_test.sv')
