@@ -260,3 +260,18 @@ def test_frmwrk_20(datafiles):
 
         golden_if_unit_test('test_static', 'test_static')
         verify_file('test_static_unit_test.gold', 'test_static_unit_test.sv')
+
+
+@pytest.mark.skip(reason="create_svunit.pl doesn't exist. The original test still passes, though.")
+@all_files_in_dir('frmwrk_22')
+def test_frmwrk_22(datafiles):
+    with datafiles.as_cwd():
+        subprocess.check_call(['create_svunit.pl'])
+
+        subprocess.check_call(['make', '.testrunner.sv'])
+
+        golden_testsuite_with_1_unittest('test')
+        golden_testrunner_with_1_testsuite()
+
+        verify_testsuite('testsuite.gold')
+        verify_testrunner('testrunner.gold', '.')
