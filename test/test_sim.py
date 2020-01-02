@@ -181,3 +181,13 @@ def test_sim_12(datafiles):
             subprocess.check_call(['runSVUnit', '-s', s, '-m', 'vhdl.f'])
 
             expect_testrunner_pass('run.log')
+
+
+@all_files_in_dir('sim_13')
+def test_sim_13(datafiles):
+    with datafiles.as_cwd():
+        for s in get_simulators():
+            subprocess.check_call(['runSVUnit', '-s', s])
+
+            expect_string(br"ERROR: \[50\]\[dut_ut\]: fail_if: svunit_timeout (at `pwd`/./dut_unit_test.sv line:62)", 'run.log')
+            expect_string(br"INFO:  \[99\]\[dut_ut\]: no_timeout::PASSED", 'run.log')
