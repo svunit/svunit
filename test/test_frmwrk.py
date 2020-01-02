@@ -377,3 +377,17 @@ def test_frmwrk_30(datafiles):
             print(line.replace('`include "test.sv"', 'import a_pkg::*;'), end='')
 
         verify_file('test_unit_test.gold', 'test_unit_test.sv')
+
+
+# TODO Remove as this is the same as 'frmwrk_29'. Left in to make review easier
+@all_files_in_dir('frmwrk_31')
+def test_frmwrk_31(datafiles):
+    '''Test that the 'runSVUnit' script passes all '-t' arguments to 'buildSVUnit.'''
+    with datafiles.as_cwd():
+        subprocess.check_call(['runSVUnit', '-s', 'questa', '-t', 'test_unit_test.sv', '-t', 'test2_unit_test.sv'])
+
+        golden_testsuite_with_2_unittests('test', 'test2')
+        golden_testrunner_with_1_testsuite()
+
+        verify_testsuite('testsuite.gold')
+        verify_testrunner('testrunner.gold', '_', '.')
