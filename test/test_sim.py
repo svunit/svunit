@@ -155,3 +155,14 @@ def test_sim_10(datafiles):
             expect_string(br'fail_if_equal::PASSED', 'run.log')
             expect_string(br'fail_unless_equal::FAILED', 'run.log')
             expect_testrunner_fail('run.log')
+
+
+@all_files_in_dir('sim_11')
+def test_sim_11(datafiles):
+    with datafiles.as_cwd():
+        for s in get_simulators():
+            subprocess.check_call(['runSVUnit', '-s', s])
+
+            expect_string(br'ERROR: \[0\]\[dut_ut\]: fail_unless_str_equal: \"abd\" != \"abcd\"', 'run.log')
+            expect_string(br'ERROR: \[0\]\[dut_ut\]: fail_if_str_equal: \"abcd\" == \"abcd\"', 'run.log')
+            expect_testrunner_fail('run.log')
