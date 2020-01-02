@@ -119,3 +119,14 @@ def test_sim_7(datafiles):
             subprocess.check_call(['runSVUnit', '-s', s, '-o', 'rundir'])
 
             expect_testrunner_pass('rundir/run.log')
+
+
+@all_files_in_dir('sim_8')
+def test_sim_8(datafiles):
+    with datafiles.as_cwd():
+        subprocess.check_call(['create_unit_test.pl', '-overwrite', '-out', '-dut_unit_test.sv', 'dut.sv'])
+
+        for s in get_simulators():
+            subprocess.check_call(['runSVUnit', '-s', s, '-f', 'my_filelist.f', '--filelist', 'a_filelist.f'])
+
+            expect_testrunner_pass('run.log')
