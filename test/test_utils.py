@@ -1,5 +1,7 @@
+import mmap
 import os
 import pathlib
+import re
 import shutil
 import subprocess
 
@@ -110,3 +112,8 @@ def verify_testrunner(testrunner, ts0, ts1='', ts2='', ts3='', tr=''):
         for line in file:
             output.write(line.replace('TS0', ts0).replace('TS1', ts1).replace('TS2', ts2).replace('TS3', ts3))
     verify_file(output.name, tr)
+
+
+def expect_testrunner_pass(logfile_path):
+    with open(logfile_path) as file, mmap.mmap(file.fileno(), 0, access=mmap.ACCESS_READ) as log:
+        return re.search(br'INFO:  \[.*\]\[testrunner\]: PASSED (. of . suites passing) \[$SVUnitVersion\]', log)
