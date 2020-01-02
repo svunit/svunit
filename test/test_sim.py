@@ -110,3 +110,12 @@ def test_sim_6(datafiles):
             subprocess.check_call(['runSVUnit', '-s', s, '-c', '+define+JOKES +define+DUD=4', '--c_arg', '+define+BOZO'])
 
             expect_testrunner_pass('run.log')
+
+
+@all_files_in_dir('sim_7')
+def test_sim_7(datafiles):
+    with datafiles.as_cwd():
+        for s in get_simulators():
+            subprocess.check_call(['runSVUnit', '-s', s, '-o', 'rundir'])
+
+            expect_testrunner_pass('rundir/run.log')
