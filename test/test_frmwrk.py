@@ -238,3 +238,12 @@ def test_frmwrk_18(tmpdir):
         golden_module_unit_test('module_under_test', 'module_under_test')
 
         verify_file('module_under_test_unit_test.gold', 'module_under_test_unit_test.sv')
+
+
+def test_frmwrk_19(tmpdir):
+    with tmpdir.as_cwd():
+        subprocess.check_call(['create_unit_test.pl', '-if_name', 'if_under_test'])
+
+        golden_if_unit_test('if_under_test', 'if_under_test')
+
+        verify_file('if_under_test_unit_test.gold', 'if_under_test_unit_test.sv')
