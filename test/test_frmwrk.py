@@ -290,3 +290,15 @@ def test_frmwrk_23(datafiles):
         golden_testrunner_with_4_testsuites()
 
         verify_testrunner('testrunner.gold', '__subdir0', '__subdir1_subdir1a', '__subdir1', '_', '/tmp/rundir/.testrunner.sv')
+
+
+@all_files_in_dir('frmwrk_24')
+def test_frmwrk_24(datafiles):
+    with datafiles.as_cwd():
+        subprocess.check_call(['buildSVUnit', '-t', 'test_unit_test.sv'])
+
+        golden_testsuite_with_1_unittest('test')
+        golden_testrunner_with_1_testsuite()
+
+        verify_testsute('testsuite.gold')
+        verify_testrunner('testrunner.gold', '_', '.')
