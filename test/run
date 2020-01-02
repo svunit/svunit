@@ -42,7 +42,11 @@ done
 run_testlist frmwrk_tests[@]
 
 declare -a sim_tests
-sim_tests=`ls -v -d sim_*`
+for test_dir in `ls -v -d sim_*`; do
+  if [ -f "$test_dir/run" ]; then
+    frmwrk_tests+=($test_dir)
+  fi
+done
 run_testlist sim_tests[@]
 
 declare -a example_tests
