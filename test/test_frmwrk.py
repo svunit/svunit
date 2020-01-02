@@ -229,3 +229,12 @@ def test_frmwrk_17(tmpdir):
         golden_class_unit_test('class_under_test', 'class_under_test')
 
         verify_file('class_under_test_unit_test.gold', 'class_under_test_unit_test.sv')
+
+
+def test_frmwrk_18(tmpdir):
+    with tmpdir.as_cwd():
+        subprocess.check_call(['create_unit_test.pl', '-module_name', 'module_under_test'])
+
+        golden_module_unit_test('module_under_test', 'module_under_test')
+
+        verify_file('module_under_test_unit_test.gold', 'module_under_test_unit_test.sv')
