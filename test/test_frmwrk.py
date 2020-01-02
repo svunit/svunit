@@ -391,3 +391,9 @@ def test_frmwrk_31(datafiles):
 
         verify_testsuite('testsuite.gold')
         verify_testrunner('testrunner.gold', '_', '.')
+
+
+def test_frmwrk_32(tmpdir):
+    with tmpdir.as_cwd():
+        return_code = subprocess.call(['runSVUnit', '-s', 'questa', 'blunt_object_unit_test.sv'])
+        assert return_code == 255
