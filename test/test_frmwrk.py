@@ -247,3 +247,16 @@ def test_frmwrk_19(tmpdir):
         golden_if_unit_test('if_under_test', 'if_under_test')
 
         verify_file('if_under_test_unit_test.gold', 'if_under_test_unit_test.sv')
+
+
+@all_files_in_dir('frmwrk_20')
+def test_frmwrk_20(datafiles):
+    with datafiles.as_cwd():
+        subprocess.check_call(['create_unit_test.pl', 'test_automatic.sv'])
+        subprocess.check_call(['create_unit_test.pl', 'test_static.sv'])
+
+        golden_if_unit_test('test_automatic', 'test_automatic')
+        verify_file('test_automatic_unit_test.gold', 'test_automatic_unit_test.sv')
+
+        golden_if_unit_test('test_static', 'test_static')
+        verify_file('test_static_unit_test.gold', 'test_static_unit_test.sv')
