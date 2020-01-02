@@ -117,3 +117,7 @@ def verify_testrunner(testrunner, ts0, ts1='', ts2='', ts3='', tr=''):
 def expect_testrunner_pass(logfile_path):
     with open(logfile_path) as file, mmap.mmap(file.fileno(), 0, access=mmap.ACCESS_READ) as log:
         return re.search(br'INFO:  \[.*\]\[testrunner\]: PASSED (. of . suites passing) \[$SVUnitVersion\]', log)
+
+def expect_string(pattern, logfile_path):
+    with open(logfile_path) as file, mmap.mmap(file.fileno(), 0, access=mmap.ACCESS_READ) as log:
+        return re.search(pattern, log)
