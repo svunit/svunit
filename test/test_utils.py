@@ -57,6 +57,12 @@ def golden_testsuite_with_1_unittest(MYNAME):
         for line in template:
             output.write(line.replace('MYNAME', MYNAME))
 
+def golden_testsuite_with_2_unittests(MYNAME1, MYNAME2):
+    template = open('{}/test/templates/testsuite_with_2_unittest.gold'.format(os.environ['SVUNIT_INSTALL']))
+    with open('testsuite.gold', 'w') as output:
+        for line in template:
+            output.write(line.replace('MYNAME1', MYNAME1).replace('MYNAME2', MYNAME2))
+
 def golden_testrunner_with_1_testsuite():
     template = open('{}/test/templates/testrunner_with_1_testsuite.gold'.format(os.environ['SVUNIT_INSTALL']))
     with open('testrunner.gold', 'w') as output:
