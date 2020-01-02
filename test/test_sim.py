@@ -130,3 +130,12 @@ def test_sim_8(datafiles):
             subprocess.check_call(['runSVUnit', '-s', s, '-f', 'my_filelist.f', '--filelist', 'a_filelist.f'])
 
             expect_testrunner_pass('run.log')
+
+
+@all_files_in_dir('sim_9')
+def test_sim_9(datafiles):
+    with datafiles.as_cwd():
+        for s in get_simulators():
+            subprocess.check_call(['runSVUnit', '-s', s, '-f', os.path.abspath( 'my_filelist.f'), '--filelist', os.path.abspath('a_filelist.f'), '-o', '.'])
+
+            expect_testrunner_pass('./run.log')
