@@ -139,3 +139,19 @@ def test_sim_9(datafiles):
             subprocess.check_call(['runSVUnit', '-s', s, '-f', os.path.abspath( 'my_filelist.f'), '--filelist', os.path.abspath('a_filelist.f'), '-o', '.'])
 
             expect_testrunner_pass('./run.log')
+
+
+@all_files_in_dir('sim_10')
+def test_sim_10(datafiles):
+    with datafiles.as_cwd():
+        for s in get_simulators():
+            subprocess.check_call(['runSVUnit', '-s', s])
+
+            expect_string(br'INFO:  \[0\]\[dut_ut\]: Use the INFO macro', 'run.log')
+            expect_string(br'ERROR: \[0\]\[dut_ut\]: Use the ERROR macro', 'run.log')
+            expect_string(br'strictly_so_the_teardown_is_called::FAILED', 'run.log')
+            expect_string(br'fail_if::FAILED', 'run.log')
+            expect_string(br'fail_unless::FAILED', 'run.log')
+            expect_string(br'fail_if_equal::PASSED', 'run.log')
+            expect_string(br'fail_unless_equal::FAILED', 'run.log')
+            expect_testrunner_fail('run.log')
