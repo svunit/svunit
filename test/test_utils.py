@@ -121,3 +121,9 @@ def expect_testrunner_pass(logfile_path):
 def expect_string(pattern, logfile_path):
     with open(logfile_path) as file, mmap.mmap(file.fileno(), 0, access=mmap.ACCESS_READ) as log:
         return re.search(pattern, log)
+
+def expect_file(path):
+    return os.path.exists(path)
+
+def expect_file_does_contain(pattern, file_path):
+    return expect_string(pattern, file_path)

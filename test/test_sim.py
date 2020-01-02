@@ -80,3 +80,15 @@ def test_sim_3(datafiles):
             expect_string(br'INFO:  \[0\]\[dut_ut\]: eleventh_test::RUNNING', 'run.log')
             expect_string(br'INFO:  \[0\]\[dut_ut\]: eleventh_test::PASSED', 'run.log')
             expect_string(br'INFO:  \[0\]\[testrunner\]: FAILED', 'run.log')
+
+
+@all_files_in_dir('sim_4')
+def test_sim_4(datafiles):
+    with datafiles.as_cwd():
+        for s in get_simulators():
+            subprocess.check_call(['runSVUnit', '--sim', s, '--log', 'other.log', '--define', 'DIDLEY_SQUAT', '-d', 'FIDDLE_FADDLE="junk"'])
+
+            expect_file('other.log')
+            expect_file_does_contain(br'defined DIDLEY_SQUAT', 'other.log')
+            expect_file_does_contain(br'junk', 'other.log')
+            expect_testrunner_pass('other.log')
