@@ -338,3 +338,16 @@ def test_frmwrk_27(datafiles):
 
         verify_testsuite('testsuite.gold')
         verify_testrunner('testrunner.gold', '_', '.')
+
+
+@all_files_in_dir('frmwrk_28')
+def test_frmwrk_28(datafiles):
+    '''Test that the 'runSVUnit' script passes a '-t' argument to 'buildSVUnit.'''
+    with datafiles.as_cwd():
+        subprocess.check_call(['runSVUnit', '-s', 'questa', '-t', 'test_unit_test.sv'])
+
+        golden_testsuite_with_1_unittest('test')
+        golden_testrunner_with_1_testsuite()
+
+        verify_testsuite('testsuite.gold')
+        verify_testrunner('testrunner.gold', '_', '.')
