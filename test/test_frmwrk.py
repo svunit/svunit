@@ -23,7 +23,7 @@ def test_frmwrk_0(datafiles):
         golden_testrunner_with_1_testsuite()
 
         verify_file('test_unit_test.gold', 'test_unit_test.sv')
-        verify_testsute('testsuite.gold')
+        verify_testsuite('testsuite.gold')
         verify_testrunner('testrunner.gold', '_')
 
 
@@ -54,7 +54,7 @@ def test_frmwrk_3(datafiles):
         subprocess.check_call(['buildSVUnit'])
 
         verify_file('test_unit_test.gold', 'test_unit_test.sv')
-        verify_testsute('testsuite.gold')
+        verify_testsuite('testsuite.gold')
 
 
 @all_files_in_dir('frmwrk_4')
@@ -300,5 +300,5 @@ def test_frmwrk_24(datafiles):
         golden_testsuite_with_1_unittest('test')
         golden_testrunner_with_1_testsuite()
 
-        verify_testsute('testsuite.gold')
+        verify_testsuite('testsuite.gold')
         verify_testrunner('testrunner.gold', '_', '.')

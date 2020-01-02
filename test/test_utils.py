@@ -88,7 +88,7 @@ def verify_file(file0, file1):
     if result.returncode == 1:
         assert result.stdout == b''
 
-def verify_testsute(testsuite, dir=''):
+def verify_testsuite(testsuite, dir=''):
     PWD = '_'
     file = open(testsuite)
     with open('.{}'.format(testsuite), 'w') as output:
