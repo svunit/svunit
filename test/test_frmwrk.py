@@ -207,3 +207,16 @@ def test_frmwrk_15(datafiles):
 
         subprocess.check_call(['create_unit_test.pl', '-out', 'dud.v', 'test2.sv'])
         assert not pathlib.Path('dud.v').is_file()
+
+
+@all_files_in_dir('frmwrk_16')
+def test_frmwrk_16(datafiles):
+    with datafiles.as_cwd():
+        subprocess.check_call(['create_unit_test.pl', 'test_if.sv'])
+        subprocess.check_call(['create_unit_test.pl', 'test_if2.sv'])
+
+        golden_if_unit_test('test_if', 'test_if')
+        golden_if_unit_test('test_if2', 'test_if2')
+
+        verify_file('test_if_unit_test.gold', 'test_if_unit_test.sv')
+        verify_file('test_if2_unit_test.gold', 'test_if2_unit_test.sv')
