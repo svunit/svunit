@@ -92,3 +92,12 @@ def test_sim_4(datafiles):
             expect_file_does_contain(br'defined DIDLEY_SQUAT', 'other.log')
             expect_file_does_contain(br'junk', 'other.log')
             expect_testrunner_pass('other.log')
+
+
+@all_files_in_dir('sim_5')
+def test_sim_5(datafiles):
+    with datafiles.as_cwd():
+        for s in get_simulators():
+            subprocess.check_call(['runSVUnit', '-s', s, '-r', '+JOKES +DUD=4', '--r_arg', '+BOZO'])
+
+            expect_testrunner_pass('run.log')
