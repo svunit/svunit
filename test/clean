@@ -1,9 +1,0 @@
-for test in `ls`; do
-  if [ -d $test -a "$test" != "templates" -a "$test" != "__pycache__" ]; then
-    if [ ! -e "$test/clean" ]; then
-      continue
-    fi
-    echo cleaning $test...
-    cd $test && ./clean && cd - > /dev/null 2>&1
-  fi
-done
