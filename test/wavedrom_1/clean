@@ -1,7 +1,0 @@
-rm -rf my_task.svh \
-       *.svh \
-       run.history \
-       write.svh \
-       read.svh \
-       readish.svh
-cleanSVUnit

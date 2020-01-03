@@ -1,9 +1,0 @@
-source ../test_functions.bsh
-
-setup
-
-# remove and create the unit_test
-create_unit_test test.sv
-
-golden_module_unit_test test test
-verify_file             test_unit_test.gold test_unit_test.sv
