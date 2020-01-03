@@ -25,3 +25,9 @@ def test_example_modules_apb_slave(datafiles):
 def test_example_uvm_report_mock(datafiles):
     for s in get_simulators():
         expect_passing_example(datafiles, s, ['-uvm', '-define', 'RUN_SVUNIT_WITH_UVM_REPORT_MOCK'])
+
+
+@all_files_in_dir((EXAMPLES_DIR / 'uvm/simple_model').as_posix())
+def test_example_uvm_simple_model(datafiles):
+    for s in get_simulators():
+        expect_passing_example(datafiles, s, ['-uvm'])
