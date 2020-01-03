@@ -31,3 +31,10 @@ def test_example_uvm_report_mock(datafiles):
 def test_example_uvm_simple_model(datafiles):
     for s in get_simulators():
         expect_passing_example(datafiles, s, ['-uvm'])
+
+
+# TODO Remove this is the same test as 'simple_model'. Not sure why this exists.
+@all_files_in_dir((EXAMPLES_DIR / 'uvm/simple_model').as_posix())
+def test_example_uvm_simple_model_2(datafiles):
+    for s in get_simulators():
+        expect_passing_example(datafiles, s, ['-uvm'])
