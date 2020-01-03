@@ -159,7 +159,6 @@ def test_frmwrk_13(datafiles):
             assert pathlib.Path(file.purebasename + '_unit_test.sv').is_file()
 
 
-@pytest.mark.skip(reason='Setup.csh is busted')
 @all_files_in_dir('frmwrk_14')
 @all_available_simulators()
 def test_frmwrk_14(datafiles, simulator):
