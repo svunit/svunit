@@ -16,7 +16,18 @@ def all_files_in_dir(dirname):
             )
 
 def all_available_simulators():
-    return pytest.mark.parametrize("simulator", get_simulators())
+    simulators = []
+
+    if shutil.which('irun'):
+        simulators.append('irun')
+    if shutil.which('vcs'):
+        simulators.append('vcs')
+    if shutil.which('vlog'):
+        simulators.append('modelsim')
+
+    assert simulators, 'None of irun, modelsim or vcs are in your path. You need at least 1 simulator to regress svunit-code!'
+
+    return pytest.mark.parametrize("simulator", simulators)
 
 
 def clean_paths(rm_paths):
@@ -27,21 +38,6 @@ def clean_paths(rm_paths):
 
 def create_unit_test(name):
     subprocess.check_call(['create_unit_test.pl', name])
-
-
-def get_simulators():
-    result = []
-
-    if shutil.which('irun'):
-        result.append('irun')
-    if shutil.which('vcs'):
-        result.append('vcs')
-    if shutil.which('vlog'):
-        result.append('modelsim')
-
-    assert result, 'None of irun, modelsim or vcs are in your path. You need at least 1 simulator to regress svunit-code!'
-
-    return result
 
 
 def get_svunit_root():
