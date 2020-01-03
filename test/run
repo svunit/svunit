@@ -49,10 +49,6 @@ for test_dir in `ls -v -d sim_*`; do
 done
 run_testlist sim_tests[@]
 
-declare -a mock_tests
-mock_tests=`ls -d mock_*`
-run_testlist mock_tests[@]
-
 declare -a util_tests
 util_tests=`ls -d util_*`
 run_testlist util_tests[@]
