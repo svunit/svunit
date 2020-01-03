@@ -1,16 +1,7 @@
 import fileinput
 import subprocess
 import pathlib
-import pytest
 from test_utils import *
-
-
-def all_files_in_dir(dirname):
-    dirpath = os.path.join(os.path.dirname(os.path.realpath(__file__)), dirname)
-    return pytest.mark.datafiles(
-            *pathlib.Path(dirpath).iterdir(),
-            keep_top_dir=True,
-            )
 
 
 @all_files_in_dir('sim_0')

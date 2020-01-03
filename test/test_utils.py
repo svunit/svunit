@@ -5,6 +5,16 @@ import re
 import shutil
 import subprocess
 
+import pytest
+
+
+def all_files_in_dir(dirname):
+    dirpath = os.path.join(os.path.dirname(os.path.realpath(__file__)), dirname)
+    return pytest.mark.datafiles(
+            *pathlib.Path(dirpath).iterdir(),
+            keep_top_dir=True,
+            )
+
 
 def clean_paths(rm_paths):
     for rm_path in rm_paths:
