@@ -38,3 +38,12 @@ def test_example_uvm_simple_model(datafiles):
 def test_example_uvm_simple_model_2(datafiles):
     for s in get_simulators():
         expect_passing_example(datafiles, s, ['-uvm'])
+
+
+@all_files_in_dir((EXAMPLES_DIR / 'uvm/uvm_express').as_posix())
+def test_example_uvm_uvm_express(datafiles):
+    for s in get_simulators():
+        if s == 'irun':
+            expect_passing_example(datafiles, s, ['-U', '--filelist', 'cov.f', '-define', 'CLK_PERIOD=10ns'])
+        if s == 'qverilog':
+            expect_passing_example(datafiles, s, ['-U', '-define', 'CLK_PERIOD=10ns'])
