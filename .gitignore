@@ -22,3 +22,6 @@ xcelium.d
 # test specific files
 test/frmwrk_3/.testsuite.gold
 test/frmwrk_3/test_unit_test.sv
+
+# scratch space for Python virtual environment used for testing
+test/venv
