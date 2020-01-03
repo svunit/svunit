@@ -133,9 +133,9 @@ def expect_file_does_contain(pattern, file_path):
     return expect_string(pattern, file_path)
 
 
-def expect_passing_example(dir, sim):
+def expect_passing_example(dir, sim, args=[]):
     with dir.as_cwd():
-        subprocess.check_call(['runSVUnit', '-s', sim])
+        subprocess.check_call(['runSVUnit', '-s', sim] + args)
 
         expect_file('run.log')
         expect_testrunner_pass('run.log')

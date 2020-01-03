@@ -19,3 +19,9 @@ def all_files_in_dir(dirname):
 def test_example_modules_apb_slave(datafiles):
     for s in get_simulators():
         expect_passing_example(datafiles, s)
+
+
+@all_files_in_dir((EXAMPLES_DIR / 'uvm/uvm_report_mock').as_posix())
+def test_example_uvm_report_mock(datafiles):
+    for s in get_simulators():
+        expect_passing_example(datafiles, s, ['-uvm', '-define', 'RUN_SVUNIT_WITH_UVM_REPORT_MOCK'])
