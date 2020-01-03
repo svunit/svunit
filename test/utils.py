@@ -20,6 +20,8 @@ def all_available_simulators():
 
     if shutil.which('irun'):
         simulators.append('irun')
+    if shutil.which('xrun'):
+        simulators.append('xrun')
     if shutil.which('vcs'):
         simulators.append('vcs')
     if shutil.which('vlog'):
