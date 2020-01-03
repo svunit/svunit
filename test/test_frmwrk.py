@@ -2,7 +2,7 @@ import fileinput
 import subprocess
 import pathlib
 import pytest
-from test_utils import *
+from utils import *
 
 
 @all_files_in_dir('frmwrk_0')

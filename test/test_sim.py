@@ -1,7 +1,7 @@
 import fileinput
 import subprocess
 import pathlib
-from test_utils import *
+from utils import *
 
 
 @all_files_in_dir('sim_0')

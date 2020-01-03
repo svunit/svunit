@@ -1,6 +1,6 @@
 import subprocess
 import pathlib
-from test_utils import *
+from utils import *
 
 
 EXAMPLES_DIR = pathlib.Path(os.environ['SVUNIT_INSTALL']) / 'examples'

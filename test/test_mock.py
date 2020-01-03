@@ -1,5 +1,5 @@
 import subprocess
-from test_utils import *
+from utils import *
 
 
 @all_files_in_dir('mock_uvm_report')
