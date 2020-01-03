@@ -15,6 +15,9 @@ def all_files_in_dir(dirname):
             keep_top_dir=True,
             )
 
+def all_available_simulators():
+    return pytest.mark.parametrize("simulator", get_simulators())
+
 
 def clean_paths(rm_paths):
     for rm_path in rm_paths:
