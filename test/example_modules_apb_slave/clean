@@ -1,6 +1,0 @@
-pushd . >/dev/null 2>&1
-
-cd $SVUNIT_INSTALL/examples/modules/apb_slave
-cleanSVUnit
-
-popd >/dev/null 2>&1

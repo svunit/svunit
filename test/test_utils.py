@@ -131,3 +131,11 @@ def expect_file(path):
 
 def expect_file_does_contain(pattern, file_path):
     return expect_string(pattern, file_path)
+
+
+def expect_passing_example(dir, sim):
+    with dir.as_cwd():
+        subprocess.check_call(['runSVUnit', '-s', sim])
+
+        expect_file('run.log')
+        expect_testrunner_pass('run.log')
