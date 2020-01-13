@@ -1,4 +1,0 @@
-rm -rf *_unit_test.sv \
-       second_dir/*_unit_test.sv \
-       third_dir \
-       dud*

@@ -1,7 +1,0 @@
-pushd . >/dev/null 2>&1
-
-cd $SVUNIT_INSTALL/examples/uvm/uvm_express
-cleanSVUnit
-rm -rf cov_work
-
-popd >/dev/null 2>&1
