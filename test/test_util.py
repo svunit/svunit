@@ -3,8 +3,8 @@ from utils import *
 
 
 @all_files_in_dir('util_clk_reset')
-def test_mock_uvm_report(datafiles):
+@all_available_simulators()
+def test_mock_uvm_report(datafiles, simulator):
     with datafiles.as_cwd():
-        for s in get_simulators():
-            subprocess.check_call(['runSVUnit', '-s', s])
-            expect_testrunner_pass('run.log')
+        subprocess.check_call(['runSVUnit', '-s', simulator])
+        expect_testrunner_pass('run.log')
