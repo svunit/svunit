@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/bin/env perl
 
 ############################################################################
 #
@@ -21,8 +21,11 @@
 use strict;
 use File::Glob;
 use File::Find;
+use IPC::System::Simple qw(system);
+use Cwd qw(getcwd abs_path);
 
 
+my $cwd = getcwd;
 find({
     wanted => sub {
                     if (/^\..*testsuite\.sv$/   or
@@ -31,16 +34,16 @@ find({
                       unlink;
                     }
                   }
-  }, qw( . ));
+  }, qq( $cwd ));
 
-unlink "run.log";
-unlink "compile.log";
-unlink ".svunit.f";
-system("rm -rf work");
-unlink "vsim.wlf";
-unlink "ncsc.log";
-system("rm -rf INCA_libs");
-unlink "irun.key";
-system("rm -rf csrc");
-unlink "simv";
-system("rm -rf simv.daidir");
+unlink "$cwd/run.log";
+unlink "$cwd/compile.log";
+unlink "$cwd/.svunit.f";
+system("\\rm -rf work");
+unlink "$cwd/vsim.wlf";
+unlink "$cwd/ncsc.log";
+system("\\rm -rf INCA_libs");
+unlink "$cwd/irun.key";
+system("\\rm -rf csrc");
+unlink "$cwd/simv";
+system("\\rm -rf simv.daidir");

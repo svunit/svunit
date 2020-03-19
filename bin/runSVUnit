@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/bin/env perl
 
 ############################################################################
 #
@@ -23,7 +23,11 @@ use Getopt::Long;
 use File::Glob;
 use File::Find;
 use IO::File;
-use Cwd 'abs_path';
+use File::Basename qw( dirname );
+use Cwd qw/getcwd abs_path/;
+my $cwd = getcwd;
+my $scriptDir = dirname(abs_path(__FILE__));
+use IPC::System::Simple qw(system);
 
 use vars qw/ %opt /;
 
@@ -33,8 +37,8 @@ use vars qw/ %opt /;
 ##########################################################################
 
 my $cmd;
-my $logfile = "run.log";
-my $vlogfile = "compile.log";
+my $logfile = "$cwd/run.log";
+my $vlogfile = "$cwd/compile.log";
 my $simulator;
 my @defines;
 my @filelists;
@@ -73,13 +77,13 @@ sub clean () {
                       if (/^\..*testsuite\.sv$/   or
                           /^\..*testrunner\.sv$/
                       ) {
-                        unlink;
+                        unlink or die "Coule not unlink $_";
                       }
                     }
     }, $outdir);
 
-  unlink qw( run.log .svunit.f vsim.wlf ncsc.log irun.key );
-  system("rm -rf work INCA_libs");
+  map{unlink qq($cwd/$_ ) or "could not unlink $_"} qw( run.log .svunit.f vsim.wlf ncsc.log irun.key );
+  system("\\rm -rf work INCA_libs");
 }
 
 # command line options
@@ -120,17 +124,17 @@ usage() if $simulator ne "xrun" &&
            $simulator ne "vcs";
 
 # start the command line
-$cmd = "cd $outdir; ";
+$cmd = "\\cd $outdir; ";
 # add the vdhl switches if necessary
 if ($simulator eq "modelsim" or $simulator eq "riviera") {
-  $cmd .= "vlib work; ";
-  $cmd .= "vcom -work work -f $vhdlfile ; " if $vhdlfile;
-  $cmd .= "vlog -l $vlogfile ";
+  $cmd .= "\\vlib work; ";
+  $cmd .= "\\vcom -work work -f $vhdlfile ; " if $vhdlfile;
+  $cmd .= "\\vlog -l $vlogfile ";
 } elsif ($simulator eq "vcs") {
-  $cmd .= "$simulator -R -sverilog -l $logfile";
+  $cmd .= "\\$simulator -R -sverilog -l $logfile";
   $cmd .= "-f $vhdlfile " if $vhdlfile;
 } else {
-  $cmd .= "$simulator -l $logfile ";
+  $cmd .= "\\$simulator -l $logfile ";
   $cmd .= "-f $vhdlfile " if $vhdlfile;
 }
 
@@ -160,7 +164,8 @@ if ($simulator eq "modelsim" or $simulator eq "riviera") {
   $cmd .= " @compileargs @simargs -top testrunner";
 }
 
-my $build_cmd = "buildSVUnit -o $outdir";
+die "could not open script ${scriptDir}/buildSVUnit for execution \n" unless((-e qq(${scriptDir}/buildSVUnit)) && (-r qq(${scriptDir}/buildSVUnit)) && (-x qq(${scriptDir}/buildSVUnit)));
+my $build_cmd = "$scriptDir/buildSVUnit -o $outdir";
 foreach (@tests) {
   $build_cmd .= " -t $_";
 }
@@ -178,4 +183,5 @@ if (system("$build_cmd")) {
 }
 print $cmd . "\n";
 system("$cmd");
-system("svunit_user_feedback.pl")
+die "could not open script ${scriptDir}/svunit_user_feedback.pl for execution \n" unless((-e qq(${scriptDir}/svunit_user_feedback.pl)) && (-r qq(${scriptDir}/svunit_user_feedback.pl)) && (-x qq(${scriptDir}/svunit_user_feedback.pl)));
+system("$scriptDir/svunit_user_feedback.pl")
