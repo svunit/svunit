@@ -16,6 +16,9 @@
 //
 //###########################################################################
 
+`ifdef SVUNIT_PKG____SV
+`else
+`define SVUNIT_PKG____SV
 `include "svunit_defines.svh"
 
 package svunit_pkg;
@@ -33,3 +36,4 @@ package svunit_pkg;
   `include "svunit_testrunner.sv"
   `include "svunit_globals.svh"
 endpackage
+`endif  // SVUNIT_PKG____SV
