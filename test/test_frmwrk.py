@@ -1,8 +1,19 @@
 import fileinput
+import os
 import subprocess
 import pathlib
 import pytest
+import shutil
 from utils import *
+
+
+# Need a possibility to remove tools from PATH, otherwise we can't test
+def get_path_without_sims():
+    paths = os.environ['PATH'].split(os.path.pathsep)
+    xrun = shutil.which('xrun')
+    if xrun:
+        paths = list(filter(lambda p: p != os.path.dirname(xrun), paths))
+    return os.path.pathsep.join(paths)
 
 
 @all_files_in_dir('frmwrk_0')
@@ -387,3 +398,36 @@ def test_frmwrk_32(tmpdir):
     with tmpdir.as_cwd():
         return_code = subprocess.call(['runSVUnit', '-s', 'questa', 'blunt_object_unit_test.sv'])
         assert return_code == 255
+
+
+def test_called_without_simulator__extract_xcelium_if_on_path(tmpdir, monkeypatch):
+    with tmpdir.as_cwd():
+        fake_tool = pathlib.Path('xrun')
+        fake_tool.write_text('echo "called" > fake_tool.log')
+        fake_tool.chmod(0o700)
+        monkeypatch.setenv('PATH', get_path_without_sims())
+        monkeypatch.setenv('PATH', '.', prepend=os.pathsep)
+        print(os.environ["PATH"])
+
+        pathlib.Path('dummy_unit_test.sv').write_text('dummy')
+
+        subprocess.check_call(['runSVUnit'])
+
+        assert pathlib.Path('fake_tool.log').is_file()
+        assert 'called' in pathlib.Path('fake_tool.log').read_text()
+
+
+def test_called_without_simulator__extract_incisive_if_on_path(tmpdir, monkeypatch):
+    with tmpdir.as_cwd():
+        fake_tool = pathlib.Path('irun')
+        fake_tool.write_text('echo "called" > fake_tool.log')
+        fake_tool.chmod(0o700)
+        monkeypatch.setenv('PATH', get_path_without_sims())
+        monkeypatch.setenv('PATH', '.', prepend=os.pathsep)
+
+        pathlib.Path('dummy_unit_test.sv').write_text('dummy')
+
+        subprocess.check_call(['runSVUnit'])
+
+        assert pathlib.Path('fake_tool.log').is_file()
+        assert 'called' in pathlib.Path('fake_tool.log').read_text()

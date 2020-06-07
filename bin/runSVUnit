@@ -49,7 +49,7 @@ my @tests;
 my $help;
 
 sub usage () {
-  print "Usage:  runSVUnit -s|--sim <simulator> [-l|--log <log> -d|--define <macro> -f|--filelist <file> -U|-uvm -m|-mixedsim <vhdlfile>\n";
+  print "Usage:  runSVUnit [-s|--sim <simulator> -l|--log <log> -d|--define <macro> -f|--filelist <file> -U|-uvm -m|-mixedsim <vhdlfile>\n";
   print "                  -r|--r_arg <option> -c|--c_arg <option> -o|--out <dir> -t|--test <test>]\n";
   print "  -s|--sim <simulator>     : simulator is either of questa, modelsim, riviera, ius, xcelium or vcs\n";
   print "  -l|--log <log>           : simulation log file (default: run.log)\n";
@@ -108,11 +108,20 @@ my $version = $VERSION->getline;
 chomp $version;
 push @defines, qq!SVUNIT_VERSION='"$version"'!;
 
+if (system("which xrun > /dev/null 2>1") == 0) {
+  $simulator = "xrun";
+}
+if (system("which irun > /dev/null 2>1") == 0) {
+  $simulator = "irun";
+}
+
 # simulator check
 $simulator =~ tr/A-Z/a-z/;
 $simulator =~ s/questa/modelsim/;
 $simulator =~ s/ius/irun/;
 $simulator =~ s/xcelium/xrun/;
+
+# TODO Also print that the simulator can't be determined from PATH
 usage() if $simulator ne "xrun" &&
            $simulator ne "irun" &&
            $simulator ne "modelsim" &&
