@@ -108,12 +108,15 @@ my $version = $VERSION->getline;
 chomp $version;
 push @defines, qq!SVUNIT_VERSION='"$version"'!;
 
-if (system("which xrun > /dev/null 2>1") == 0) {
-  $simulator = "xrun";
+my @sims = qw(xrun irun vsim vcs);
+foreach my $sim (@sims) {
+    if (system("which $sim > /dev/null 2>&1") == 0) {
+      $simulator = $sim;
+    }
 }
-if (system("which irun > /dev/null 2>1") == 0) {
-  $simulator = "irun";
-}
+
+# We look for the executable 'vsim', but the script uses 'modelsim' as a simulator name
+$simulator =~ s/vsim/modelsim/;
 
 # simulator check
 $simulator =~ tr/A-Z/a-z/;

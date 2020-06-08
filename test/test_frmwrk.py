@@ -407,7 +407,6 @@ def test_called_without_simulator__extract_xcelium_if_on_path(tmpdir, monkeypatc
         fake_tool.chmod(0o700)
         monkeypatch.setenv('PATH', get_path_without_sims())
         monkeypatch.setenv('PATH', '.', prepend=os.pathsep)
-        print(os.environ["PATH"])
 
         pathlib.Path('dummy_unit_test.sv').write_text('dummy')
 
@@ -420,6 +419,38 @@ def test_called_without_simulator__extract_xcelium_if_on_path(tmpdir, monkeypatc
 def test_called_without_simulator__extract_incisive_if_on_path(tmpdir, monkeypatch):
     with tmpdir.as_cwd():
         fake_tool = pathlib.Path('irun')
+        fake_tool.write_text('echo "called" > fake_tool.log')
+        fake_tool.chmod(0o700)
+        monkeypatch.setenv('PATH', get_path_without_sims())
+        monkeypatch.setenv('PATH', '.', prepend=os.pathsep)
+
+        pathlib.Path('dummy_unit_test.sv').write_text('dummy')
+
+        subprocess.check_call(['runSVUnit'])
+
+        assert pathlib.Path('fake_tool.log').is_file()
+        assert 'called' in pathlib.Path('fake_tool.log').read_text()
+
+
+def test_called_without_simulator__extract_questa_if_on_path(tmpdir, monkeypatch):
+    with tmpdir.as_cwd():
+        fake_tool = pathlib.Path('vsim')
+        fake_tool.write_text('echo "called" > fake_tool.log')
+        fake_tool.chmod(0o700)
+        monkeypatch.setenv('PATH', get_path_without_sims())
+        monkeypatch.setenv('PATH', '.', prepend=os.pathsep)
+
+        pathlib.Path('dummy_unit_test.sv').write_text('dummy')
+
+        subprocess.check_call(['runSVUnit'])
+
+        assert pathlib.Path('fake_tool.log').is_file()
+        assert 'called' in pathlib.Path('fake_tool.log').read_text()
+
+
+def test_called_without_simulator__extract_vcs_if_on_path(tmpdir, monkeypatch):
+    with tmpdir.as_cwd():
+        fake_tool = pathlib.Path('vcs')
         fake_tool.write_text('echo "called" > fake_tool.log')
         fake_tool.chmod(0o700)
         monkeypatch.setenv('PATH', get_path_without_sims())
