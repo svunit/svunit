@@ -400,57 +400,10 @@ def test_frmwrk_32(tmpdir):
         assert return_code == 255
 
 
-def test_called_without_simulator__extract_xcelium_if_on_path(tmpdir, monkeypatch):
+@pytest.mark.parametrize("sim", ["xrun", "irun", "vsim", "vcs"])
+def test_called_without_simulator__extract_sim_if_on_path(sim, tmpdir, monkeypatch):
     with tmpdir.as_cwd():
-        fake_tool = pathlib.Path('xrun')
-        fake_tool.write_text('echo "called" > fake_tool.log')
-        fake_tool.chmod(0o700)
-        monkeypatch.setenv('PATH', get_path_without_sims())
-        monkeypatch.setenv('PATH', '.', prepend=os.pathsep)
-
-        pathlib.Path('dummy_unit_test.sv').write_text('dummy')
-
-        subprocess.check_call(['runSVUnit'])
-
-        assert pathlib.Path('fake_tool.log').is_file()
-        assert 'called' in pathlib.Path('fake_tool.log').read_text()
-
-
-def test_called_without_simulator__extract_incisive_if_on_path(tmpdir, monkeypatch):
-    with tmpdir.as_cwd():
-        fake_tool = pathlib.Path('irun')
-        fake_tool.write_text('echo "called" > fake_tool.log')
-        fake_tool.chmod(0o700)
-        monkeypatch.setenv('PATH', get_path_without_sims())
-        monkeypatch.setenv('PATH', '.', prepend=os.pathsep)
-
-        pathlib.Path('dummy_unit_test.sv').write_text('dummy')
-
-        subprocess.check_call(['runSVUnit'])
-
-        assert pathlib.Path('fake_tool.log').is_file()
-        assert 'called' in pathlib.Path('fake_tool.log').read_text()
-
-
-def test_called_without_simulator__extract_questa_if_on_path(tmpdir, monkeypatch):
-    with tmpdir.as_cwd():
-        fake_tool = pathlib.Path('vsim')
-        fake_tool.write_text('echo "called" > fake_tool.log')
-        fake_tool.chmod(0o700)
-        monkeypatch.setenv('PATH', get_path_without_sims())
-        monkeypatch.setenv('PATH', '.', prepend=os.pathsep)
-
-        pathlib.Path('dummy_unit_test.sv').write_text('dummy')
-
-        subprocess.check_call(['runSVUnit'])
-
-        assert pathlib.Path('fake_tool.log').is_file()
-        assert 'called' in pathlib.Path('fake_tool.log').read_text()
-
-
-def test_called_without_simulator__extract_vcs_if_on_path(tmpdir, monkeypatch):
-    with tmpdir.as_cwd():
-        fake_tool = pathlib.Path('vcs')
+        fake_tool = pathlib.Path(sim)
         fake_tool.write_text('echo "called" > fake_tool.log')
         fake_tool.chmod(0o700)
         monkeypatch.setenv('PATH', get_path_without_sims())
