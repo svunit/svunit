@@ -415,3 +415,24 @@ def test_called_without_simulator__extract_sim_if_on_path(sim, tmpdir, monkeypat
 
         assert pathlib.Path('fake_tool.log').is_file()
         assert 'called' in pathlib.Path('fake_tool.log').read_text()
+
+
+def test_called_without_simulator__extract_xrun_even_if_irun_also_on_path(tmpdir, monkeypatch):
+    with tmpdir.as_cwd():
+        fake_tool = pathlib.Path("xrun")
+        fake_tool.write_text('echo "xrun called" > fake_tool.log')
+        fake_tool.chmod(0o700)
+
+        fake_tool = pathlib.Path("irun")
+        fake_tool.write_text('echo "irun called" > fake_tool.log')
+        fake_tool.chmod(0o700)
+
+        monkeypatch.setenv('PATH', get_path_without_sims())
+        monkeypatch.setenv('PATH', '.', prepend=os.pathsep)
+
+        pathlib.Path('dummy_unit_test.sv').write_text('dummy')
+
+        subprocess.check_call(['runSVUnit'])
+
+        assert pathlib.Path('fake_tool.log').is_file()
+        assert 'xrun called' in pathlib.Path('fake_tool.log').read_text()

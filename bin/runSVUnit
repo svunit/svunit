@@ -112,6 +112,7 @@ my @sims = qw(xrun irun vsim vcs);
 foreach my $sim (@sims) {
     if (system("which $sim > /dev/null 2>&1") == 0) {
       $simulator = $sim;
+      last;
     }
 }
 
