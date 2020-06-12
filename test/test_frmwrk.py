@@ -16,6 +16,13 @@ def get_path_without_sims():
     return os.path.pathsep.join(paths)
 
 
+def fake_tool(name):
+    executable = pathlib.Path(name)
+    executable.write_text('echo "{} called" > fake_tool.log'.format(name))
+    executable.chmod(0o700)
+    return executable
+
+
 @all_files_in_dir('frmwrk_0')
 def test_frmwrk_0(datafiles):
     with datafiles.as_cwd():
@@ -403,9 +410,7 @@ def test_frmwrk_32(tmpdir):
 @pytest.mark.parametrize("sim", ["xrun", "irun", "vsim", "vcs"])
 def test_called_without_simulator__extract_sim_if_on_path(sim, tmpdir, monkeypatch):
     with tmpdir.as_cwd():
-        fake_tool = pathlib.Path(sim)
-        fake_tool.write_text('echo "called" > fake_tool.log')
-        fake_tool.chmod(0o700)
+        fake_tool(sim)
         monkeypatch.setenv('PATH', get_path_without_sims())
         monkeypatch.setenv('PATH', '.', prepend=os.pathsep)
 
@@ -419,13 +424,8 @@ def test_called_without_simulator__extract_sim_if_on_path(sim, tmpdir, monkeypat
 
 def test_called_without_simulator__extract_xrun_even_if_irun_also_on_path(tmpdir, monkeypatch):
     with tmpdir.as_cwd():
-        fake_tool = pathlib.Path("xrun")
-        fake_tool.write_text('echo "xrun called" > fake_tool.log')
-        fake_tool.chmod(0o700)
-
-        fake_tool = pathlib.Path("irun")
-        fake_tool.write_text('echo "irun called" > fake_tool.log')
-        fake_tool.chmod(0o700)
+        fake_tool('xrun')
+        fake_tool('irun')
 
         monkeypatch.setenv('PATH', get_path_without_sims())
         monkeypatch.setenv('PATH', '.', prepend=os.pathsep)
@@ -440,13 +440,8 @@ def test_called_without_simulator__extract_xrun_even_if_irun_also_on_path(tmpdir
 
 def test_called_with_simulator__override_simulator_extracted_from_path(tmpdir, monkeypatch):
     with tmpdir.as_cwd():
-        fake_tool = pathlib.Path("xrun")
-        fake_tool.write_text('echo "xrun called" > fake_tool.log')
-        fake_tool.chmod(0o700)
-
-        fake_tool = pathlib.Path("irun")
-        fake_tool.write_text('echo "irun called" > fake_tool.log')
-        fake_tool.chmod(0o700)
+        fake_tool('xrun')
+        fake_tool('irun')
 
         monkeypatch.setenv('PATH', get_path_without_sims())
         monkeypatch.setenv('PATH', '.', prepend=os.pathsep)
