@@ -457,3 +457,15 @@ def test_called_with_simulator__override_simulator_extracted_from_path(tmpdir, m
 
         assert pathlib.Path('fake_tool.log').is_file()
         assert 'irun called' in pathlib.Path('fake_tool.log').read_text()
+
+
+def test_called_without_simulator__nothing_on_path(tmpdir, monkeypatch):
+    with tmpdir.as_cwd():
+        monkeypatch.setenv('PATH', get_path_without_sims())
+
+        pathlib.Path('dummy_unit_test.sv').write_text('dummy')
+
+        proc = subprocess.run(['runSVUnit'], stdout=subprocess.PIPE, universal_newlines=True)
+
+        assert proc.returncode != 0
+        assert "Could not determine simulator" in proc.stdout

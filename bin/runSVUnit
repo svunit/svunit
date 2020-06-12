@@ -128,12 +128,10 @@ $simulator =~ s/questa/modelsim/;
 $simulator =~ s/ius/irun/;
 $simulator =~ s/xcelium/xrun/;
 
-# TODO Also print that the simulator can't be determined from PATH
-usage() if $simulator ne "xrun" &&
-           $simulator ne "irun" &&
-           $simulator ne "modelsim" &&
-           $simulator ne "riviera" &&
-           $simulator ne "vcs";
+if (not grep { $_ eq $simulator } qw(xrun irun modelsim riviera vcs)) {
+  print("Could not determine simulator. None found on 'PATH' and none specified via command line\n");
+  usage()
+}
 
 # start the command line
 $cmd = "cd $outdir; ";
