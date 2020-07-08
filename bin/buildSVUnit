@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/bin/env perl
 
 ############################################################################
 #
@@ -19,7 +19,10 @@
 ############################################################################
 
 use strict;
-use Cwd;
+use Cwd qw(getcwd abs_path);
+use File::Basename qw( dirname );
+use IPC::System::Simple qw(system);
+use English qw(-no_match_vars);
 use Getopt::Long;
 use IO::File;
 use IO::Dir;
@@ -28,6 +31,7 @@ use File::Find;
 
 
 my $cwd = getcwd;
+my $scriptDir = dirname(abs_path(__FILE__));
 my $pwd = ".";
 my $outdir = ".";
 my $g_found_unit_test = 0;
@@ -69,7 +73,7 @@ sub getFilelists
                       }
                     },
       no_chdir => 1
-    }, qw( . ));
+    }, qq( $cwd ));
 }
 
 #############################################
@@ -80,7 +84,8 @@ sub getFilelists
 #############################################
 sub buildTestrunner
 {
-  my $cmd = "cd $outdir; create_testrunner.pl -overwrite -out testrunner.sv";
+  die "could not open script ${scriptDir}/create_testrunner.pl for execution \n" unless((-e qq(${scriptDir}/create_testrunner.pl)) && (-r qq(${scriptDir}/create_testrunner.pl)) && (-x qq(${scriptDir}/create_testrunner.pl)));
+  my $cmd = "cd $outdir; ${scriptDir}/create_testrunner.pl -overwrite -out testrunner.sv";
   my $testsuites;
 
   find({
@@ -94,13 +99,13 @@ sub buildTestrunner
     }, $outdir);
 
   if (!defined $testsuites) {
-    unlink ".svunit.f";
+    unlink "${cwd}/.svunit.f" or die "could not unlink ${cwd}/.svunit.f\n";
     return 1;
   }
 
   else {
     system("$cmd$testsuites");
-    system("mv $outdir/testrunner.sv $outdir/.testrunner.sv");
+    system("\\mv $outdir/testrunner.sv $outdir/.testrunner.sv");
     $FILELIST->print(".testrunner.sv\n");
     return 0;
   }
@@ -129,7 +134,8 @@ sub buildTestsuite
 
   # create the testsuite for this directory
   if (@unittest > 0) {
-    my $cmd = "create_testsuite.pl -overwrite -out $outdir/$dirID\_testsuite.sv";
+    die "could not open script ${scriptDir}/create_testsuite.pl for execution \n" unless((-e qq(${scriptDir}/create_testsuite.pl)) && (-r qq(${scriptDir}/create_testsuite.pl)) && (-x qq(${scriptDir}/create_testsuite.pl)));
+    my $cmd = "${scriptDir}/create_testsuite.pl -overwrite -out $outdir/$dirID\_testsuite.sv";
     foreach (@unittest) {
       $FILELIST->print("$cwd/$_\n");
       $cmd .= " -add $_";
@@ -182,11 +188,12 @@ GetOptions("o|out=s" => \$outdir,
 usage() if $help;
 
 if (! -e $outdir ) {
-  system("mkdir $outdir");
+  system("\\mkdir $outdir");
 }
 $FILELIST = IO::File->new();
 $FILELIST->open(">$outdir/.svunit.f");
 $FILELIST->print("+incdir+$cwd\n");
+die "SVUNIT_INSTALL is not found in the env\n" unless(exists($ENV{SVUNIT_INSTALL}));
 $FILELIST->print("+incdir+$ENV{SVUNIT_INSTALL}/svunit_base\n");
 $FILELIST->print("$ENV{SVUNIT_INSTALL}/svunit_base/svunit_pkg.sv\n");
 if (defined $mock) {
@@ -198,7 +205,7 @@ if ($uvm) {
   $FILELIST->print("$ENV{SVUNIT_INSTALL}/svunit_base/uvm-mock/svunit_uvm_mock_pkg.sv\n");
 }
 if ($wavedrom) {
-  system("python3 $ENV{SVUNIT_INSTALL}/bin/wavedromSVUnit.py");
+  system("\\python3 $ENV{SVUNIT_INSTALL}/bin/wavedromSVUnit.py");
 }
 
 getFilelists;

@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/bin/env perl
 
 ############################################################################
 #
@@ -19,6 +19,8 @@
 ############################################################################
 
 use File::Basename;
+use Cwd qw(getcwd abs_path);
+my $cwd = getcwd;
 
 
 ##########################################################################
@@ -116,20 +118,20 @@ sub ValidArgs() {
     return 1;
   }
   if (defined ($class_name)) {
-    $output_file = $class_name;
+    $output_file = qq($cwd/$class_name);
     $output_file .= "_unit_test.sv";
   }
   elsif (defined ($module_name)) {
-    $output_file = $module_name;
+    $output_file = qq($cwd/$module_name);
     $output_file .= "_unit_test.sv";
   }
   elsif (defined ($if_name)) {
-    $output_file = $if_name;
+    $output_file = qq($cwd/$if_name);
     $output_file .= "_unit_test.sv";
   }
   elsif ($output_file eq "") {
     ($name, $path, $suffix) = fileparse($testname, qr/\.[^.]*/);
-    $output_file = "$name";
+    $output_file = "$cwd/$name";
     $output_file .= "_unit_test.sv";
   }
   else {

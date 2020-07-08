@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/bin/env perl
 
 ############################################################################
 #
@@ -17,6 +17,9 @@
 #  limitations under the License.
 #
 ############################################################################
+use IPC::System::Simple qw(system);
+use Cwd qw(getcwd abs_path);
+my $cwd = getcwd;
 
 ##########################################################################
 # Local Variables
@@ -100,12 +103,12 @@ sub ValidArgs() {
 # OpenFiles(): This opens the input and output files
 ##########################################################################
 sub OpenFiles() {
-  if ( -r $output_file and $overwrite != 1 ) {
+  if ( -r qq($cwd/$output_file) and $overwrite != 1 ) {
     print "ERROR: The file already exists, to overwrite, use the -overwrite argument\n\n";
     exit 1;
   }
   else {
-    open ( OUTFILE, ">$output_file"  ) or die "Cannot Open file $output_file\n";
+    open ( OUTFILE, ">$cwd/$output_file"  ) or die "Cannot Open file $cwd/$output_file\n";
   }
 }
 
@@ -114,7 +117,7 @@ sub OpenFiles() {
 # CloseFiles(): This closes the input and output files
 ##########################################################################
 sub CloseFiles() {
-  close ( OUTFILE ) or die "Cannot Close file $output_file\n";
+  close ( OUTFILE ) or die "Cannot Close file $cwd/$output_file\n";
 }
 
 ###############################################################################
@@ -262,11 +265,11 @@ sub CreateTestSuite() {
 #             temporary output file.
 ##########################################################################
 sub MoveFile() {
-  if ( -w $output_file ) {
-    system("mv $output_file~ $output_file");
+  if ( -w qq($cwd/$output_file) ) {
+    system("\\mv $cwd/$output_file~ $cwd/$output_file");
   }
   else {
-    die "ERROR: Move from $output_file~ to $output_file failed";
+    die "ERROR: Move from $cwd/$output_file~ to $cwd/$output_file failed";
   }
 }
 
