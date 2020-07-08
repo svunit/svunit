@@ -49,7 +49,7 @@ my @tests;
 my $help;
 
 sub usage () {
-  print "Usage:  runSVUnit -s|--sim <simulator> [-l|--log <log> -d|--define <macro> -f|--filelist <file> -U|-uvm -m|-mixedsim <vhdlfile>\n";
+  print "Usage:  runSVUnit [-s|--sim <simulator> -l|--log <log> -d|--define <macro> -f|--filelist <file> -U|-uvm -m|-mixedsim <vhdlfile>\n";
   print "                  -r|--r_arg <option> -c|--c_arg <option> -o|--out <dir> -t|--test <test>]\n";
   print "  -s|--sim <simulator>     : simulator is either of questa, modelsim, riviera, ius, xcelium or vcs\n";
   print "  -l|--log <log>           : simulation log file (default: run.log)\n";
@@ -108,16 +108,30 @@ my $version = $VERSION->getline;
 chomp $version;
 push @defines, qq!SVUNIT_VERSION='"$version"'!;
 
+# Extract simulator from PATH if nothing passed as argument
+if ($simulator eq "") {
+  my @sims = qw(xrun irun vsim vcs);
+  foreach my $sim (@sims) {
+    if (system("which $sim > /dev/null 2>&1") == 0) {
+      $simulator = $sim;
+      last;
+    }
+  }
+
+  # We look for the executable 'vsim', but the script uses 'modelsim' as a simulator name
+  $simulator =~ s/vsim/modelsim/;
+}
+
 # simulator check
 $simulator =~ tr/A-Z/a-z/;
 $simulator =~ s/questa/modelsim/;
 $simulator =~ s/ius/irun/;
 $simulator =~ s/xcelium/xrun/;
-usage() if $simulator ne "xrun" &&
-           $simulator ne "irun" &&
-           $simulator ne "modelsim" &&
-           $simulator ne "riviera" &&
-           $simulator ne "vcs";
+
+if (not grep { $_ eq $simulator } qw(xrun irun modelsim riviera vcs)) {
+  print("Could not determine simulator. None found on 'PATH' and none specified via command line\n");
+  usage()
+}
 
 # start the command line
 $cmd = "cd $outdir; ";

@@ -1,8 +1,26 @@
 import fileinput
+import os
 import subprocess
 import pathlib
 import pytest
+import shutil
 from utils import *
+
+
+# Need a possibility to remove tools from PATH, otherwise we can't test
+def get_path_without_sims():
+    paths = os.environ['PATH'].split(os.path.pathsep)
+    xrun = shutil.which('xrun')
+    if xrun:
+        paths = list(filter(lambda p: p != os.path.dirname(xrun), paths))
+    return os.path.pathsep.join(paths)
+
+
+def fake_tool(name):
+    executable = pathlib.Path(name)
+    executable.write_text('echo "{} called" > fake_tool.log'.format(name))
+    executable.chmod(0o700)
+    return executable
 
 
 @all_files_in_dir('frmwrk_0')
@@ -387,3 +405,62 @@ def test_frmwrk_32(tmpdir):
     with tmpdir.as_cwd():
         return_code = subprocess.call(['runSVUnit', '-s', 'questa', 'blunt_object_unit_test.sv'])
         assert return_code == 255
+
+
+@pytest.mark.parametrize("sim", ["xrun", "irun", "vsim", "vcs"])
+def test_called_without_simulator__extract_sim_if_on_path(sim, tmpdir, monkeypatch):
+    with tmpdir.as_cwd():
+        fake_tool(sim)
+        monkeypatch.setenv('PATH', get_path_without_sims())
+        monkeypatch.setenv('PATH', '.', prepend=os.pathsep)
+
+        pathlib.Path('dummy_unit_test.sv').write_text('dummy')
+
+        subprocess.check_call(['runSVUnit'])
+
+        assert pathlib.Path('fake_tool.log').is_file()
+        assert 'called' in pathlib.Path('fake_tool.log').read_text()
+
+
+def test_called_without_simulator__extract_xrun_even_if_irun_also_on_path(tmpdir, monkeypatch):
+    with tmpdir.as_cwd():
+        fake_tool('xrun')
+        fake_tool('irun')
+
+        monkeypatch.setenv('PATH', get_path_without_sims())
+        monkeypatch.setenv('PATH', '.', prepend=os.pathsep)
+
+        pathlib.Path('dummy_unit_test.sv').write_text('dummy')
+
+        subprocess.check_call(['runSVUnit'])
+
+        assert pathlib.Path('fake_tool.log').is_file()
+        assert 'xrun called' in pathlib.Path('fake_tool.log').read_text()
+
+
+def test_called_with_simulator__override_simulator_extracted_from_path(tmpdir, monkeypatch):
+    with tmpdir.as_cwd():
+        fake_tool('xrun')
+        fake_tool('irun')
+
+        monkeypatch.setenv('PATH', get_path_without_sims())
+        monkeypatch.setenv('PATH', '.', prepend=os.pathsep)
+
+        pathlib.Path('dummy_unit_test.sv').write_text('dummy')
+
+        subprocess.check_call(['runSVUnit', '-s', 'irun'])
+
+        assert pathlib.Path('fake_tool.log').is_file()
+        assert 'irun called' in pathlib.Path('fake_tool.log').read_text()
+
+
+def test_called_without_simulator__nothing_on_path(tmpdir, monkeypatch):
+    with tmpdir.as_cwd():
+        monkeypatch.setenv('PATH', get_path_without_sims())
+
+        pathlib.Path('dummy_unit_test.sv').write_text('dummy')
+
+        proc = subprocess.run(['runSVUnit'], stdout=subprocess.PIPE, universal_newlines=True)
+
+        assert proc.returncode != 0
+        assert "Could not determine simulator" in proc.stdout
