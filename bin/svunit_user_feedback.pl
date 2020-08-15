@@ -24,6 +24,7 @@ my $FB;
 my $fb_file;
 my $HI_MSG_THRESHOLD = 200;
 my $LO_MSG_THRESHOLD = 10;
+my $EMAIL = "neil.johnson\@agilesoc.com";
 
 sub main() {
   if (defined $ENV{"HOME"} and -O $ENV{"HOME"}) {
@@ -85,7 +86,7 @@ sub printHi() {
   We need to hear how you're doing with SVUnit so
   please, please, please send us a note at:
 
-              neil.johnson\@agilesoc.com
+              $EMAIL
 
   Tell us about what you like, what you don't like,
   new features you'd like to see... basically anything
@@ -139,7 +140,7 @@ sub printLo() {
   chance to kick the tires, we're hoping you'll tell us
   about your experience by sending us a note at:
 
-              neil.johnson\@agilesoc.com
+              $EMAIL
 
   Tell us about what you like, what you don't like,
   new features you'd like to see... basically anything
