@@ -1,13 +1,13 @@
 //###########################################################################
 //
-//  Copyright 2011 XtremeEDA Corp.
-//  
+//  Copyright 2011 The SVUnit Authors.
+//
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
 //  You may obtain a copy of the License at
-//  
+//
 //      http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 //  Unless required by applicable law or agreed to in writing, software
 //  distributed under the License is distributed on an "AS IS" BASIS,
 //  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -62,7 +62,7 @@ endfunction
 */
 function void svunit_testsuite::add_testcase(svunit_testcase svunit);
   `INFO($sformatf("Registering Unit Test Case %s", svunit.get_name()));
-  list_of_testcases.push_back(svunit); 
+  list_of_testcases.push_back(svunit);
 endfunction
 
 
@@ -90,7 +90,7 @@ function void svunit_testsuite::report();
     svunit_testcase match[$] = list_of_testcases.find() with (item.get_results() == PASS);
     pass_cnt = match.size();
   end
-  
+
   if (pass_cnt == list_of_testcases.size()) begin
     success_str = "PASSED";
     success = PASS;
