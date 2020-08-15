@@ -3,13 +3,13 @@
 ############################################################################
 #
 #  Copyright 2011 XtremeEDA Corp.
-#  
+#
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
 #  You may obtain a copy of the License at
-#  
+#
 #      http://www.apache.org/licenses/LICENSE-2.0
-#  
+#
 #  Unless required by applicable law or agreed to in writing, software
 #  distributed under the License is distributed on an "AS IS" BASIS,
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,6 +24,7 @@ my $FB;
 my $fb_file;
 my $HI_MSG_THRESHOLD = 200;
 my $LO_MSG_THRESHOLD = 10;
+my $EMAIL = "svunit\@outlook.com";
 
 sub main() {
   if (defined $ENV{"HOME"} and -O $ENV{"HOME"}) {
@@ -60,20 +61,20 @@ sub printHi() {
 ============================================================
 ============================================================
 
- WW              WW      OOOOO      WW              WW  !!! 
- WW              WW     OOOOOOO     WW              WW  !!! 
- WW              WW   OOO     OOO   WW              WW  !!! 
- WW              WW  OOO       OOO  WW              WW  !!! 
- WW              WW  OOO       OOO  WW              WW  !!! 
- WW              WW  OOO       OOO  WW              WW  !!! 
- WW              WW  OOO       OOO  WW              WW  !!! 
- WW              WW  OOO       OOO  WW              WW  !!! 
- WW              WW  OOO       OOO  WW              WW  !!! 
- WWW     WW     WWW  OOO       OOO  WWW     WW     WWW  !!! 
-  WWW    WW    WWW   OOO       OOO   WWW    WW    WWW   !!! 
-   WWW  WWWW  WWW     OOO     OOO     WWW  WWWW  WWW    !!! 
-     WWWWWWWWWW         OOOOOOO         WWWWWWWWWW          
-       WW  WW            OOOOO            WW  WW        !!! 
+ WW              WW      OOOOO      WW              WW  !!!
+ WW              WW     OOOOOOO     WW              WW  !!!
+ WW              WW   OOO     OOO   WW              WW  !!!
+ WW              WW  OOO       OOO  WW              WW  !!!
+ WW              WW  OOO       OOO  WW              WW  !!!
+ WW              WW  OOO       OOO  WW              WW  !!!
+ WW              WW  OOO       OOO  WW              WW  !!!
+ WW              WW  OOO       OOO  WW              WW  !!!
+ WW              WW  OOO       OOO  WW              WW  !!!
+ WWW     WW     WWW  OOO       OOO  WWW     WW     WWW  !!!
+  WWW    WW    WWW   OOO       OOO   WWW    WW    WWW   !!!
+   WWW  WWWW  WWW     OOO     OOO     WWW  WWWW  WWW    !!!
+     WWWWWWWWWW         OOOOOOO         WWWWWWWWWW
+       WW  WW            OOOOO            WW  WW        !!!
 
 
   You've been busy!!
@@ -85,7 +86,7 @@ sub printHi() {
   We need to hear how you're doing with SVUnit so
   please, please, please send us a note at:
 
-              neil.johnson\@agilesoc.com
+              $EMAIL
 
   Tell us about what you like, what you don't like,
   new features you'd like to see... basically anything
@@ -104,7 +105,7 @@ sub printHi() {
 
   Thanks again for your help!
 
-  -the creaters of SVUnit and other SVUnit experts like you
+  -the creators of SVUnit and other SVUnit experts like you
 
 ============================================================
 ============================================================
@@ -128,7 +129,7 @@ sub printLo() {
     HHH       HHH  EEE                  YYY         !!!
     HHH       HHH  EEE                  YYY         !!!
     HHH       HHH  EEE                  YYY         !!!
-    HHH       HHH  EEEEEEEEEEEEEE       YYY            
+    HHH       HHH  EEEEEEEEEEEEEE       YYY
     HHH       HHH  EEEEEEEEEEEEEE       YYY         !!!
 
 
@@ -139,7 +140,7 @@ sub printLo() {
   chance to kick the tires, we're hoping you'll tell us
   about your experience by sending us a note at:
 
-              neil.johnson\@agilesoc.com
+              $EMAIL
 
   Tell us about what you like, what you don't like,
   new features you'd like to see... basically anything
@@ -157,7 +158,7 @@ sub printLo() {
 
   Thanks for your help!
 
-  -the creaters of SVUnit and SVUnit users everywhere
+  -the creators of SVUnit and SVUnit users everywhere
 
   PS: I love your shoes!! Are they new?
 
@@ -167,7 +168,3 @@ HEY
 }
 
 main();
-
-
-
-
