@@ -13,7 +13,7 @@ NOTE: Refer also to the FAQ at: www.agilesoc.com/svunit/svunit-FAQ
 
 ## Release Notes
 
-See RELEASE.txt for release notes
+Go [here](CHANGELOG.md) for release notes.
 
 
 ## Step-by-step instructions to get a first unit test going...
