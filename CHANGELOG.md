@@ -5,7 +5,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
-## [Unreleased]
+## [3.34.0]
 
 ### Added
 - Detect simulator automatically, based on what tools are on 'PATH'.
@@ -313,7 +313,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * ?
 
 
-[unreleased]: https://github.com/tudortimi/svunit/compare/v3.33...HEAD
+[3.34.0]: https://github.com/tudortimi/svunit/compare/v3.33...v3.34.0
 [3.33]: https://github.com/tudortimi/svunit/compare/v3.32...v3.33
 [3.32]: https://github.com/tudortimi/svunit/compare/v3.31...v3.32
 [3.31]: https://github.com/tudortimi/svunit/compare/v3.30...v3.31
