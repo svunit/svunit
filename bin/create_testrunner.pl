@@ -2,14 +2,14 @@
 
 ############################################################################
 #
-#  Copyright 2011 XtremeEDA Corp.
-#  
+#  Copyright 2011 The SVUnit Authors.
+#
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
 #  You may obtain a copy of the License at
-#  
+#
 #      http://www.apache.org/licenses/LICENSE-2.0
-#  
+#
 #  Unless required by applicable law or agreed to in writing, software
 #  distributed under the License is distributed on an "AS IS" BASIS,
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -70,7 +70,7 @@ sub CheckArgs() {
   }
 }
 
-  
+
 ##########################################################################
 # ValidArgs(): This checks to see if the arguments provided make sense.
 ##########################################################################
@@ -112,7 +112,7 @@ sub CloseFiles() {
 
 ##########################################################################
 # CreateTestSuite(): This creates the testsuite for all unit tests within
-#                    this directory 
+#                    this directory
 ##########################################################################
 sub CreateTestSuite() {
   foreach ( @files_to_add ) {
@@ -136,7 +136,7 @@ sub CreateTestSuite() {
     push( @instance_names, $instance );
     $num_suites++;
   }
-  
+
 
   $cnt = 0;
 
@@ -223,7 +223,7 @@ sub CreateTestSuite() {
 
 
 ##########################################################################
-# MoveFile(): This moves the overwrites the output file with the 
+# MoveFile(): This moves the overwrites the output file with the
 #             temporary output file.
 ##########################################################################
 sub MoveFile() {
@@ -243,4 +243,4 @@ CheckArgs();
 ValidArgs();
 OpenFiles();
 CreateTestSuite();
-CloseFiles(); 
+CloseFiles();
