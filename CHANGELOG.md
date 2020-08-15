@@ -4,8 +4,6 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-Only changes after v3.33 are tracked in this file.
-
 
 ## [Unreleased]
 
@@ -17,57 +15,302 @@ Only changes after v3.33 are tracked in this file.
 - Start following [SemVer](https://semver.org) properly.
 
 
-Untracked versions
+# Legacy versions
 
 ## [3.33] - 2018-08-21
+
+* wavedrom update to handle task outputs
+
 ## [3.32] - 2018-08-21
+
+* updated the license headers b/c they were from a bad initial copy paste
+
 ## [3.31] - 2018-08-20
+
+* merge wavedrom
+
 ## [3.30] - 2018-01-17
+
+* pull https://github.com/tudortimi/svunit-code.git fix_uvm_build
+
 ## [3.29] - 2018-01-17
+
+* pull https://github.com/jesseprusi/svunit-code.git patch-4
+
 ## [3.28] - 2018-01-17
+
+* pull https://github.com/B00Ze/svunit-code.git tests_fix
+
 ## [3.27] - 2018-01-17
+
+* pull https://github.com/tudortimi/svunit-code.git tudortimi-add_gitignore
+
 ## [3.26] - 2017-01-04
+
+* pull https://github.com/jesseprusi/svunit-code.git patch-3
+
+## 3.25 - ?
+
+* pull https://github.com/chris-n-johnson/svunit-code.git fail_macro_argument_grouping
+
+## 3.24 - ?
+
+* update for issue #20
+
+## 3.23 - ?
+
+* pull https://github.com/jesseprusi/svunit-code.git patch-1
+
+## 3.22 - ?
+
+* pull https://github.com/jesseprusi/svunit-code.git patch-2
+
+## 3.21 - ?
+
+* pull https://github.com/chris-n-johnson/svunit-code.git fix-regex-used-for-cleanup
+
+## 3.20 - ?
+
+* add vcs top to runSVUnit command line
+
+## 3.19 - ?
+
+* add a timeout when SVUNIT_TIMEOUT is defined
+
+## 3.18 - ?
+
+* update for issue #17,#18
+* pull https://github.com/jesseprusi/svunit-code.git master
+
+## 3.17 - ?
+
+* vhdl support via -m switch
+
+## 3.16 - ?
+
+* pull https://github.com/tudortimi/svunit-code.git select_sim_for_tests
+
+## 3.15 - ?
+
+* update for issue #7
+
+## 3.14 - ?
+
+* test generalizing to make the regression suite easier/more robust
+* udpate for issue #12
+
+## 3.13 - ?
+
+* testsuite specific updates
+
+## 3.12 - ?
+
+* calling FAIL macros outside the testcase
+* update for issue #4
+
+## 3.11 - ?
+
+* uvm 1.2 support
+
+## 3.10 - ?
+
+* add the clk_and_reset.svh
+* beta support for vhdl file lists
+
+## 3.9 - ?
+
+* remove File::Which dependancy
+* improved create_unit_test.pl help for -uvm
+
+## 3.8 - ?
+
+* add support for 'create_unit_test.pl -uvm' to generate uvm test case templates
+
 ## [3.7] - 2015-06-18
+
+* update for ticket 57
+* update for ticket 63
+* re-added svunit user feedback that continues counting
+
 ## [3.6] - 2014-10-15
+
+* swapped the get_child for has_child to get rid of the NOCHILD warning
+
 ## [3.5] - 2014-09-27
+
+* .testrunner.sv build properly in outdir now (ticket 61 safe to close now)
+
 ## [3.4] - 2014-09-25
+
+* can have absolute or relative path for -f <file>
+
 ## [3.3] - 2014-09-25
+
+* update for ticket 61
+* update for ticket 62
+
 ## [3.2] - 2014-08-13
+
+* fix perl IO::File in runSVUnit
+
 ## [3.1] - 2014-08-12
+
+* major scripting update
+
 ## [2.12] - 2014-07-02
+
+* rm the docs
+
 ## [2.11] - 2014-05-28
+
+* update for ticket 53
+* update for ticket 50
+
 ## [2.10] - 2014-05-22
+
+* fixes for tickets 56 and 58
+
 ## [2.9] - 2014-05-08
+
+* vcs was broken without the sverilog/R switches. now it's fixed.
+
 ## [2.8] - 2014-04-09
+
+* closed ticket 56
+* add support for Riviera. I sure hope that works.
+
 ## [2.7] - 2014-01-16
+
+* updates to avoid SIM_ARG and RUN_LOG being cleared
+
 ## [2.6] - 2014-01-14
+
+* updates to questa.mk and addition of modelsim.mk (same files)
+
 ## [2.5] - 2013-09-23
+
+* closed ticket 51
+
 ## [2.4] - 2013-09-03
+
+* updated the ability to run sims from a parent dir that include any/all child unit tests
+
 ## [2.3] - 2013-07-19
+
+* README.txt update to fix a SVTEST_END example
+
 ## [2.2] - 2013-07-19
+
+* failed release
+
 ## [2.1] - 2013-06-17
+
+* SVTEST_END macro update, parentheses are no longer necessary
+* automated the version update that ends up being displayed in the testrunner pass/fail msg
+
 ## [1.9] - 2013-06-11
+
+* minor update to the uvm_report_mock to add dumping in the condition where the # of expected/actual don't match
+
 ## [1.8] - 2013-06-04
+
+* add svunit user feedback
+
 ## [1.7] - 2013-06-04
+
+* closed tickets 46 and 48
+* testsuites and makefiles no longer use abs paths
+* new macros for string comparison
+
 ## [1.6] - 2013-05-24
+
+* class infrastructure refactoring to consolidate functionality/rm superfluous code
+* logging update to remove redundant info
+* SVTEST_END() macro update. argument no longer required
+
 ## [1.5] - 2013-05-17
+
+* update the uvm_express example to be ius compatible (the coverage_unit_test.sv was holding us back to this point and I've rectified that with updates to the svunit-ius.mks and apb_coverage_unit_test.sv)
+* NOTE: IUS is still a little quirky when it comes to polling coverage statistics. seems the initial state of coverage points may start at 100 instead of 0 for some cases.
+
 ## [1.4] - 2013-05-17
+
+* in v1.3, UVM_INFO were trapped by the report mock. v1.4 ignores UVM_INFO. they're displayed normally.
+
 ## [1.3] - 2013-05-17
+
+* upgrade the uvm_report_mock to allow usage of the global uvm_report_(error/warning/fatal). overridden macros are no longer required
+* update the uvm_report_mock to display the actual/expected logging messages for debug
+
 ## [1.2] - 2013-04-26
+
+* maintenance release for consolidating functionality that's used and removing functionality that isn't
+* refactored/consolidated svunit regression suite
+* refactor svunit framework to remove unused features
+* refactor perl scripts to remove unused features
+
 ## [1.1] - 2013-04-25
+
+* major upgrade to switch to module based svunit hierarchy
+
 ## [0.13] - 2013-04-11
+
+* fixed tickets 42 and 44
+
 ## [0.12] - 2013-03-13
+
+* add example for the uvm_report_mock
+* integrate the example with the unit tests
+
 ## [0.11] - 2013-03-12
+
+* confirm ius support (close ticket #31)
+* add ius support to the uvm examples
+
 ## [0.10] - 2013-03-12
+
+* initial release of the mock_uvm_report object
+
 ## [0.9] - 2013-02-07
+
+* more test refactoring
+* updates to the uvm examples that were broken since the upgrade to rm the uvm dpi compilation
+
 ## [0.8] - 2013-01-31
+
+* success :)
+* primarily a maintenence update (no real funcational additions)
+* refactored frmwork* unit tests (not included in the release package)
+* remove reliance on UVM_HOME for examples and use the build-in uvm libraries that come with simulators
+* add thsi RELEASE.txt and update the release script
+
 ## [0.7] - 2013-01-31
+
+* it's harder than it looks. broken again.
+
 ## [0.6] - 2013-01-31
+
+* This release was completely broken so I removed it entirely
+
 ## [0.5] - 2012-09-05
+
+* ?
+
 ## [0.4] - 2012-06-29
+
+* ?
+
 ## [0.3] - 2012-06-27
+
+* ?
+
 ## [0.2] - 2012-06-21
+
+* ?
+
 ## [0.1] - 2012-06-11
+
+* ?
 
 
 [unreleased]: https://github.com/tudortimi/svunit/compare/v3.33...HEAD
