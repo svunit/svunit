@@ -1,4 +1,4 @@
-SVUnit
+# SVUnit
 
 NOTE: for instructions on how to get going with SVUnit, go to
       www.agilesoc.com/svunit.
@@ -6,17 +6,12 @@ NOTE: for instructions on how to get going with SVUnit, go to
 NOTE: Refer also to the FAQ at: www.agilesoc.com/svunit/svunit-FAQ
 
 
+## Release Notes
 
------------------------------------------------------------
-Release Notes...
------------------------------------------------------------
 See RELEASE.txt for release notes
 
 
-
------------------------------------------------------------
-Step-by-step instructions to get a first unit test going...
------------------------------------------------------------
+## Step-by-step instructions to get a first unit test going...
 
 1) setup the SVUNIT_INSTALL and PATH environment variables
 >export SVUNIT_INSTALL=`pwd`
