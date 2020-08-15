@@ -104,7 +104,7 @@ sub printHi() {
 
   Thanks again for your help!
 
-  -the creaters of SVUnit and other SVUnit experts like you
+  -the creators of SVUnit and other SVUnit experts like you
 
 ============================================================
 ============================================================
@@ -157,7 +157,7 @@ sub printLo() {
 
   Thanks for your help!
 
-  -the creaters of SVUnit and SVUnit users everywhere
+  -the creators of SVUnit and SVUnit users everywhere
 
   PS: I love your shoes!! Are they new?
 
