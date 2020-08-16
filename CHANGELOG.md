@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added
+### Fixed
 
 - Fix shebangs in scripts to use '/usr/bin/env'
 - Remove unused SV file from 'bin' directory
