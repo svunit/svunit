@@ -96,7 +96,7 @@ module dut_unit_test;
     `SVTEST(seventh_test)
       static int bozo = 4;
       static string gum = "gum is wrong";
-      `FAIL_IF_LOG(bozo != 2, $psprintf("%s %0d", gum, bozo));
+      `FAIL_IF_LOG(bozo != 2, $sformatf("%s %0d", gum, bozo));
     `SVTEST_END
 
     // verify FAIL_IF_EQUAL works with ternary operator (should pass)

@@ -182,7 +182,7 @@ module simple_model_unit_test;
 
          my_simple_model.in_put_port.put(tr);
          #1;
-         `uvm_info("simple_model_unit_test", $psprintf("out_get_fifo empty : %0d", my_simple_model.out_get_fifo.is_empty()), UVM_NONE)
+         `uvm_info("simple_model_unit_test", $sformatf("out_get_fifo empty : %0d", my_simple_model.out_get_fifo.is_empty()), UVM_NONE)
          `FAIL_IF(my_simple_model.out_get_fifo.is_empty());
        end
      `SVTEST_END
