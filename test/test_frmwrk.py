@@ -480,3 +480,20 @@ def test_uut_name_contains_static(tmpdir):
         verify_file('something_with_static_in_name_unit_test.gold',
                     'something_with_static_in_name_unit_test.sv')
         verify_testsuite('testsuite.gold')
+
+
+def test_uut_name_contains_automatic(tmpdir):
+    with tmpdir.as_cwd():
+        with open('something_with_automatic_in_name.sv',  'w+') as f:
+            f.write('\n'.join(['module something_with_automatic_in_name;',
+                               'endmodule']))
+        create_unit_test('something_with_automatic_in_name.sv')
+        subprocess.check_call(['buildSVUnit'])
+
+        golden_module_unit_test('something_with_automatic_in_name',
+                                'something_with_automatic_in_name')
+        golden_testsuite_with_1_unittest('something_with_automatic_in_name')
+
+        verify_file('something_with_automatic_in_name_unit_test.gold',
+                    'something_with_automatic_in_name_unit_test.sv')
+        verify_testsuite('testsuite.gold')
