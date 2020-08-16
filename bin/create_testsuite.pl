@@ -150,7 +150,7 @@ sub getUnitTests() {
         }
 
         # filter out the static/automatic keywords
-        s/(\s+)(static)(\s+)/$1$3/;
+        s/\bstatic\b//;
         s/automatic//;
 
         if ( /^\s*module\s*(\w+_unit_test);/ ) {
