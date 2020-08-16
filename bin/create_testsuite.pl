@@ -150,8 +150,8 @@ sub getUnitTests() {
         }
 
         # filter out the static/automatic keywords
-        s/static//;
-        s/automatic//;
+        s/\bstatic\b//;
+        s/\bautomatic\b//;
 
         if ( /^\s*module\s*(\w+_unit_test);/ ) {
           push (@unittests, $1);

@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fix shebangs in scripts to use '/usr/bin/env'
 - Remove unused SV file from 'bin' directory
+- Fix issues when UUT names contain 'static' or 'automatic'
 
 
 ## [3.34.0]
