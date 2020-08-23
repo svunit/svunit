@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix issues when UUT names contain 'static' or 'automatic'.
 
 
-## [3.34.0]
+## [3.34.0] - 2020-08-15
 
 ### Added
 - Detect simulator automatically, based on what tools are on 'PATH'.
