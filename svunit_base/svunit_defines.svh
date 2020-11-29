@@ -21,8 +21,10 @@
 */
 `ifndef FAIL_IF
 `define FAIL_IF(exp) \
-  if (svunit_pkg::current_tc.fail(`"fail_if`", (exp), `"exp`", `__FILE__, `__LINE__)) begin \
-    if (svunit_pkg::current_tc.is_running()) svunit_pkg::current_tc.give_up(); \
+  begin \
+    if (svunit_pkg::current_tc.fail(`"fail_if`", (exp), `"exp`", `__FILE__, `__LINE__)) begin \
+      if (svunit_pkg::current_tc.is_running()) svunit_pkg::current_tc.give_up(); \
+    end \
   end
 `endif
 
