@@ -5,6 +5,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [3.34.2] - 2020-11-29
+
+### Fixed
+
+- Fix fail macros to contain `begin`/`end` blocks, so that they can be used inside `if` statements.
+
+
 ## [3.34.1] - 2020-08-23
 
 ### Fixed
@@ -322,6 +329,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * ?
 
 
+[3.34.2]: https://github.com/tudortimi/svunit/compare/v3.34.1...v3.34.2
 [3.34.1]: https://github.com/tudortimi/svunit/compare/v3.34.0...v3.34.1
 [3.34.0]: https://github.com/tudortimi/svunit/compare/v3.33...v3.34.0
 [3.33]: https://github.com/tudortimi/svunit/compare/v3.32...v3.33
