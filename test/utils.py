@@ -150,3 +150,8 @@ def expect_passing_example(dir, sim, args=[]):
 
         expect_file('run.log')
         expect_testrunner_pass('run.log')
+
+
+def contains_pattern(pattern, logfile_path):
+    with open(logfile_path) as file, mmap.mmap(file.fileno(), 0, access=mmap.ACCESS_READ) as log:
+        return bool(re.search(pattern, log))
