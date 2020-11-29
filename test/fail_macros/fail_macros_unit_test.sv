@@ -48,6 +48,30 @@ module fail_macros_unit_test;
         $display(else_block_error_msg);
     `SVTEST_END
 
+
+    `SVTEST(fail_unless_macro_under_if_statement_with_else_block)
+      if (1)
+        `FAIL_UNLESS(1)
+      else
+        $display(else_block_error_msg);
+    `SVTEST_END
+
+
+    `SVTEST(fail_unless_log_macro_under_if_statement_with_else_block)
+      if (1)
+        `FAIL_UNLESS_LOG(1, "dummy")
+      else
+        $display(else_block_error_msg);
+    `SVTEST_END
+
+
+    `SVTEST(fail_unless_equal_macro_under_if_statement_with_else_block)
+      if (1)
+        `FAIL_UNLESS_EQUAL(0, 0)
+      else
+        $display(else_block_error_msg);
+    `SVTEST_END
+
   `SVUNIT_TESTS_END
 
 endmodule
