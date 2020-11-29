@@ -72,6 +72,22 @@ module fail_macros_unit_test;
         $display(else_block_error_msg);
     `SVTEST_END
 
+
+    `SVTEST(fail_if_str_equal_macro_under_if_statement_with_else_block)
+      if (1)
+        `FAIL_IF_STR_EQUAL("0", "1")
+      else
+        $display(else_block_error_msg);
+    `SVTEST_END
+
+
+    `SVTEST(fail_unless_str_equal_macro_under_if_statement_with_else_block)
+      if (1)
+        `FAIL_UNLESS_STR_EQUAL("0", "0")
+      else
+        $display(else_block_error_msg);
+    `SVTEST_END
+
   `SVUNIT_TESTS_END
 
 endmodule
