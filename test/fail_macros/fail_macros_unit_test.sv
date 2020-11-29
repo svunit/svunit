@@ -22,9 +22,25 @@ module fail_macros_unit_test;
 
   `SVUNIT_TESTS_BEGIN
 
-    `SVTEST(fail_if)
+    `SVTEST(fail_if_macro_under_if_statement_with_else_block)
       if (1)
         `FAIL_IF(0)
+      else
+        $display("went into 'else' block");
+    `SVTEST_END
+
+
+    `SVTEST(fail_if_log_macro_under_if_statement_with_else_block)
+      if (1)
+        `FAIL_IF_LOG(0, "dummy")
+      else
+        $display("went into 'else' block");
+    `SVTEST_END
+
+
+    `SVTEST(fail_if_equal_macro_under_if_statement_with_else_block)
+      if (1)
+        `FAIL_IF_EQUAL(0, 1)
       else
         $display("went into 'else' block");
     `SVTEST_END

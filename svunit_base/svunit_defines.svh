@@ -30,15 +30,19 @@
 
 `ifndef FAIL_IF_LOG
 `define FAIL_IF_LOG(exp,msg) \
-  if (svunit_pkg::current_tc.fail(`"fail_if`", (exp), `"exp`", `__FILE__, `__LINE__, msg)) begin \
-    if (svunit_pkg::current_tc.is_running()) svunit_pkg::current_tc.give_up(); \
+  begin \
+    if (svunit_pkg::current_tc.fail(`"fail_if`", (exp), `"exp`", `__FILE__, `__LINE__, msg)) begin \
+      if (svunit_pkg::current_tc.is_running()) svunit_pkg::current_tc.give_up(); \
+    end \
   end
 `endif
 
 `ifndef FAIL_IF_EQUAL
 `define FAIL_IF_EQUAL(a,b) \
-  if (svunit_pkg::current_tc.fail(`"fail_if_equal`", ((a)===(b)), `"(a) === (b)`", `__FILE__, `__LINE__)) begin \
-    if (svunit_pkg::current_tc.is_running()) svunit_pkg::current_tc.give_up(); \
+  begin \
+    if (svunit_pkg::current_tc.fail(`"fail_if_equal`", ((a)===(b)), `"(a) === (b)`", `__FILE__, `__LINE__)) begin \
+      if (svunit_pkg::current_tc.is_running()) svunit_pkg::current_tc.give_up(); \
+    end \
   end
 `endif
 
