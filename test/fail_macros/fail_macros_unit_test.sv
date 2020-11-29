@@ -20,13 +20,16 @@ module fail_macros_unit_test;
   endtask
 
 
+  const string else_block_error_msg = "went into 'else' block";
+
+
   `SVUNIT_TESTS_BEGIN
 
     `SVTEST(fail_if_macro_under_if_statement_with_else_block)
       if (1)
         `FAIL_IF(0)
       else
-        $display("went into 'else' block");
+        $display(else_block_error_msg);
     `SVTEST_END
 
 
@@ -34,7 +37,7 @@ module fail_macros_unit_test;
       if (1)
         `FAIL_IF_LOG(0, "dummy")
       else
-        $display("went into 'else' block");
+        $display(else_block_error_msg);
     `SVTEST_END
 
 
@@ -42,7 +45,7 @@ module fail_macros_unit_test;
       if (1)
         `FAIL_IF_EQUAL(0, 1)
       else
-        $display("went into 'else' block");
+        $display(else_block_error_msg);
     `SVTEST_END
 
   `SVUNIT_TESTS_END
