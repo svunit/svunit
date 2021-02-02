@@ -116,9 +116,9 @@ endfunction
 
 function void svunit_testsuite::print_color_start(string success_str);
   if (success_str == "PASSED")
-    $write("%c[1;34m",27); // Green
+    $write("%c[1;32m", 27); // Green
   else
-	  $write("%c[1;31m",27); // Red
+    $write("%c[1;31m", 27); // Red
 endfunction
 
 function void svunit_testsuite::print_color_end();
