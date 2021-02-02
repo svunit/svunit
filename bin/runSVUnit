@@ -192,4 +192,9 @@ if (system("$build_cmd")) {
 }
 print $cmd . "\n";
 system("$cmd");
+
+# Filter out ANSI color characters from log file
+# See here: https://superuser.com/questions/380772/removing-ansi-color-codes-from-text-stream
+system("sed -i 's/\x1b\[[0-9;]*m//g' $logfile");
+
 system("svunit_user_feedback.pl")
