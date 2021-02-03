@@ -38,6 +38,12 @@ class svunit_testsuite extends svunit_base;
 
   extern function void report();
 
+  /*
+    Private methods
+  */
+  extern function void print_color_start(string success_str);
+  extern function void print_color_end();
+
 endclass
 
 
@@ -98,10 +104,23 @@ function void svunit_testsuite::report();
     success_str = "FAILED";
     success = FAIL;
   end
-
+  
+  print_color_start(success_str);
   `LF;
   `INFO($sformatf("%0s (%0d of %0d testcases passing)",
     success_str,
     pass_cnt,
     list_of_testcases.size()));
+  print_color_end();
+endfunction
+
+function void svunit_testsuite::print_color_start(string success_str);
+  if (success_str == "PASSED")
+    $write("%c[1;32m", 27); // Green
+  else
+    $write("%c[1;31m", 27); // Red
+endfunction
+
+function void svunit_testsuite::print_color_end();
+  $write("%c[0m",27); 
 endfunction
