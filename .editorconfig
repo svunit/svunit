@@ -1,0 +1,13 @@
+root = true
+
+[*]
+indent_style = space
+indent_size = 4
+
+# These settings aren't supported by the Eclipse plugin, so we have to use AnyEdit for them.
+end_of_line = lf
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+[*.{sv,svh}]
+indent_size = 2
