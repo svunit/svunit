@@ -5,6 +5,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [Unreleased]
+
+### Added
+- Generation of (Apache Ant) JUnit XML
+
+
 ## [3.34.2] - 2020-11-29
 
 ### Fixed
@@ -329,6 +335,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * ?
 
 
+[Unreleased]: https://github.com/tudortimi/svunit/compare/v3.34.2...HEAD
 [3.34.2]: https://github.com/tudortimi/svunit/compare/v3.34.1...v3.34.2
 [3.34.1]: https://github.com/tudortimi/svunit/compare/v3.34.0...v3.34.1
 [3.34.0]: https://github.com/tudortimi/svunit/compare/v3.33...v3.34.0

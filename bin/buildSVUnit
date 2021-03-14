@@ -187,6 +187,8 @@ if (! -e $outdir ) {
 $FILELIST = IO::File->new();
 $FILELIST->open(">$outdir/.svunit.f");
 $FILELIST->print("+incdir+$cwd\n");
+$FILELIST->print("+incdir+$ENV{SVUNIT_INSTALL}/svunit_base/junit-xml\n");
+$FILELIST->print("$ENV{SVUNIT_INSTALL}/svunit_base/junit-xml/junit_xml.sv\n");
 $FILELIST->print("+incdir+$ENV{SVUNIT_INSTALL}/svunit_base\n");
 $FILELIST->print("$ENV{SVUNIT_INSTALL}/svunit_base/svunit_pkg.sv\n");
 if (defined $mock) {

@@ -42,6 +42,9 @@ class svunit_testcase extends svunit_base;
   */
   local bit running = 0;
 
+  local junit_xml::TestCase current_junit_test_case;
+  local junit_xml::TestCase junit_test_cases[$];
+
 
   /*
     Interface
@@ -63,6 +66,19 @@ class svunit_testcase extends svunit_base;
 
   extern virtual task setup();
   extern virtual task teardown();
+
+
+  function void add_junit_test_case(string name);
+    current_junit_test_case = new(name, get_name());
+    junit_test_cases.push_back(current_junit_test_case);
+  endfunction
+
+
+  /* local */ typedef junit_xml::TestCase array_of_junit_test_cases[];
+
+  function array_of_junit_test_cases as_junit_test_cases();
+    return junit_test_cases;
+  endfunction
 
 endclass
 
@@ -130,6 +146,7 @@ function bit svunit_testcase::fail(string c, bit b, string s, string f, int l, s
     if (d != "") begin
       $sformat(_d, "[ %s ] ", d);
     end
+    current_junit_test_case.add_failure($sformatf("%s: %s %s(at %s line:%0d)",c,s,_d,f,l));
     `ERROR($sformatf("%s: %s %s(at %s line:%0d)",c,s,_d,f,l));
     return 1;
   end
