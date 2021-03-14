@@ -17,6 +17,8 @@ def test_single_passing_test(datafiles, simulator):
         root = tree.getroot()
         assert root.tag == 'testsuites'
         assert len(list(root)) == 1
-        assert root[0].tag == 'testsuite'
-        assert 'name' in root[0].attrib
-        assert root[0].attrib['name'] == '__ts'
+
+        testsuite = root[0]
+        assert testsuite.tag == 'testsuite'
+        assert 'name' in testsuite.attrib
+        assert testsuite.attrib['name'] == '__ts'
