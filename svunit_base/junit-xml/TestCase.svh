@@ -19,10 +19,12 @@
 class TestCase;
 
   local const string name;
+  local const string class_name;
 
 
-  function new(string name);
+  function new(string name, string class_name);
     this.name = name;
+    this.class_name = class_name;
   endfunction
 
 
@@ -34,6 +36,7 @@ class TestCase;
   function XmlElement as_xml_element();
     XmlElement result = new("testcase");
     result.set_attribute("name", name);
+    result.set_attribute("classname", class_name);
     return result;
   endfunction
 
