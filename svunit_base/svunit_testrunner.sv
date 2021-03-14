@@ -37,6 +37,11 @@ class svunit_testrunner extends svunit_base;
 
   extern function void report();
 
+
+  local function void write_xml();
+    int xml = $fopen("tests.xml", "w");
+  endfunction
+
 endclass
 
 
@@ -92,4 +97,6 @@ function void svunit_testrunner::report();
     pass_cnt,
     list_of_suites.size(),
     svunit_version));
+
+  write_xml();
 endfunction
