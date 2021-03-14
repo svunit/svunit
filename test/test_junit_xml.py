@@ -7,9 +7,9 @@ import xml.etree.ElementTree as ET
 from utils import *
 
 
-@all_files_in_dir('junit-xml/single-passing-test')
+@all_files_in_dir('junit-xml/single-test-suite')
 @all_available_simulators()
-def test_single_passing_test(datafiles, simulator):
+def test_single_test_suite(datafiles, simulator):
     with datafiles.as_cwd():
         subprocess.check_call(['runSVUnit', '-s', simulator])
         assert pathlib.Path('tests.xml').exists()
