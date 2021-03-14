@@ -42,6 +42,8 @@ class svunit_testcase extends svunit_base;
   */
   local bit running = 0;
 
+  local junit_xml::TestCase junit_test_case;
+
 
   /*
     Interface
@@ -65,9 +67,13 @@ class svunit_testcase extends svunit_base;
   extern virtual task teardown();
 
 
+  function void create_junit_test_case(string name);
+    junit_test_case = new(name, get_name());
+  endfunction
+
+
   function junit_xml::TestCase as_junit_test_case();
-    junit_xml::TestCase result = new(get_name(), get_name());
-    return result;
+    return junit_test_case;
   endfunction
 
 endclass

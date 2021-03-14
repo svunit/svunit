@@ -53,5 +53,7 @@ def test_single_passing_test(datafiles, simulator):
 
         test_case = root[0][0]
         assert test_case.tag == 'testcase'
+        assert 'name' in test_case.attrib
+        assert test_case.attrib['name'] == 'passing_test'
         assert 'classname' in test_case.attrib
         assert test_case.attrib['classname'] == 'dummy_ut'
