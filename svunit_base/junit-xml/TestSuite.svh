@@ -30,4 +30,11 @@ class TestSuite;
     return name;
   endfunction
 
+
+  function XmlElement as_xml_element();
+    XmlElement result = new("testsuite");
+    result.set_attribute("name", name);
+    return result;
+  endfunction
+
 endclass

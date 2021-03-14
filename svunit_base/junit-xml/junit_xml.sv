@@ -18,26 +18,14 @@
 
 package junit_xml;
 
+  `include "XmlElement.svh"
   `include "TestSuite.svh"
 
 
   function automatic string to_xml_report_string(TestSuite test_suite);
-    string result;
-    string lines[$];
-    lines.push_back($sformatf("<testsuites>"));
-    lines.push_back($sformatf("  <testsuite name=\"%s\">", test_suite.get_name()));
-    lines.push_back($sformatf("  </testsuite>"));
-    lines.push_back($sformatf("</testsuites>"));
-
-    foreach (lines[i]) begin
-      if (i == 0) begin
-        result = lines[i];
-        continue;
-      end
-
-      result = { result, "\n", lines[i] };
-    end
-    return result;
+    XmlElement testsuites = new("testsuites");
+    testsuites.add_child(test_suite.as_xml_element());
+    return testsuites.as_string();
   endfunction
 
 endpackage
