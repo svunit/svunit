@@ -41,6 +41,8 @@ class svunit_testrunner extends svunit_base;
   local function void write_xml();
     int xml = $fopen("tests.xml", "w");
     $fwrite(xml, "<testsuites>");
+    $fwrite(xml, "  <testsuite name=\"%s\">", list_of_suites[0].get_name());
+    $fwrite(xml, "  </testsuite>");
     $fwrite(xml, "</testsuites>");
   endfunction
 

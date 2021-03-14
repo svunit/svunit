@@ -16,3 +16,7 @@ def test_single_passing_test(datafiles, simulator):
         tree = ET.parse('tests.xml')
         root = tree.getroot()
         assert root.tag == 'testsuites'
+        assert len(list(root)) == 1
+        assert root[0].tag == 'testsuite'
+        assert 'name' in root[0].attrib
+        assert root[0].attrib['name'] == '__ts'
