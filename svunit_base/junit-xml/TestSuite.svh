@@ -16,6 +16,12 @@
 //
 //###########################################################################
 
+
+/**
+ * Models a JUnit test suite.
+ *
+ * @see TestCase
+ */
 class TestSuite;
 
   local const string name;

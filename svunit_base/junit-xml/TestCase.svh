@@ -16,6 +16,13 @@
 //
 //###########################################################################
 
+/**
+ * Models a JUnit test case. Note that this is not the same concept as an
+ * SVUnit test case. A test case in JUnit refers to a test method, but a test
+ * case in SVUnit currently refers to a module containing test methods.
+ *
+ * @see TestSuite
+ */
 class TestCase;
 
   local const string name;
