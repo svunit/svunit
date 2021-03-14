@@ -38,6 +38,12 @@ class svunit_testsuite extends svunit_base;
 
   extern function void report();
 
+
+  function junit_xml::TestSuite as_junit_test_suite();
+    junit_xml::TestSuite result = new(get_name());
+    return result;
+  endfunction
+
 endclass
 
 
