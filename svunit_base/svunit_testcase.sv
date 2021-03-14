@@ -42,7 +42,7 @@ class svunit_testcase extends svunit_base;
   */
   local bit running = 0;
 
-  local junit_xml::TestCase junit_test_case;
+  local junit_xml::TestCase junit_test_cases[$];
 
 
   /*
@@ -67,13 +67,16 @@ class svunit_testcase extends svunit_base;
   extern virtual task teardown();
 
 
-  function void create_junit_test_case(string name);
-    junit_test_case = new(name, get_name());
+  function void add_junit_test_case(string name);
+    junit_xml::TestCase junit_test_case = new(name, get_name());
+    junit_test_cases.push_back(junit_test_case);
   endfunction
 
 
-  function junit_xml::TestCase as_junit_test_case();
-    return junit_test_case;
+  /* local */ typedef junit_xml::TestCase array_of_junit_test_cases[];
+
+  function array_of_junit_test_cases as_junit_test_cases();
+    return junit_test_cases;
   endfunction
 
 endclass

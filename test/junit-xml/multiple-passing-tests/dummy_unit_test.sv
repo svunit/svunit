@@ -16,33 +16,38 @@
 //
 //###########################################################################
 
-class TestSuite;
+module dummy_unit_test;
 
-  local const string name;
-  local TestCase test_cases[$];
+  import svunit_pkg::*;
+  `include "svunit_defines.svh"
+
+  string name = "dummy_ut";
+  svunit_testcase svunit_ut;
 
 
-  function new(string name);
-    this.name = name;
+  function void build();
+    svunit_ut = new(name);
   endfunction
 
+  task setup();
+    svunit_ut.setup();
+  endtask
 
-  function string get_name();
-    return name;
-  endfunction
-
-
-  function void add_test_case(TestCase test_case);
-    test_cases.push_back(test_case);
-  endfunction
+  task teardown();
+    svunit_ut.teardown();
+  endtask
 
 
-  function XmlElement as_xml_element();
-    XmlElement result = new("testsuite");
-    result.set_attribute("name", name);
-    foreach (test_cases[i])
-      result.add_child(test_cases[i].as_xml_element());
-    return result;
-  endfunction
+  `SVUNIT_TESTS_BEGIN
 
-endclass
+    `SVTEST(passing_test0)
+      `FAIL_UNLESS(1)
+    `SVTEST_END
+
+    `SVTEST(passing_test1)
+      `FAIL_UNLESS(1)
+    `SVTEST_END
+
+  `SVUNIT_TESTS_END
+
+endmodule

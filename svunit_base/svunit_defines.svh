@@ -159,7 +159,7 @@
 \
     `INFO($sformatf(`"%s::RUNNING`", _testName)); \
     svunit_pkg::current_tc = svunit_ut; \
-    svunit_ut.create_junit_test_case(_testName); \
+    svunit_ut.add_junit_test_case(_testName); \
     svunit_ut.start(); \
     setup(); \
     fork \
