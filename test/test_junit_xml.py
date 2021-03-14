@@ -22,3 +22,19 @@ def test_single_passing_test(datafiles, simulator):
         assert testsuite.tag == 'testsuite'
         assert 'name' in testsuite.attrib
         assert testsuite.attrib['name'] == '__ts'
+
+
+@all_files_in_dir('junit-xml/multiple-test-suites')
+@all_available_simulators()
+def test_multiple_test_suites(datafiles, simulator):
+    with datafiles.as_cwd():
+        subprocess.check_call(['runSVUnit', '-s', simulator])
+        assert pathlib.Path('tests.xml').exists()
+        tree = ET.parse('tests.xml')
+        root = tree.getroot()
+        assert root.tag == 'testsuites'
+        assert len(list(root)) == 3
+
+        assert any(ts.attrib['name'] == '__ts' for ts in list(root))
+        assert any(ts.attrib['name'] == '__group0_ts' for ts in list(root))
+        assert any(ts.attrib['name'] == '__group1_ts' for ts in list(root))

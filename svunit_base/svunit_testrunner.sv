@@ -40,8 +40,12 @@ class svunit_testrunner extends svunit_base;
 
   local function void write_xml();
     int xml = $fopen("tests.xml", "w");
-    junit_xml::TestSuite ts = new(list_of_suites[0].get_name());
-    $fwrite(xml, junit_xml::to_xml_report_string(ts));
+    junit_xml::TestSuite test_suites[$];
+    foreach (list_of_suites[i]) begin
+      junit_xml::TestSuite test_suite = new(list_of_suites[i].get_name());
+      test_suites.push_back(test_suite);
+    end
+    $fwrite(xml, junit_xml::to_xml_report_string(test_suites));
   endfunction
 
 endclass

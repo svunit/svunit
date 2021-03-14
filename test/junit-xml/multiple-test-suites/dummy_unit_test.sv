@@ -16,17 +16,34 @@
 //
 //###########################################################################
 
-package junit_xml;
+module dummy_unit_test;
 
-  `include "XmlElement.svh"
-  `include "TestSuite.svh"
+  import svunit_pkg::*;
+  `include "svunit_defines.svh"
+
+  string name = "dummy0_ut";
+  svunit_testcase svunit_ut;
 
 
-  function automatic string to_xml_report_string(TestSuite test_suites[]);
-    XmlElement testsuites = new("testsuites");
-    foreach (test_suites[i])
-      testsuites.add_child(test_suites[i].as_xml_element());
-    return testsuites.as_string();
+  function void build();
+    svunit_ut = new(name);
   endfunction
 
-endpackage
+  task setup();
+    svunit_ut.setup();
+  endtask
+
+  task teardown();
+    svunit_ut.teardown();
+  endtask
+
+
+  `SVUNIT_TESTS_BEGIN
+
+    `SVTEST(passing_test)
+      `FAIL_UNLESS(1)
+    `SVTEST_END
+
+  `SVUNIT_TESTS_END
+
+endmodule
