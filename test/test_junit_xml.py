@@ -9,13 +9,21 @@ from utils import *
 
 @all_files_in_dir('junit-xml/single-test-suite')
 @all_available_simulators()
-def test_single_test_suite(datafiles, simulator):
+def test_writes_junit_xml(datafiles, simulator):
     with datafiles.as_cwd():
         subprocess.check_call(['runSVUnit', '-s', simulator])
         assert pathlib.Path('tests.xml').exists()
         tree = ET.parse('tests.xml')
         root = tree.getroot()
         assert root.tag == 'testsuites'
+
+
+@all_files_in_dir('junit-xml/single-test-suite')
+@all_available_simulators()
+def test_single_test_suite(datafiles, simulator):
+    with datafiles.as_cwd():
+        subprocess.check_call(['runSVUnit', '-s', simulator])
+        root = ET.parse('tests.xml').getroot()
         assert len(list(root)) == 1
 
         testsuite = root[0]
@@ -29,10 +37,7 @@ def test_single_test_suite(datafiles, simulator):
 def test_multiple_test_suites(datafiles, simulator):
     with datafiles.as_cwd():
         subprocess.check_call(['runSVUnit', '-s', simulator])
-        assert pathlib.Path('tests.xml').exists()
-        tree = ET.parse('tests.xml')
-        root = tree.getroot()
-        assert root.tag == 'testsuites'
+        root = ET.parse('tests.xml').getroot()
         assert len(list(root)) == 3
 
         assert any(ts.attrib['name'] == '__ts' for ts in list(root))
@@ -45,9 +50,7 @@ def test_multiple_test_suites(datafiles, simulator):
 def test_single_passing_test(datafiles, simulator):
     with datafiles.as_cwd():
         subprocess.check_call(['runSVUnit', '-s', simulator])
-        assert pathlib.Path('tests.xml').exists()
-        tree = ET.parse('tests.xml')
-        root = tree.getroot()
+        root = ET.parse('tests.xml').getroot()
         test_suite = root[0]
         assert len(list(test_suite)) == 1
 
@@ -64,9 +67,7 @@ def test_single_passing_test(datafiles, simulator):
 def test_multiple_passing_tests(datafiles, simulator):
     with datafiles.as_cwd():
         subprocess.check_call(['runSVUnit', '-s', simulator])
-        assert pathlib.Path('tests.xml').exists()
-        tree = ET.parse('tests.xml')
-        root = tree.getroot()
+        root = ET.parse('tests.xml').getroot()
         test_suite = root[0]
 
         assert len(list(test_suite)) == 2
@@ -79,9 +80,7 @@ def test_multiple_passing_tests(datafiles, simulator):
 def test_multiple_test_modules(datafiles, simulator):
     with datafiles.as_cwd():
         subprocess.check_call(['runSVUnit', '-s', simulator])
-        assert pathlib.Path('tests.xml').exists()
-        tree = ET.parse('tests.xml')
-        root = tree.getroot()
+        root = ET.parse('tests.xml').getroot()
         test_suite = root[0]
 
         assert len(list(test_suite)) == 2
@@ -94,9 +93,7 @@ def test_multiple_test_modules(datafiles, simulator):
 def test_single_failing_test(datafiles, simulator):
     with datafiles.as_cwd():
         subprocess.check_call(['runSVUnit', '-s', simulator])
-        assert pathlib.Path('tests.xml').exists()
-        tree = ET.parse('tests.xml')
-        root = tree.getroot()
+        root = ET.parse('tests.xml').getroot()
         test_suite = root[0]
         test_case = test_suite[0]
 
@@ -111,9 +108,7 @@ def test_single_failing_test(datafiles, simulator):
 def test_multiple_failing_tests(datafiles, simulator):
     with datafiles.as_cwd():
         subprocess.check_call(['runSVUnit', '-s', simulator])
-        assert pathlib.Path('tests.xml').exists()
-        tree = ET.parse('tests.xml')
-        root = tree.getroot()
+        root = ET.parse('tests.xml').getroot()
         test_suite = root[0]
         assert len(list(test_suite)) == 2
         failing_test0 = next(tc for tc in list(test_suite) if tc.attrib['name'] == 'failing_test0')
