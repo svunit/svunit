@@ -87,3 +87,20 @@ def test_multiple_test_modules(datafiles, simulator):
         assert len(list(test_suite)) == 2
         assert any(ts.attrib['classname'] == 'dummy0_ut' for ts in list(test_suite))
         assert any(ts.attrib['classname'] == 'dummy1_ut' for ts in list(test_suite))
+
+
+@all_files_in_dir('junit-xml/single-failing-test')
+@all_available_simulators()
+def test_single_failing_test(datafiles, simulator):
+    with datafiles.as_cwd():
+        subprocess.check_call(['runSVUnit', '-s', simulator])
+        assert pathlib.Path('tests.xml').exists()
+        tree = ET.parse('tests.xml')
+        root = tree.getroot()
+        test_suite = root[0]
+        test_case = test_suite[0]
+
+        assert len(list(test_case)) == 1
+        assert test_case[0].tag == 'failure'
+        assert test_case[0].attrib['type'] == 'failure'
+        assert 'fail_if' in test_case[0].attrib['message']

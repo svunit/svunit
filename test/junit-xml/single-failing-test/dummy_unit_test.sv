@@ -16,38 +16,34 @@
 //
 //###########################################################################
 
-class TestCase;
+module dummy_unit_test;
 
-  local const string name;
-  local const string class_name;
-  local XmlElement failure;
+  import svunit_pkg::*;
+  `include "svunit_defines.svh"
+
+  string name = "dummy_ut";
+  svunit_testcase svunit_ut;
 
 
-  function new(string name, string class_name);
-    this.name = name;
-    this.class_name = class_name;
+  function void build();
+    svunit_ut = new(name);
   endfunction
 
+  task setup();
+    svunit_ut.setup();
+  endtask
 
-  function string get_name();
-    return name;
-  endfunction
-
-
-  function void add_failure(string message);
-    failure = new("failure");
-    failure.set_attribute("message", message);
-    failure.set_attribute("type", "failure");
-  endfunction
+  task teardown();
+    svunit_ut.teardown();
+  endtask
 
 
-  function XmlElement as_xml_element();
-    XmlElement result = new("testcase");
-    result.set_attribute("name", name);
-    result.set_attribute("classname", class_name);
-    if (failure != null)
-      result.add_child(failure);
-    return result;
-  endfunction
+  `SVUNIT_TESTS_BEGIN
 
-endclass
+    `SVTEST(failing_test)
+      `FAIL_IF(1)
+    `SVTEST_END
+
+  `SVUNIT_TESTS_END
+
+endmodule

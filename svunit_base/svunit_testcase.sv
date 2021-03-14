@@ -42,6 +42,7 @@ class svunit_testcase extends svunit_base;
   */
   local bit running = 0;
 
+  local junit_xml::TestCase current_junit_test_case;
   local junit_xml::TestCase junit_test_cases[$];
 
 
@@ -68,8 +69,8 @@ class svunit_testcase extends svunit_base;
 
 
   function void add_junit_test_case(string name);
-    junit_xml::TestCase junit_test_case = new(name, get_name());
-    junit_test_cases.push_back(junit_test_case);
+    current_junit_test_case = new(name, get_name());
+    junit_test_cases.push_back(current_junit_test_case);
   endfunction
 
 
@@ -145,6 +146,7 @@ function bit svunit_testcase::fail(string c, bit b, string s, string f, int l, s
     if (d != "") begin
       $sformat(_d, "[ %s ] ", d);
     end
+    current_junit_test_case.add_failure($sformatf("%s: %s %s(at %s line:%0d)",c,s,_d,f,l));
     `ERROR($sformatf("%s: %s %s(at %s line:%0d)",c,s,_d,f,l));
     return 1;
   end
