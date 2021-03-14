@@ -64,6 +64,12 @@ class svunit_testcase extends svunit_base;
   extern virtual task setup();
   extern virtual task teardown();
 
+
+  function junit_xml::TestCase as_junit_test_case();
+    junit_xml::TestCase result = new(get_name());
+    return result;
+  endfunction
+
 endclass
 
 

@@ -38,3 +38,18 @@ def test_multiple_test_suites(datafiles, simulator):
         assert any(ts.attrib['name'] == '__ts' for ts in list(root))
         assert any(ts.attrib['name'] == '__group0_ts' for ts in list(root))
         assert any(ts.attrib['name'] == '__group1_ts' for ts in list(root))
+
+
+@all_files_in_dir('junit-xml/single-passing-test')
+@all_available_simulators()
+def test_single_passing_test(datafiles, simulator):
+    with datafiles.as_cwd():
+        subprocess.check_call(['runSVUnit', '-s', simulator])
+        assert pathlib.Path('tests.xml').exists()
+        tree = ET.parse('tests.xml')
+        root = tree.getroot()
+        test_suite = root[0]
+        assert len(list(test_suite)) == 1
+
+        test_case = root[0][0]
+        assert test_case.tag == 'testcase'

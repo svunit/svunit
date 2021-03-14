@@ -16,18 +16,25 @@
 //
 //###########################################################################
 
-package junit_xml;
+class TestCase;
 
-  `include "XmlElement.svh"
-  `include "TestCase.svh"
-  `include "TestSuite.svh"
+  local const string name;
 
 
-  function automatic string to_xml_report_string(TestSuite test_suites[]);
-    XmlElement testsuites = new("testsuites");
-    foreach (test_suites[i])
-      testsuites.add_child(test_suites[i].as_xml_element());
-    return testsuites.as_string();
+  function new(string name);
+    this.name = name;
   endfunction
 
-endpackage
+
+  function string get_name();
+    return name;
+  endfunction
+
+
+  function XmlElement as_xml_element();
+    XmlElement result = new("testcase");
+    result.set_attribute("name", name);
+    return result;
+  endfunction
+
+endclass

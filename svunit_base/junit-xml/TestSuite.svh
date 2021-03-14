@@ -19,6 +19,7 @@
 class TestSuite;
 
   local const string name;
+  local TestCase test_cases[$];
 
 
   function new(string name);
@@ -31,9 +32,15 @@ class TestSuite;
   endfunction
 
 
+  function void add_test_case(TestCase test_case);
+    test_cases.push_back(test_case);
+  endfunction
+
+
   function XmlElement as_xml_element();
     XmlElement result = new("testsuite");
     result.set_attribute("name", name);
+    result.add_child(test_cases[0].as_xml_element());
     return result;
   endfunction
 

@@ -41,6 +41,7 @@ class svunit_testsuite extends svunit_base;
 
   function junit_xml::TestSuite as_junit_test_suite();
     junit_xml::TestSuite result = new(get_name());
+    result.add_test_case(list_of_testcases[0].as_junit_test_case());
     return result;
   endfunction
 
