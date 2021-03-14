@@ -72,3 +72,18 @@ def test_multiple_passing_tests(datafiles, simulator):
         assert len(list(test_suite)) == 2
         assert any(ts.attrib['name'] == 'passing_test0' for ts in list(test_suite))
         assert any(ts.attrib['name'] == 'passing_test1' for ts in list(test_suite))
+
+
+@all_files_in_dir('junit-xml/multiple-test-modules')
+@all_available_simulators()
+def test_multiple_test_modules(datafiles, simulator):
+    with datafiles.as_cwd():
+        subprocess.check_call(['runSVUnit', '-s', simulator])
+        assert pathlib.Path('tests.xml').exists()
+        tree = ET.parse('tests.xml')
+        root = tree.getroot()
+        test_suite = root[0]
+
+        assert len(list(test_suite)) == 2
+        assert any(ts.attrib['classname'] == 'dummy0_ut' for ts in list(test_suite))
+        assert any(ts.attrib['classname'] == 'dummy1_ut' for ts in list(test_suite))
