@@ -135,13 +135,14 @@
 */
 `define SVUNIT_TESTS_BEGIN \
   task automatic run(); \
-    `INFO("RUNNING");
+    `INFO("RUNNING"); \
+    begin
 
 /*
   Macro: `SVUNIT_TESTS_END
   END a block of unit tests
 */
-`define SVUNIT_TESTS_END endtask
+`define SVUNIT_TESTS_END end endtask
 
 
 /*
