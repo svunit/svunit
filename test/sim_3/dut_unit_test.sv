@@ -130,6 +130,13 @@ module dut_unit_test;
       static logic       select = 1;
       `FAIL_UNLESS_EQUAL(select ? data_a : data_b, data_a);
     `SVTEST_END
+
+      // verify FAIL_IF works with 'x as expression (test should fail)
+    `SVTEST(x_as_fail_if_expression)
+      static logic foo = 'x;
+      `FAIL_IF(foo != 1);
+    `SVTEST_END
+
   `SVUNIT_TESTS_END
 
 

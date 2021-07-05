@@ -55,7 +55,7 @@ class svunit_testcase extends svunit_base;
   extern function integer get_error_count();
   extern task give_up();
 
-  extern function bit fail(string c, bit b, string s, string f, int l, string d = "");
+  extern function bit fail(string c, logic b, string s, string f, int l, string d = "");
 
   extern function void start();
   extern function void stop();
@@ -139,9 +139,9 @@ endtask
 
     return 1 if fail else 0
 */
-function bit svunit_testcase::fail(string c, bit b, string s, string f, int l, string d = "");
+function bit svunit_testcase::fail(string c, logic b, string s, string f, int l, string d = "");
   string _d;
-  if (b) begin
+  if (b !== 0) begin
     error_count++;
     if (d != "") begin
       $sformat(_d, "[ %s ] ", d);
