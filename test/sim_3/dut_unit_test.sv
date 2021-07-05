@@ -137,6 +137,11 @@ module dut_unit_test;
       `FAIL_IF(foo != 1);
     `SVTEST_END
 
+    // verify WARNING macro
+    `SVTEST(warning_print_test)
+      `WARNING("simple warning");
+    `SVTEST_END
+
   `SVUNIT_TESTS_END
 
 

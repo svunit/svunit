@@ -123,6 +123,17 @@
 
 
 /*
+  Macro: `WARNING
+  Displays WARNING message to screen and in log file
+
+  Parameters:
+    msg - string to display
+ */
+`define WARNING(msg) \
+  $display("WARNING: [%0t][%0s]: %s", $time, name, msg)
+
+
+/*
   Macro: `LF
   Displays a blank line in log file
 */
