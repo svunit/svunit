@@ -30,6 +30,13 @@ class svunit_testcase extends svunit_base;
 
 
   /*
+    uint: fail_count
+    Counter for number of fail
+  */
+  local int unsigned fail_count = 0;
+
+
+  /*
     uint: error_count
     Counter for number of errors
   */
@@ -110,7 +117,7 @@ endtask
   Returns the error count
 */
 function integer svunit_testcase::get_error_count();
-  return error_count;
+  return fail_count;
 endfunction
 
 
@@ -142,7 +149,7 @@ endtask
 function bit svunit_testcase::fail(string c, logic b, string s, string f, int l, string d = "");
   string _d;
   if (b !== 0) begin
-    error_count++;
+    fail_count++;
     if (d != "") begin
       $sformat(_d, "[ %s ] ", d);
     end
@@ -189,6 +196,10 @@ endfunction
   Updates the results of this testcase
 */
 function void svunit_testcase::update_exit_status();
+  if (fail_count != 0)
+    error_count++;
+  fail_count = 0;
+
   if (error_count == 0)
     success = PASS;
   else

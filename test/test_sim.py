@@ -186,6 +186,14 @@ def test_sim_13(datafiles, simulator):
         expect_string(br"ERROR: \[50\]\[dut_ut\]: fail_if: svunit_timeout (at `pwd`/./dut_unit_test.sv line:62)", 'run.log')
         expect_string(br"INFO:  \[99\]\[dut_ut\]: no_timeout::PASSED", 'run.log')
 
+@all_files_in_dir('sim_14')
+@all_available_simulators()
+def test_sim_14(datafiles, simulator):
+    with datafiles.as_cwd():
+        subprocess.check_call(['runSVUnit', '-s', simulator])
+
+        expect_string(br"ERROR: \[0\]\[dut_ut\]: fail_if: 1 \(at *./dut_unit_test.sv line:46\)", 'run.log')
+        expect_string(br"ERROR: \[0\]\[dut_ut\]: fail_if: 1 \(at *./dut_unit_test.sv line:69\)", 'run.log')
 
 @all_files_in_dir('fail_macros')
 @all_available_simulators()
