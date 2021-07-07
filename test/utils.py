@@ -126,16 +126,14 @@ def verify_testrunner(testrunner, ts0, ts1='', ts2='', ts3='', tr=''):
 
 
 def expect_testrunner_pass(logfile_path):
-    with open(logfile_path) as file, mmap.mmap(file.fileno(), 0, access=mmap.ACCESS_READ) as log:
-        return re.search(br'INFO:  \[.*\]\[testrunner\]: PASSED (. of . suites passing) \[$SVUnitVersion\]', log)
+    expect_string(br'INFO:  \[.*\]\[testrunner\]: PASSED \(. of . suites passing\) \[$SVUnitVersion\]', logfile_path)
 
 def expect_testrunner_fail(logfile_path):
-    with open(logfile_path) as file, mmap.mmap(file.fileno(), 0, access=mmap.ACCESS_READ) as log:
-        return re.search(br'INFO:  \[.*\]\[testrunner\]: FAILED', log)
+    expect_string(br'INFO:  \[.*\]\[testrunner\]: FAILED', logfile_path)
 
 def expect_string(pattern, logfile_path):
     with open(logfile_path) as file, mmap.mmap(file.fileno(), 0, access=mmap.ACCESS_READ) as log:
-        return re.search(pattern, log)
+        assert re.search(pattern, log), "\"%s\" not found at %s log file" % (pattern, logfile_path)
 
 def expect_file(path):
     return os.path.exists(path)
