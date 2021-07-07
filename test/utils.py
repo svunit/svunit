@@ -126,7 +126,7 @@ def verify_testrunner(testrunner, ts0, ts1='', ts2='', ts3='', tr=''):
 
 
 def expect_testrunner_pass(logfile_path):
-    expect_string(br'INFO:  \[.*\]\[testrunner\]: PASSED \(. of . suites passing\) \[$SVUnitVersion\]', logfile_path)
+    expect_string(br'INFO:  \[.*\]\[testrunner\]: PASSED \(. of . suites passing\) \[.*\]', logfile_path)
 
 def expect_testrunner_fail(logfile_path):
     expect_string(br'INFO:  \[.*\]\[testrunner\]: FAILED', logfile_path)
