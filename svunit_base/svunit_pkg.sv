@@ -26,10 +26,13 @@ package svunit_pkg;
   const string svunit_version = "For SVUnit Version info, see: $SVUNIT_INSTALL/VERSION.txt";
 `endif
 
+  typedef class svunit_testcase;
+
   `include "svunit_types.svh"
   `include "svunit_base.sv"
+  `include "svunit_globals.svh"
   `include "svunit_testcase.sv"
+  `include "svunit_testcase_wrp.sv"
   `include "svunit_testsuite.sv"
   `include "svunit_testrunner.sv"
-  `include "svunit_globals.svh"
 endpackage
