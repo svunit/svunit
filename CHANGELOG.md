@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Generation of (Apache Ant) JUnit XML
 
+### Fixed
+- Fixed FAIL_IF and FAIL_UNLESS macros to properly implement SystemVerilog
+  semantics w.r.t. handling of unknown values (#51)
+
 
 ## [3.34.2] - 2020-11-29
 

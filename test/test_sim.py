@@ -71,6 +71,8 @@ def test_sim_3(datafiles, simulator):
         expect_string(br'INFO:  \[0\]\[dut_ut\]: tenth_test::PASSED', 'run.log')
         expect_string(br'INFO:  \[0\]\[dut_ut\]: eleventh_test::RUNNING', 'run.log')
         expect_string(br'INFO:  \[0\]\[dut_ut\]: eleventh_test::PASSED', 'run.log')
+        expect_string(br'ERROR: \[0\]\[dut_ut\]: fail_if: foo != 1 \(at .*dut_unit_test.sv line:.*\)', 'run.log')
+        expect_string(br'INFO:  \[0\]\[dut_ut\]: x_as_fail_if_expression::FAILED', 'run.log')
         expect_string(br'INFO:  \[0\]\[testrunner\]: FAILED', 'run.log')
 
 
