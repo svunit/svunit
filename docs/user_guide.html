@@ -58,11 +58,11 @@
 
 <h1><span id="Writing_Unit_Tests">Writing Unit Tests</span></h1>
 <p>The unit test template includes embedded instructions on structure and position of unit tests:</p>
-<p><a href="http://web.archive.org/web/20210303235623/https://i1.wp.com/www.agilesoc.com/wp-content/uploads/2015/07/Screen-Shot-2015-07-03-at-4.41.54-PM.png"><img class="alignnone size-full wp-image-5804" src="http://web.archive.org/web/20210303235623im_/https://i1.wp.com/www.agilesoc.com/wp-content/uploads/2015/07/Screen-Shot-2015-07-03-at-4.41.54-PM.png?resize=276%2C264" alt="Screen Shot 2015-07-03 at 4.41.54 PM" width="276" height="264" data-recalc-dims="1"/></a></p>
+<p><img src="user_guide_files/Screen-Shot-2015-07-03-at-4.41.54-PM.png" width="276" height="264" data-recalc-dims="1"/></p>
 <p>Multiple unit tests can be defined in a unit test template. All must be defined between the `SVUNIT_TESTS_BEGIN and `SVUNIT_TESTS_END macros. Individual unit tests are defined using the `SVTEST(&lt;name&gt;) and `SVTEST_END macros. The test &lt;name&gt; must be a valid verilog code block label (i.e. any alphanumeric starting with [_a-zA-Z]). For example, a template with 2 tests called test0 and test1 would be declared as:</p>
-<p><a href="http://web.archive.org/web/20210303235623/https://i1.wp.com/www.agilesoc.com/wp-content/uploads/2015/07/Screen-Shot-2015-07-03-at-4.44.52-PM.png"><img class="alignnone size-full wp-image-5805" src="http://web.archive.org/web/20210303235623im_/https://i1.wp.com/www.agilesoc.com/wp-content/uploads/2015/07/Screen-Shot-2015-07-03-at-4.44.52-PM.png?resize=170%2C137" alt="Screen Shot 2015-07-03 at 4.44.52 PM" width="170" height="137" data-recalc-dims="1"/></a></p>
+<p><img src="user_guide_files/Screen-Shot-2015-07-03-at-4.44.52-PM.png" width="170" height="137" data-recalc-dims="1"/></p>
 <p>The macros expand to a Verilog code block so any code that is legal within a code block can be used within a unit test. Other required variables, declarations, functions, tasks, etc must be defined outside the BEGIN/END macros. For example, the function helper() can be defined and used within a unit test as:</p>
-<p><a href="http://web.archive.org/web/20210303235623/https://i2.wp.com/www.agilesoc.com/wp-content/uploads/2015/07/Screen-Shot-2015-07-03-at-4.50.11-PM.png"><img class="alignnone size-full wp-image-5806" src="http://web.archive.org/web/20210303235623im_/https://i2.wp.com/www.agilesoc.com/wp-content/uploads/2015/07/Screen-Shot-2015-07-03-at-4.50.11-PM.png?resize=162%2C189" alt="Screen Shot 2015-07-03 at 4.50.11 PM" width="162" height="189" data-recalc-dims="1"/></a></p>
+<p><img src="user_guide_files/Screen-Shot-2015-07-03-at-4.50.11-PM.png" width="162" height="189" data-recalc-dims="1"/></p>
 <p>SVUnit imposes no limit on the number of unit tests that can be defined with a unit test template.</p>
 
 <h2><span id="SVUnit_Reporting_Macros">SVUnit Reporting Macros</span></h2>
