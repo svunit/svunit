@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Generation of (Apache Ant) JUnit XML
+- Imported user guide from http://agilesoc.com/open-source-projects/svunit/svunit-user-guide/ into
+  repo
 
 ### Fixed
 - Fixed FAIL_IF and FAIL_UNLESS macros to properly implement SystemVerilog
