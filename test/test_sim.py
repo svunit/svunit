@@ -119,7 +119,7 @@ def test_sim_7(datafiles, simulator):
 @all_available_simulators()
 def test_sim_8(datafiles, simulator):
     with datafiles.as_cwd():
-        subprocess.check_call(['create_unit_test.pl', '-overwrite', '-out', '-dut_unit_test.sv', 'dut.sv'])
+        subprocess.check_call(['create_unit_test.pl', '-overwrite', '-out', 'dut_unit_test.sv', 'dut.sv'])
 
         subprocess.check_call(['runSVUnit', '-s', simulator, '-f', 'my_filelist.f', '--filelist', 'a_filelist.f'])
 
