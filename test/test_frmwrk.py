@@ -180,6 +180,8 @@ def test_frmwrk_13(datafiles):
 @all_files_in_dir('frmwrk_14')
 @all_available_simulators()
 def test_frmwrk_14(datafiles, simulator):
+    if not shutil.which('csh') or not shutil.which('tcsh'):
+        pytest.skip()
     new_env = os.environ.copy()
     path_entries = new_env['PATH'].split(':')
     new_path_entries = [path_entry for path_entry in path_entries if not 'svunit-code' in path_entry]
