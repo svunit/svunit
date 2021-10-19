@@ -13,6 +13,9 @@ def get_path_without_sims():
     xrun = shutil.which('xrun')
     if xrun:
         paths = list(filter(lambda p: p != os.path.dirname(xrun), paths))
+    dsim = shutil.which('dsim')
+    if dsim:
+        paths = list(filter(lambda p: p != os.path.dirname(dsim), paths))
     return os.path.pathsep.join(paths)
 
 
