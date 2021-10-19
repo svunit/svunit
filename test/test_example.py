@@ -1,5 +1,8 @@
 import subprocess
 import pathlib
+
+import pytest
+
 from utils import *
 
 
@@ -21,6 +24,8 @@ def test_example_uvm_report_mock(datafiles, simulator):
 @all_files_in_dir((EXAMPLES_DIR / 'uvm/simple_model').as_posix())
 @all_available_simulators()
 def test_example_uvm_simple_model(datafiles, simulator):
+    if simulator == 'dsim':
+        pytest.skip("Issue when running with 'dsim' that needs to be debugged")
     expect_passing_example(datafiles, simulator, ['-uvm'])
 
 
@@ -28,6 +33,8 @@ def test_example_uvm_simple_model(datafiles, simulator):
 @all_files_in_dir((EXAMPLES_DIR / 'uvm/simple_model').as_posix())
 @all_available_simulators()
 def test_example_uvm_simple_model_2(datafiles, simulator):
+    if simulator == 'dsim':
+        pytest.skip("Issue when running with 'dsim' that needs to be debugged")
     expect_passing_example(datafiles, simulator, ['-uvm'])
 
 

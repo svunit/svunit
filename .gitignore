@@ -22,6 +22,12 @@ run.history
 # Xcelium specific files
 xcelium.d
 
+# dsim
+dsim.env
+dsim_work/
+metrics.db
+metrics_history.db
+
 # test specific files
 test/frmwrk_3/.testsuite.gold
 test/frmwrk_3/test_unit_test.sv

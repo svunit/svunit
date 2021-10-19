@@ -10,9 +10,10 @@ from utils import *
 # Need a possibility to remove tools from PATH, otherwise we can't test
 def get_path_without_sims():
     paths = os.environ['PATH'].split(os.path.pathsep)
-    xrun = shutil.which('xrun')
-    if xrun:
-        paths = list(filter(lambda p: p != os.path.dirname(xrun), paths))
+    for sim_name in ['xrun', 'dsim']:
+        sim = shutil.which(sim_name)
+        if sim:
+            paths = list(filter(lambda p: p != os.path.dirname(sim), paths))
     return os.path.pathsep.join(paths)
 
 
@@ -180,6 +181,8 @@ def test_frmwrk_13(datafiles):
 @all_files_in_dir('frmwrk_14')
 @all_available_simulators()
 def test_frmwrk_14(datafiles, simulator):
+    if not shutil.which('csh') or not shutil.which('tcsh'):
+        pytest.skip()
     new_env = os.environ.copy()
     path_entries = new_env['PATH'].split(':')
     new_path_entries = [path_entry for path_entry in path_entries if not 'svunit-code' in path_entry]

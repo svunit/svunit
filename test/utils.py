@@ -26,8 +26,10 @@ def all_available_simulators():
         simulators.append('vcs')
     if shutil.which('vlog'):
         simulators.append('modelsim')
+    if shutil.which('dsim'):
+        simulators.append('dsim')
 
-    assert simulators, 'None of irun, modelsim or vcs are in your path. You need at least 1 simulator to regress svunit-code!'
+    assert simulators, 'None of irun, modelsim, vcs or dsim are in your path. You need at least 1 simulator to regress svunit-code!'
 
     return pytest.mark.parametrize("simulator", simulators)
 
