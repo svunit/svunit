@@ -191,6 +191,20 @@ def test_sim_13(datafiles, simulator):
         expect_string(br"INFO:  \[99\]\[dut_ut\]: no_timeout::PASSED", 'run.log')
 
 
+@all_files_in_dir('sim_15')
+@all_available_simulators()
+def test_sim_15(datafiles, simulator):
+    with datafiles.as_cwd():
+        subprocess.check_call(['runSVUnit', '-s', simulator])
+
+        expect_string(br"print from param dut testrunner\.__ts\.parameter_ut\.ut_1_BE\.my_dut\.print", 'run.log')
+        expect_string(br"print from param dut testrunner\.__ts\.parameter_ut\.ut_2_CAFE\.my_dut\.print", 'run.log')
+        for i in range(1,8):
+            expect_string(br"print from param dut testrunner\.__ts\.parameter_ut\.inst\[%d\]\.ut_gen\.my_dut\.print" % i, 'run.log')
+            expect_string(br"parameter \$bits\(T\): %d" % (i*8), 'run.log')
+        expect_string(br"INFO:  \[0\]\[__ts\]: FAILED \(8 of 10 testcases passing\)", 'run.log')
+
+
 @all_files_in_dir('fail_macros')
 @all_available_simulators()
 def test_fail_macros(datafiles, simulator):

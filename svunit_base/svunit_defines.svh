@@ -130,10 +130,44 @@
 
 
 /*
+  Macro: `SVUNIT_LAUNCHER_DEFINE
+  Define extension of launcher wrapper for unit test
+*/
+`define SVUNIT_LAUNCHER_DEFINE(_UT_) \
+  class svunit_testcase_launcher_extension extends \
+        svunit_pkg::svunit_testcase_launcher; \
+    function void wrp_build(); \
+      svunit_pkg::current_tc = _UT_; \
+      build(); \
+      ut = _UT_; \
+    endfunction \
+    task wrp_setup(); \
+      setup(); \
+    endtask \
+    task wrp_teardown(); \
+      teardown(); \
+    endtask \
+    task automatic wrp_run(); \
+      run(); \
+    endtask \
+  endclass
+
+
+/*
+  Macro: `SVUNIT_LAUNCHER_INST
+  Instance of launcher
+*/
+`define SVUNIT_LAUNCHER_INST \
+  svunit_testcase_launcher_extension __launcher_inst = new();
+
+
+/*
   Macro: `SVUNIT_TESTS_BEGIN
   START a block of unit tests
 */
 `define SVUNIT_TESTS_BEGIN \
+  `SVUNIT_LAUNCHER_DEFINE(svunit_ut) \
+  `SVUNIT_LAUNCHER_INST \
   task automatic run(); \
     `INFO("RUNNING");
 
@@ -218,3 +252,33 @@ end \
                 wait( svunit_ut.is_running() ); \
         end \
     end
+
+
+/*
+  Macro: `SVUNIT_UT_PARAM_WRP
+  Use this macro at begin of wrapper with your parameterized unit tests modules
+  Internal infrastructure will be created
+*/
+`define SVUNIT_UT_PARAM_WRP(_name_ = "wrapper_with_parameterized_unit_tests") \
+  svunit_pkg::svunit_testcase_wrp svunit_ut = new(_name_); \
+  function void build(); \
+    svunit_ut.build(); \
+  endfunction \
+  task setup(); \
+    svunit_ut.setup(); \
+  endtask \
+  task teardown(); \
+    svunit_ut.teardown(); \
+  endtask \
+  task automatic run(); \
+    svunit_ut.run(); \
+  endtask
+
+
+/*
+ Macro: `SVUNIT_UT_PARAM
+ Add instance of parameterized unit test in wrapper layer
+*/
+`define SVUNIT_UT_PARAM(unit_test_module_inst) \
+  initial svunit_ut.add_launcher_inst(unit_test_module_inst.__launcher_inst);
+

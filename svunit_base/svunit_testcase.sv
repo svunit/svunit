@@ -33,7 +33,7 @@ class svunit_testcase extends svunit_base;
     uint: error_count
     Counter for number of errors
   */
-  local int unsigned error_count = 0;
+  protected int unsigned error_count = 0;
 
 
   /*

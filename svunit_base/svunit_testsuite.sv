@@ -72,8 +72,15 @@ endfunction
     svunit - unit test to add to the list of unit tests
 */
 function void svunit_testsuite::add_testcase(svunit_testcase svunit);
+  svunit_testcase_wrp wrp;
   `INFO($sformatf("Registering Unit Test Case %s", svunit.get_name()));
-  list_of_testcases.push_back(svunit);
+  if ($cast(wrp, svunit)) begin
+    foreach(wrp.launcher[i]) begin
+      list_of_testcases.push_back(wrp.launcher[i].ut);
+    end
+  end else begin
+    list_of_testcases.push_back(svunit);
+  end
 endfunction
 
 
