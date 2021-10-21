@@ -25,6 +25,7 @@ my $fb_file;
 my $HI_MSG_THRESHOLD = 200;
 my $LO_MSG_THRESHOLD = 10;
 my $EMAIL = "contact\@svunit.org";
+my $DISCUSSIONS = "https://github.com/svunit/svunit/discussions";
 
 sub main() {
   if (defined $ENV{"HOME"} and -O $ENV{"HOME"}) {
@@ -88,6 +89,10 @@ sub printHi() {
 
               $EMAIL
 
+  You can also start a discussion at:
+
+      $DISCUSSIONS
+
   Tell us about what you like, what you don't like,
   new features you'd like to see... basically anything
   you think would make SVUnit more valuable to you.
@@ -141,6 +146,10 @@ sub printLo() {
   about your experience by sending us a note at:
 
               $EMAIL
+
+  You can also start a discussion at:
+
+      $DISCUSSIONS
 
   Tell us about what you like, what you don't like,
   new features you'd like to see... basically anything
