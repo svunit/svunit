@@ -24,7 +24,7 @@ my $FB;
 my $fb_file;
 my $HI_MSG_THRESHOLD = 200;
 my $LO_MSG_THRESHOLD = 10;
-my $EMAIL = "svunit\@outlook.com";
+my $EMAIL = "contact\@svunit.org";
 
 sub main() {
   if (defined $ENV{"HOME"} and -O $ENV{"HOME"}) {
