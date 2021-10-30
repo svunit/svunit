@@ -11,3 +11,6 @@ insert_final_newline = true
 
 [*.{sv,svh}]
 indent_size = 2
+
+[*.{yml,yaml}]
+indent_size = 2
