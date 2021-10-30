@@ -10,5 +10,10 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v2
 
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.6"
+
       - name: Run a one-line script
-        run: echo Hello, world!
+        run: python -c 'print("Hello, world!")'
