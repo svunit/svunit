@@ -15,5 +15,8 @@ jobs:
         with:
           python-version: "3.6"
 
+      - name: Set up testing environment
+        run: pip install -r test/requirements.txt
+
       - name: Run a one-line script
         run: python -c 'print("Hello, world!")'
