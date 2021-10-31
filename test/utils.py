@@ -4,6 +4,7 @@ import pathlib
 import re
 import shutil
 import subprocess
+import warnings
 
 import pytest
 
@@ -29,7 +30,8 @@ def all_available_simulators():
     if shutil.which('dsim'):
         simulators.append('dsim')
 
-    assert simulators, 'None of irun, modelsim, vcs or dsim are in your path. You need at least 1 simulator to regress svunit-code!'
+    if not simulators:
+        warnings.warn('None of irun, modelsim, vcs or dsim are in your path. You need at least 1 simulator to regress svunit-code!')
 
     return pytest.mark.parametrize("simulator", simulators)
 
