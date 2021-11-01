@@ -85,6 +85,14 @@ endfunction
       $fatal(0, error_msg);
 
   result.testcase = filter.substr(0, dot_idx-1);
+  if (result.testcase != "*")
+    if ("*" inside { result.testcase })
+      $fatal(0, "Partial wildcards in testcase names aren't currently supported");
+
   result.test = filter.substr(dot_idx+1, filter.len()-1);
+  if (result.test != "*")
+    if ("*" inside { result.test })
+      $fatal(0, "Partial wildcards in test names aren't currently supported");
+
   return result;
 endfunction
