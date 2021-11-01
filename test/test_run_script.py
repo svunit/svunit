@@ -164,3 +164,40 @@ endmodule
 
     log = tmp_path.joinpath('run.log')
     assert 'fatal' in log.read_text()
+
+
+
+def test_filter_with_extra_dot(tmp_path):
+    dummy_unit_test = tmp_path.joinpath('dummy_unit_test.sv')
+    dummy_unit_test.write_text('''
+module dummy_unit_test;
+
+  import svunit_pkg::*;
+  `include "svunit_defines.svh"
+
+  string name = "some_passing_ut";
+  svunit_testcase svunit_ut;
+
+  function void build();
+    svunit_ut = new(name);
+  endfunction
+
+  task setup();
+    svunit_ut.setup();
+  endtask
+
+  task teardown();
+    svunit_ut.teardown();
+  endtask
+
+  `SVUNIT_TESTS_BEGIN
+  `SVUNIT_TESTS_END
+
+endmodule
+    ''')
+
+    subprocess.check_call(['runSVUnit', '--filter', 'a.b.c'], cwd=tmp_path)
+
+    log = tmp_path.joinpath('run.log')
+    assert 'fatal' in log.read_text()
+
