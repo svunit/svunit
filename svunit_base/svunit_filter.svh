@@ -32,11 +32,8 @@ class filter;
 
 
   local function new();
-    string raw_filter;
+    string raw_filter = get_filter_value_from_run_script();
     int unsigned dot_idx;
-
-    if (!$value$plusargs("SVUNIT_FILTER=%s", raw_filter))
-      $fatal(0, "Expected to receive a plusarg called 'SVUNIT_FILTER'");
 
     if (raw_filter == "*") begin
       filter_parts.testcase = "*";
@@ -51,6 +48,14 @@ class filter;
 
     filter_parts.test = raw_filter.substr(dot_idx+1, raw_filter.len()-1);
     disallow_partial_wildcards("test", filter_parts.test);
+  endfunction
+
+
+  local function string get_filter_value_from_run_script();
+    string result;
+    if (!$value$plusargs("SVUNIT_FILTER=%s", result))
+      $fatal(0, "Expected to receive a plusarg called 'SVUNIT_FILTER'");
+    return result;
   endfunction
 
 
