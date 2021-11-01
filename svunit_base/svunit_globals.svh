@@ -29,7 +29,13 @@ const string filter = get_filter();
   string result;
   if (!$value$plusargs("SVUNIT_FILTER=%s", result))
     $fatal(0, "Expected to receive a plusarg called 'SVUNIT_FILTER'");
+  validate_filter(result);
   return result;
+endfunction
+
+
+/* local */ function automatic void validate_filter(string filter);
+  void'(parse_filter_parts(filter));
 endfunction
 
 
@@ -42,7 +48,7 @@ endfunction
 /* local */ function automatic bit is_selected(svunit_testcase tc, string test_name);
   filter_parts_t filter_parts;
 
-  filter_parts = parse_filter_parts();
+  filter_parts = parse_filter_parts(filter);
   if (is_match(filter_parts.testcase, tc.get_name()) && is_match(filter_parts.test, test_name))
     return 1;
 
@@ -55,7 +61,7 @@ endfunction
 endfunction
 
 
-/* local */ function automatic filter_parts_t parse_filter_parts();
+/* local */ function automatic filter_parts_t parse_filter_parts(string filter);
   filter_parts_t result;
   const string error_msg = "Expected the filter to be of the type '<test_case>.<test>'";
   int dot_idx = -1;
