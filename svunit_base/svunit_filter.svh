@@ -29,18 +29,14 @@ class filter;
 
 
   local static const filter single_instance = new();
-  local const string raw_filter;
+  local const filter_parts_t filter_parts;
 
 
   local function new();
+    string raw_filter;
     if (!$value$plusargs("SVUNIT_FILTER=%s", raw_filter))
       $fatal(0, "Expected to receive a plusarg called 'SVUNIT_FILTER'");
-    validate_filter(raw_filter);
-  endfunction
-
-
-  local function void validate_filter(string filter);
-    void'(parse_filter_parts(filter));
+    this.filter_parts = parse_filter_parts(raw_filter);
   endfunction
 
 
@@ -87,9 +83,6 @@ class filter;
 
 
   function bit is_selected(svunit_testcase tc, string test_name);
-    filter_parts_t filter_parts;
-
-    filter_parts = parse_filter_parts(raw_filter);
     if (is_match(filter_parts.testcase, tc.get_name()) && is_match(filter_parts.test, test_name))
       return 1;
 
