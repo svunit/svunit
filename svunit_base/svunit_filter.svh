@@ -22,6 +22,12 @@
  */
 class filter;
 
+  /* local */ typedef struct {
+    string testcase;
+    string test;
+  } filter_parts_t;
+
+
   local static const filter single_instance = new();
   local const string raw_filter;
 
@@ -33,35 +39,8 @@ class filter;
   endfunction
 
 
-  static function filter get();
-    return single_instance;
-  endfunction
-
-
   local function void validate_filter(string filter);
     void'(parse_filter_parts(filter));
-  endfunction
-
-
-  /* local */ typedef struct {
-    string testcase;
-    string test;
-  } filter_parts_t;
-
-
-  function bit is_selected(svunit_testcase tc, string test_name);
-    filter_parts_t filter_parts;
-
-    filter_parts = parse_filter_parts(raw_filter);
-    if (is_match(filter_parts.testcase, tc.get_name()) && is_match(filter_parts.test, test_name))
-      return 1;
-
-    return 0;
-  endfunction
-
-
-  local function bit is_match(string filter_val, string val);
-    return (filter_val == "*") || (filter_val == val);
   endfunction
 
 
@@ -99,6 +78,27 @@ class filter;
         $fatal(0, "Partial wildcards in test names aren't currently supported");
 
     return result;
+  endfunction
+
+
+  static function filter get();
+    return single_instance;
+  endfunction
+
+
+  function bit is_selected(svunit_testcase tc, string test_name);
+    filter_parts_t filter_parts;
+
+    filter_parts = parse_filter_parts(raw_filter);
+    if (is_match(filter_parts.testcase, tc.get_name()) && is_match(filter_parts.test, test_name))
+      return 1;
+
+    return 0;
+  endfunction
+
+
+  local function bit is_match(string filter_val, string val);
+    return (filter_val == "*") || (filter_val == val);
   endfunction
 
 endclass
