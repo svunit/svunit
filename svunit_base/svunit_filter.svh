@@ -29,6 +29,7 @@ class filter;
 
 
   local static const filter single_instance = new();
+  local static const string error_msg = "Expected the filter to be of the type '<test_case>.<test>'";
   local const filter_parts_t filter_parts;
 
 
@@ -42,8 +43,7 @@ class filter;
 
   local function filter_parts_t parse_filter_parts(string filter);
     filter_parts_t result;
-    const string error_msg = "Expected the filter to be of the type '<test_case>.<test>'";
-    int dot_idx = -1;
+    int unsigned dot_idx;
 
     if (filter == "*") begin
       result.testcase = "*";
@@ -51,17 +51,7 @@ class filter;
       return result;
     end
 
-    for (int i = 0; i < filter.len(); i++)
-      if (filter[i] == ".") begin
-        dot_idx = i;
-        break;
-      end
-    if (dot_idx == -1)
-      $fatal(0, error_msg);
-
-    for (int i = dot_idx+1; i < filter.len(); i++)
-      if (filter[i] == ".")
-        $fatal(0, error_msg);
+    dot_idx = get_dot_idx(filter);
 
     result.testcase = filter.substr(0, dot_idx-1);
     if (result.testcase != "*")
@@ -74,6 +64,28 @@ class filter;
         $fatal(0, "Partial wildcards in test names aren't currently supported");
 
     return result;
+  endfunction
+
+
+  local function int unsigned get_dot_idx(string filter);
+    int unsigned first_dot_idx = get_first_dot_idx(filter);
+    ensure_no_more_dots(filter, first_dot_idx);
+    return first_dot_idx;
+  endfunction
+
+
+  local function int unsigned get_first_dot_idx(string filter);
+    for (int i = 0; i < filter.len(); i++)
+      if (filter[i] == ".")
+        return i;
+    $fatal(0, error_msg);
+  endfunction
+
+
+  local function void ensure_no_more_dots(string filter, int unsigned first_dot_idx);
+    for (int i = first_dot_idx+1; i < filter.len(); i++)
+      if (filter[i] == ".")
+        $fatal(0, error_msg);
   endfunction
 
 
