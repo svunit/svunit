@@ -42,9 +42,6 @@ endfunction
 /* local */ function automatic bit is_selected(svunit_testcase tc, string test_name);
   filter_parts_t filter_parts;
 
-  if (filter == "*")
-    return 1;
-
   filter_parts = parse_filter_parts();
   if (is_match(filter_parts.testcase, tc.get_name()) && is_match(filter_parts.test, test_name))
     return 1;
@@ -62,6 +59,12 @@ endfunction
   filter_parts_t result;
   const string error_msg = "Expected the filter to be of the type '<test_case>.<test>'";
   int dot_idx = -1;
+
+  if (filter == "*") begin
+    result.testcase = "*";
+    result.test = "*";
+    return result;
+  end
 
   for (int i = 0; i < filter.len(); i++)
     if (filter[i] == ".") begin
