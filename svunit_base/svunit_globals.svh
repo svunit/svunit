@@ -1,6 +1,6 @@
 //###########################################################################
 //
-//  Copyright 2011 The SVUnit Authors.
+//  Copyright 2011-2021 The SVUnit Authors.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -18,3 +18,59 @@
 
 // The current testcase that is being executed.
 svunit_testcase current_tc;
+
+/**
+ * The filter expression that controls which tests should run.
+ */
+const string filter = get_filter();
+
+
+/* local */ function automatic string get_filter();
+  string result;
+  if (!$value$plusargs("SVUNIT_FILTER=%s", result))
+    $fatal(0, "Expected to receive a plusarg called 'SVUNIT_FILTER'");
+  return result;
+endfunction
+
+
+/* local */ typedef struct {
+  string testcase;
+  string test;
+} filter_parts_t;
+
+
+/* local */ function automatic bit is_selected(svunit_testcase tc, string test_name);
+  filter_parts_t filter_parts;
+
+  if (filter == "*")
+    return 1;
+
+  filter_parts = parse_filter_parts();
+  if (filter_parts.testcase == tc.get_name() && filter_parts.test == test_name)
+    return 1;
+
+  return 0;
+endfunction
+
+
+/* local */ function automatic filter_parts_t parse_filter_parts();
+  filter_parts_t result;
+  const string error_msg = "Expected the filter to be of the type '<test_case>.<test>'";
+  int dot_idx = -1;
+
+  for (int i = 0; i < filter.len(); i++)
+    if (filter[i] == ".") begin
+      dot_idx = i;
+      break;
+    end
+  if (dot_idx == -1)
+    $fatal(0, error_msg);
+
+  for (int i = dot_idx+1; i < filter.len(); i++)
+    if (filter[i] == ".")
+      $fatal(0, error_msg);
+
+  result.testcase = filter.substr(0, dot_idx-1);
+  result.test = filter.substr(dot_idx+1, filter.len()-1);
+  return result;
+endfunction

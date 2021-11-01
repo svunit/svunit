@@ -151,7 +151,7 @@
   REQUIRES ACCESS TO error_count
 */
 `define SVTEST(_NAME_) \
-  begin : _NAME_ \
+  if (is_selected(svunit_ut, `"_NAME_`")) begin : _NAME_ \
     string _testName = `"_NAME_`"; \
     integer local_error_count = svunit_ut.get_error_count(); \
     string fileName; \

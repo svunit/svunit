@@ -46,11 +46,12 @@ my $outdir = ".";
 my $clean;
 my $vhdlfile;
 my @tests;
+my $filter = '*';
 my $help;
 
 sub usage () {
   print "Usage:  runSVUnit [-s|--sim <simulator> -l|--log <log> -d|--define <macro> -f|--filelist <file> -U|-uvm -m|-mixedsim <vhdlfile>\n";
-  print "                  -r|--r_arg <option> -c|--c_arg <option> -o|--out <dir> -t|--test <test>]\n";
+  print "                  -r|--r_arg <option> -c|--c_arg <option> -o|--out <dir> -t|--test <test> --filter <filter>]\n";
   print "  -s|--sim <simulator>     : simulator is either of questa, modelsim, riviera, ius, xcelium or vcs\n";
   print "  -l|--log <log>           : simulation log file (default: run.log)\n";
   print "  -d|--define <macro>      : appended to the command line as +define+<macro>\n";
@@ -62,6 +63,7 @@ sub usage () {
   print "  -t|--test                : specifies a unit test to run (multiple can be given)\n";
   print "  -m|--mixedsim <vhdlfile> : consolidated file list with VHDL files and command line switches\n";
   print "  -w|--wavedrom            : process json files as wavedrom output\n";
+  print "     --filter <filter>     : TODO\n";
   print "  -h|--help                : prints this help screen\n";
   print "\n";
   exit 1;
@@ -93,6 +95,7 @@ GetOptions("l|log=s" => \$logfile,
            "o|out=s" => \$outdir,
            "m|mixedsim=s" => \$vhdlfile,
            "t|test=s{,}" => \@tests,
+           "filter=s" => \$filter,
            "w|wavedrom" => \$wavedrom,
            "h|help" => \$help
            ) or usage();
@@ -174,6 +177,8 @@ if ($simulator eq "modelsim" or $simulator eq "riviera") {
 } else {
   $cmd .= " @compileargs @simargs -top testrunner";
 }
+
+$cmd .= " +SVUNIT_FILTER=$filter";
 
 my $build_cmd = "buildSVUnit -o $outdir";
 foreach (@tests) {
