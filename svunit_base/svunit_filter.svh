@@ -54,14 +54,10 @@ class filter;
     dot_idx = get_dot_idx(filter);
 
     result.testcase = filter.substr(0, dot_idx-1);
-    if (result.testcase != "*")
-      if ("*" inside { result.testcase })
-        $fatal(0, "Partial wildcards in testcase names aren't currently supported");
+    disallow_partial_wildcards("testcase", result.testcase);
 
     result.test = filter.substr(dot_idx+1, filter.len()-1);
-    if (result.test != "*")
-      if ("*" inside { result.test })
-        $fatal(0, "Partial wildcards in test names aren't currently supported");
+    disallow_partial_wildcards("test", result.test);
 
     return result;
   endfunction
@@ -86,6 +82,13 @@ class filter;
     for (int i = first_dot_idx+1; i < filter.len(); i++)
       if (filter[i] == ".")
         $fatal(0, error_msg);
+  endfunction
+
+
+  local function void disallow_partial_wildcards(string field_name, string field_value);
+    if (field_value != "*")
+      if ("*" inside { field_value })
+        $fatal(0, $sformatf("Partial wildcards in %s names aren't currently supported", field_name));
   endfunction
 
 
