@@ -46,10 +46,15 @@ endfunction
     return 1;
 
   filter_parts = parse_filter_parts();
-  if (filter_parts.testcase == tc.get_name() && filter_parts.test == test_name)
+  if (is_match(filter_parts.testcase, tc.get_name()) && is_match(filter_parts.test, test_name))
     return 1;
 
   return 0;
+endfunction
+
+
+/* local */ function automatic bit is_match(string filter_val, string val);
+  return (filter_val == "*") || (filter_val == val);
 endfunction
 
 
