@@ -127,6 +127,23 @@
 <p>The &#8216;-t&#8217; switch can be used to specify multiple unit test templates as:</p>
 <p><em>&gt; runSVunit -t mine_unit_test.sv -t yours_unit_test.sv -s &lt;your simulator&gt;</em></p>
 
+<p>It's also possible to restrict which individual tests should run. This is done using the &#8216;--filter&#8217; option.</p>
+<p>The following call runs only some_test defined in some_testcase:</p>
+<p><em>&gt; runSVUnit --filter some_testcase.some_test</em></p>
+<p>The following call runs all tests called some_test regardless of which testcase they are defined in:</p>
+<p><em>&gt; runSVUnit --filter *.some_test</em></p>
+<p>The following call runs all tests defined in some_testcase:</p>
+<p><em>&gt; runSVUnit --filter some_testcase.*</em></p>
+<p>
+The previous command is conceptually similar to using the &#8216;-t&#8217; option.
+While the runtime behavior is the same, it is slightly different in terms of what gets compiled.
+Using &#8216;-t&#8217; selects what gets compiled and by extension limits what can be run.
+Using &#8216;--filter&#8217; only affects which of the tests that were compiled should run, but doesn't control what gets compiled.
+Both options are useful, as they serve different purposes.
+The &#8216;-t&#8217; option is helpful when API changes would require modifications to many unit test files, but you would like to update them one after the other.
+It is also a very blunt tool, as compilation can only be handled at the file level.
+The &#8216;--filter&#8217; option can be used to focus on finer subsets of tests.
+</p>
 
 <h1><span id="Simulator_Output">Simulator Output</span></h1>
 <p>Using built-in logging macros, the logged SVUnit output shows step-by-step run status for each test, unit test template and test suite as well as a cumulative result for the testrunner.</p>
