@@ -2,8 +2,11 @@ import subprocess
 
 import pytest
 
+from utils import *
 
-def test_filter(tmp_path):
+
+@all_available_simulators()
+def test_filter(tmp_path, simulator):
     unit_test = tmp_path.joinpath('some_unit_test.sv')
     unit_test.write_text('''
 module some_unit_test;
@@ -44,16 +47,16 @@ endmodule
     log = tmp_path.joinpath('run.log')
 
     print('Filtering only the passing test should block the fail')
-    subprocess.check_call(['runSVUnit', '--filter', 'some_ut.some_passing_test'], cwd=tmp_path)
+    subprocess.check_call(['runSVUnit', '-s', simulator, '--filter', 'some_ut.some_passing_test'], cwd=tmp_path)
     assert 'FAILED' not in log.read_text()
 
     print('No explicit filter should cause both tests to run, hence trigger the fail')
-    subprocess.check_call(['runSVUnit'], cwd=tmp_path)
+    subprocess.check_call(['runSVUnit', '-s', simulator], cwd=tmp_path)
     assert 'FAILED' in log.read_text()
 
 
-
-def test_filter_wildcards(tmp_path):
+@all_available_simulators()
+def test_filter_wildcards(tmp_path, simulator):
     failing_unit_test = tmp_path.joinpath('some_failing_unit_test.sv')
     failing_unit_test.write_text('''
 module some_failing_unit_test;
@@ -122,16 +125,17 @@ endmodule
     log = tmp_path.joinpath('run.log')
 
     print('Filtering only the passing testcase should block the fail')
-    subprocess.check_call(['runSVUnit', '--filter', 'some_passing_ut.*'], cwd=tmp_path)
+    subprocess.check_call(['runSVUnit', '-s', simulator, '--filter', 'some_passing_ut.*'], cwd=tmp_path)
     assert 'FAILED' not in log.read_text()
     assert 'some_test' in log.read_text()
 
     print('Filtering only for the test should cause both tests to run, hence trigger the fail')
-    subprocess.check_call(['runSVUnit', '--filter', "*.some_test"], cwd=tmp_path)
+    subprocess.check_call(['runSVUnit', '-s', simulator, '--filter', "*.some_test"], cwd=tmp_path)
     assert 'FAILED' in log.read_text()
 
 
-def test_filter_without_dot(tmp_path):
+@all_available_simulators()
+def test_filter_without_dot(tmp_path, simulator):
     dummy_unit_test = tmp_path.joinpath('dummy_unit_test.sv')
     dummy_unit_test.write_text('''
 module dummy_unit_test;
@@ -160,14 +164,14 @@ module dummy_unit_test;
 endmodule
     ''')
 
-    subprocess.check_call(['runSVUnit', '--filter', 'some_string'], cwd=tmp_path)
+    subprocess.check_call(['runSVUnit', '-s', simulator, '--filter', 'some_string'], cwd=tmp_path)
 
     log = tmp_path.joinpath('run.log')
     assert 'fatal' in log.read_text()
 
 
-
-def test_filter_with_extra_dot(tmp_path):
+@all_available_simulators()
+def test_filter_with_extra_dot(tmp_path, simulator):
     dummy_unit_test = tmp_path.joinpath('dummy_unit_test.sv')
     dummy_unit_test.write_text('''
 module dummy_unit_test;
@@ -196,14 +200,14 @@ module dummy_unit_test;
 endmodule
     ''')
 
-    subprocess.check_call(['runSVUnit', '--filter', 'a.b.c'], cwd=tmp_path)
+    subprocess.check_call(['runSVUnit', '-s', simulator, '--filter', 'a.b.c'], cwd=tmp_path)
 
     log = tmp_path.joinpath('run.log')
     assert 'fatal' in log.read_text()
 
 
-
-def test_filter_with_partial_widlcard(tmp_path):
+@all_available_simulators()
+def test_filter_with_partial_widlcard(tmp_path, simulator):
     dummy_unit_test = tmp_path.joinpath('dummy_unit_test.sv')
     dummy_unit_test.write_text('''
 module dummy_unit_test;
@@ -232,10 +236,10 @@ module dummy_unit_test;
 endmodule
     ''')
 
-    subprocess.check_call(['runSVUnit', '--filter', 'foo*.bar'], cwd=tmp_path)
+    subprocess.check_call(['runSVUnit', '-s', simulator, '--filter', 'foo*.bar'], cwd=tmp_path)
     log = tmp_path.joinpath('run.log')
     assert 'fatal' in log.read_text()
 
-    subprocess.check_call(['runSVUnit', '--filter', 'foo.bar*'], cwd=tmp_path)
+    subprocess.check_call(['runSVUnit', '-s', simulator, '--filter', 'foo.bar*'], cwd=tmp_path)
     log = tmp_path.joinpath('run.log')
     assert 'fatal' in log.read_text()
