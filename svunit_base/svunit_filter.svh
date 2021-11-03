@@ -27,6 +27,7 @@ class filter;
     string test;
   } filter_parts_t;
 
+
   local static const filter single_instance = new();
   local static const string error_msg = "Expected the filter to be of the type '<test_case>.<test>'";
 
