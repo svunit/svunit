@@ -1,6 +1,6 @@
 //###########################################################################
 //
-//  Copyright 2011 The SVUnit Authors.
+//  Copyright 2011-2021 The SVUnit Authors.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -151,7 +151,7 @@
   REQUIRES ACCESS TO error_count
 */
 `define SVTEST(_NAME_) \
-  begin : _NAME_ \
+  if (svunit_pkg::_filter.is_selected(svunit_ut, `"_NAME_`")) begin : _NAME_ \
     string _testName = `"_NAME_`"; \
     integer local_error_count = svunit_ut.get_error_count(); \
     string fileName; \

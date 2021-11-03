@@ -1,6 +1,6 @@
 //###########################################################################
 //
-//  Copyright 2011 The SVUnit Authors.
+//  Copyright 2011-2021 The SVUnit Authors.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -31,5 +31,6 @@ package svunit_pkg;
   `include "svunit_testcase.sv"
   `include "svunit_testsuite.sv"
   `include "svunit_testrunner.sv"
+  `include "svunit_filter.svh"
   `include "svunit_globals.svh"
 endpackage

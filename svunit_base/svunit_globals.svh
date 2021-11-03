@@ -1,6 +1,6 @@
 //###########################################################################
 //
-//  Copyright 2011 The SVUnit Authors.
+//  Copyright 2011-2021 The SVUnit Authors.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -18,3 +18,6 @@
 
 // The current testcase that is being executed.
 svunit_testcase current_tc;
+
+// The filter to apply on tests
+/* local */ const filter _filter = filter::get();
