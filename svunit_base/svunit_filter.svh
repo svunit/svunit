@@ -22,32 +22,21 @@
  */
 class filter;
 
+  /* local */ typedef struct {
+    string testcase;
+    string test;
+  } filter_parts_t;
+
+
   local static const filter single_instance = new();
   local static const string error_msg = "Expected the filter to be of the type '<test_case>.<test>'";
 
-  local const struct {
-    string testcase;
-    string test;
-  } filter_parts;
+  local const filter_parts_t filter_parts;
 
 
   local function new();
     string raw_filter = get_filter_value_from_run_script();
-    int unsigned dot_idx;
-
-    if (raw_filter == "*") begin
-      filter_parts.testcase = "*";
-      filter_parts.test = "*";
-      return;
-    end
-
-    dot_idx = get_dot_idx(raw_filter);
-
-    filter_parts.testcase = raw_filter.substr(0, dot_idx-1);
-    disallow_partial_wildcards("testcase", filter_parts.testcase);
-
-    filter_parts.test = raw_filter.substr(dot_idx+1, raw_filter.len()-1);
-    disallow_partial_wildcards("test", filter_parts.test);
+    filter_parts = get_filter_parts(raw_filter);
   endfunction
 
 
@@ -55,6 +44,32 @@ class filter;
     string result;
     if (!$value$plusargs("SVUNIT_FILTER=%s", result))
       $fatal(0, "Expected to receive a plusarg called 'SVUNIT_FILTER'");
+    return result;
+  endfunction
+
+
+  local function filter_parts_t get_filter_parts(string raw_filter);
+    if (raw_filter == "*") begin
+      filter_parts_t result;
+      result.testcase = "*";
+      result.test = "*";
+      return result;
+    end
+
+    return get_filter_parts_from_non_trivial_expr(raw_filter);
+  endfunction
+
+
+  local function filter_parts_t get_filter_parts_from_non_trivial_expr(string raw_filter);
+    filter_parts_t result;
+    int unsigned dot_idx = get_dot_idx(raw_filter);
+
+    result.testcase = raw_filter.substr(0, dot_idx-1);
+    disallow_partial_wildcards("testcase", result.testcase);
+
+    result.test = raw_filter.substr(dot_idx+1, raw_filter.len()-1);
+    disallow_partial_wildcards("test", result.test);
+
     return result;
   endfunction
 

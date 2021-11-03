@@ -13,6 +13,7 @@ __pycache__
 .svunit.f
 .testrunner.sv
 run.log
+tests.xml
 
 # IUS specific files
 INCA_libs
