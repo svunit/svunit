@@ -22,13 +22,15 @@
  */
 class filter;
 
+  /* local */ typedef struct {
+    string testcase;
+    string test;
+  } filter_parts_t;
+
   local static const filter single_instance = new();
   local static const string error_msg = "Expected the filter to be of the type '<test_case>.<test>'";
 
-  local const struct {
-    string testcase;
-    string test;
-  } filter_parts;
+  local const filter_parts_t filter_parts;
 
 
   local function new();
