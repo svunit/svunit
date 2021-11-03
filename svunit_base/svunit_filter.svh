@@ -35,21 +35,29 @@ class filter;
 
   local function new();
     string raw_filter = get_filter_value_from_run_script();
+    filter_parts = get_filter_parts(raw_filter);
+  endfunction
+
+
+  local function filter_parts_t get_filter_parts(string raw_filter);
+    filter_parts_t result;
     int unsigned dot_idx;
 
     if (raw_filter == "*") begin
-      filter_parts.testcase = "*";
-      filter_parts.test = "*";
-      return;
+      result.testcase = "*";
+      result.test = "*";
+      return result;
     end
 
     dot_idx = get_dot_idx(raw_filter);
 
-    filter_parts.testcase = raw_filter.substr(0, dot_idx-1);
-    disallow_partial_wildcards("testcase", filter_parts.testcase);
+    result.testcase = raw_filter.substr(0, dot_idx-1);
+    disallow_partial_wildcards("testcase", result.testcase);
 
-    filter_parts.test = raw_filter.substr(dot_idx+1, raw_filter.len()-1);
-    disallow_partial_wildcards("test", filter_parts.test);
+    result.test = raw_filter.substr(dot_idx+1, raw_filter.len()-1);
+    disallow_partial_wildcards("test", result.test);
+
+    return result;
   endfunction
 
 
