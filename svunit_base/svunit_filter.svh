@@ -39,6 +39,14 @@ class filter;
   endfunction
 
 
+  local function string get_filter_value_from_run_script();
+    string result;
+    if (!$value$plusargs("SVUNIT_FILTER=%s", result))
+      $fatal(0, "Expected to receive a plusarg called 'SVUNIT_FILTER'");
+    return result;
+  endfunction
+
+
   local function filter_parts_t get_filter_parts(string raw_filter);
     filter_parts_t result;
     int unsigned dot_idx;
@@ -57,14 +65,6 @@ class filter;
     result.test = raw_filter.substr(dot_idx+1, raw_filter.len()-1);
     disallow_partial_wildcards("test", result.test);
 
-    return result;
-  endfunction
-
-
-  local function string get_filter_value_from_run_script();
-    string result;
-    if (!$value$plusargs("SVUNIT_FILTER=%s", result))
-      $fatal(0, "Expected to receive a plusarg called 'SVUNIT_FILTER'");
     return result;
   endfunction
 
