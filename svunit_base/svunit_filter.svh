@@ -48,16 +48,20 @@ class filter;
 
 
   local function filter_parts_t get_filter_parts(string raw_filter);
-    filter_parts_t result;
-    int unsigned dot_idx;
-
     if (raw_filter == "*") begin
+      filter_parts_t result;
       result.testcase = "*";
       result.test = "*";
       return result;
     end
 
-    dot_idx = get_dot_idx(raw_filter);
+    return get_filter_parts_from_non_trivial_expr(raw_filter);
+  endfunction
+
+
+  local function filter_parts_t get_filter_parts_from_non_trivial_expr(string raw_filter);
+    filter_parts_t result;
+    int unsigned dot_idx = get_dot_idx(raw_filter);
 
     result.testcase = raw_filter.substr(0, dot_idx-1);
     disallow_partial_wildcards("testcase", result.testcase);
