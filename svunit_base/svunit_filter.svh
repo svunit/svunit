@@ -28,8 +28,8 @@ class filter;
   } filter_parts_t;
 
 
-  local static const filter single_instance = new();
   local static const string error_msg = "Expected the filter to be of the type '<test_case>.<test>'";
+  local static filter single_instance;
 
   local const filter_parts_t filter_parts;
 
@@ -104,6 +104,8 @@ class filter;
 
 
   static function filter get();
+    if (single_instance == null)
+      single_instance = new();
     return single_instance;
   endfunction
 
