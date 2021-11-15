@@ -28,13 +28,12 @@ class filter;
   } filter_parts_t;
 
 
-  local static const filter single_instance = new();
   local static const string error_msg = "Expected the filter to be of the type '<test_case>.<test>'";
 
   local const filter_parts_t filter_parts;
 
 
-  local function new();
+  function new();
     string raw_filter = get_filter_value_from_run_script();
     filter_parts = get_filter_parts(raw_filter);
   endfunction
@@ -100,11 +99,6 @@ class filter;
     if (field_value != "*")
       if ("*" inside { field_value })
         $fatal(0, $sformatf("Partial wildcards in %s names aren't currently supported", field_name));
-  endfunction
-
-
-  static function filter get();
-    return single_instance;
   endfunction
 
 
