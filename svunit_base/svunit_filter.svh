@@ -34,6 +34,13 @@ class filter;
   local const filter_parts_t filter_parts;
 
 
+  static function filter get();
+    if (single_instance == null)
+      single_instance = new();
+    return single_instance;
+  endfunction
+
+
   local function new();
     string raw_filter = get_filter_value_from_run_script();
     filter_parts = get_filter_parts(raw_filter);
@@ -100,13 +107,6 @@ class filter;
     if (field_value != "*")
       if ("*" inside { field_value })
         $fatal(0, $sformatf("Partial wildcards in %s names aren't currently supported", field_name));
-  endfunction
-
-
-  static function filter get();
-    if (single_instance == null)
-      single_instance = new();
-    return single_instance;
   endfunction
 
 
