@@ -10,7 +10,7 @@ from utils import *
 # Need a possibility to remove tools from PATH, otherwise we can't test
 def get_path_without_sims():
     paths = os.environ['PATH'].split(os.path.pathsep)
-    for sim_name in ['xrun', 'dsim']:
+    for sim_name in ['xrun', 'dsim', 'vsim']:
         sim = shutil.which(sim_name)
         if sim:
             paths = list(filter(lambda p: p != os.path.dirname(sim), paths))
