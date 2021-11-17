@@ -243,3 +243,7 @@ endmodule
     subprocess.check_call(['runSVUnit', '-s', simulator, '--filter', 'foo.bar*'], cwd=tmp_path)
     log = tmp_path.joinpath('run.log')
     assert 'fatal' in log.read_text().lower()
+
+    subprocess.check_call(['runSVUnit', '-s', simulator, '--filter', '*foo.bar'], cwd=tmp_path)
+    log = tmp_path.joinpath('run.log')
+    assert 'fatal' in log.read_text().lower()
