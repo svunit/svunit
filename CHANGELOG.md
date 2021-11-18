@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Fix broken compilation for QuestaSim
 - Fix argument checking for partial wildcards in filter expression
+- Fix help for `runSVUnit` to mention DSim and `--filter` option
 
 
 ## [3.35.0] - 2021-11-04
