@@ -171,7 +171,10 @@ $cmd .= " +define+" . join " +define+", @defines if (@defines > 0);
 
 if ($simulator eq "modelsim" or $simulator eq "riviera") {
   if (!grep(/(^| )(-gui|-c|-i)( |$)/, @simargs)) {
-    push @simargs, "-c -do 'run -all; quit'";
+    push @simargs, "-c -do 'run -all'";
+  }
+  if (grep(/(-gui)( |$)/, @simargs)) {
+      push @simargs, "-onfinish stop";
   }
   $cmd .= qq! @compileargs; vsim @simargs -lib work -l $logfile testrunner!;
 } else {
