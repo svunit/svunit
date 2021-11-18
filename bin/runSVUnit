@@ -63,7 +63,7 @@ sub usage () {
   print "  -t|--test                : specifies a unit test to run (multiple can be given)\n";
   print "  -m|--mixedsim <vhdlfile> : consolidated file list with VHDL files and command line switches\n";
   print "  -w|--wavedrom            : process json files as wavedrom output\n";
-  print "     --filter <filter>     : TODO\n";
+  print "     --filter <filter>     : specify which tests to run, as <test_module>.<test_name>\n";
   print "  -h|--help                : prints this help screen\n";
   print "\n";
   exit 1;
