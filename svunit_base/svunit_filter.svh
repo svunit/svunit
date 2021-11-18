@@ -28,10 +28,17 @@ class filter;
   } filter_parts_t;
 
 
-  local static const filter single_instance = new();
   local static const string error_msg = "Expected the filter to be of the type '<test_case>.<test>'";
+  local static filter single_instance;
 
   local const filter_parts_t filter_parts;
+
+
+  static function filter get();
+    if (single_instance == null)
+      single_instance = new();
+    return single_instance;
+  endfunction
 
 
   local function new();
@@ -98,13 +105,18 @@ class filter;
 
   local function void disallow_partial_wildcards(string field_name, string field_value);
     if (field_value != "*")
-      if ("*" inside { field_value })
+      if (str_contains_char(field_value, "*"))
         $fatal(0, $sformatf("Partial wildcards in %s names aren't currently supported", field_name));
   endfunction
 
 
-  static function filter get();
-    return single_instance;
+  local static function bit str_contains_char(string s, string c);
+    if (c.len() != 1)
+      $fatal(0, "Expected a single character");
+    foreach (s[i])
+      if (s[i] == c[0])
+        return 1;
+    return 0;
   endfunction
 
 

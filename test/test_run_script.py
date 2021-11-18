@@ -167,7 +167,7 @@ endmodule
     subprocess.check_call(['runSVUnit', '-s', simulator, '--filter', 'some_string'], cwd=tmp_path)
 
     log = tmp_path.joinpath('run.log')
-    assert 'fatal' in log.read_text()
+    assert 'fatal' in log.read_text().lower()
 
 
 @all_available_simulators()
@@ -203,7 +203,7 @@ endmodule
     subprocess.check_call(['runSVUnit', '-s', simulator, '--filter', 'a.b.c'], cwd=tmp_path)
 
     log = tmp_path.joinpath('run.log')
-    assert 'fatal' in log.read_text()
+    assert 'fatal' in log.read_text().lower()
 
 
 @all_available_simulators()
@@ -238,8 +238,12 @@ endmodule
 
     subprocess.check_call(['runSVUnit', '-s', simulator, '--filter', 'foo*.bar'], cwd=tmp_path)
     log = tmp_path.joinpath('run.log')
-    assert 'fatal' in log.read_text()
+    assert 'fatal' in log.read_text().lower()
 
     subprocess.check_call(['runSVUnit', '-s', simulator, '--filter', 'foo.bar*'], cwd=tmp_path)
     log = tmp_path.joinpath('run.log')
-    assert 'fatal' in log.read_text()
+    assert 'fatal' in log.read_text().lower()
+
+    subprocess.check_call(['runSVUnit', '-s', simulator, '--filter', '*foo.bar'], cwd=tmp_path)
+    log = tmp_path.joinpath('run.log')
+    assert 'fatal' in log.read_text().lower()
