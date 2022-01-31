@@ -10,7 +10,7 @@ from utils import *
 # Need a possibility to remove tools from PATH, otherwise we can't test
 def get_path_without_sims():
     paths = os.environ['PATH'].split(os.path.pathsep)
-    for sim_name in ['xrun', 'dsim', 'vsim']:
+    for sim_name in ['xrun', 'dsim', 'vsim', "qrun"]:
         sim = shutil.which(sim_name)
         if sim:
             paths = list(filter(lambda p: p != os.path.dirname(sim), paths))
@@ -410,7 +410,7 @@ def test_frmwrk_32(tmpdir):
         assert return_code == 255
 
 
-@pytest.mark.parametrize("sim", ["xrun", "irun", "vsim", "vcs"])
+@pytest.mark.parametrize("sim", ["xrun", "irun", "vsim", "vcs", "qrun"])
 def test_called_without_simulator__extract_sim_if_on_path(sim, tmpdir, monkeypatch):
     with tmpdir.as_cwd():
         fake_tool(sim)
@@ -439,6 +439,22 @@ def test_called_without_simulator__extract_xrun_even_if_irun_also_on_path(tmpdir
 
         assert pathlib.Path('fake_tool.log').is_file()
         assert 'xrun called' in pathlib.Path('fake_tool.log').read_text()
+
+
+def test_called_without_simulator__extract_qrun_even_if_vsim_also_on_path(tmpdir, monkeypatch):
+    with tmpdir.as_cwd():
+        fake_tool('qrun')
+        fake_tool('vsim')
+
+        monkeypatch.setenv('PATH', get_path_without_sims())
+        monkeypatch.setenv('PATH', '.', prepend=os.pathsep)
+
+        pathlib.Path('dummy_unit_test.sv').write_text('dummy')
+
+        subprocess.check_call(['runSVUnit'])
+
+        assert pathlib.Path('fake_tool.log').is_file()
+        assert 'qrun called' in pathlib.Path('fake_tool.log').read_text()
 
 
 def test_called_with_simulator__override_simulator_extracted_from_path(tmpdir, monkeypatch):
