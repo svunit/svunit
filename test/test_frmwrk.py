@@ -441,6 +441,22 @@ def test_called_without_simulator__extract_xrun_even_if_irun_also_on_path(tmpdir
         assert 'xrun called' in pathlib.Path('fake_tool.log').read_text()
 
 
+def test_called_without_simulator__extract_qrun_even_if_vsim_also_on_path(tmpdir, monkeypatch):
+    with tmpdir.as_cwd():
+        fake_tool('qrun')
+        fake_tool('vsim')
+
+        monkeypatch.setenv('PATH', get_path_without_sims())
+        monkeypatch.setenv('PATH', '.', prepend=os.pathsep)
+
+        pathlib.Path('dummy_unit_test.sv').write_text('dummy')
+
+        subprocess.check_call(['runSVUnit'])
+
+        assert pathlib.Path('fake_tool.log').is_file()
+        assert 'qrun called' in pathlib.Path('fake_tool.log').read_text()
+
+
 def test_called_with_simulator__override_simulator_extracted_from_path(tmpdir, monkeypatch):
     with tmpdir.as_cwd():
         fake_tool('xrun')
