@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Support for `qrun` (QuestaSim one-step flow)
+
 ### Fixed
 - Fix broken compilation for QuestaSim
 - Fix argument checking for partial wildcards in filter expression
