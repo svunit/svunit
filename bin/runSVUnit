@@ -131,7 +131,7 @@ $simulator =~ s/questa/modelsim/;
 $simulator =~ s/ius/irun/;
 $simulator =~ s/xcelium/xrun/;
 
-if (not grep { $_ eq $simulator } qw(xrun irun modelsim riviera vcs dsim)) {
+if (not grep { $_ eq $simulator } qw(xrun irun modelsim riviera vcs dsim qrun)) {
   print("Could not determine simulator. None found on 'PATH' and none specified via command line\n");
   usage()
 }
