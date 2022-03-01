@@ -28,6 +28,7 @@ class filter;
   } filter_parts_t;
 
   /* local */ typedef filter_parts_t array_of_filter_parts_t[];
+  /* local */ typedef string array_of_string[];
 
 
   local static const string error_msg = "Expected the filter to be of the type '<test_case>.<test>[:<test_case>.<test>]'";
@@ -59,8 +60,7 @@ class filter;
 
   local function array_of_filter_parts_t get_filter_parts(string raw_filter);
     filter_parts_t result[$];
-    string patterns[$];
-    int last_colon_position = -1;
+    string patterns[];
 
     if (raw_filter == "*") begin
       filter_parts_t result;
@@ -69,18 +69,27 @@ class filter;
       return '{ result };
     end
 
-    for (int i = 0; i < raw_filter.len(); i++) begin
-      if (i == raw_filter.len()-1)
-        patterns.push_back(raw_filter.substr(last_colon_position+1, i));
-      if (raw_filter[i] == ":") begin
-        patterns.push_back(raw_filter.substr(last_colon_position+1, i-1));
+    patterns = split_by_colon(raw_filter);
+    foreach (patterns[i])
+      result.push_back(get_filter_parts_from_non_trivial_expr(patterns[i]));
+    return result;
+  endfunction
+
+
+  local function array_of_string split_by_colon(string s);
+    string parts[$];
+    int last_colon_position = -1;
+
+    for (int i = 0; i < s.len(); i++) begin
+      if (i == s.len()-1)
+        parts.push_back(s.substr(last_colon_position+1, i));
+      if (s[i] == ":") begin
+        parts.push_back(s.substr(last_colon_position+1, i-1));
         last_colon_position = i;
       end
     end
 
-    foreach (patterns[i])
-      result.push_back(get_filter_parts_from_non_trivial_expr(patterns[i]));
-    return result;
+    return parts;
   endfunction
 
 
