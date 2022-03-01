@@ -30,7 +30,7 @@ class filter;
   /* local */ typedef filter_parts_t array_of_filter_parts_t[];
 
 
-  local static const string error_msg = "Expected the filter to be of the type '<test_case>.<test>'";
+  local static const string error_msg = "Expected the filter to be of the type '<test_case>.<test>[:<test_case>.<test>]'";
   local static filter single_instance;
 
   local const filter_parts_t filter_parts[];
