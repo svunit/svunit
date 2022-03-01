@@ -27,11 +27,13 @@ class filter;
     string test;
   } filter_parts_t;
 
+  /* local */ typedef filter_parts_t array_of_filter_parts_t[];
+
 
   local static const string error_msg = "Expected the filter to be of the type '<test_case>.<test>'";
   local static filter single_instance;
 
-  local const filter_parts_t filter_parts;
+  local const filter_parts_t filter_parts[];
 
 
   static function filter get();
@@ -55,15 +57,24 @@ class filter;
   endfunction
 
 
-  local function filter_parts_t get_filter_parts(string raw_filter);
+  local function array_of_filter_parts_t get_filter_parts(string raw_filter);
     if (raw_filter == "*") begin
       filter_parts_t result;
       result.testcase = "*";
       result.test = "*";
-      return result;
+      return '{ result };
     end
 
-    return get_filter_parts_from_non_trivial_expr(raw_filter);
+    for (int i = 0; i < raw_filter.len(); i++) begin
+      if (raw_filter[i] == ":") begin
+        return '{ 
+            get_filter_parts_from_non_trivial_expr(raw_filter.substr(0, i-1)),
+            get_filter_parts_from_non_trivial_expr(raw_filter.substr(i+1, raw_filter.len()-1))
+            };
+      end
+    end
+
+    return '{ get_filter_parts_from_non_trivial_expr(raw_filter) };
   endfunction
 
 
@@ -121,8 +132,9 @@ class filter;
 
 
   function bit is_selected(svunit_testcase tc, string test_name);
-    if (is_match(filter_parts.testcase, tc.get_name()) && is_match(filter_parts.test, test_name))
-      return 1;
+    foreach (filter_parts[i])
+      if (is_match(filter_parts[i].testcase, tc.get_name()) && is_match(filter_parts[i].test, test_name))
+        return 1;
 
     return 0;
   endfunction
