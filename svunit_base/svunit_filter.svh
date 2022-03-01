@@ -58,6 +58,10 @@ class filter;
 
 
   local function array_of_filter_parts_t get_filter_parts(string raw_filter);
+    filter_parts_t result[$];
+    string patterns[$];
+    int last_colon_position = -1;
+
     if (raw_filter == "*") begin
       filter_parts_t result;
       result.testcase = "*";
@@ -66,15 +70,17 @@ class filter;
     end
 
     for (int i = 0; i < raw_filter.len(); i++) begin
+      if (i == raw_filter.len()-1)
+        patterns.push_back(raw_filter.substr(last_colon_position+1, i));
       if (raw_filter[i] == ":") begin
-        return '{ 
-            get_filter_parts_from_non_trivial_expr(raw_filter.substr(0, i-1)),
-            get_filter_parts_from_non_trivial_expr(raw_filter.substr(i+1, raw_filter.len()-1))
-            };
+        patterns.push_back(raw_filter.substr(last_colon_position+1, i-1));
+        last_colon_position = i;
       end
     end
 
-    return '{ get_filter_parts_from_non_trivial_expr(raw_filter) };
+    foreach (patterns[i])
+      result.push_back(get_filter_parts_from_non_trivial_expr(patterns[i]));
+    return result;
   endfunction
 
 
