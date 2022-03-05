@@ -247,3 +247,66 @@ endmodule
     subprocess.check_call(['runSVUnit', '-s', simulator, '--filter', '*foo.bar'], cwd=tmp_path)
     log = tmp_path.joinpath('run.log')
     assert 'fatal' in log.read_text().lower()
+
+
+@all_available_simulators()
+def test_multiple_filter_expressions(tmp_path, simulator):
+    unit_test = tmp_path.joinpath('some_unit_test.sv')
+    unit_test.write_text('''
+module some_unit_test;
+
+  import svunit_pkg::*;
+  `include "svunit_defines.svh"
+
+  string name = "some_ut";
+  svunit_testcase svunit_ut;
+
+  function void build();
+    svunit_ut = new(name);
+  endfunction
+
+  task setup();
+    svunit_ut.setup();
+  endtask
+
+  task teardown();
+    svunit_ut.teardown();
+  endtask
+
+  `SVUNIT_TESTS_BEGIN
+
+    `SVTEST(some_failing_test)
+      `FAIL_IF(1)
+    `SVTEST_END
+
+    `SVTEST(some_passing_test)
+      `FAIL_IF(0)
+    `SVTEST_END
+
+    `SVTEST(some_other_passing_test)
+      `FAIL_IF(0)
+    `SVTEST_END
+
+    `SVTEST(yet_another_passing_test)
+      `FAIL_IF(0)
+    `SVTEST_END
+
+  `SVUNIT_TESTS_END
+
+endmodule
+    ''')
+
+    log = tmp_path.joinpath('run.log')
+
+    print('Filtering only the passing testcases should block the fail')
+    subprocess.check_call(
+          [
+              'runSVUnit',
+              '-s', simulator,
+              '--filter', '*.some_passing_test:*.some_other_passing_test:*.yet_another_passing_test',
+              ], 
+          cwd=tmp_path)
+    assert 'FAILED' not in log.read_text()
+    assert 'some_passing_test' in log.read_text()
+    assert 'some_other_passing_test' in log.read_text()
+    assert 'yet_another_passing_test' in log.read_text()
