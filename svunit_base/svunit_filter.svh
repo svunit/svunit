@@ -155,18 +155,16 @@ class filter;
 
   class filter_for_single_pattern;
 
-    local struct {
-      string testcase;
-      string test;
-    } filter_parts;
+    local const string testcase;
+    local const string test;
 
     function new(string testcase, string test);
-      filter_parts.testcase = testcase;
-      filter_parts.test = test;
+      this.testcase = testcase;
+      this.test = test;
     endfunction
 
     virtual function bit is_selected(svunit_testcase tc, string test_name);
-      if (is_match(filter_parts.testcase, tc.get_name()) && is_match(filter_parts.test, test_name))
+      if (is_match(this.testcase, tc.get_name()) && is_match(this.test, test_name))
         return 1;
       return 0;
     endfunction
