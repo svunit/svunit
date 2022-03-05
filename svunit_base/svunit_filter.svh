@@ -88,9 +88,9 @@ class filter;
   endfunction
 
 
-  local function filter_for_single_pattern get_subfilter_from_non_trivial_expr(string raw_filter);
+  local function filter_for_single_pattern get_subfilter_from_non_trivial_expr(string pattern);
     filter_for_single_pattern result;
-    result = new(raw_filter);
+    result = new(pattern);
     return result;
   endfunction
 
@@ -109,13 +109,13 @@ class filter;
     local const string testcase;
     local const string test;
 
-    function new(string raw_filter);
-      int unsigned dot_idx = get_dot_idx(raw_filter);
+    function new(string pattern);
+      int unsigned dot_idx = get_dot_idx(pattern);
 
-      testcase = raw_filter.substr(0, dot_idx-1);
+      testcase = pattern.substr(0, dot_idx-1);
       disallow_partial_wildcards("testcase", testcase);
 
-      test = raw_filter.substr(dot_idx+1, raw_filter.len()-1);
+      test = pattern.substr(dot_idx+1, pattern.len()-1);
       disallow_partial_wildcards("test", test);
     endfunction
 
