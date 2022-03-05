@@ -1,6 +1,6 @@
 //###########################################################################
 //
-//  Copyright 2021 The SVUnit Authors.
+//  Copyright 2021-2022 The SVUnit Authors.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -22,19 +22,16 @@
  */
 class filter;
 
-  /* local */ typedef struct {
-    string testcase;
-    string test;
-  } filter_parts_t;
+  /* local */ typedef class filter_for_single_pattern;
 
-  /* local */ typedef filter_parts_t array_of_filter_parts_t[];
+  /* local */ typedef filter_for_single_pattern array_of_filters[];
   /* local */ typedef string array_of_string[];
 
 
   local static const string error_msg = "Expected the filter to be of the type '<test_case>.<test>[:<test_case>.<test>]'";
   local static filter single_instance;
 
-  local const filter_parts_t filter_parts[];
+  local const filter_for_single_pattern subfilters[];
 
 
   static function filter get();
@@ -46,7 +43,7 @@ class filter;
 
   local function new();
     string raw_filter = get_filter_value_from_run_script();
-    filter_parts = get_filter_parts(raw_filter);
+    subfilters = get_subfilters(raw_filter);
   endfunction
 
 
@@ -58,20 +55,18 @@ class filter;
   endfunction
 
 
-  local function array_of_filter_parts_t get_filter_parts(string raw_filter);
-    filter_parts_t result[$];
+  local function array_of_filters get_subfilters(string raw_filter);
+    filter_for_single_pattern result[$];
     string patterns[];
 
     if (raw_filter == "*") begin
-      filter_parts_t result;
-      result.testcase = "*";
-      result.test = "*";
-      return '{ result };
+      filter_for_single_pattern filter_that_always_matches = new("*", "*");
+      return '{ filter_that_always_matches };
     end
 
     patterns = split_by_colon(raw_filter);
     foreach (patterns[i])
-      result.push_back(get_filter_parts_from_non_trivial_expr(patterns[i]));
+      result.push_back(get_subfilter_from_non_trivial_expr(patterns[i]));
     return result;
   endfunction
 
@@ -93,16 +88,19 @@ class filter;
   endfunction
 
 
-  local function filter_parts_t get_filter_parts_from_non_trivial_expr(string raw_filter);
-    filter_parts_t result;
+  local function filter_for_single_pattern get_subfilter_from_non_trivial_expr(string raw_filter);
+    filter_for_single_pattern result;
     int unsigned dot_idx = get_dot_idx(raw_filter);
+    string testcase;
+    string test;
 
-    result.testcase = raw_filter.substr(0, dot_idx-1);
-    disallow_partial_wildcards("testcase", result.testcase);
+    testcase = raw_filter.substr(0, dot_idx-1);
+    disallow_partial_wildcards("testcase", testcase);
 
-    result.test = raw_filter.substr(dot_idx+1, raw_filter.len()-1);
-    disallow_partial_wildcards("test", result.test);
+    test = raw_filter.substr(dot_idx+1, raw_filter.len()-1);
+    disallow_partial_wildcards("test", test);
 
+    result = new(testcase, test);
     return result;
   endfunction
 
@@ -147,16 +145,36 @@ class filter;
 
 
   function bit is_selected(svunit_testcase tc, string test_name);
-    foreach (filter_parts[i])
-      if (is_match(filter_parts[i].testcase, tc.get_name()) && is_match(filter_parts[i].test, test_name))
+    foreach (subfilters[i])
+      if (subfilters[i].is_selected(tc, test_name))
         return 1;
 
     return 0;
   endfunction
 
 
-  local function bit is_match(string filter_val, string val);
-    return (filter_val == "*") || (filter_val == val);
-  endfunction
+  class filter_for_single_pattern;
+
+    local struct {
+      string testcase;
+      string test;
+    } filter_parts;
+
+    function new(string testcase, string test);
+      filter_parts.testcase = testcase;
+      filter_parts.test = test;
+    endfunction
+
+    virtual function bit is_selected(svunit_testcase tc, string test_name);
+      if (is_match(filter_parts.testcase, tc.get_name()) && is_match(filter_parts.test, test_name))
+        return 1;
+      return 0;
+    endfunction
+
+    local function bit is_match(string filter_val, string val);
+      return (filter_val == "*") || (filter_val == val);
+    endfunction
+
+  endclass
 
 endclass
