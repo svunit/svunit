@@ -3,8 +3,6 @@
 # Emacs
 *~
 
-__pycache__
-
 # Not sure what these are, but they appear when interrupting the test script
 .bpad
 
@@ -31,7 +29,3 @@ metrics_history.db
 
 # QuestaSim/ModelSim
 work/
-
-# test specific files
-test/frmwrk_3/.testsuite.gold
-test/frmwrk_3/test_unit_test.sv
