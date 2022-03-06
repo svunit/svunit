@@ -49,16 +49,10 @@ class filter;
 
   local function new();
     string raw_filter = get_filter_value_from_run_script();
-    if (raw_filter[0] == "-") begin
-      subfilters = get_subfilters("*");
-      negative_subfilters = get_subfilters(raw_filter.substr(1, raw_filter.len()-1));
-    end
-    else begin
-      filter_expression_parts parts = get_filter_expression_parts(raw_filter);
-      subfilters = get_subfilters(parts.positive);
-      if (parts.negative != "")
-        negative_subfilters = get_subfilters(parts.negative);
-    end
+    filter_expression_parts parts = get_filter_expression_parts(raw_filter);
+    subfilters = get_subfilters(parts.positive);
+    if (parts.negative != "")
+      negative_subfilters = get_subfilters(parts.negative);
   endfunction
 
 
@@ -74,6 +68,8 @@ class filter;
     string parts[] = split_by_minus(raw_filter);
     if (parts.size() > 2)
       $fatal(0, "Expected at most a single '-' character.");
+    if (raw_filter[0] == "-")
+      return '{ "*", parts[1] };  // parts[0] is '""' (empty string) when filter starts with '-'
     if (parts.size() == 1)
       return '{ parts[0], "" };
     return '{ parts[0], parts[1] };
