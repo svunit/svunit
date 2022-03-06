@@ -1,2 +1,6 @@
 .venv
 /.pytest_cache/
+
+# test specific generated files
+frmwrk_3/.testsuite.gold
+frmwrk_3/test_unit_test.sv
