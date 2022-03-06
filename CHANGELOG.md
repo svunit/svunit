@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Support for `qrun` (QuestaSim one-step flow)
 - Add possibility to specify multiple filter (simple) wildcard patterns for `--filter` option
+- Add possibility to specify negative filter (simple) wildcard patterns for `--filter` option
 
 ### Fixed
 - Fix broken compilation for QuestaSim

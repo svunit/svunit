@@ -27,11 +27,17 @@ class filter;
   /* local */ typedef filter_for_single_pattern array_of_filters[];
   /* local */ typedef string array_of_string[];
 
+  /* local */ typedef struct {
+    string positive;
+    string negative;
+  } filter_expression_parts;
+
 
   local static const string error_msg = "Expected the filter to be of the type '<test_case>.<test>[:<test_case>.<test>]'";
   local static filter single_instance;
 
-  local const filter_for_single_pattern subfilters[];
+  local const filter_for_single_pattern positive_subfilters[];
+  local const filter_for_single_pattern negative_subfilters[];
 
 
   static function filter get();
@@ -43,7 +49,10 @@ class filter;
 
   local function new();
     string raw_filter = get_filter_value_from_run_script();
-    subfilters = get_subfilters(raw_filter);
+    filter_expression_parts parts = get_filter_expression_parts(raw_filter);
+    positive_subfilters = get_subfilters(parts.positive);
+    if (parts.negative != "")
+      negative_subfilters = get_subfilters(parts.negative);
   endfunction
 
 
@@ -52,6 +61,42 @@ class filter;
     if (!$value$plusargs("SVUNIT_FILTER=%s", result))
       $fatal(0, "Expected to receive a plusarg called 'SVUNIT_FILTER'");
     return result;
+  endfunction
+
+
+  local function filter_expression_parts get_filter_expression_parts(string raw_filter);
+    string parts[];
+
+    if (raw_filter[0] == "-")
+      raw_filter = { "*", raw_filter };
+
+    parts = split_by_char("-", raw_filter);
+    if (parts.size() > 2)
+      $fatal(0, "Expected at most a single '-' character.");
+
+    if (parts.size() == 1)
+      return '{ parts[0], "" };
+    return '{ parts[0], parts[1] };
+  endfunction
+
+
+  local function array_of_string split_by_char(string char, string s);
+    string parts[$];
+    int last_char_position = -1;
+
+    if (char.len() != 1)
+      $fatal(0, "Internal error: expected a single character string");
+
+    for (int i = 0; i < s.len(); i++) begin
+      if (i == s.len()-1)
+        parts.push_back(s.substr(last_char_position+1, i));
+      if (s[i] == char) begin
+        parts.push_back(s.substr(last_char_position+1, i-1));
+        last_char_position = i;
+      end
+    end
+
+    return parts;
   endfunction
 
 
@@ -64,27 +109,10 @@ class filter;
       return '{ filter_that_always_matches };
     end
 
-    patterns = split_by_colon(raw_filter);
+    patterns = split_by_char(":", raw_filter);
     foreach (patterns[i])
       result.push_back(get_subfilter_from_non_trivial_expr(patterns[i]));
     return result;
-  endfunction
-
-
-  local function array_of_string split_by_colon(string s);
-    string parts[$];
-    int last_colon_position = -1;
-
-    for (int i = 0; i < s.len(); i++) begin
-      if (i == s.len()-1)
-        parts.push_back(s.substr(last_colon_position+1, i));
-      if (s[i] == ":") begin
-        parts.push_back(s.substr(last_colon_position+1, i-1));
-        last_colon_position = i;
-      end
-    end
-
-    return parts;
   endfunction
 
 
@@ -96,8 +124,12 @@ class filter;
 
 
   function bit is_selected(svunit_testcase tc, string test_name);
-    foreach (subfilters[i])
-      if (subfilters[i].is_selected(tc, test_name))
+    foreach (negative_subfilters[i])
+      if (negative_subfilters[i].is_selected(tc, test_name))
+        return 0;
+
+    foreach (positive_subfilters[i])
+      if (positive_subfilters[i].is_selected(tc, test_name))
         return 1;
 
     return 0;
