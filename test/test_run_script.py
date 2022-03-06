@@ -366,3 +366,89 @@ endmodule
             cwd=tmp_path)
     assert 'FAILED' not in log.read_text()
     assert 'some_passing_test' in log.read_text()
+
+
+@all_available_simulators()
+def test_positive_and_negative_filter(tmp_path, simulator):
+    unit_test = tmp_path.joinpath('some_unit_test.sv')
+    unit_test.write_text('''
+module some_unit_test;
+
+  import svunit_pkg::*;
+  `include "svunit_defines.svh"
+
+  string name = "some_ut";
+  svunit_testcase svunit_ut;
+
+  function void build();
+    svunit_ut = new(name);
+  endfunction
+
+  task setup();
+    svunit_ut.setup();
+  endtask
+
+  task teardown();
+    svunit_ut.teardown();
+  endtask
+
+  `SVUNIT_TESTS_BEGIN
+
+    `SVTEST(some_failing_test)
+      `FAIL_IF(1)
+    `SVTEST_END
+
+    `SVTEST(some_passing_test)
+      `FAIL_IF(0)
+    `SVTEST_END
+
+  `SVUNIT_TESTS_END
+
+endmodule
+    ''')
+
+    other_unit_test = tmp_path.joinpath('some_other_unit_test.sv')
+    other_unit_test.write_text('''
+module some_other_unit_test;
+
+  import svunit_pkg::*;
+  `include "svunit_defines.svh"
+
+  string name = "some_other_ut";
+  svunit_testcase svunit_ut;
+
+  function void build();
+    svunit_ut = new(name);
+  endfunction
+
+  task setup();
+    svunit_ut.setup();
+  endtask
+
+  task teardown();
+    svunit_ut.teardown();
+  endtask
+
+  `SVUNIT_TESTS_BEGIN
+
+    `SVTEST(some_other_failing_test)
+      `FAIL_IF(1)
+    `SVTEST_END
+
+  `SVUNIT_TESTS_END
+
+endmodule
+    ''')
+
+    log = tmp_path.joinpath('run.log')
+
+    print('Filtering only tests from the first unit test'
+            + ' and then filtering out the failing test should block the fail')
+    subprocess.check_call(
+            ['runSVUnit',
+                    '-s', simulator,
+                    '--filter', 'some_ut.*-some_ut.some_failing_test',
+                    ],
+            cwd=tmp_path)
+    assert 'FAILED' not in log.read_text()
+    assert 'some_passing_test' in log.read_text()

@@ -27,6 +27,11 @@ class filter;
   /* local */ typedef filter_for_single_pattern array_of_filters[];
   /* local */ typedef string array_of_string[];
 
+  /* local */ typedef struct {
+    string positive;
+    string negative;
+  } filter_expression_parts;
+
 
   local static const string error_msg = "Expected the filter to be of the type '<test_case>.<test>[:<test_case>.<test>]'";
   local static filter single_instance;
@@ -49,7 +54,10 @@ class filter;
       negative_subfilters = get_subfilters(raw_filter.substr(1, raw_filter.len()-1));
     end
     else begin
-      subfilters = get_subfilters(raw_filter);
+      filter_expression_parts parts = get_filter_expression_parts(raw_filter);
+      subfilters = get_subfilters(parts.positive);
+      if (parts.negative != "")
+        negative_subfilters = get_subfilters(parts.negative);
     end
   endfunction
 
@@ -59,6 +67,33 @@ class filter;
     if (!$value$plusargs("SVUNIT_FILTER=%s", result))
       $fatal(0, "Expected to receive a plusarg called 'SVUNIT_FILTER'");
     return result;
+  endfunction
+
+
+  local function filter_expression_parts get_filter_expression_parts(string raw_filter);
+    string parts[] = split_by_minus(raw_filter);
+    if (parts.size() > 2)
+      $fatal(0, "Expected at most a single '-' character.");
+    if (parts.size() == 1)
+      return '{ parts[0], "" };
+    return '{ parts[0], parts[1] };
+  endfunction
+
+
+  local function array_of_string split_by_minus(string s);
+    string parts[$];
+    int last_minus_position = -1;
+
+    for (int i = 0; i < s.len(); i++) begin
+      if (i == s.len()-1)
+        parts.push_back(s.substr(last_minus_position+1, i));
+      if (s[i] == "-") begin
+        parts.push_back(s.substr(last_minus_position+1, i-1));
+        last_minus_position = i;
+      end
+    end
+
+    return parts;
   endfunction
 
 
