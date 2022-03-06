@@ -70,7 +70,7 @@ class filter;
     if (raw_filter[0] == "-")
       raw_filter = { "*", raw_filter };
 
-    parts = split_by_minus(raw_filter);
+    parts = split_by_char("-", raw_filter);
     if (parts.size() > 2)
       $fatal(0, "Expected at most a single '-' character.");
 
@@ -80,16 +80,19 @@ class filter;
   endfunction
 
 
-  local function array_of_string split_by_minus(string s);
+  local function array_of_string split_by_char(string char, string s);
     string parts[$];
-    int last_minus_position = -1;
+    int last_char_position = -1;
+
+    if (char.len() != 1)
+      $fatal(0, "Internal error: expected a single character string");
 
     for (int i = 0; i < s.len(); i++) begin
       if (i == s.len()-1)
-        parts.push_back(s.substr(last_minus_position+1, i));
-      if (s[i] == "-") begin
-        parts.push_back(s.substr(last_minus_position+1, i-1));
-        last_minus_position = i;
+        parts.push_back(s.substr(last_char_position+1, i));
+      if (s[i] == char) begin
+        parts.push_back(s.substr(last_char_position+1, i-1));
+        last_char_position = i;
       end
     end
 
@@ -106,27 +109,10 @@ class filter;
       return '{ filter_that_always_matches };
     end
 
-    patterns = split_by_colon(raw_filter);
+    patterns = split_by_char(":", raw_filter);
     foreach (patterns[i])
       result.push_back(get_subfilter_from_non_trivial_expr(patterns[i]));
     return result;
-  endfunction
-
-
-  local function array_of_string split_by_colon(string s);
-    string parts[$];
-    int last_colon_position = -1;
-
-    for (int i = 0; i < s.len(); i++) begin
-      if (i == s.len()-1)
-        parts.push_back(s.substr(last_colon_position+1, i));
-      if (s[i] == ":") begin
-        parts.push_back(s.substr(last_colon_position+1, i-1));
-        last_colon_position = i;
-      end
-    end
-
-    return parts;
   endfunction
 
 
