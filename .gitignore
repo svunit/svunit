@@ -3,8 +3,6 @@
 # Emacs
 *~
 
-__pycache__
-
 # Not sure what these are, but they appear when interrupting the test script
 .bpad
 
