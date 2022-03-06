@@ -32,6 +32,7 @@ class filter;
   local static filter single_instance;
 
   local const filter_for_single_pattern subfilters[];
+  local const filter_for_single_pattern negative_subfilters[];
 
 
   static function filter get();
@@ -43,7 +44,13 @@ class filter;
 
   local function new();
     string raw_filter = get_filter_value_from_run_script();
-    subfilters = get_subfilters(raw_filter);
+    if (raw_filter[0] == "-") begin
+      subfilters = get_subfilters("*");
+      negative_subfilters = get_subfilters(raw_filter.substr(1, raw_filter.len()-1));
+    end
+    else begin
+      subfilters = get_subfilters(raw_filter);
+    end
   endfunction
 
 
@@ -96,6 +103,10 @@ class filter;
 
 
   function bit is_selected(svunit_testcase tc, string test_name);
+    foreach (negative_subfilters[i])
+      if (negative_subfilters[i].is_selected(tc, test_name))
+        return 0;
+
     foreach (subfilters[i])
       if (subfilters[i].is_selected(tc, test_name))
         return 1;
