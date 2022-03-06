@@ -36,7 +36,7 @@ class filter;
   local static const string error_msg = "Expected the filter to be of the type '<test_case>.<test>[:<test_case>.<test>]'";
   local static filter single_instance;
 
-  local const filter_for_single_pattern subfilters[];
+  local const filter_for_single_pattern positive_subfilters[];
   local const filter_for_single_pattern negative_subfilters[];
 
 
@@ -50,7 +50,7 @@ class filter;
   local function new();
     string raw_filter = get_filter_value_from_run_script();
     filter_expression_parts parts = get_filter_expression_parts(raw_filter);
-    subfilters = get_subfilters(parts.positive);
+    positive_subfilters = get_subfilters(parts.positive);
     if (parts.negative != "")
       negative_subfilters = get_subfilters(parts.negative);
   endfunction
@@ -128,8 +128,8 @@ class filter;
       if (negative_subfilters[i].is_selected(tc, test_name))
         return 0;
 
-    foreach (subfilters[i])
-      if (subfilters[i].is_selected(tc, test_name))
+    foreach (positive_subfilters[i])
+      if (positive_subfilters[i].is_selected(tc, test_name))
         return 1;
 
     return 0;
