@@ -65,11 +65,15 @@ class filter;
 
 
   local function filter_expression_parts get_filter_expression_parts(string raw_filter);
-    string parts[] = split_by_minus(raw_filter);
+    string parts[];
+
+    if (raw_filter[0] == "-")
+      raw_filter = { "*", raw_filter };
+
+    parts = split_by_minus(raw_filter);
     if (parts.size() > 2)
       $fatal(0, "Expected at most a single '-' character.");
-    if (raw_filter[0] == "-")
-      return '{ "*", parts[1] };  // parts[0] is '""' (empty string) when filter starts with '-'
+
     if (parts.size() == 1)
       return '{ parts[0], "" };
     return '{ parts[0], parts[1] };
