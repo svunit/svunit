@@ -124,7 +124,7 @@ class filter;
       ensure_no_more_dots(filter, first_dot_idx);
       return first_dot_idx;
     endfunction
-  
+
     local function int unsigned get_first_dot_idx(string filter);
       for (int i = 0; i < filter.len(); i++)
         if (filter[i] == ".")
@@ -143,7 +143,7 @@ class filter;
         if (str_contains_char(field_value, "*"))
           $fatal(0, $sformatf("Partial wildcards in %s names aren't currently supported", field_name));
     endfunction
-  
+
     local static function bit str_contains_char(string s, string c);
       if (c.len() != 1)
         $fatal(0, "Expected a single character");
