@@ -1,0 +1,6 @@
+{
+    "python.pythondefaultInterpreterPath": "${workspaceFolder}/test/.venv/bin/python3",
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true,
+    "python.testing.cwd": "${workspaceFolder}/test"
+}

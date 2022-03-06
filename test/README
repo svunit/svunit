@@ -4,7 +4,7 @@ Setup
 
 The test suite uses 'pytest'. It requires at least Python 3.6. To set up call:
 
-    python3 -m venv venv
+    python3 -m venv .venv
     source venv/bin/activate
     pip install -r requirements.txt
 
