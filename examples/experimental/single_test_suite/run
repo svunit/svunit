@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
 echo "Compiling production code"
+xrun factorial.sv
+
 echo "Compiling SVUnit"
 echo "Compiling test code"
 echo "Running tests"

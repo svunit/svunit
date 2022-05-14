@@ -1,3 +1,3 @@
-automatic function int unsigned factorial(int unsigned n);
+function automatic int unsigned factorial(int unsigned n);
   return 0;
 endfunction
