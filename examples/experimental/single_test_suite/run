@@ -1,18 +1,18 @@
 #!/usr/bin/env bash
 
 echo "Compiling production code"
-xrun factorial.sv
+xrun -compile factorial.sv
 
 echo "Compiling SVUnit"
-xrun \
+xrun -compile \
     -incdir ../../../svunit_base/junit-xml \
     ../../../svunit_base/junit-xml/*.sv
-xrun \
+xrun -compile \
     -incdir ../../../svunit_base \
     ../../../svunit_base/svunit_pkg.sv
 
 echo "Compiling test code"
-xrun factorial_test.sv
+xrun -compile factorial_test.sv
 
 echo "Running tests"
 xrun svunit_main.sv
