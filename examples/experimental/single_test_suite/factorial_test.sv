@@ -1,5 +1,7 @@
 package factorial_test;
 
+  import factorial::*;
+
   `include "svunit.svh"
 
 
