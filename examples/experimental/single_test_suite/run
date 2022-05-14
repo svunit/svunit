@@ -12,4 +12,6 @@ xrun \
     ../../../svunit_base/svunit_pkg.sv
 
 echo "Compiling test code"
+xrun factorial_test.sv
+
 echo "Running tests"
