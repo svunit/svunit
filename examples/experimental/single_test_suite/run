@@ -17,7 +17,9 @@ xrun -compile \
     svunit.sv
 
 echo "Compiling test code"
-xrun -compile factorial_test.sv
+xrun -compile \
+    -incdir ../../../svunit_base \
+    factorial_test.sv
 
 echo "Running tests"
 xrun svunit_main.sv \

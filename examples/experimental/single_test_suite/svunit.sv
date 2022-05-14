@@ -3,7 +3,7 @@ package svunit;
   import svunit_pkg::*;
   `include "svunit_defines.svh"
 
-  class test;
+  virtual class test;
 
     typedef class builder;
     typedef builder builder_darray[];
@@ -18,6 +18,8 @@ package svunit;
     static function builder_darray get_test_builders();
       return test_builders;
     endfunction
+
+    pure virtual task run();
 
     virtual class builder;
       pure virtual function test create();
@@ -73,7 +75,7 @@ package svunit;
             begin
               fork
                 begin
-                  // TODO Execute test
+                  tests[i].run();
         `SVTEST_END
       end
     `SVUNIT_TESTS_END
