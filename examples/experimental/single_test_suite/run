@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 echo "Compiling production code"
 xrun -compile factorial.sv
 
