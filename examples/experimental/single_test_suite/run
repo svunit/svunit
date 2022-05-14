@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+echo "Compiling production code"
+echo "Compiling SVUnit"
+echo "Compiling test code"
+echo "Running tests"
