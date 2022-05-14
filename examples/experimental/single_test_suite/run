@@ -12,6 +12,7 @@ xrun -compile \
 xrun -compile \
     -incdir ../../../svunit_base \
     ../../../svunit_base/svunit_pkg.sv
+xrun -compile svunit.sv
 
 echo "Compiling test code"
 xrun -compile factorial_test.sv
