@@ -1,6 +1,7 @@
 package svunit;
 
   import svunit_pkg::*;
+  `include "svunit_defines.svh"
 
   class test;
 
@@ -52,13 +53,30 @@ package svunit;
       end
     endfunction
 
+    `SVUNIT_TESTS_BEGIN
+      foreach (tests[i]) begin
+        string test_name = $vtypename(tests[i]);
+        svunit_testcase svunit_ut = this;
 
-    function void run();
-      // TODO Implement
-      $display("Would run:");
-      foreach (tests[i])
-        $display("  ", $vtypename(tests[i]));
-    endfunction
+        // More or less what `SVTEST expands to
+        if (svunit_pkg::_filter.is_selected(svunit_ut, test_name)) begin
+          string _testName = test_name;
+          integer local_error_count = svunit_ut.get_error_count();
+          string fileName;
+          int lineNumber;
+          `INFO($sformatf(`"%s::RUNNING`", _testName));
+          svunit_pkg::current_tc = svunit_ut;
+          svunit_ut.add_junit_test_case(_testName);
+          svunit_ut.start();
+          setup();
+          fork
+            begin
+              fork
+                begin
+                  // TODO Execute test
+        `SVTEST_END
+      end
+    `SVUNIT_TESTS_END
 
   endclass
 
