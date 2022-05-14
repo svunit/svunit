@@ -4,5 +4,12 @@ echo "Compiling production code"
 xrun factorial.sv
 
 echo "Compiling SVUnit"
+xrun \
+    -incdir ../../../svunit_base/junit-xml \
+    ../../../svunit_base/junit-xml/*.sv
+xrun \
+    -incdir ../../../svunit_base \
+    ../../../svunit_base/svunit_pkg.sv
+
 echo "Compiling test code"
 echo "Running tests"
