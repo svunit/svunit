@@ -18,4 +18,6 @@ echo "Compiling test code"
 xrun -compile factorial_test.sv
 
 echo "Running tests"
-xrun svunit_main.sv
+xrun svunit_main.sv \
+    -top svunit_main \
+    -top factorial_test
