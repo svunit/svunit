@@ -15,3 +15,4 @@ echo "Compiling test code"
 xrun factorial_test.sv
 
 echo "Running tests"
+xrun svunit_main.sv
