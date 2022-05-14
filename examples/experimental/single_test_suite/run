@@ -20,4 +20,5 @@ xrun -compile factorial_test.sv
 echo "Running tests"
 xrun svunit_main.sv \
     -top svunit_main \
-    -top factorial_test
+    -top factorial_test \
+    +SVUNIT_FILTER="*"
