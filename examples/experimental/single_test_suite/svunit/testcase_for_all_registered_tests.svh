@@ -3,8 +3,11 @@ class testcase_for_all_registered_tests extends svunit_testcase;
   local test tests[$];
 
 
-  function new(string name, test::builder test_builders[]);
+  function new(string name);
+    test::builder test_builders[] = test::get_test_builders();
+
     super.new(name);
+
     foreach (test_builders[i]) begin
       test t = test_builders[i].create();
       tests.push_back(t);
