@@ -19,6 +19,7 @@ virtual class test;
 
 
   pure virtual function string full_name();
+  pure virtual function string name();
 
 
   pure virtual task run();

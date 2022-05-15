@@ -68,7 +68,7 @@ class testcase_for_all_registered_tests extends svunit_testcase;
 
   `SVUNIT_TESTS_BEGIN
     foreach (tests[i]) begin
-      string test_name = $vtypename(tests[i]);
+      string test_name = tests[i].name();
       svunit_testcase svunit_ut = this;
 
       // More or less what `SVTEST expands to

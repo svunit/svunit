@@ -8,6 +8,10 @@
       return full_name_of_class; \
     endfunction \
     \
+    virtual function string name(); \
+      return `"TEST_NAME`"; \
+    endfunction \
+    \
     virtual task run(); \
 
 
