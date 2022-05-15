@@ -14,7 +14,7 @@ package svunit;
 
     svunit_tr = new("testrunner");
     svunit_ts = new("__ts");
-    svunit_tc = new("__tc");  // TODO Should get name from package where tests are defined
+    svunit_tc = new();
     svunit_ts.add_testcase(svunit_tc);
     svunit_tr.add_testsuite(svunit_ts);
 
