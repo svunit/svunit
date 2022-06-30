@@ -40,6 +40,7 @@ my @defines;
 my @filelists;
 my $uvm;
 my $wavedrom;
+my @directory;
 my @simargs;
 my @compileargs;
 my $outdir = ".";
@@ -64,6 +65,7 @@ sub usage () {
   print "  -m|--mixedsim <vhdlfile> : consolidated file list with VHDL files and command line switches\n";
   print "  -w|--wavedrom            : process json files as wavedrom output\n";
   print "     --filter <filter>     : specify which tests to run, as <test_module>.<test_name>\n";
+  print "     --directory           : only run svunit discovery on selected directories\n";
   print "  -h|--help                : prints this help screen\n";
   print "\n";
   exit 1;
@@ -97,6 +99,7 @@ GetOptions("l|log=s" => \$logfile,
            "t|test=s{,}" => \@tests,
            "filter=s" => \$filter,
            "w|wavedrom" => \$wavedrom,
+           "directory=s" => \@directory,
            "h|help" => \$help
            ) or usage();
 
@@ -181,6 +184,11 @@ if ($simulator eq "modelsim" or $simulator eq "riviera") {
 $cmd .= " +SVUNIT_FILTER=$filter";
 
 my $build_cmd = "buildSVUnit -o $outdir";
+
+foreach (@directory) {
+    $build_cmd .= " --directory $_";
+}
+
 foreach (@tests) {
   $build_cmd .= " -t $_";
 }

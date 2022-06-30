@@ -39,6 +39,7 @@ my @tests;
 my $mock;
 my $uvm;
 my $wavedrom;
+my @directory;
 my $help;
 
 
@@ -54,6 +55,7 @@ sub usage() {
   print "  -m|--mock                : includes the uvm_mock_pkg to the final build file\n";
   print "  -U|--uvm                 : build SVUnit with UVM\n";
   print "  -w|--wavedrom            : process json files as wavedrom output\n";
+  print "     --directory           : only build svunit on selected directories\n";
   print "  -h|--help                : prints this help screen\n";
   print "\n";
   exit 1;
@@ -176,6 +178,7 @@ GetOptions("o|out=s" => \$outdir,
            "m|mock" => \$mock,
            "U|uvm" => \$uvm,
            "w|wavedrom" => \$wavedrom,
+           "directory=s" => \@directory,
            "h|help" => \$help
            ) or usage();
 
@@ -204,6 +207,14 @@ if ($wavedrom) {
 }
 
 getFilelists;
-buildTestsuite($pwd);
+
+# Build a test suite for every directory passed in via --directory
+foreach (@directory) {
+    buildTestsuite($_);
+}
+# If --directory wasn't used, assume the test suite must be built using the current directory
+if (@directory < 1) {
+    buildTestsuite($pwd);
+}
 exit buildTestrunner;
 #print "Info: Found no unit tests. No SVUnit framework created.\n";
