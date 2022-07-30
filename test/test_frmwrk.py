@@ -554,3 +554,19 @@ def test_collects_test_from_dirs_passed_with_directory_option(tmp_path):
 
         golden_testrunner_with_2_testsuites()
         verify_testrunner('testrunner.gold', '___test_dir1', '___test_dir2')
+
+
+def test_does_not_collect_test_from_cwd_passed_with_directory_option(tmp_path):
+    tmp_path.joinpath('run_dir').mkdir()
+    tmp_path.joinpath('run_dir/test_in_run_dir_unit_test.sv').write_text('module test_in_run_dir_unit_test;\nendmodule')
+    tmp_path.joinpath('test_dir1').mkdir()
+    tmp_path.joinpath('test_dir1/test_in_dir1_unit_test.sv').write_text('module test_in_dir1_unit_test;\nendmodule')
+
+    with working_directory(tmp_path/'run_dir'):
+        subprocess.check_call(['runSVUnit', '--directory', '../test_dir1'])
+
+        golden_testsuite_with_1_unittest('test_in_dir1')
+        verify_testsuite('testsuite.gold', '__test_dir1')
+
+        golden_testrunner_with_1_testsuite()
+        verify_testrunner('testrunner.gold', '___test_dir1')
