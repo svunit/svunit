@@ -105,6 +105,13 @@ GetOptions("l|log=s" => \$logfile,
 
 usage() if $help;
 
+foreach (@directory) {
+    if (File::Spec->file_name_is_absolute($_)) {
+        print("Argument error: absolute paths are not yet supported as values for '--directory'\n");
+        exit 4;
+    }
+}
+
 clean();
 
 # version
