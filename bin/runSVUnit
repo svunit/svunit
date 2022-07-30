@@ -27,6 +27,10 @@ use Cwd 'abs_path';
 
 use vars qw/ %opt /;
 
+use constant {
+    CMDLINE_USAGE_ERROR => 4,
+    # TODO Add other error codes
+};
 
 ##########################################################################
 # PrintHelp(): Prints the script usage.
@@ -104,6 +108,13 @@ GetOptions("l|log=s" => \$logfile,
            ) or usage();
 
 usage() if $help;
+
+foreach (@directory) {
+    if (File::Spec->file_name_is_absolute($_)) {
+        print("Argument error: absolute paths are not yet supported as values for '--directory'\n");
+        exit CMDLINE_USAGE_ERROR;
+    }
+}
 
 clean();
 

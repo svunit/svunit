@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Support for `qrun` (QuestaSim one-step flow)
 - Add possibility to specify multiple filter (simple) wildcard patterns for `--filter` option
 - Add possibility to specify negative filter (simple) wildcard patterns for `--filter` option
+- Add `--directory` option to specify where to look for `_unit_test.sv` files
 
 ### Fixed
 - Fix broken compilation for QuestaSim
