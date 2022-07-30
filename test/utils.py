@@ -1,3 +1,4 @@
+import contextlib
 import mmap
 import os
 import pathlib
@@ -7,6 +8,17 @@ import subprocess
 import warnings
 
 import pytest
+
+
+@contextlib.contextmanager
+def working_directory(path):
+    """Changes working directory and returns to previous on exit."""
+    prev_cwd = pathlib.Path.cwd()
+    os.chdir(path)
+    try:
+        yield
+    finally:
+        os.chdir(prev_cwd)
 
 
 def all_files_in_dir(dirname):
