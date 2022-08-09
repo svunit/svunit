@@ -108,7 +108,7 @@
     msg - string to display
 */
 `define INFO(msg) \
-  $display("INFO:  [%0t][%0s]: %s", $time, name, msg)
+  svunit_pkg::svunit_printer::info(name, msg)
 
 
 /*
@@ -119,14 +119,15 @@
     msg - string to display
 */
 `define ERROR(msg) \
-  $display("ERROR: [%0t][%0s]: %s", $time, name, msg)
+  svunit_pkg::svunit_printer::error(name, msg)
 
 
 /*
   Macro: `LF
   Displays a blank line in log file
 */
-`define LF $display("");
+`define LF \
+  svunit_pkg::svunit_printer::lf()
 
 
 /*
