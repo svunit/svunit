@@ -123,6 +123,17 @@
 
 
 /*
+  Macro: `WARNING
+  Displays WARNING message to screen and in log file
+
+  Parameters:
+    msg - string to display
+ */
+`define WARNING(msg) \
+  $display("WARNING: [%0t][%0s]: %s", $time, name, msg)
+
+
+/*
   Macro: `LF
   Displays a blank line in log file
 */
@@ -135,13 +146,14 @@
 */
 `define SVUNIT_TESTS_BEGIN \
   task automatic run(); \
-    `INFO("RUNNING");
+    `INFO("RUNNING"); \
+    begin
 
 /*
   Macro: `SVUNIT_TESTS_END
   END a block of unit tests
 */
-`define SVUNIT_TESTS_END endtask
+`define SVUNIT_TESTS_END end endtask
 
 
 /*

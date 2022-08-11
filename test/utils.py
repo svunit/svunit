@@ -153,6 +153,9 @@ def expect_string(pattern, logfile_path):
     with open(logfile_path) as file, mmap.mmap(file.fileno(), 0, access=mmap.ACCESS_READ) as log:
         assert re.search(pattern, log), "\"%s\" not found at %s log file" % (pattern, logfile_path)
 
+def expect_string_esc(pattern, logfile_path):
+    return expect_string(re.escape(pattern).replace(br'\*', br'.*'), logfile_path)
+
 def expect_file(path):
     return os.path.exists(path)
 
