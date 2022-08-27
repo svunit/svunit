@@ -51,6 +51,13 @@ module equals_macros_example_unit_test;
   `SVTEST_END
 
 
+  `SVTEST(fail_unless_equal__int_arrays)
+    int some_array[] = '{ 1, 2, 3 };
+    int first_three_primes[] = '{ 2, 3, 5 };
+    `FAIL_UNLESS_EQUAL(some_array, first_three_primes);
+  `SVTEST_END
+
+
   `SVTEST(fail_unless_equal__bit_vectors_displayed_as_hex)
     bit[15:0] val1 = 'hdead;
     bit[15:0] val2 = 'hbeef;
