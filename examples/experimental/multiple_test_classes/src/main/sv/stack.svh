@@ -1,0 +1,2 @@
+class stack;
+endclass
