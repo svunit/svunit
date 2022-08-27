@@ -51,6 +51,20 @@ module equals_macros_example_unit_test;
   `SVTEST_END
 
 
+  `SVTEST(fail_unless_equal__bit_vectors_displayed_as_hex)
+    bit[15:0] val1 = 'hdead;
+    bit[15:0] val2 = 'hbeef;
+    `FAIL_UNLESS_EQUAL(val1, val2, "'h%x");
+  `SVTEST_END
+
+
+  `SVTEST(fail_if_equal__bit_vectors_displayed_as_hex)
+    bit[15:0] val1 = 'hbeef;
+    bit[15:0] val2 = 'hbeef;
+    `FAIL_IF_EQUAL(val1, val2, "'h%x");
+  `SVTEST_END
+
+
   `SVUNIT_TESTS_END
 
 
