@@ -44,6 +44,13 @@ module equals_macros_example_unit_test;
   `SVTEST_END
 
 
+  `SVTEST(fail_if_equal__int_variables)
+    int one = 1;
+    int also_one = 1;
+    `FAIL_IF_EQUAL(one, also_one);
+  `SVTEST_END
+
+
   `SVUNIT_TESTS_END
 
 
