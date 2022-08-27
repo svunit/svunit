@@ -12,19 +12,21 @@ xrun -compile \
 xrun -compile \
     -incdir ../../../svunit_base \
     ../../../svunit_base/svunit_pkg.sv
+
+echo "Compiling experimental extensions to SVUnit"
 xrun -compile \
     -incdir ../../../svunit_base \
-    -incdir svunit \
-    svunit/svunit.sv
+    -incdir ../../../src/experimental/sv \
+    ../../../src/experimental/sv/svunit.sv
 
 echo "Compiling test code"
 xrun -compile \
-    -incdir svunit \
+    -incdir ../../../src/experimental/sv \
     -incdir ../../../svunit_base \
     factorial_test.sv
 
 echo "Running tests"
-xrun svunit/svunit_main.sv \
+xrun ../../../src/experimental/sv/svunit_main.sv \
     -top svunit_main \
     -top factorial_test \
     +SVUNIT_FILTER="*"
