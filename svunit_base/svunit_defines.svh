@@ -67,7 +67,10 @@
 `ifndef FAIL_UNLESS_EQUAL
 `define FAIL_UNLESS_EQUAL(a,b) \
   begin \
-    if (svunit_pkg::current_tc.fail(`"fail_unless_equal`", ((a)!==(b)), `"(a) !== (b)`", `__FILE__, `__LINE__)) begin \
+    string original_expression = `"(a) !== (b)`"; \
+    string expanded_expression = $sformatf("(%p) !== (%p)", a, b); \
+    string message = $sformatf("%s, because %s", original_expression, expanded_expression); \
+    if (svunit_pkg::current_tc.fail(`"fail_unless_equal`", ((a)!==(b)), message, `__FILE__, `__LINE__)) begin \
       if (svunit_pkg::current_tc.is_running()) svunit_pkg::current_tc.give_up(); \
     end \
   end
