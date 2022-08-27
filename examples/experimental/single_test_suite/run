@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+set -e
+
+echo "Compiling production code"
+xrun -compile factorial.sv
+
+echo "Compiling SVUnit"
+xrun -compile \
+    -incdir ../../../svunit_base/junit-xml \
+    ../../../svunit_base/junit-xml/*.sv
+xrun -compile \
+    -incdir ../../../svunit_base \
+    ../../../svunit_base/svunit_pkg.sv
+xrun -compile \
+    -incdir ../../../svunit_base \
+    -incdir svunit \
+    svunit/svunit.sv
+
+echo "Compiling test code"
+xrun -compile \
+    -incdir svunit \
+    -incdir ../../../svunit_base \
+    factorial_test.sv
+
+echo "Running tests"
+xrun svunit/svunit_main.sv \
+    -top svunit_main \
+    -top factorial_test \
+    +SVUNIT_FILTER="*"
