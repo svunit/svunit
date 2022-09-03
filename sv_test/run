@@ -1,12 +1,14 @@
 #!/bin/env python3
 
+import fileinput
 import pathlib
+import shutil
 import subprocess
 
 
 def main():
     clone_stable_version_of_svunit()
-    print("Preparing compile of current version of SVunit")
+    prepare_compile_for_current_svunit()
     print("Running tests")
 
 
@@ -16,6 +18,18 @@ def clone_stable_version_of_svunit():
 
     subprocess.check_call(['git', 'clone', 'https://github.com/svunit/svunit.git'])
     subprocess.check_call(['git', 'checkout', 'v3.36.0'], cwd='svunit')
+
+
+def prepare_compile_for_current_svunit():
+    pathlib.Path('svunit_under_test').mkdir(exist_ok=True)
+    create_copy_of_package()
+
+
+def create_copy_of_package():
+    shutil.copyfile('../svunit_base/svunit_pkg.sv', 'svunit_under_test/svunit_under_test.sv')
+    with fileinput.FileInput('svunit_under_test/svunit_under_test.sv', inplace=True, backup='.bak') as file:
+        for line in file:
+            print(line.replace("package svunit_pkg", "package svunit_under_test"), end='')
 
 
 main()
