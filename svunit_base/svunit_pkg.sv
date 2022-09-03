@@ -27,6 +27,7 @@ package svunit_pkg;
 `endif
 
   `include "svunit_types.svh"
+  `include "svunit_string_utils.svh"
   `include "svunit_base.sv"
   `include "svunit_testcase.sv"
   `include "svunit_testsuite.sv"
