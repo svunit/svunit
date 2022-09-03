@@ -28,9 +28,20 @@ def prepare_compile_for_current_svunit():
 
 def create_copy_of_package():
     shutil.copyfile('../svunit_base/svunit_pkg.sv', 'svunit_under_test/svunit_under_test.sv')
+    rename_package()
+    include_linked_files()
+
+
+def rename_package():
     with fileinput.FileInput('svunit_under_test/svunit_under_test.sv', inplace=True, backup='.bak') as file:
         for line in file:
             print(line.replace("package svunit_pkg", "package svunit_under_test"), end='')
+
+
+def include_linked_files():
+    with fileinput.FileInput('svunit_under_test/svunit_under_test.sv', inplace=True, backup='.bak') as file:
+        for line in file:
+            print(line.replace('`include "svunit_', '`include "svunit_under_test_'), end='')
 
 
 def link_included_files():
