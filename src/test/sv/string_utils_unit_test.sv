@@ -26,8 +26,19 @@ module string_utils_unit_test;
 
   `SVUNIT_TESTS_BEGIN
 
-    `SVTEST(some_passing_test)
-      `FAIL_UNLESS(svunit_under_test::TRUE)
+    `SVTEST(can_split_string_by_underscore)
+      string some_string = "some_string";
+      string parts[] = string_utils::split_by_char("_", some_string);
+      string exp_parts[] = '{ "some", "string" };
+      `FAIL_UNLESS_EQUAL(parts, exp_parts)
+    `SVTEST_END
+
+
+    `SVTEST(split_string_by_underscore_does_nothing_when_no_underscore)
+      string some_string = "string";
+      string parts[] = string_utils::split_by_char("_", some_string);
+      string exp_parts[] = '{ "string" };
+      `FAIL_UNLESS_EQUAL(parts, exp_parts)
     `SVTEST_END
 
   `SVUNIT_TESTS_END
