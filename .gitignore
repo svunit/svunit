@@ -7,7 +7,7 @@
 .bpad
 
 # Framework files
-.__testsuite.sv
+.__*testsuite.sv
 .svunit.f
 .testrunner.sv
 run.log

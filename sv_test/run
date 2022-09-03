@@ -1,0 +1,70 @@
+#!/bin/env python3
+
+import fileinput
+import os
+import pathlib
+import shutil
+import subprocess
+
+
+def main():
+    clone_stable_version_of_svunit()
+    prepare_compile_for_current_svunit()
+    run_tests()
+
+
+def clone_stable_version_of_svunit():
+    if (pathlib.Path('svunit').is_dir()):
+        return
+
+    subprocess.check_call(['git', 'clone', 'https://github.com/svunit/svunit.git'])
+    subprocess.check_call(['git', 'checkout', 'v3.36.0'], cwd='svunit')
+
+    delete_problematic_directories_that_interfere_with_build()
+
+
+def delete_problematic_directories_that_interfere_with_build():
+    shutil.rmtree('svunit/examples')
+    shutil.rmtree('svunit/test')
+
+
+def prepare_compile_for_current_svunit():
+    shutil.rmtree('svunit_under_test')
+    pathlib.Path('svunit_under_test').mkdir()
+    create_copy_of_package()
+    link_included_files()
+
+
+def create_copy_of_package():
+    shutil.copyfile('../svunit_base/svunit_pkg.sv', 'svunit_under_test/svunit_under_test.sv')
+    rename_package()
+    include_linked_files()
+
+
+def rename_package():
+    with fileinput.FileInput('svunit_under_test/svunit_under_test.sv', inplace=True, backup='.bak') as file:
+        for line in file:
+            print(line.replace("package svunit_pkg", "package svunit_under_test"), end='')
+
+
+def include_linked_files():
+    with fileinput.FileInput('svunit_under_test/svunit_under_test.sv', inplace=True, backup='.bak') as file:
+        for line in file:
+            print(line.replace('`include "svunit_', '`include "svunit_under_test_'), end='')
+
+
+def link_included_files():
+    included_files = [p for p in pathlib.Path('../svunit_base').glob('*') if p.is_file() and p.name != 'svunit_pkg.sv']
+    for file in included_files:
+        new_name = file.name.replace('svunit_', 'svunit_under_test_')
+        pathlib.Path(f'svunit_under_test/{new_name}').symlink_to(f'../{file}')
+
+
+def run_tests():
+    run_env = os.environ.copy()
+    run_env['SVUNIT_INSTALL'] = str(pathlib.Path('svunit').resolve())
+    run_env['PATH'] = str(pathlib.Path('svunit').joinpath('bin').resolve()) + ':' + run_env['PATH']
+    subprocess.check_call(['svunit/bin/runSVUnit', '--directory', '../src/test/sv'], env=run_env)
+
+
+main()
