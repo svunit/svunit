@@ -20,6 +20,13 @@ def clone_stable_version_of_svunit():
     subprocess.check_call(['git', 'clone', 'https://github.com/svunit/svunit.git'])
     subprocess.check_call(['git', 'checkout', 'v3.36.0'], cwd='svunit')
 
+    delete_problematic_directories_that_interfere_with_build()
+
+
+def delete_problematic_directories_that_interfere_with_build():
+    shutil.rmtree('svunit/examples')
+    shutil.rmtree('svunit/test')
+
 
 def prepare_compile_for_current_svunit():
     shutil.rmtree('svunit_under_test')
