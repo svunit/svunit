@@ -1,0 +1,9 @@
+#!/bin/env python3
+
+def main():
+    print("Cloning stable version of SVUnit")
+    print("Preparing compile of current version of SVunit")
+    print("Running tests")
+
+
+main()
