@@ -1,5 +1,6 @@
 #!/bin/env python3
 
+import pathlib
 import subprocess
 
 
@@ -10,6 +11,9 @@ def main():
 
 
 def clone_stable_version_of_svunit():
+    if (pathlib.Path('svunit').is_dir()):
+        return
+
     subprocess.check_call(['git', 'clone', 'https://github.com/svunit/svunit.git'])
     subprocess.check_call(['git', 'checkout', 'v3.36.0'], cwd='svunit')
 
