@@ -21,7 +21,8 @@ def clone_stable_version_of_svunit():
 
 
 def prepare_compile_for_current_svunit():
-    pathlib.Path('svunit_under_test').mkdir(exist_ok=True)
+    shutil.rmtree('svunit_under_test')
+    pathlib.Path('svunit_under_test').mkdir()
     create_copy_of_package()
     link_included_files()
 
