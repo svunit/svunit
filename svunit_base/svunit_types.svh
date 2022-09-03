@@ -1,6 +1,6 @@
 //###########################################################################
 //
-//  Copyright 2011 The SVUnit Authors.
+//  Copyright 2011-2022 The SVUnit Authors.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -16,8 +16,6 @@
 //
 //###########################################################################
 
-`ifndef SVUNIT_TYPES
-`define SVUNIT_TYPES
 
   /*
     Enum: results_t
@@ -31,5 +29,3 @@
     enumerated type containing TRUE/FALSE
   */
   typedef enum {TRUE=1, FALSE=0} boolean_t;
-
-`endif
