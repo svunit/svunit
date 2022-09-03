@@ -1,9 +1,17 @@
 #!/bin/env python3
 
+import subprocess
+
+
 def main():
-    print("Cloning stable version of SVUnit")
+    clone_stable_version_of_svunit()
     print("Preparing compile of current version of SVunit")
     print("Running tests")
+
+
+def clone_stable_version_of_svunit():
+    subprocess.check_call(['git', 'clone', 'https://github.com/svunit/svunit.git'])
+    subprocess.check_call(['git', 'checkout', 'v3.36.0'], cwd='svunit')
 
 
 main()
