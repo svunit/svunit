@@ -23,6 +23,7 @@ def clone_stable_version_of_svunit():
 def prepare_compile_for_current_svunit():
     pathlib.Path('svunit_under_test').mkdir(exist_ok=True)
     create_copy_of_package()
+    link_included_files()
 
 
 def create_copy_of_package():
@@ -30,6 +31,13 @@ def create_copy_of_package():
     with fileinput.FileInput('svunit_under_test/svunit_under_test.sv', inplace=True, backup='.bak') as file:
         for line in file:
             print(line.replace("package svunit_pkg", "package svunit_under_test"), end='')
+
+
+def link_included_files():
+    included_files = [p for p in pathlib.Path('../svunit_base').glob('*') if p.is_file() and p.name != 'svunit_pkg.sv']
+    for file in included_files:
+        new_name = file.name.replace('svunit_', 'svunit_under_test_')
+        pathlib.Path(f'svunit_under_test/{new_name}').symlink_to(f'../{file}')
 
 
 main()
