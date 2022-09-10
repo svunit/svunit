@@ -9,7 +9,7 @@ module dut_unit_test;
 
 
   //===================================
-  // This is the UUT that we're 
+  // This is the UUT that we're
   // running the Unit Tests on
   //===================================
   dut my_dut();
@@ -33,7 +33,7 @@ module dut_unit_test;
 
 
   //===================================
-  // Here we deconstruct anything we 
+  // Here we deconstruct anything we
   // need after running the Unit Tests
   //===================================
   task teardown();
@@ -135,6 +135,16 @@ module dut_unit_test;
     `SVTEST(x_as_fail_if_expression)
       static logic foo = 'x;
       `FAIL_IF(foo != 1);
+    `SVTEST_END
+
+    `SVTEST(fail_if_equal_works_with_expression_with_side_effects)
+      static int i = 0;
+      `FAIL_IF_EQUAL(i++, 0)  // `i` should still be `0` in the comparison, test should fail
+    `SVTEST_END
+
+    `SVTEST(fail_unless_equal_works_with_expression_with_side_effects)
+      static int i = 0;
+      `FAIL_UNLESS_EQUAL(i++, 0)  // `i` should still be `0` in the comparison, test should pass
     `SVTEST_END
 
   `SVUNIT_TESTS_END
