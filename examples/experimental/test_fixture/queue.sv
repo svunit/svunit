@@ -6,6 +6,10 @@ package queue;
     endfunction
 
 
+    function T dequeue();
+    endfunction
+
+
     function int unsigned size();
     endfunction
 
