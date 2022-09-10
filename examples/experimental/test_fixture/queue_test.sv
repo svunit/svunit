@@ -8,9 +8,9 @@ package queue_test;
 
   virtual class queue_test extends svunit::test;
 
-    protected queue #(int) q0;
-    protected queue #(int) q1;
-    protected queue #(int) q2;
+    protected queue #(int) q0 = new();
+    protected queue #(int) q1 = new();
+    protected queue #(int) q2 = new();
 
 
     protected virtual function void set_up();
