@@ -51,10 +51,10 @@ def test_sim_3(datafiles, simulator):
         expect_string(br'ERROR: \[0\]\[dut_ut\]: fail_unless: beam == 1 \(at .*dut_unit_test.sv line:73\)', 'run.log')
         expect_string(br'INFO:  \[0\]\[dut_ut\]: third_test::FAILED', 'run.log')
         expect_string(br'INFO:  \[0\]\[dut_ut\]: fourth_test::RUNNING', 'run.log')
-        expect_string(br"ERROR: \[0\]\[dut_ut\]: fail_if_equal: \('hf\) === \(15\), because \(15\) === \(15\) \(at .*dut_unit_test.sv line:80\)", 'run.log')
+        expect_string(br"ERROR: \[0\]\[dut_ut\]: fail_if_equal: \('hf\) === \(15\) \(at .*dut_unit_test.sv line:80\)", 'run.log')
         expect_string(br'INFO:  \[0\]\[dut_ut\]: fourth_test::FAILED', 'run.log')
         expect_string(br'INFO:  \[0\]\[dut_ut\]: fifth_test::RUNNING', 'run.log')
-        expect_string(br"ERROR: \[0\]\[dut_ut\]: fail_unless_equal: \(15\) !== \('ha\), because \(15\) !== \(10\) \(at .*dut_unit_test.sv line:86\)", 'run.log')
+        expect_string(br"ERROR: \[0\]\[dut_ut\]: fail_unless_equal: \(15\) !== \('ha\) \(at .*dut_unit_test.sv line:86\)", 'run.log')
         expect_string(br'INFO:  \[0\]\[dut_ut\]: fifth_test::FAILED', 'run.log')
         expect_string(br'INFO:  \[0\]\[dut_ut\]: FAILED', 'run.log')
         expect_string(br'INFO:  \[0\]\[dut_ut\]: sixth_test::RUNNING', 'run.log')
@@ -73,6 +73,8 @@ def test_sim_3(datafiles, simulator):
         expect_string(br'INFO:  \[0\]\[dut_ut\]: eleventh_test::PASSED', 'run.log')
         expect_string(br'ERROR: \[0\]\[dut_ut\]: fail_if: foo != 1 \(at .*dut_unit_test.sv line:.*\)', 'run.log')
         expect_string(br'INFO:  \[0\]\[dut_ut\]: x_as_fail_if_expression::FAILED', 'run.log')
+        expect_string(br'INFO:  \[0\]\[dut_ut\]: fail_if_equal_works_with_expression_with_side_effects::FAILED', 'run.log')
+        expect_string(br'INFO:  \[0\]\[dut_ut\]: fail_unless_equal_works_with_expression_with_side_effects::PASSED', 'run.log')
         expect_string(br'INFO:  \[0\]\[testrunner\]: FAILED', 'run.log')
 
 

@@ -38,13 +38,9 @@
 `endif
 
 `ifndef FAIL_IF_EQUAL
-`define FAIL_IF_EQUAL(a,b, format_string="%p") \
+`define FAIL_IF_EQUAL(a,b) \
   begin \
-    string original_expression = `"(a) === (b)`"; \
-    string expanded_expression_format_string = $sformatf("(%s) === (%s)", format_string, format_string); \
-    string expanded_expression = $sformatf(expanded_expression_format_string, a, b); \
-    string message = $sformatf("%s, because %s", original_expression, expanded_expression); \
-    if (svunit_pkg::current_tc.fail(`"fail_if_equal`", ((a)===(b)), message, `__FILE__, `__LINE__)) begin \
+    if (svunit_pkg::current_tc.fail(`"fail_if_equal`", ((a)===(b)), `"(a) === (b)`", `__FILE__, `__LINE__)) begin \
       if (svunit_pkg::current_tc.is_running()) svunit_pkg::current_tc.give_up(); \
     end \
   end
@@ -69,13 +65,9 @@
 `endif
 
 `ifndef FAIL_UNLESS_EQUAL
-`define FAIL_UNLESS_EQUAL(a,b, format_string="%p") \
+`define FAIL_UNLESS_EQUAL(a,b) \
   begin \
-    string original_expression = `"(a) !== (b)`"; \
-    string expanded_expression_format_string = $sformatf("(%s) !== (%s)", format_string, format_string); \
-    string expanded_expression = $sformatf(expanded_expression_format_string, a, b); \
-    string message = $sformatf("%s, because %s", original_expression, expanded_expression); \
-    if (svunit_pkg::current_tc.fail(`"fail_unless_equal`", ((a)!==(b)), message, `__FILE__, `__LINE__)) begin \
+    if (svunit_pkg::current_tc.fail(`"fail_unless_equal`", ((a)!==(b)), `"(a) !== (b)`", `__FILE__, `__LINE__)) begin \
       if (svunit_pkg::current_tc.is_running()) svunit_pkg::current_tc.give_up(); \
     end \
   end
