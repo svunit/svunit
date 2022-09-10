@@ -1,1 +1,1 @@
-SVUnit unreleased
+SVUnit v3.36.1
