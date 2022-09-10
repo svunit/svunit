@@ -6,7 +6,7 @@ package queue_test;
   import queue::*;
 
 
-  class queue_test;  // TODO Extends from class for test fixture
+  virtual class queue_test extends svunit::test;
 
     protected queue #(int) q0;
     protected queue #(int) q1;
@@ -23,7 +23,7 @@ package queue_test;
 
 
   `TEST_F_BEGIN(queue_test, is_empty_initially)
-    // `FAIL_UNLESS_EQUAL(q0.size(), 0)
+    `FAIL_UNLESS_EQUAL(q0.size(), 0)
   `TEST_F_END
 
 endpackage

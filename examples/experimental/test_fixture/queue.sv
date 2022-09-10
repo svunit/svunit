@@ -5,6 +5,10 @@ package queue;
     function void enqueue(T e);
     endfunction
 
+
+    function int unsigned size();
+    endfunction
+
   endclass
 
 endpackage
