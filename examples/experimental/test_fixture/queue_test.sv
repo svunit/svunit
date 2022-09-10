@@ -22,7 +22,8 @@ package queue_test;
   endclass
 
 
-  `TEST_BEGIN(dummy_test_needed_because_otherwise_test_registration_crashes_and_burns)
-  `TEST_END
+  `TEST_F_BEGIN(queue_test, is_empty_initially)
+    // `FAIL_UNLESS_EQUAL(q0.size(), 0)
+  `TEST_F_END
 
 endpackage

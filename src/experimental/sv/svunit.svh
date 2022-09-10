@@ -18,3 +18,13 @@
 `define TEST_END \
     endtask \
   endclass \
+
+
+`define TEST_F_BEGIN(TEST_FIXTURE, TEST_NAME) \
+  // TODO Implement properly \
+  `TEST_BEGIN(TEST_NAME)
+
+
+`define TEST_F_END \
+  // TODO Implement properly \
+  `TEST_END
