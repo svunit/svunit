@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix `FAIL_IF_EQUALS` and `FAIL_UNLESS_EQUALS` to work with expressions with side-effects
 
 
-## [3.36.0] - 2022-08-27
+## [3.36.0] - 2022-08-27 [YANKED]
 
 ### Added
 - Support for `qrun` (QuestaSim one-step flow)
