@@ -13,11 +13,11 @@ package queue_test;
     protected queue #(int) q2 = new();
 
 
-    protected virtual function void set_up();
+    protected virtual task set_up();
       q1.enqueue(1);
       q2.enqueue(2);
       q2.enqueue(3);
-    endfunction
+    endtask
 
   endclass
 

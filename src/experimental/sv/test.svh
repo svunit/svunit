@@ -28,8 +28,8 @@ virtual class test;
   endtask
 
 
-  protected virtual function void set_up();
-  endfunction
+  protected virtual task set_up();
+  endtask
 
 
   pure virtual task test_body();
