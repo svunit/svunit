@@ -6,7 +6,7 @@ module string_utils_unit_test;
   string name = "string_utils_ut";
   svunit_testcase svunit_ut;
 
-  import svunit_under_test::string_utils;
+  import svunit_pkg::string_utils;
 
 
   function void build();
