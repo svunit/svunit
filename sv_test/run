@@ -29,6 +29,8 @@ def prepare_svunit_for_testing():
     clone_stable_version_of_svunit()
     delete_problematic_directories_that_interfere_with_build()
     rename_source_files()
+    update_package_to_include_renamed_source_files()
+    update_package_name()
 
 
 def clone_stable_version_of_svunit():
@@ -55,6 +57,18 @@ def rename_source_files():
         assert f.name.startswith('svunit_')
     for f in source_files:
         f.rename(pathlib.Path(f.parent, f.name.replace('svunit_', 'svunit_stable_')))
+
+
+def update_package_to_include_renamed_source_files():
+    with fileinput.FileInput('svunit/svunit_base/svunit_stable_pkg.sv', inplace=True, backup='.bak') as file:
+        for line in file:
+            print(line.replace('`include "svunit_', '`include "svunit_stable_'), end='')
+
+
+def update_package_name():
+    with fileinput.FileInput('svunit/svunit_base/svunit_stable_pkg.sv', inplace=True, backup='.bak') as file:
+        for line in file:
+            print(line.replace('package svunit_', 'package svunit_stable_'), end='')
 
 
 def prepare_compile_for_current_svunit():
