@@ -1,2 +1,2 @@
-+incdir+svunit_under_test
-svunit_under_test/svunit_under_test.sv
++incdir+../svunit_base
+../svunit_base/svunit_pkg.sv

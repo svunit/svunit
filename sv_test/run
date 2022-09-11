@@ -1,5 +1,6 @@
 #!/bin/env python3
 
+import argparse
 import fileinput
 import os
 import pathlib
@@ -8,9 +9,30 @@ import subprocess
 
 
 def main():
-    clone_stable_version_of_svunit()
-    prepare_compile_for_current_svunit()
+    parser = get_parser()
+    args = parser.parse_args()
+    if args.force_fresh_svunit_for_test:
+        shutil.rmtree('svunit')
+
+    prepare_svunit_for_testing()
     run_tests()
+
+
+def get_parser():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--force-fresh-svunit-for-test', action='store_true')
+    return parser
+
+
+def prepare_svunit_for_testing():
+    clone_stable_version_of_svunit()
+    delete_problematic_directories_that_interfere_with_build()
+    rename_source_files()
+    update_package_to_include_renamed_source_files()
+    update_package_name()
+    update_build_script_to_use_renamed_source_files()
+    update_source_files_to_use_new_package_name()
+    update_bin_files_to_use_new_package_name()
 
 
 def clone_stable_version_of_svunit():
@@ -20,44 +42,59 @@ def clone_stable_version_of_svunit():
     subprocess.check_call(['git', 'clone', 'https://github.com/svunit/svunit.git'])
     subprocess.check_call(['git', 'checkout', 'v3.36.0'], cwd='svunit')
 
-    delete_problematic_directories_that_interfere_with_build()
-
 
 def delete_problematic_directories_that_interfere_with_build():
+    shutil.rmtree('svunit/svunit_base/util')
+    shutil.rmtree('svunit/svunit_base/uvm-mock')
     shutil.rmtree('svunit/examples')
     shutil.rmtree('svunit/test')
 
 
-def prepare_compile_for_current_svunit():
-    shutil.rmtree('svunit_under_test')
-    pathlib.Path('svunit_under_test').mkdir()
-    create_copy_of_package()
-    link_included_files()
+def rename_source_files():
+    source_root = pathlib.Path('svunit/svunit_base')
+    for p in source_root.glob('*'):
+        assert not p.is_dir() or p.name == 'junit-xml'  # TODO Handle junit-xml
+    source_files = [p for p in source_root.glob('*') if p.is_file()]
+    for f in source_files:
+        assert f.name.startswith('svunit_')
+    for f in source_files:
+        f.rename(pathlib.Path(f.parent, f.name.replace('svunit_', 'svunit_stable_')))
 
 
-def create_copy_of_package():
-    shutil.copyfile('../svunit_base/svunit_pkg.sv', 'svunit_under_test/svunit_under_test.sv')
-    rename_package()
-    include_linked_files()
-
-
-def rename_package():
-    with fileinput.FileInput('svunit_under_test/svunit_under_test.sv', inplace=True, backup='.bak') as file:
+def update_package_to_include_renamed_source_files():
+    with fileinput.FileInput('svunit/svunit_base/svunit_stable_pkg.sv', inplace=True, backup='.bak') as file:
         for line in file:
-            print(line.replace("package svunit_pkg", "package svunit_under_test"), end='')
+            print(line.replace('`include "svunit_', '`include "svunit_stable_'), end='')
 
 
-def include_linked_files():
-    with fileinput.FileInput('svunit_under_test/svunit_under_test.sv', inplace=True, backup='.bak') as file:
+def update_package_name():
+    with fileinput.FileInput('svunit/svunit_base/svunit_stable_pkg.sv', inplace=True, backup='.bak') as file:
         for line in file:
-            print(line.replace('`include "svunit_', '`include "svunit_under_test_'), end='')
+            print(line.replace('package svunit_', 'package svunit_stable_'), end='')
 
 
-def link_included_files():
-    included_files = [p for p in pathlib.Path('../svunit_base').glob('*') if p.is_file() and p.name != 'svunit_pkg.sv']
-    for file in included_files:
-        new_name = file.name.replace('svunit_', 'svunit_under_test_')
-        pathlib.Path(f'svunit_under_test/{new_name}').symlink_to(f'../{file}')
+def update_build_script_to_use_renamed_source_files():
+    with fileinput.FileInput('svunit/bin/buildSVUnit', inplace=True, backup='.bak') as file:
+        for line in file:
+            print(line.replace('svunit_base/svunit_', 'svunit_base/svunit_stable_'), end='')
+
+
+def update_source_files_to_use_new_package_name():
+    source_root = pathlib.Path('svunit/svunit_base')
+    source_files = [p for p in source_root.glob('*') if p.is_file()]
+    for f in source_files:
+        with fileinput.FileInput(str(f), inplace=True, backup='.bak') as file:
+            for line in file:
+                print(line.replace('svunit_pkg::', 'svunit_stable_pkg::'), end='')
+
+
+def update_bin_files_to_use_new_package_name():
+    bin_root = pathlib.Path('svunit/bin')
+    bin_files = [p for p in bin_root.glob('*') if p.is_file()]
+    for f in bin_files:
+        with fileinput.FileInput(str(f), inplace=True, backup='.bak') as file:
+            for line in file:
+                print(line.replace('svunit_pkg::', 'svunit_stable_pkg::'), end='')
 
 
 def run_tests():
