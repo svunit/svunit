@@ -22,7 +22,13 @@ virtual class test;
   pure virtual function string name();
 
 
-  virtual function void set_up();
+  task run();
+    set_up();
+    test_body();
+  endtask
+
+
+  protected virtual function void set_up();
   endfunction
 
 

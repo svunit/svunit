@@ -81,12 +81,11 @@ class testcase_for_all_registered_tests extends svunit_testcase;
         svunit_pkg::current_tc = svunit_ut;
         svunit_ut.add_junit_test_case(_testName);
         svunit_ut.start();
-        tests[i].set_up();
         fork
           begin
             fork
               begin
-                tests[i].test_body();
+                tests[i].run();
       `SVTEST_END
     end
   `SVUNIT_TESTS_END
