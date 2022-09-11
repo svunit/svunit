@@ -62,7 +62,7 @@ module test_unit_test;
       num_set_up_calls++;
     endtask
 
-    virtual task test_body();
+    protected virtual task test_body();
       num_test_body_calls++;
     endtask
 
