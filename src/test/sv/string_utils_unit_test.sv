@@ -1,7 +1,7 @@
 module string_utils_unit_test;
 
-  import svunit_pkg::*;
-  `include "svunit_defines.svh"
+  import svunit_stable_pkg::*;
+  `include "svunit_stable_defines.svh"
 
   string name = "string_utils_ut";
   svunit_testcase svunit_ut;
