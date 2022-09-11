@@ -32,6 +32,7 @@ def prepare_svunit_for_testing():
     update_package_to_include_renamed_source_files()
     update_package_name()
     update_build_script_to_use_renamed_source_files()
+    update_source_files_to_use_new_package_name()
 
 
 def clone_stable_version_of_svunit():
@@ -76,6 +77,15 @@ def update_build_script_to_use_renamed_source_files():
     with fileinput.FileInput('svunit/bin/buildSVUnit', inplace=True, backup='.bak') as file:
         for line in file:
             print(line.replace('svunit_base/svunit_', 'svunit_base/svunit_stable_'), end='')
+
+
+def update_source_files_to_use_new_package_name():
+    source_root = pathlib.Path('svunit/svunit_base')
+    source_files = [p for p in source_root.glob('*') if p.is_file()]
+    for f in source_files:
+        with fileinput.FileInput(str(f), inplace=True, backup='.bak') as file:
+            for line in file:
+                print(line.replace('svunit_pkg::', 'svunit_stable_pkg::*'), end='')
 
 
 def prepare_compile_for_current_svunit():
