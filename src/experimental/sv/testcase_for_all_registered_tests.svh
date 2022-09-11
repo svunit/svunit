@@ -86,7 +86,7 @@ class testcase_for_all_registered_tests extends svunit_testcase;
           begin
             fork
               begin
-                tests[i].run();
+                tests[i].test_body();
       `SVTEST_END
     end
   `SVUNIT_TESTS_END

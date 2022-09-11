@@ -26,7 +26,7 @@ virtual class test;
   endfunction
 
 
-  pure virtual task run();
+  pure virtual task test_body();
 
 
   virtual class builder;
