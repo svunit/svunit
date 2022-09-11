@@ -33,7 +33,7 @@ virtual class test;
   endtask
 
 
-  pure virtual task test_body();
+  protected pure virtual task test_body();
 
 
   protected virtual task tear_down();

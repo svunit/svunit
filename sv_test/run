@@ -11,10 +11,12 @@ import subprocess
 def main():
     parser = get_parser()
     args = parser.parse_args()
+
     if args.force_fresh_svunit_for_test:
         shutil.rmtree('svunit')
+    if not pathlib.Path('svunit').is_dir():
+        prepare_svunit_for_testing()
 
-    prepare_svunit_for_testing()
     run_tests()
 
 
@@ -36,9 +38,6 @@ def prepare_svunit_for_testing():
 
 
 def clone_stable_version_of_svunit():
-    if (pathlib.Path('svunit').is_dir()):
-        return
-
     subprocess.check_call(['git', 'clone', 'https://github.com/svunit/svunit.git'])
     subprocess.check_call(['git', 'checkout', 'v3.36.0'], cwd='svunit')
 
@@ -101,7 +100,11 @@ def run_tests():
     run_env = os.environ.copy()
     run_env['SVUNIT_INSTALL'] = str(pathlib.Path('svunit').resolve())
     run_env['PATH'] = str(pathlib.Path('svunit').joinpath('bin').resolve()) + ':' + run_env['PATH']
-    subprocess.check_call(['svunit/bin/runSVUnit', '--directory', '../src/test/sv'], env=run_env)
+    subprocess.check_call([
+            'svunit/bin/runSVUnit',
+            '--directory', '../src/test/sv',
+            '--directory', '../src/testExperimental/sv',
+            ], env=run_env)
 
 
 main()
