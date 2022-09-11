@@ -3,7 +3,7 @@
 set -e
 
 echo "Compiling production code"
-xrun -compile factorial.sv
+xrun -compile queue.sv
 
 echo "Compiling SVUnit"
 xrun -compile \
@@ -23,10 +23,10 @@ echo "Compiling test code"
 xrun -compile \
     -incdir ../../../src/experimental/sv \
     -incdir ../../../svunit_base \
-    factorial_test.sv
+    queue_test.sv
 
 echo "Running tests"
 xrun ../../../src/experimental/sv/svunit_main.sv \
     -top svunit_main \
-    -top factorial_test \
+    -top queue_test \
     +SVUNIT_FILTER="*"

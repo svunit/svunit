@@ -22,7 +22,22 @@ virtual class test;
   pure virtual function string name();
 
 
-  pure virtual task run();
+  task run();
+    set_up();
+    test_body();
+    tear_down();
+  endtask
+
+
+  protected virtual task set_up();
+  endtask
+
+
+  pure virtual task test_body();
+
+
+  protected virtual task tear_down();
+  endtask
 
 
   virtual class builder;

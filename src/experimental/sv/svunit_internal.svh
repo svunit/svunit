@@ -1,5 +1,5 @@
-`define TEST_BEGIN(TEST_NAME) \
-  class TEST_NAME extends svunit::test; \
+`define SVUNIT_INTERNAL_TEST_BEGIN(TEST_NAME, BASE_CLASS) \
+  class TEST_NAME extends BASE_CLASS; \
     local static const bit is_test_builder_registerd \
         = register_test_builder(concrete_builder#(TEST_NAME)::get()); \
     local static string full_name_of_class = $sformatf("%m"); \
@@ -12,9 +12,9 @@
       return `"TEST_NAME`"; \
     endfunction \
     \
-    virtual task run(); \
+    virtual task test_body(); \
 
 
-`define TEST_END \
+`define SVUNIT_INTERNAL_TEST_END \
     endtask \
   endclass \
