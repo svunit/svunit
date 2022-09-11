@@ -8,9 +8,14 @@ import subprocess
 
 
 def main():
-    clone_stable_version_of_svunit()
+    prepare_svunit_for_testing()
     prepare_compile_for_current_svunit()
     run_tests()
+
+
+def prepare_svunit_for_testing():
+    clone_stable_version_of_svunit()
+    delete_problematic_directories_that_interfere_with_build()
 
 
 def clone_stable_version_of_svunit():
@@ -19,8 +24,6 @@ def clone_stable_version_of_svunit():
 
     subprocess.check_call(['git', 'clone', 'https://github.com/svunit/svunit.git'])
     subprocess.check_call(['git', 'checkout', 'v3.36.0'], cwd='svunit')
-
-    delete_problematic_directories_that_interfere_with_build()
 
 
 def delete_problematic_directories_that_interfere_with_build():
