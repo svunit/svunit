@@ -25,6 +25,7 @@ virtual class test;
   task run();
     set_up();
     test_body();
+    tear_down();
   endtask
 
 
@@ -33,6 +34,10 @@ virtual class test;
 
 
   pure virtual task test_body();
+
+
+  protected virtual task tear_down();
+  endtask
 
 
   virtual class builder;
