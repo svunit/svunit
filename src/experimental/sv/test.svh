@@ -7,7 +7,11 @@ virtual class test;
   protected static builder test_builders[$];
 
 
-  protected static function bit register_test_builder(builder b);
+  protected static function bit register_test_builder(builder b, string typename);
+    full_name_extraction fn_extraction = new();
+    string full_name = fn_extraction.get_full_name(typename);
+    svunit::__test_registry.register(b, full_name);
+
     test_builders.push_back(b);
     return 1;
   endfunction
