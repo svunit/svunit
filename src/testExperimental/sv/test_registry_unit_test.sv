@@ -99,6 +99,24 @@ module test_registry_unit_test;
       `FAIL_UNLESS(test_builders[1] inside { registered_test_builders })
     `SVTEST_END
 
+
+    `SVTEST(two_test_classes_under_package)
+      test_registry tr = new();
+      testsuite testsuites[];
+      testcase testcases[];
+
+      tr.register(fake_test_builder::new_instance(), "some_test_package.some_test_class.some_test");
+      tr.register(fake_test_builder::new_instance(), "some_test_package.some_other_test_class.some_test");
+
+      testsuites = tr.get_testsuites();
+      `FAIL_UNLESS(testsuites.size() == 1)
+
+      testcases = testsuites[0].get_testcases();
+      `FAIL_UNLESS(testcases.size() == 2)
+      `FAIL_UNLESS_STR_EQUAL(testcases[0].get_name(), "some_test_class")
+      `FAIL_UNLESS_STR_EQUAL(testcases[1].get_name(), "some_other_test_class")
+    `SVTEST_END
+
   `SVUNIT_TESTS_END
 
 
