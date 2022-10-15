@@ -7,9 +7,7 @@ class test_registry;
 
 
   function void register(test::builder test_builder, string full_name);
-    string name_parts[] = string_utils::split_by_char(".", full_name);
-    testcase tc = new(name_parts[0]);
-    ts.add_testcase(tc);
+    ts.register(test_builder, full_name);
   endfunction
 
 
