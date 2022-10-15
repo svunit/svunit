@@ -3,6 +3,7 @@ package svunit;
   import svunit_pkg::*;
   `include "svunit_defines.svh"
 
+  `include "full_name_extraction.svh"
   `include "test.svh"
   `include "testcase_for_all_registered_tests.svh"
 
