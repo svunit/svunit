@@ -29,8 +29,10 @@ module full_name_extraction_unit_test;
 
   `SVUNIT_TESTS_BEGIN
 
-    `SVTEST(dummy)
-      `FAIL_IF(1)
+    `SVTEST(test_defined_directly_under_package)
+      `FAIL_UNLESS_STR_EQUAL(
+          full_name_extr.get_full_name("tests::some_test extends svunit::test"),
+          "tests.some_test")
     `SVTEST_END
 
   `SVUNIT_TESTS_END
