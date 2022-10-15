@@ -12,7 +12,7 @@
       return `"TEST_NAME`"; \
     endfunction \
     \
-    virtual task test_body(); \
+    protected virtual task test_body(); \
 
 
 `define SVUNIT_INTERNAL_TEST_END \
