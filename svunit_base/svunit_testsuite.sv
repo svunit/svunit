@@ -26,7 +26,7 @@ class svunit_testsuite extends svunit_base;
     Array: list_of_testcases
     Queue list of Unit Testcases to include for this Test Suite
   */
-  local svunit_testcase list_of_testcases[$];
+  protected svunit_testcase list_of_testcases[$];
 
 
   /*

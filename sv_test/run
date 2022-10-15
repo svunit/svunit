@@ -17,12 +17,13 @@ def main():
     if not pathlib.Path('svunit').is_dir():
         prepare_svunit_for_testing()
 
-    run_tests()
+    run_tests(args)
 
 
 def get_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument('--force-fresh-svunit-for-test', action='store_true')
+    parser.add_argument('--test')
     return parser
 
 
@@ -96,15 +97,22 @@ def update_bin_files_to_use_new_package_name():
                 print(line.replace('svunit_pkg::', 'svunit_stable_pkg::'), end='')
 
 
-def run_tests():
+def run_tests(args):
     run_env = os.environ.copy()
     run_env['SVUNIT_INSTALL'] = str(pathlib.Path('svunit').resolve())
     run_env['PATH'] = str(pathlib.Path('svunit').joinpath('bin').resolve()) + ':' + run_env['PATH']
-    subprocess.check_call([
-            'svunit/bin/runSVUnit',
+
+    runSVUnit = ['svunit/bin/runSVUnit']
+
+    if args.test:
+        runSVUnit.extend(['--test', args.test])
+    else:  # '--test' doesn't seem to play nice with '--directory' (#191)
+        runSVUnit.extend([
             '--directory', '../src/test/sv',
             '--directory', '../src/testExperimental/sv',
-            ], env=run_env)
+            ])
+
+    subprocess.check_call(runSVUnit, env=run_env)
 
 
 main()

@@ -1,24 +1,17 @@
 virtual class test;
 
   typedef class builder;
-  typedef builder builder_darray[];
 
 
-  protected static builder test_builders[$];
+  protected static function bit register_test_builder(builder b, string typename);
+    full_name_extraction fn_extraction = new();
+    string full_name = fn_extraction.get_full_name(typename);
+    svunit::__test_registry.register(b, full_name);
 
-
-  protected static function bit register_test_builder(builder b);
-    test_builders.push_back(b);
     return 1;
   endfunction
 
 
-  static function builder_darray get_test_builders();
-    return test_builders;
-  endfunction
-
-
-  pure virtual function string full_name();
   pure virtual function string name();
 
 
