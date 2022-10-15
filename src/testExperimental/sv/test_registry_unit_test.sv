@@ -10,6 +10,7 @@ module test_registry_unit_test;
   import svunit::test_registry;
   import svunit::testsuite;
   import svunit::testcase;
+  import svunit::test;
 
 
   function void build();
@@ -78,17 +79,37 @@ module test_registry_unit_test;
       `FAIL_UNLESS(testcases.size() == 1)
     `SVTEST_END
 
+
+    `SVTEST(tests_under_package)
+      test_registry tr = new();
+      testsuite testsuites[];
+      testcase testcases[];
+      test::builder test_builders[];
+      test::builder registered_test_builders[2] = '{ default: fake_test_builder::new_instance };
+
+      tr.register(registered_test_builders[0], "some_test_package.some_test");
+      tr.register(registered_test_builders[1], "some_test_package.some_other_test");
+
+      testsuites = tr.get_testsuites();
+      testcases = testsuites[0].get_testcases();
+      test_builders = testcases[0].get_test_builders();
+      `FAIL_UNLESS(test_builders.size() == 2)
+      `FAIL_UNLESS(test_builders[0] != test_builders[1])
+      `FAIL_UNLESS(test_builders[0] inside { registered_test_builders })
+      `FAIL_UNLESS(test_builders[1] inside { registered_test_builders })
+    `SVTEST_END
+
   `SVUNIT_TESTS_END
 
 
-  class fake_test_builder extends svunit::test::builder;
+  class fake_test_builder extends test::builder;
 
     static function fake_test_builder new_instance();
       new_instance = new();
     endfunction
 
 
-    virtual function svunit::test create();
+    virtual function test create();
       // Intentionally empty
     endfunction
 

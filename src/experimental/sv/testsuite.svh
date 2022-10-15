@@ -9,22 +9,30 @@ class testsuite extends svunit_testsuite;
 
 
   function void register(test::builder test_builder, string full_name);
+    testcase tc;
     string name_parts[] = string_utils::split_by_char(".", full_name);
     if (name_parts.size() != 2)
       $fatal(0, "Internal error");
 
-    if (!has_testcase(name_parts[0])) begin
-      testcase tc = new(name_parts[0]);
+    tc = get_testcase(name_parts[0]);
+    if (tc == null) begin
+      tc = new(name_parts[0]);
       add_testcase(tc);
     end
+
+    tc.register(test_builder);
   endfunction
 
 
-  local function bit has_testcase(string name);
+  local function testcase get_testcase(string name);
     foreach (list_of_testcases[i])
-      if (list_of_testcases[i].get_name() == name)
-        return 1;
-    return 0;
+      if (list_of_testcases[i].get_name() == name) begin
+        testcase tc;
+        if (!$cast(tc, list_of_testcases[i]))
+          $fatal(0, "Internal error");
+        return tc;
+      end
+    return null;
   endfunction
 
 
