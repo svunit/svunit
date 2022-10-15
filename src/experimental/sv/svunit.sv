@@ -6,6 +6,7 @@ package svunit;
   `include "full_name_extraction.svh"
   `include "test.svh"
   `include "testcase_for_all_registered_tests.svh"
+  `include "test_registry.svh"
 
 
   task automatic run_all_tests();
