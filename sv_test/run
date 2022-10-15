@@ -100,11 +100,14 @@ def run_tests():
     run_env = os.environ.copy()
     run_env['SVUNIT_INSTALL'] = str(pathlib.Path('svunit').resolve())
     run_env['PATH'] = str(pathlib.Path('svunit').joinpath('bin').resolve()) + ':' + run_env['PATH']
-    subprocess.check_call([
+
+    runSVUnit = [
             'svunit/bin/runSVUnit',
             '--directory', '../src/test/sv',
             '--directory', '../src/testExperimental/sv',
-            ], env=run_env)
+            ]
+
+    subprocess.check_call(runSVUnit, env=run_env)
 
 
 main()
