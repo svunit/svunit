@@ -29,18 +29,18 @@ module equals_macros_example_unit_test;
   `SVTEST(fail_unless_equal__int_variables)
     int one = 1;
     int two = 2;
-    `FAIL_UNLESS_EQUAL(one, two);
+    `ASSERT_EQ(one, two, #(int));
   `SVTEST_END
 
 
   `SVTEST(fail_unless_equal__int_variable_and_int_constant)
     int one = 1;
-    `FAIL_UNLESS_EQUAL(one, 2);
+    `ASSERT_EQ(one, 2, #(int));
   `SVTEST_END
 
 
   `SVTEST(fail_unless_equal__int_function_and_int_constant)
-    `FAIL_UNLESS_EQUAL(function_returning_one(), 2);
+    `ASSERT_EQ(function_returning_one(), 2, #(int));
   `SVTEST_END
 
 
