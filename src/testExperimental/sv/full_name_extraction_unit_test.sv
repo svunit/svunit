@@ -35,6 +35,13 @@ module full_name_extraction_unit_test;
           "tests.some_test")
     `SVTEST_END
 
+
+    `SVTEST(test_defined_under_class_in_package)
+      `FAIL_UNLESS_STR_EQUAL(
+          full_name_extr.get_full_name("tests::some_test_class.some_test extends svunit::test"),
+          "tests.some_test_class.some_test")
+    `SVTEST_END
+
   `SVUNIT_TESTS_END
 
 endmodule
