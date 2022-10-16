@@ -11,6 +11,8 @@ package svunit;
   `include "test_registry.svh"
   `include "global_test_registry.svh"
 
+  `include "equals_helper.svh"
+
 
   task automatic run_all_tests();
     svunit_testrunner svunit_tr = new("testrunner");
