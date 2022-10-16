@@ -1,4 +1,3 @@
-
 module equals_macros_example_unit_test;
 
   import svunit_pkg::svunit_testcase;
