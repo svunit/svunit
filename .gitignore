@@ -33,3 +33,4 @@ metrics_history.db
 
 # QuestaSim/ModelSim
 work/
+qrun.out/
