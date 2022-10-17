@@ -1,3 +1,6 @@
+typedef class global_test_registry;
+
+
 virtual class test;
 
   typedef class builder;
@@ -6,7 +9,7 @@ virtual class test;
   protected static function bit register_test_builder(builder b, string typename);
     full_name_extraction fn_extraction = new();
     string full_name = fn_extraction.get_full_name(typename);
-    svunit::__test_registry.register(b, full_name);
+    global_test_registry::get().register(b, full_name);
 
     return 1;
   endfunction
