@@ -29,7 +29,7 @@ virtual class test;
   endtask
 
 
-  protected pure virtual task test_body();
+  pure virtual protected task test_body();
 
 
   protected virtual task tear_down();
