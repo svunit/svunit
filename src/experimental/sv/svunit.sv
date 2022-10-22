@@ -9,14 +9,12 @@ package svunit;
   `include "testcase.svh"
   `include "testsuite.svh"
   `include "test_registry.svh"
-
-
-  test_registry __test_registry = new();
+  `include "global_test_registry.svh"
 
 
   task automatic run_all_tests();
     svunit_testrunner svunit_tr = new("testrunner");
-    testsuite testsuites[] = __test_registry.get_testsuites();
+    testsuite testsuites[] = global_test_registry::get().get_testsuites();
 
     foreach (testsuites[i])
       svunit_tr.add_testsuite(testsuites[i]);
