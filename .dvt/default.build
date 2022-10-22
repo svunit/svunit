@@ -2,3 +2,20 @@
 svunit_base/junit-xml/*.sv
 -incdir svunit_base
 svunit_base/svunit_pkg.sv
+
+
+-incdir src/experimental/sv
+src/experimental/sv/*.sv
+
+-incdir examples/experimental/single_test_suite
+examples/experimental/single_test_suite/factorial.sv
+examples/experimental/single_test_suite/factorial_test.sv
+
+-incdir examples/experimental/multiple_test_classes/src/main/sv
+examples/experimental/multiple_test_classes/src/main/sv/*.sv
+-incdir examples/experimental/multiple_test_classes/src/test/sv
+examples/experimental/multiple_test_classes/src/test/sv/*.sv
+
+-incdir examples/experimental/test_fixture
+examples/experimental/test_fixture/queue.sv
+examples/experimental/test_fixture/queue_test.sv
