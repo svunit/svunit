@@ -44,6 +44,17 @@ module equals_macros_example_unit_test;
   `SVTEST_END
 
 
+`ifdef QUESTA
+
+  `SVTEST(assert_eq__type_automatically_extracted)
+    int one = 1;
+    int two = 2;
+    `ASSERT_EQ(one, two)
+  `SVTEST_END
+
+`endif
+
+
   `SVUNIT_TESTS_END
 
 

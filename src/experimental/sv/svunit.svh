@@ -17,7 +17,7 @@
   `SVUNIT_INTERNAL_TEST_END
 
 
-`define ASSERT_EQ(a, b, params) \
+`define ASSERT_EQ(a, b, params = #()) \
   begin \
     svunit::equals_helper params matcher = new(); \
     matcher.check(`"a`", `"b`", a, b, `__FILE__, `__LINE__); \
