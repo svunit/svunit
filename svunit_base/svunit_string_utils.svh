@@ -13,7 +13,7 @@
     for (int i = 0; i < s.len(); i++) begin
       if (i == s.len()-1)
         parts.push_back(s.substr(last_char_position+1, i));
-      if (s[i] == char) begin
+      if (string'(s[i]) == char) begin
         parts.push_back(s.substr(last_char_position+1, i-1));
         last_char_position = i;
       end
