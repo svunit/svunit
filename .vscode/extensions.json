@@ -4,6 +4,7 @@
     "eamodio.gitlens",
     "eirikpre.systemverilog",
     "ms-python.python",
-    "ms-python.vscode-pylance"
+    "ms-python.vscode-pylance",
+    "amiq.dvt"
   ]
 }
