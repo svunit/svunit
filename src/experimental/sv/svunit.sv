@@ -11,6 +11,7 @@ package svunit;
   `include "test_registry.svh"
   `include "global_test_registry.svh"
 
+  `include "dummy.svh"
   `include "equals_helper.svh"
 
 

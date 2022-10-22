@@ -1,4 +1,4 @@
-class equals_helper #(type T = int);
+class equals_helper #(type T = dummy);
 
   task check(string lhs_expr, string rhs_expr, T lhs, T rhs, string file, int unsigned line);
     string original_expression = $sformatf("(%s) !== (%s)", lhs_expr, rhs_expr);
