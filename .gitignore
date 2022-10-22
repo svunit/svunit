@@ -1,5 +1,9 @@
 *.log
 
+# DVT
+.dvt/build.config.xml
+.dvt/*.ls
+
 # Emacs
 *~
 
