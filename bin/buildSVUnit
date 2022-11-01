@@ -97,9 +97,13 @@ sub buildTestrunner
       no_chdir => 0
     }, $outdir);
 
-  if (!defined $testsuites) {
+  if (!defined $testsuites && !$enable_experimental) {
     unlink ".svunit.f";
     return 1;
+  }
+
+  if ($enable_experimental) {
+    $cmd = "$cmd --run-self-registered-tests";
   }
 
   system("$cmd$testsuites");
