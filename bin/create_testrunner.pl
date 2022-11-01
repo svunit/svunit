@@ -2,7 +2,7 @@
 
 ############################################################################
 #
-#  Copyright 2011 The SVUnit Authors.
+#  Copyright 2011-2022 The SVUnit Authors.
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -29,11 +29,12 @@ $num_suites  = 0;
 ##########################################################################
 sub PrintHelp() {
   print "\n";
-  print "Usage:  create_testrunner.pl [ -help | -i | -r | -out <file> | -add <filename> | -overwrite ]\n\n";
+  print "Usage:  create_testrunner.pl [ -help | -i | -r | -out <file> | -add <filename> | -overwrite | --run-self-registered-tests ]\n\n";
   print "Where -help           : prints this help screen\n";
   print "      -out <file>     : specifies an output filename\n";
   print "      -add <filename> : adds suite to test runner\n";
   print "      -overwrite      : overwrites the output file if it already exists\n";
+  print "      --run-self-registered-tests";
   print "\n";
   die;
 }
@@ -66,6 +67,9 @@ sub CheckArgs() {
       elsif ( @ARGV[$i] =~ /-overwrite/ ) {
         $overwrite = 1;
       }
+      elsif ( @ARGV[$i] =~ /--run-self-registered-tests/ ) {
+        $run_self_registered_tests = 1
+      }
     }
   }
 }
@@ -79,7 +83,7 @@ sub ValidArgs() {
     print "ERROR:  The output file was not specified\n";
     PrintHelp();
   }
-  if ( @files_to_add == 0 ) {
+  if ( @files_to_add == 0 && !$run_self_registered_tests ) {
     print "ERROR:  No files specified\n";
     PrintHelp();
   }
@@ -203,7 +207,22 @@ sub CreateTestSuite() {
     $cnt++;
   }
 
+  if ($run_self_registered_tests) {
+    print OUTFILE "\n";
+    print OUTFILE "    add_testsuites_for_self_registered_tests();\n"
+  }
+
   print OUTFILE "  endfunction\n\n\n";
+
+  if ($run_self_registered_tests) {
+    print OUTFILE "  function automatic void add_testsuites_for_self_registered_tests();\n";
+    print OUTFILE "     svunit::testsuite testsuites[] = svunit::global_test_registry::get().get_testsuites();\n";
+    print OUTFILE "     foreach (testsuites[i])\n";
+    print OUTFILE "       svunit_tr.add_testsuite(testsuites[i]);\n";
+    print OUTFILE "  endfunction\n";
+    print OUTFILE "  \n";
+    print OUTFILE "  \n";
+  }
 
   print OUTFILE "  //===================================\n";
   print OUTFILE "  // Run\n";
@@ -212,11 +231,33 @@ sub CreateTestSuite() {
   foreach $item ( @instance_names ) {
     print OUTFILE "    $item.run();\n";
   }
+
+  if ($run_self_registered_tests) {
+    print OUTFILE "\n";
+    print OUTFILE "    run_testsuites_for_self_registered_tests();\n"
+  }
+
   print OUTFILE "    svunit_tr.report();\n";
   print OUTFILE "  endtask\n";
+  print OUTFILE "\n";
+  print OUTFILE "\n";
 
-  print OUTFILE "\n";
-  print OUTFILE "\n";
+  if ($run_self_registered_tests) {
+    print OUTFILE "  task automatic run_testsuites_for_self_registered_tests();\n";
+    print OUTFILE "     svunit::testsuite testsuites[] = svunit::global_test_registry::get().get_testsuites();\n";
+    print OUTFILE "     foreach (testsuites[i]) begin\n";
+    print OUTFILE "       svunit::testcase testcases[] = testsuites[i].get_testcases();\n";
+    print OUTFILE "\n";
+    print OUTFILE "       testsuites[i].run();\n";
+    print OUTFILE "       foreach (testcases[j])\n";
+    print OUTFILE "         testcases[j].run();\n";
+    print OUTFILE "       testsuites[i].report();\n";
+    print OUTFILE "     end\n";
+    print OUTFILE "  endtask\n";
+    print OUTFILE "  \n";
+    print OUTFILE "  \n";
+  }
+
   print OUTFILE "endmodule\n";
 }
 

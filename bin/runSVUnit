@@ -52,6 +52,7 @@ my $clean;
 my $vhdlfile;
 my @tests;
 my $filter = '*';
+my $enable_experimental;
 my $help;
 
 sub usage () {
@@ -70,6 +71,7 @@ sub usage () {
   print "  -w|--wavedrom            : process json files as wavedrom output\n";
   print "     --filter <filter>     : specify which tests to run, as <test_module>.<test_name>\n";
   print "     --directory           : only run svunit discovery on selected directories\n";
+  print "     --enable-experimental : enable experimental features\n";
   print "  -h|--help                : prints this help screen\n";
   print "\n";
   exit 1;
@@ -104,6 +106,7 @@ GetOptions("l|log=s" => \$logfile,
            "filter=s" => \$filter,
            "w|wavedrom" => \$wavedrom,
            "directory=s" => \@directory,
+           "enable-experimental" => \$enable_experimental,
            "h|help" => \$help
            ) or usage();
 
@@ -198,6 +201,10 @@ my $build_cmd = "buildSVUnit -o $outdir";
 
 foreach (@directory) {
     $build_cmd .= " --directory $_";
+}
+
+if ($enable_experimental) {
+    $build_cmd .= " --enable-experimental";
 }
 
 foreach (@tests) {

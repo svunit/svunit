@@ -2,7 +2,7 @@
 
 ############################################################################
 #
-#  Copyright 2011 The SVUnit Authors.
+#  Copyright 2011-2022 The SVUnit Authors.
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -40,6 +40,7 @@ my $mock;
 my $uvm;
 my $wavedrom;
 my @directory;
+my $enable_experimental;
 my $help;
 
 
@@ -56,6 +57,7 @@ sub usage() {
   print "  -U|--uvm                 : build SVUnit with UVM\n";
   print "  -w|--wavedrom            : process json files as wavedrom output\n";
   print "     --directory           : only build svunit on selected directories\n";
+  print "     --enable-experimental : enable experimental features\n";
   print "  -h|--help                : prints this help screen\n";
   print "\n";
   exit 1;
@@ -95,17 +97,19 @@ sub buildTestrunner
       no_chdir => 0
     }, $outdir);
 
-  if (!defined $testsuites) {
+  if (!defined $testsuites && !$enable_experimental) {
     unlink ".svunit.f";
     return 1;
   }
 
-  else {
-    system("$cmd$testsuites");
-    system("mv $outdir/testrunner.sv $outdir/.testrunner.sv");
-    $FILELIST->print(".testrunner.sv\n");
-    return 0;
+  if ($enable_experimental) {
+    $cmd = "$cmd --run-self-registered-tests";
   }
+
+  system("$cmd$testsuites");
+  system("mv $outdir/testrunner.sv $outdir/.testrunner.sv");
+  $FILELIST->print(".testrunner.sv\n");
+  return 0;
 }
 
 
@@ -179,6 +183,7 @@ GetOptions("o|out=s" => \$outdir,
            "U|uvm" => \$uvm,
            "w|wavedrom" => \$wavedrom,
            "directory=s" => \@directory,
+           "enable-experimental" => \$enable_experimental,
            "h|help" => \$help
            ) or usage();
 
@@ -204,6 +209,11 @@ if ($uvm) {
 }
 if ($wavedrom) {
   system("python3 $ENV{SVUNIT_INSTALL}/bin/wavedromSVUnit.py");
+}
+
+if ($enable_experimental) {
+  $FILELIST->print("+incdir+$ENV{SVUNIT_INSTALL}/src/experimental/sv\n");
+  $FILELIST->print("$ENV{SVUNIT_INSTALL}/src/experimental/sv/svunit.sv\n");
 }
 
 getFilelists;
