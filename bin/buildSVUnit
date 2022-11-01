@@ -102,12 +102,10 @@ sub buildTestrunner
     return 1;
   }
 
-  else {
-    system("$cmd$testsuites");
-    system("mv $outdir/testrunner.sv $outdir/.testrunner.sv");
-    $FILELIST->print(".testrunner.sv\n");
-    return 0;
-  }
+  system("$cmd$testsuites");
+  system("mv $outdir/testrunner.sv $outdir/.testrunner.sv");
+  $FILELIST->print(".testrunner.sv\n");
+  return 0;
 }
 
 
