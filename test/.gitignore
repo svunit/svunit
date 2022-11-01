@@ -3,6 +3,10 @@ __pycache__
 .venv
 /.pytest_cache/
 
+# pytest-html
+*.html
+assets/
+
 # test specific generated files
 frmwrk_3/.testsuite.gold
 frmwrk_3/test_unit_test.sv

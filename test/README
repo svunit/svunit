@@ -10,6 +10,15 @@ The test suite uses 'pytest'. It requires at least Python 3.6. To set up call:
 
 
 =================
+Execution
+=================
+
+To run, call:
+
+    pytest --html=report.html
+
+
+=================
 Test descriptions
 =================
 
