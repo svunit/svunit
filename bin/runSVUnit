@@ -170,7 +170,17 @@ if ($simulator eq "modelsim" or $simulator eq "riviera") {
 
 # add the uvm switches if necessary
 if (defined $uvm) {
-  $cmd .= " -uvm" if ($simulator eq "xrun" or $simulator eq "irun");
+  if ($simulator eq "xrun" or $simulator eq "irun") {
+    if (defined $ENV{UVM_HOME} and $enable_experimental) {
+      # use user-specified UVM install
+      $cmd .= " -uvmhome $ENV{UVM_HOME}";
+      $cmd .= " -uvmnocdnsextra";
+    }
+    else{
+      # else, use vendor-provided UVM install
+      $cmd .= " -uvm";
+    }
+  }
   $cmd .= " -ntb_opts uvm" if $simulator eq "vcs";
   $cmd .= ' +incdir+$UVM_HOME/src $UVM_HOME/src/uvm.sv -sv_lib $UVM_HOME/src/dpi/libuvm_dpi.so' if $simulator eq "dsim";
   push @defines, "RUN_SVUNIT_WITH_UVM";
