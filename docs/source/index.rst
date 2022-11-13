@@ -35,3 +35,4 @@ Contents
    special_considerations_for_unit_testing_uvm_components
    running_unit_tests
    simulator_output
+   support_and_more_information
