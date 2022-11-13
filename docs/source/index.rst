@@ -36,3 +36,4 @@ Contents
    running_unit_tests
    simulator_output
    support_and_more_information
+   user_guide_feedback
