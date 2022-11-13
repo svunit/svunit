@@ -15,25 +15,17 @@ The feature characteristic of SVUnit is ease-of-use, meaning developers can be u
    :caption: Contents:
 
 
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
-
-
 Contents
 --------
 
 .. toctree::
 
-   structure_and_workflow
-   installation_and_setup
-   creating_a_unit_test_template
-   writing_unit_tests
-   special_considerations_for_unit_testing_uvm_components
-   running_unit_tests
-   simulator_output
-   support_and_more_information
-   user_guide_feedback
+    structure_and_workflow
+    installation_and_setup
+    creating_a_unit_test_template
+    writing_unit_tests
+    special_considerations_for_unit_testing_uvm_components
+    running_unit_tests
+    simulator_output
+    support_and_more_information
+    user_guide_feedback
