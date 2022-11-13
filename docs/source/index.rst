@@ -31,3 +31,4 @@ Contents
    structure_and_workflow
    installation_and_setup
    creating_a_unit_test_template
+   writing_unit_tests
