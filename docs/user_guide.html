@@ -1,56 +1,6 @@
 <title>SVUnit User Guide | AgileSoC</title>
 
 
-<h1><span id="Running_Unit_Tests">Running Unit Tests</span></h1>
-<p>SVUnit unit tests are run using runSVUnit. Usage of runSVUnit is as follows&#8230;</p>
-<p><img src="user_guide_files/Screen-Shot-2015-07-03-at-3.59.08-PM.png" width="640" height="152" data-recalc-dims="1"/></p>
-
-<h2><span id="Choosing_a_Simulator">Choosing a Simulator</span></h2>
-<p>SVUnit can be run using most commonly used EDA simulators using the &#8216;-s&#8217; switch. Supported simulators currently include Mentor Graphics Questa, Cadence Incisive, Synopsys VCS and Aldec Riviera PRO.</p>
-
-<h2><span id="Logging">Logging</span></h2>
-<p>By default, simulation output is written to run.log. The default location can be overridden using the &#8216;-l&#8217; switch.</p>
-
-<h2><span id="Specifying_Command-line_Macros">Specifying Command-line Macros</span></h2>
-<p>SVUnit will pass command line macro defines specified by the &#8216;-d&#8217; switch directly to the simulator.</p>
-
-<h2><span id="AddingFiles_For_Simulation">Adding Files For Simulation</span></h2>
-<p>Through the use of `include directives, both the unit test template and corresponding UUT file are included in compilation making it possible to build and verify on simple designs without any need to specify or maintain file lists. As designs grow, however, more files can be added using standard simulator file lists and the &#8216;-f&#8217; switch.</p>
-<p><em>NOTE:</em> The file svunit.f is automatically included for compilation provided it exists. Thus, files can be added to svunit.f without having to specify &#8216;-f svunit.f&#8217; on the command line.</p>
-
-<h2><span id="Adding_Run_Time_andor_Compile_Time_Options">Adding Run Time and/or Compile Time Options</span></h2>
-<p>It is possible to specified compile and run time options using the &#8216;-c_arg&#8217; and &#8216;-r_arg&#8217; switches respectively. All compile and run time arguments are passed directly to the simulator command line.</p>
-
-<h2><span id="Enable_UVM_Component_Unit_Testing">Enable UVM Component Unit Testing</span></h2>
-<p>For verification engineers unit testing UVM-based components, the &#8216;-U&#8217; switch must be specified to include relevant run-flow handling.</p>
-
-<h2><span id="Specifying_a_Simulation_Directory">Specifying a Simulation Directory</span></h2>
-<p>By default, SVUnit is run in the current working directory. However, to avoid mixing source files with simulation output, it is possible to change the location where SVUnit is built and simulated using the &#8216;-o&#8217; switch. It is an error to use the &#8216;-o&#8217; switch to runSVUnit that doesn&#8217;t exist.</p>
-
-<h2><span id="Specifying_Unit_Tests_to_be_Run">Specifying Unit Tests to be Run</span></h2>
-<p>By default, runSVUnit finds and simulates all unit test templates within a given parent directory. For short runs, this is recommended practice. However, if simulation times grow to the point where they are long and cumbersome, it is possible to specify specific unit test templates to be run using the &#8216;-t&#8217; switch. For example, if a parent directory has 12 unit test templates but you only want to run mine_unit_test.sv, you can use the &#8216;-t&#8217; switch as:</p>
-<p><em>&gt; runSVunit -t mine_unit_test.sv -s &lt;your simulator&gt;</em></p>
-<p>The &#8216;-t&#8217; switch can be used to specify multiple unit test templates as:</p>
-<p><em>&gt; runSVunit -t mine_unit_test.sv -t yours_unit_test.sv -s &lt;your simulator&gt;</em></p>
-
-<p>It's also possible to restrict which individual tests should run. This is done using the &#8216;--filter&#8217; option.</p>
-<p>The following call runs only some_test defined in some_testcase:</p>
-<p><em>&gt; runSVUnit --filter some_testcase.some_test</em></p>
-<p>The following call runs all tests called some_test regardless of which testcase they are defined in:</p>
-<p><em>&gt; runSVUnit --filter *.some_test</em></p>
-<p>The following call runs all tests defined in some_testcase:</p>
-<p><em>&gt; runSVUnit --filter some_testcase.*</em></p>
-<p>
-The previous command is conceptually similar to using the &#8216;-t&#8217; option.
-While the runtime behavior is the same, it is slightly different in terms of what gets compiled.
-Using &#8216;-t&#8217; selects what gets compiled and by extension limits what can be run.
-Using &#8216;--filter&#8217; only affects which of the tests that were compiled should run, but doesn't control what gets compiled.
-Both options are useful, as they serve different purposes.
-The &#8216;-t&#8217; option is helpful when API changes would require modifications to many unit test files, but you would like to update them one after the other.
-It is also a very blunt tool, as compilation can only be handled at the file level.
-The &#8216;--filter&#8217; option can be used to focus on finer subsets of tests.
-</p>
-
 <h1><span id="Simulator_Output">Simulator Output</span></h1>
 <p>Using built-in logging macros, the logged SVUnit output shows step-by-step run status for each test, unit test template and test suite as well as a cumulative result for the testrunner.</p>
 <p><img src="user_guide_files/Screen-Shot-2015-07-08-at-11.11.01-AM.png" width="640" height="225" data-recalc-dims="1"/></p>
@@ -61,5 +11,5 @@ The &#8216;--filter&#8217; option can be used to focus on finer subsets of tests
 
 
 <h1><span id="User_Guide_Feedback">User Guide Feedback</span></h1>
-<p>It&#8217;d be a big help for me to get your feedback and direction so I can make sure the user guide is actually helping SVUnit users. Please let me know what you think!</p>
+<p>It'd be a big help for me to get your feedback and direction so I can make sure the user guide is actually helping SVUnit users. Please let me know what you think!</p>
 <p>&nbsp;</p>

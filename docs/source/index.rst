@@ -33,3 +33,4 @@ Contents
    creating_a_unit_test_template
    writing_unit_tests
    special_considerations_for_unit_testing_uvm_components
+   running_unit_tests
