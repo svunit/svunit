@@ -4,7 +4,7 @@ Running Unit Tests
 SVUnit unit tests are run using runSVUnit. Usage of runSVUnit is as follows:
 
 .. image:: ../user_guide_files/Screen-Shot-2015-07-03-at-3.59.08-PM.png
-  :width: 640
+    :width: 640
 
 
 Choosing a Simulator
