@@ -34,3 +34,4 @@ Contents
    writing_unit_tests
    special_considerations_for_unit_testing_uvm_components
    running_unit_tests
+   simulator_output
