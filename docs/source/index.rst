@@ -32,3 +32,4 @@ Contents
    installation_and_setup
    creating_a_unit_test_template
    writing_unit_tests
+   special_considerations_for_unit_testing_uvm_components

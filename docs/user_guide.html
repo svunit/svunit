@@ -1,16 +1,6 @@
 <title>SVUnit User Guide | AgileSoC</title>
 
 
-<h1><span id="Special_Considerations_for_Unit_Testing_UVM_Components">Special Considerations for Unit Testing UVM Components</span></h1>
-<p>UVM components require additional infrastructure found in the svunit_uvm_mock_pkg. An additional switch, therefore, is included with create_unit_test.pl to generate a UVM component specific test case template. If, for example, class blah is derived from uvm_component, create_unit_test.pl would be invoked as&#8230;<br/>
-<em>&gt; create_unit_test.pl -uvm -class_name blah</em></p>
-<p>The UVM component test case template includes a UUT wrapper that can be used to instantiate any additional unit test infrastructure, like connections to TLM FIFOs or analysis ports, if required. The UUT wrapper in the test case template is output as&#8230;</p>
-<p><img src="user_guide_files/Screen-Shot-2016-02-17-at-6.57.47-AM.png" width="506" height="329" data-recalc-dims="1"/></p>
-<p>The template also includes calls to functions svunit_activate_uvm_component, svunit_deactivate_uvm_component, svunit_uvm_test_start and svunit_uvm_test_finish in the build, setup and teardown tasks to integrate the UVM runflow with the sequential test running behaviour of SVUnit.</p>
-<p><img src="user_guide_files/Screen-Shot-2016-02-17-at-11.25.24-AM.png" width="402" height="616" data-recalc-dims="1"/></p>
-<p>The activate/deactivate functions are used to isolate the component in the uvm_domain such that multiple uvm_components can be tested in series. The start/finish functions are used to invoke phase jumping such that unit tests against against a component can be run iteratively.</p>
-
-
 <h1><span id="Running_Unit_Tests">Running Unit Tests</span></h1>
 <p>SVUnit unit tests are run using runSVUnit. Usage of runSVUnit is as follows&#8230;</p>
 <p><img src="user_guide_files/Screen-Shot-2015-07-03-at-3.59.08-PM.png" width="640" height="152" data-recalc-dims="1"/></p>
