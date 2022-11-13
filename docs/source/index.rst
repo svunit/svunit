@@ -15,10 +15,17 @@ The feature characteristic of SVUnit is ease-of-use, meaning developers can be u
    :caption: Contents:
 
 
-
 Indices and tables
 ==================
 
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
+
+
+Contents
+--------
+
+.. toctree::
+
+   structure_and_workflow
