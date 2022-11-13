@@ -29,3 +29,4 @@ Contents
 .. toctree::
 
    structure_and_workflow
+   installation_and_setup
