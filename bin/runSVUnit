@@ -43,6 +43,7 @@ my $simulator;
 my @defines;
 my @filelists;
 my $uvm;
+my $uvmopts = "";
 my $wavedrom;
 my @directory;
 my @simargs;
@@ -65,6 +66,7 @@ sub usage () {
   print "  -r|--r_arg <option>      : specify additional runtime options\n";
   print "  -c|--c_arg <option>      : specify additional compile options\n";
   print "  -U|--uvm                 : run SVUnit with UVM\n";
+  print "     --uvm_opts            : specify additional UVM options\n";
   print "  -o|--out                 : output directory for tmp and simulation files\n";
   print "  -t|--test                : specifies a unit test to run (multiple can be given)\n";
   print "  -m|--mixedsim <vhdlfile> : consolidated file list with VHDL files and command line switches\n";
@@ -98,6 +100,7 @@ GetOptions("l|log=s" => \$logfile,
            "d|define=s" => \@defines,
            "f|filelist=s" => \@filelists,
            "U|uvm" => \$uvm,
+           "uvm_opts=s" => \$uvmopts,
            "r|r_arg=s" => \@simargs,
            "c|c_arg=s" => \@compileargs,
            "o|out=s" => \$outdir,
@@ -173,6 +176,7 @@ if (defined $uvm) {
   $cmd .= " -uvm" if ($simulator eq "xrun" or $simulator eq "irun");
   $cmd .= " -ntb_opts uvm" if $simulator eq "vcs";
   $cmd .= ' +incdir+$UVM_HOME/src $UVM_HOME/src/uvm.sv -sv_lib $UVM_HOME/src/dpi/libuvm_dpi.so' if $simulator eq "dsim";
+  $cmd .= " $uvmopts" if (defined $uvmopts);
   push @defines, "RUN_SVUNIT_WITH_UVM";
 }
 
