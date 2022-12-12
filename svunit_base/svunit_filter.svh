@@ -59,7 +59,7 @@ class filter;
   local function string get_filter_value_from_run_script();
     string result;
     if (!$value$plusargs("SVUNIT_FILTER=%s", result))
-      $fatal(0, "Expected to receive a plusarg called 'SVUNIT_FILTER'");
+      result = "*";
     return result;
   endfunction
 
