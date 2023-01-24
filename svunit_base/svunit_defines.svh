@@ -151,7 +151,10 @@
   REQUIRES ACCESS TO error_count
 */
 `define SVTEST(_NAME_) \
-  if (svunit_pkg::_filter.is_selected(svunit_ut, `"_NAME_`")) begin : _NAME_ \
+  `ifndef VERILATOR \
+    if (svunit_pkg::_filter.is_selected(svunit_ut, `"_NAME_`")) \
+  `endif // VERILATOR \
+  begin : _NAME_ \
     string _testName = `"_NAME_`"; \
     integer local_error_count = svunit_ut.get_error_count(); \
     string fileName; \
@@ -180,8 +183,10 @@
           end \
           `SVUNIT_FUSE \
         join_any \
+       `ifndef VERILATOR \
         #0; \
         disable fork; \
+       `endif // VERILATOR \
       end \
     join \
     svunit_ut.stop(); \

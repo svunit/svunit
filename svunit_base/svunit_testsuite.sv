@@ -98,7 +98,11 @@ function void svunit_testsuite::report();
     list_of_testcases[i].report();
 
   begin
-    svunit_testcase match[$] = list_of_testcases.find() with (item.get_results() == PASS);
+    `ifndef VERILATOR
+      svunit_testcase match[$] = list_of_testcases.find() with (item.get_results() == PASS);
+    `else
+      svunit_testcase match[$];
+    `endif // VERILATOR
     pass_cnt = match.size();
   end
 

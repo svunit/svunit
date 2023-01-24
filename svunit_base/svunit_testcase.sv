@@ -120,7 +120,12 @@ endfunction
 */
 task svunit_testcase::give_up();
   event never;
-  @(never);
+  `ifndef VERILATOR
+   @(never);
+  `else
+   /* verilator lint_off WAITCONST */
+   wait (0);
+  `endif // VERILATOR
 endtask
 
 
