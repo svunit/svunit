@@ -3,6 +3,7 @@
   /* local */ typedef string array_of_string[];
 
 
+  /* verilator lint_off SYMRSVDWORD */
   static function array_of_string split_by_char(string char, string s);
     string parts[$];
     int last_char_position = -1;

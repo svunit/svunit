@@ -20,4 +20,6 @@
 svunit_testcase current_tc;
 
 // The filter to apply on tests
-/* local */ const filter _filter = filter::get();
+`ifndef VERILATOR
+  /* local */ const filter _filter = filter::get();
+`endif // VERILATOR
