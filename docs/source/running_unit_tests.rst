@@ -1,11 +1,23 @@
 Running Unit Tests
 ==================
 
-SVUnit unit tests are run using runSVUnit. Usage of runSVUnit is as follows:
+SVUnit unit tests are run using runSVUnit. Usage of runSVUnit is as follows::
 
-.. image:: ../user_guide_files/Screen-Shot-2015-07-03-at-3.59.08-PM.png
-    :width: 640
-
+  Usage:  runSVUnit [-s|--sim <simulator> -l|--log <log> -d|--define <macro> -f|--filelist <file> -U|-uvm -m|-mixedsim <vhdlfile>
+                    -r|--r_arg <option> -c|--c_arg <option> -o|--out <dir> -t|--test <test> --filter <filter>]
+    -s|--sim <simulator>     : simulator is either of questa, modelsim, riviera, ius, xcelium, vcs, dsim or xsim
+    -l|--log <log>           : simulation log file (default: run.log)
+    -d|--define <macro>      : appended to the command line as +define+<macro>
+    -f|--filelist <file>     : some verilog file list
+    -r|--r_arg <option>      : specify additional runtime options
+    -c|--c_arg <option>      : specify additional compile options
+    -U|--uvm                 : run SVUnit with UVM
+    -o|--out                 : output directory for tmp and simulation files
+    -t|--test                : specifies a unit test to run (multiple can be given)
+    -m|--mixedsim <vhdlfile> : consolidated file list with VHDL files and command line switches
+    -w|--wavedrom            : process json files as wavedrom output
+       --filter <filter>     : specify which tests to run, as <test_module>.<test_name>
+    -h|--help                : prints this help screen
 
 Choosing a Simulator
 --------------------
