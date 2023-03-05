@@ -130,7 +130,7 @@ push @defines, qq!SVUNIT_VERSION='"$version"'!;
 
 # Extract simulator from PATH if nothing passed as argument
 if ($simulator eq "") {
-  my @sims = qw(xrun irun qrun vsim vcs dsim);
+  my @sims = qw(xrun irun qrun vsim vcs dsim vlt);
   foreach my $sim (@sims) {
     if (system("which $sim > /dev/null 2>&1") == 0) {
       $simulator = $sim;
@@ -147,8 +147,9 @@ $simulator =~ tr/A-Z/a-z/;
 $simulator =~ s/questa/modelsim/;
 $simulator =~ s/ius/irun/;
 $simulator =~ s/xcelium/xrun/;
+$simulator =~ s/vlt/verilator/;
 
-if (not grep { $_ eq $simulator } qw(xrun irun modelsim riviera vcs dsim qrun)) {
+if (not grep { $_ eq $simulator } qw(xrun irun modelsim riviera vcs dsim qrun verilator)) {
   print("Could not determine simulator. None found on 'PATH' and none specified via command line\n");
   usage()
 }
@@ -163,6 +164,8 @@ if ($simulator eq "modelsim" or $simulator eq "riviera") {
 } elsif ($simulator eq "vcs") {
   $cmd .= "$simulator -R -sverilog -l $logfile";
   $cmd .= "-f $vhdlfile " if $vhdlfile;
+} elsif ($simulator eq "verilator") {
+  $cmd .= "verilator --Mdir vbuild --prefix Vtop --binary -Wno-INITIALDLY -Wno-lint --top-module testrunner --assert ";
 } else {
   $cmd .= "$simulator -l $logfile ";
   $cmd .= "-f $vhdlfile " if $vhdlfile;
@@ -191,11 +194,18 @@ if ($simulator eq "modelsim" or $simulator eq "riviera") {
     push @simargs, "-c";
   }
   $cmd .= qq! @compileargs; vsim @simargs -lib work -do "run -all; quit" -l $logfile testrunner!;
+} elsif ($simulator eq "verilator") {
+  $cmd .= " @compileargs @simargs -top testrunner 2>&1 | tee vlt_comp.log ";
+  $cmd .= " ; ./vbuild/Vtop 2>&1 | tee vlt_comp.log ";
 } else {
-  $cmd .= " @compileargs @simargs -top testrunner";
+  $cmd .= " @compileargs @simargs -top testrunner ";
 }
 
-$cmd .= " +SVUNIT_FILTER=$filter";
+if ($simulator eq "verilator") {
+  # No filter support yet on Verilator
+} else {
+  $cmd .= " +SVUNIT_FILTER=$filter";
+}
 
 my $build_cmd = "buildSVUnit -o $outdir";
 
@@ -219,7 +229,9 @@ if (defined $uvm) {
 }
 
 # run!!
+print $build_cmd . "\n";
 if (system("$build_cmd")) {
+  print ("Build failed\n");
   exit -1;
 }
 print $cmd . "\n";

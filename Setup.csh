@@ -19,7 +19,7 @@
 ############################################################################
 
 setenv SVUNIT_INSTALL `pwd`
-if ( $PATH =~ *$SVUNIT_INSTALL* ) then
+if ( "$PATH" =~ "*$SVUNIT_INSTALL*" ) then
 else
-  setenv PATH ${PATH}:$SVUNIT_INSTALL/bin
+  setenv PATH "${PATH}:$SVUNIT_INSTALL/bin"
 endif

@@ -32,7 +32,10 @@ class testcase extends svunit_testcase;
       svunit_testcase svunit_ut = this;
 
       // More or less what `SVTEST expands to
-      if (svunit_pkg::_filter.is_selected(svunit_ut, test_name)) begin
+      `ifndef VERILATOR
+        if (svunit_pkg::_filter.is_selected(svunit_ut, test_name)) begin
+      `endif // VERILATOR
+       begin
         string _testName = test_name;
         integer local_error_count = svunit_ut.get_error_count();
         string fileName;
