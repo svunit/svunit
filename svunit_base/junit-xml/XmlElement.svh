@@ -64,4 +64,4 @@ class XmlElement;
     return result;
   endfunction
 
-endclas
+endclass
