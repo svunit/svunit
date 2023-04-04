@@ -41,7 +41,7 @@ class svunit_testrunner extends svunit_base;
   `ifndef VERILATOR
   local 
   `endif // VERILATOR
-  function void write_xml();
+  local function void write_xml();
  //   `ifndef VERILATOR
     int xml;
     junit_xml::TestSuite test_suites[$];
