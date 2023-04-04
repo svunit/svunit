@@ -38,7 +38,11 @@ class svunit_testrunner extends svunit_base;
   extern function void report();
 
 
-  local function void write_xml();
+  `ifndef VERILATOR
+  local 
+  `endif // VERILATOR
+  function void write_xml();
+    `ifndef VERILATOR
     int xml = $fopen("tests.xml", "w");
     junit_xml::TestSuite test_suites[$];
     foreach (list_of_suites[i]) begin
@@ -46,6 +50,7 @@ class svunit_testrunner extends svunit_base;
     end
     $fwrite(xml, junit_xml::to_xml_report_string(test_suites));
     $fwrite(xml, "\n");
+    `endif // VERILATOR
   endfunction
 
 endclass
@@ -85,7 +90,11 @@ function void svunit_testrunner::report();
   string  success_str;
 
   begin
-    svunit_testsuite match[$] = list_of_suites.find() with (item.get_results() == PASS);
+    `ifndef VERILATOR
+      svunit_testsuite match[$] = list_of_suites.find() with (item.get_results() == PASS);
+    `else
+    svunit_testsuite match[$];
+    `endif // VERILATOR
     pass_cnt = match.size();
   end
 
