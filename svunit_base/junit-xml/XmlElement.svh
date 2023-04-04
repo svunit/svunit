@@ -50,9 +50,7 @@ class XmlElement;
       // XXX WORKAROUND Xcelium messes up the indentation if we try to inline the following
       // variable.
       string child_indent = { indent, "  " };
-//      `ifndef VERILATOR
-        result = { result, "\n", children[i].as_string_with_indent(child_indent) };
-//      `endif // VERILATOR
+      result = { result, "\n", children[i].as_string_with_indent(child_indent) };
     end
     result = { result, "\n", $sformatf("%s</%s>", indent, tag) };
     return result;
@@ -66,4 +64,4 @@ class XmlElement;
     return result;
   endfunction
 
-endclass
+endclas
