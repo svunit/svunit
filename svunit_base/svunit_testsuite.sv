@@ -100,7 +100,7 @@ function void svunit_testsuite::report();
   //Vivado Xsim 2020.2 gets into an infinite loop when using array.find
   //V5.008 of Verilator has an internal compile error when using array.find
   foreach(list_of_testcases[i]) begin
-    pass_cnt += (list_of_testcases[i].get_results() == PASS);
+    pass_cnt += 32'(list_of_testcases[i].get_results() == PASS);
   end
 
   if (pass_cnt == list_of_testcases.size()) begin
