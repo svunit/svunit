@@ -42,15 +42,16 @@ class svunit_testrunner extends svunit_base;
   local 
   `endif // VERILATOR
   function void write_xml();
-    `ifndef VERILATOR
-    int xml = $fopen("tests.xml", "w");
+ //   `ifndef VERILATOR
+    int xml;
     junit_xml::TestSuite test_suites[$];
+    xml = $fopen("tests.xml", "w");
     foreach (list_of_suites[i]) begin
       test_suites.push_back(list_of_suites[i].as_junit_test_suite());
     end
     $fwrite(xml, junit_xml::to_xml_report_string(test_suites));
     $fwrite(xml, "\n");
-    `endif // VERILATOR
+  //  `endif // VERILATOR
   endfunction
 
 endclass
