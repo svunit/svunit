@@ -45,13 +45,13 @@ class XmlElement;
 
   local function string as_string_with_indent(string indent);
     string result;
-    `ifndef VERILATOR
-      result = $sformatf("%s<%s>", indent, get_start_tag_contents);
-    `else
-      string lv_vlt_s;
-      lv_vlt_s = get_start_tag_contents();
-      result = $sformatf("%s<%s>", indent, lv_vlt_s);
-    `endif // VERILATOR
+//    `ifndef VERILATOR
+    result = $sformatf("%s<%s>", indent, get_start_tag_contents());
+//    `else
+//      string lv_vlt_s;
+//      lv_vlt_s = get_start_tag_contents();
+//      result = $sformatf("%s<%s>", indent, lv_vlt_s);
+//    `endif // VERILATOR
     foreach (children[i]) begin
       // XXX WORKAROUND Xcelium messes up the indentation if we try to inline the following
       // variable.
