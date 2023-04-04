@@ -90,13 +90,10 @@ function void svunit_testrunner::report();
   int     pass_cnt;
   string  success_str;
 
-  begin
-    `ifndef VERILATOR
-      svunit_testsuite match[$] = list_of_suites.find() with (item.get_results() == PASS);
-    `else
-    svunit_testsuite match[$];
-    `endif // VERILATOR
-    pass_cnt = match.size();
+  //Vivado Xsim 2020.2 gets into an infinite loop when using array.find
+  //v5.008 of Verilator reports an internal error when using array.find
+  foreach(list_of_suites[i]) begin
+    pass_cnt += 32'(list_of_suites[i].get_results() == PASS);
   end
 
   if (pass_cnt == list_of_suites.size()) begin
