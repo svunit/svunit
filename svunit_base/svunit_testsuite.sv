@@ -91,7 +91,7 @@ endtask
   This task reports the results for the unit tests
 */
 function void svunit_testsuite::report();
-  int     pass_cnt;
+  int     pass_cnt = 0;
   string  success_str;
 
   foreach(list_of_testcases[i])
