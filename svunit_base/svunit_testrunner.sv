@@ -82,7 +82,7 @@ endfunction
   This task reports the results for the test suites
 */
 function void svunit_testrunner::report();
-  int     pass_cnt;
+  int     pass_cnt = 0;
   string  success_str;
 
   //Vivado Xsim 2020.2 gets into an infinite loop when using array.find
