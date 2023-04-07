@@ -20,11 +20,9 @@
 /**
  * The filter expression that controls which tests should run.
  */
-
-// VW_VLT
-typedef class filter_for_single_pattern;
 class filter;
 
+  /* local */ typedef class filter_for_single_pattern;
 
   /* local */ typedef filter_for_single_pattern array_of_filters[];
   /* local */ typedef string array_of_string[];
@@ -38,8 +36,8 @@ class filter;
   local static const string error_msg = "Expected the filter to be of the type '<test_case>.<test>[:<test_case>.<test>]'";
   local static filter single_instance;
 
-  local filter_for_single_pattern positive_subfilters[];
-  local filter_for_single_pattern negative_subfilters[];
+  local const filter_for_single_pattern positive_subfilters[];
+  local const filter_for_single_pattern negative_subfilters[];
 
 
   static function filter get();
@@ -118,15 +116,10 @@ class filter;
   endfunction
 
 
-
-endclass
-
-// VW_VLT
   class filter_for_single_pattern;
 
-    local string testcase;
-    local string test;
-  local static const string error_msg = "Expected the filter to be of the type '<test_case>.<test>[:<test_case>.<test>]'";
+    local const string testcase;
+    local const string test;
 
     function new(string pattern);
       int unsigned dot_idx = get_dot_idx(pattern);
@@ -138,34 +131,22 @@ endclass
       disallow_partial_wildcards("test", test);
     endfunction
 
-  `ifndef VERILATOR
-  local function int unsigned get_dot_idx(string filter);
-`else
-  function int unsigned get_dot_idx(string lv_filter);
-  `endif // VERILATOR
-      int unsigned first_dot_idx = get_first_dot_idx(lv_filter);
-      ensure_no_more_dots(lv_filter, first_dot_idx);
+    local function int unsigned get_dot_idx(string filter);
+      int unsigned first_dot_idx = get_first_dot_idx(filter);
+      ensure_no_more_dots(filter, first_dot_idx);
       return first_dot_idx;
     endfunction
 
-  `ifndef VERILATOR
     local function int unsigned get_first_dot_idx(string filter);
-  `else
-    function int unsigned get_first_dot_idx(string lv_filter);
-  `endif // VERILATOR
-      for (int i = 0; i < lv_filter.len(); i++)
-        if (lv_filter[i] == ".")
+      for (int i = 0; i < filter.len(); i++)
+        if (filter[i] == ".")
           return i;
       $fatal(0, error_msg);
     endfunction
 
-  `ifndef VERILATOR
     local function void ensure_no_more_dots(string filter, int unsigned first_dot_idx);
-  `else
-    function void ensure_no_more_dots(string lv_filter, int unsigned first_dot_idx);
-    `endif // VERILATOR
-      for (int i = first_dot_idx+1; i < lv_filter.len(); i++)
-        if (lv_filter[i] == ".")
+      for (int i = first_dot_idx+1; i < filter.len(); i++)
+        if (filter[i] == ".")
           $fatal(0, error_msg);
     endfunction
 
@@ -195,3 +176,5 @@ endclass
     endfunction
 
   endclass
+
+endclass
