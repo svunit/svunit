@@ -163,6 +163,8 @@ if ($simulator eq "modelsim" or $simulator eq "riviera") {
 } elsif ($simulator eq "vcs") {
   $cmd .= "$simulator -R -sverilog -l $logfile";
   $cmd .= "-f $vhdlfile " if $vhdlfile;
+} elsif ($simulator eq "verilator") {
+  $cmd .= "verilator --binary --top-module testrunner";
 } else {
   $cmd .= "$simulator -l $logfile ";
   $cmd .= "-f $vhdlfile " if $vhdlfile;
