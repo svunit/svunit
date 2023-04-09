@@ -1,6 +1,6 @@
 //###########################################################################
 //
-//  Copyright 2011 The SVUnit Authors.
+//  Copyright 2011-2023 The SVUnit Authors.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -39,8 +39,11 @@ class svunit_testrunner extends svunit_base;
 
 
   local function void write_xml();
-    int xml = $fopen("tests.xml", "w");
+    int xml;
     junit_xml::TestSuite test_suites[$];
+
+    xml = $fopen("tests.xml", "w");
+
     foreach (list_of_suites[i]) begin
       test_suites.push_back(list_of_suites[i].as_junit_test_suite());
     end
