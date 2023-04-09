@@ -51,7 +51,7 @@ my $outdir = ".";
 my $clean;
 my $vhdlfile;
 my @tests;
-my $filter = '*';
+my $filter;
 my $enable_experimental;
 my $help;
 
@@ -195,7 +195,9 @@ if ($simulator eq "modelsim" or $simulator eq "riviera") {
   $cmd .= " @compileargs @simargs -top testrunner";
 }
 
-$cmd .= " +SVUNIT_FILTER=$filter";
+if (defined $filter) {
+  $cmd .= " +SVUNIT_FILTER=$filter";
+}
 
 my $build_cmd = "buildSVUnit -o $outdir";
 
