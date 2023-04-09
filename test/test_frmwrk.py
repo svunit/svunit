@@ -587,3 +587,31 @@ def test_absolute_path_for_directory_option_issues_error(tmp_path):
         assert run_result.returncode == 4
         assert b'absolute paths' in run_result.stdout
         assert b'not yet supported' in run_result.stdout
+
+
+def test_called_without_filter_option__no_plusarg_passed(tmpdir, monkeypatch):
+    with tmpdir.as_cwd():
+        fake_tool('xrun')
+
+        monkeypatch.setenv('PATH', get_path_without_sims())
+        monkeypatch.setenv('PATH', '.', prepend=os.pathsep)
+
+        pathlib.Path('dummy_unit_test.sv').write_text('dummy')
+
+        subprocess.check_call(['runSVUnit'])
+
+        assert '+SVUNIT_FILTER' not in pathlib.Path('fake_tool.log').read_text()
+
+
+def test_called_with_filter_option__plusarg_passed(tmpdir, monkeypatch):
+    with tmpdir.as_cwd():
+        fake_tool('xrun')
+
+        monkeypatch.setenv('PATH', get_path_without_sims())
+        monkeypatch.setenv('PATH', '.', prepend=os.pathsep)
+
+        pathlib.Path('dummy_unit_test.sv').write_text('dummy')
+
+        subprocess.check_call(['runSVUnit', '--filter', 'foo.bar'])
+
+        assert '+SVUNIT_FILTER=foo.bar' in pathlib.Path('fake_tool.log').read_text()
