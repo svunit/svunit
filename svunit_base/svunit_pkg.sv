@@ -33,6 +33,7 @@ package svunit_pkg;
   `include "svunit_testcase.sv"
   `include "svunit_testsuite.sv"
   `include "svunit_testrunner.sv"
+  `include "svunit_filter_for_single_pattern.svh"
   `include "svunit_filter.svh"
   `include "svunit_globals.svh"
 endpackage
