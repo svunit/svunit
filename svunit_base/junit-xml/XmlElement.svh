@@ -45,7 +45,7 @@ class XmlElement;
 
   local function string as_string_with_indent(string indent);
     string result;
-    result = $sformatf("%s<%s>", indent, get_start_tag_contents);
+    result = $sformatf("%s<%s>", indent, get_start_tag_contents());
     foreach (children[i]) begin
       // XXX WORKAROUND Xcelium messes up the indentation if we try to inline the following
       // variable.
