@@ -1,6 +1,6 @@
 //###########################################################################
 //
-//  Copyright 2021-2022 The SVUnit Authors.
+//  Copyright 2021-2023 The SVUnit Authors.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -131,22 +131,22 @@ class filter;
       disallow_partial_wildcards("test", test);
     endfunction
 
-    local function int unsigned get_dot_idx(string filter);
-      int unsigned first_dot_idx = get_first_dot_idx(filter);
-      ensure_no_more_dots(filter, first_dot_idx);
+    local function int unsigned get_dot_idx(string pattern);
+      int unsigned first_dot_idx = get_first_dot_idx(pattern);
+      ensure_no_more_dots(pattern, first_dot_idx);
       return first_dot_idx;
     endfunction
 
-    local function int unsigned get_first_dot_idx(string filter);
-      for (int i = 0; i < filter.len(); i++)
-        if (filter[i] == ".")
+    local function int unsigned get_first_dot_idx(string pattern);
+      for (int i = 0; i < pattern.len(); i++)
+        if (pattern[i] == ".")
           return i;
       $fatal(0, error_msg);
     endfunction
 
-    local function void ensure_no_more_dots(string filter, int unsigned first_dot_idx);
-      for (int i = first_dot_idx+1; i < filter.len(); i++)
-        if (filter[i] == ".")
+    local function void ensure_no_more_dots(string pattern, int unsigned first_dot_idx);
+      for (int i = first_dot_idx+1; i < pattern.len(); i++)
+        if (pattern[i] == ".")
           $fatal(0, error_msg);
     endfunction
 
