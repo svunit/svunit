@@ -19,7 +19,12 @@ def get_path_without_sims():
 
 def fake_tool(name):
     executable = pathlib.Path(name)
-    executable.write_text('echo "{} called" > fake_tool.log'.format(name))
+    script = [
+            'echo "{} called" > fake_tool.log'.format(name),
+            'echo "args:" >> fake_tool.log',
+            'printf "%s\n" "$@" >> fake_tool.log',
+            ]
+    executable.write_text('\n'.join(script))
     executable.chmod(0o700)
     return executable
 
