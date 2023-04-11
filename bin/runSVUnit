@@ -194,7 +194,7 @@ if ($simulator eq "modelsim" or $simulator eq "riviera") {
   }
   $cmd .= qq! @compileargs; vsim @simargs -lib work -do "run -all; quit" -l $logfile testrunner!;
 } elsif ($simulator eq "verilator") {
-  $cmd .= " @compileargs -top testrunner; obj_dir/Vtestrunner @simargs"
+  $cmd .= " @compileargs -top testrunner; obj_dir/Vtestrunner @simargs | tee $logfile"
 } else {
   $cmd .= " @compileargs @simargs -top testrunner";
 }
