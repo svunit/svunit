@@ -51,14 +51,14 @@ my $outdir = ".";
 my $clean;
 my $vhdlfile;
 my @tests;
-my $filter = '*';
+my $filter;
 my $enable_experimental;
 my $help;
 
 sub usage () {
   print "Usage:  runSVUnit [-s|--sim <simulator> -l|--log <log> -d|--define <macro> -f|--filelist <file> -U|-uvm -m|-mixedsim <vhdlfile>\n";
   print "                  -r|--r_arg <option> -c|--c_arg <option> -o|--out <dir> -t|--test <test> --filter <filter>]\n";
-  print "  -s|--sim <simulator>     : simulator is either of questa, modelsim, riviera, ius, xcelium, vcs or dsim\n";
+  print "  -s|--sim <simulator>     : simulator is either of questa, modelsim, riviera, ius, xcelium, vcs, dsim, verilator\n";
   print "  -l|--log <log>           : simulation log file (default: run.log)\n";
   print "  -d|--define <macro>      : appended to the command line as +define+<macro>\n";
   print "  -f|--filelist <file>     : some verilog file list\n";
@@ -130,7 +130,7 @@ push @defines, qq!SVUNIT_VERSION='"$version"'!;
 
 # Extract simulator from PATH if nothing passed as argument
 if ($simulator eq "") {
-  my @sims = qw(xrun irun qrun vsim vcs dsim vlt);
+  my @sims = qw(xrun irun qrun vsim vcs dsim verilator);
   foreach my $sim (@sims) {
     if (system("which $sim > /dev/null 2>&1") == 0) {
       $simulator = $sim;
@@ -147,7 +147,6 @@ $simulator =~ tr/A-Z/a-z/;
 $simulator =~ s/questa/modelsim/;
 $simulator =~ s/ius/irun/;
 $simulator =~ s/xcelium/xrun/;
-$simulator =~ s/vlt/verilator/;
 
 if (not grep { $_ eq $simulator } qw(xrun irun modelsim riviera vcs dsim qrun verilator)) {
   print("Could not determine simulator. None found on 'PATH' and none specified via command line\n");
@@ -165,7 +164,7 @@ if ($simulator eq "modelsim" or $simulator eq "riviera") {
   $cmd .= "$simulator -R -sverilog -l $logfile";
   $cmd .= "-f $vhdlfile " if $vhdlfile;
 } elsif ($simulator eq "verilator") {
-  $cmd .= "verilator --Mdir vbuild --prefix Vtop --binary -Wno-INITIALDLY -Wno-lint --top-module testrunner --assert ";
+  $cmd .= "verilator --binary";
 } else {
   $cmd .= "$simulator -l $logfile ";
   $cmd .= "-f $vhdlfile " if $vhdlfile;
@@ -194,16 +193,11 @@ if ($simulator eq "modelsim" or $simulator eq "riviera") {
     push @simargs, "-c";
   }
   $cmd .= qq! @compileargs; vsim @simargs -lib work -do "run -all; quit" -l $logfile testrunner!;
-} elsif ($simulator eq "verilator") {
-  $cmd .= " @compileargs @simargs -top testrunner 2>&1 | tee vlt_comp.log ";
-  $cmd .= " ; ./vbuild/Vtop 2>&1 | tee vlt_comp.log ";
 } else {
-  $cmd .= " @compileargs @simargs -top testrunner ";
+  $cmd .= " @compileargs @simargs -top testrunner";
 }
 
-if ($simulator eq "verilator") {
-  # No filter support yet on Verilator
-} else {
+if (defined $filter) {
   $cmd .= " +SVUNIT_FILTER=$filter";
 }
 
