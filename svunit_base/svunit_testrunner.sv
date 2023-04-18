@@ -30,10 +30,19 @@ class svunit_testrunner extends svunit_base;
 
 
   /*
+    Variable to store seed randomly generated at simulation startup
+    This can then be referenced to initialise the RNGs
+    in a predictable manner on a per test basis
+  */
+  local int unsigned     svunit_initial_seed;
+
+
+  /*
     Interface
   */
   extern function new(string name);
   extern function void add_testsuite(svunit_testsuite suite);
+  extern function int unsigned get_initial_seed();
 
   extern function void report();
 
@@ -60,8 +69,18 @@ endclass
 */
 function svunit_testrunner::new(string name);
   super.new(name);
+  this.svunit_initial_seed = $urandom();
+  `INFO($sformatf("Initial svunit seed %0d", this.get_initial_seed()));
 endfunction
 
+/*
+  Method: get_initial_seed
+  Returns the initial seed generated at simulation startup
+*/
+
+function int unsigned svunit_testrunner::get_initial_seed();
+  return this.svunit_initial_seed;
+endfunction
 
 /*
   Method: add_testsuite
