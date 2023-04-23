@@ -452,3 +452,11 @@ endmodule
             cwd=tmp_path)
     assert 'FAILED' not in log.read_text()
     assert 'some_passing_test' in log.read_text()
+
+
+def test_verilator_does_not_accept_uvm(tmp_path):
+    cmdline_usage_error = 4
+    returncode = subprocess.call(
+            ['runSVUnit', '--sim', 'verilator', '--uvm'],
+            cwd=tmp_path)
+    assert returncode == cmdline_usage_error

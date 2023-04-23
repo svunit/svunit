@@ -119,6 +119,11 @@ foreach (@directory) {
     }
 }
 
+if ($simulator eq "verilator" && defined $uvm) {
+    print("Argument error: cannot run Verilator with UVM\n");
+    exit CMDLINE_USAGE_ERROR
+}
+
 clean();
 
 # version

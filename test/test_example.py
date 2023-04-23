@@ -18,6 +18,8 @@ def test_example_modules_apb_slave(datafiles, simulator):
 @all_files_in_dir((EXAMPLES_DIR / 'uvm/uvm_report_mock').as_posix())
 @all_available_simulators()
 def test_example_uvm_report_mock(datafiles, simulator):
+    if simulator == 'verilator':
+        pytest.skip("Verilator doesn't support UVM")
     expect_passing_example(datafiles, simulator, ['-uvm', '-define', 'RUN_SVUNIT_WITH_UVM_REPORT_MOCK'])
 
 
@@ -26,6 +28,8 @@ def test_example_uvm_report_mock(datafiles, simulator):
 def test_example_uvm_simple_model(datafiles, simulator):
     if simulator == 'dsim':
         pytest.skip("Issue when running with 'dsim' that needs to be debugged")
+    if simulator == 'verilator':
+        pytest.skip("Verilator doesn't support UVM")
     expect_passing_example(datafiles, simulator, ['-uvm'])
 
 
@@ -35,6 +39,8 @@ def test_example_uvm_simple_model(datafiles, simulator):
 def test_example_uvm_simple_model_2(datafiles, simulator):
     if simulator == 'dsim':
         pytest.skip("Issue when running with 'dsim' that needs to be debugged")
+    if simulator == 'verilator':
+        pytest.skip("Verilator doesn't support UVM")
     expect_passing_example(datafiles, simulator, ['-uvm'])
 
 
