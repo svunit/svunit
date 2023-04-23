@@ -34,3 +34,6 @@ metrics_history.db
 # QuestaSim/ModelSim
 work/
 qrun.out/
+
+# Verilator
+obj_dir/
