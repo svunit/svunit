@@ -168,10 +168,10 @@ def test_sim_11(datafiles, simulator):
 @all_available_simulators()
 def test_sim_12(datafiles, simulator):
     with datafiles.as_cwd():
-        # TODO Skipping this test for 'dsim' gives the impression that we have to do something to
-        # make it work. We should remove 'dsim' from the list of simulators we test with VHDL.
-        if simulator == 'dsim':
-            pytest.skip("'dsim' doesn't support VHDL")
+        # TODO Skipping this test for 'dsim' and 'verilator' gives the impression that we have to do something to
+        # make it work. We should remove these from the list of simulators we test with VHDL.
+        if simulator in ['dsim', 'verilator']:
+            pytest.skip(f"'{simulator}' doesn't support VHDL")
         if simulator == 'vcs':
             print('WARNING: VCS mixed language simulation requires multistage compilation.')
             print('         Unfortunately, it has not been implemented yet.')

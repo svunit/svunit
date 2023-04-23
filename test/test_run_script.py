@@ -460,3 +460,11 @@ def test_verilator_does_not_accept_uvm(tmp_path):
             ['runSVUnit', '--sim', 'verilator', '--uvm'],
             cwd=tmp_path)
     assert returncode == cmdline_usage_error
+
+
+def test_verilator_does_not_accept_mixedsim(tmp_path):
+    cmdline_usage_error = 4
+    returncode = subprocess.call(
+            ['runSVUnit', '--sim', 'verilator', '--mixedsim', 'dummy'],
+            cwd=tmp_path)
+    assert returncode == cmdline_usage_error

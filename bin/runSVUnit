@@ -124,6 +124,11 @@ if ($simulator eq "verilator" && defined $uvm) {
     exit CMDLINE_USAGE_ERROR
 }
 
+if ($simulator eq "verilator" && defined $vhdlfile) {
+    print("Argument error: cannot run Verilator with VHDL\n");
+    exit CMDLINE_USAGE_ERROR
+}
+
 clean();
 
 # version
