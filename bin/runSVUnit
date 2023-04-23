@@ -195,12 +195,17 @@ if ($simulator eq "modelsim" or $simulator eq "riviera") {
   }
   $cmd .= qq! @compileargs; vsim @simargs -lib work -do "run -all; quit" -l $logfile testrunner!;
 } elsif ($simulator eq "verilator") {
-  $cmd .= qq! ; obj_dir/Vtestrunner @simargs 2>&1 | tee $logfile !;
+  my $verilator_simargs = "";
+  $verilator_simargs .= " @simargs";
+  if (defined $filter) {
+    $verilator_simargs .= " +SVUNIT_FILTER=$filter";
+  }
+  $cmd .= qq! ; obj_dir/Vtestrunner $verilator_simargs 2>&1 | tee $logfile !;
 } else {
   $cmd .= " @compileargs @simargs -top testrunner";
 }
 
-if (defined $filter) {
+if (defined $filter && $simulator ne "verilator") {
   $cmd .= " +SVUNIT_FILTER=$filter";
 }
 
