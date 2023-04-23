@@ -69,7 +69,7 @@ module dut_unit_test;
 
     // this should have the "running" and "fail" logged w/1 error
     `SVTEST(third_test)
-      static int beam = 4;
+      int beam = 4;
       `FAIL_UNLESS(beam == 1);
       `FAIL_IF(beam != 2);
     `SVTEST_END
@@ -88,62 +88,62 @@ module dut_unit_test;
 
     // verify the extra log string output
     `SVTEST(sixth_test)
-      static int bozo = 4;
-      static string gum = "gum is wrong";
+      int bozo = 4;
+      string gum = "gum is wrong";
       `FAIL_UNLESS_LOG(bozo == 1, "bozo is wrong");
     `SVTEST_END
 
     `SVTEST(seventh_test)
-      static int bozo = 4;
-      static string gum = "gum is wrong";
+      int bozo = 4;
+      string gum = "gum is wrong";
       `FAIL_IF_LOG(bozo != 2, $sformatf("%s %0d", gum, bozo));
     `SVTEST_END
 
     // verify FAIL_IF_EQUAL works with ternary operator (should pass)
     `SVTEST(eighth_test)
-      static logic [3:0] data_a = 4'h7;
-      static logic [3:0] data_b = 4'hf;
-      static logic       select = 0;
+      logic [3:0] data_a = 4'h7;
+      logic [3:0] data_b = 4'hf;
+      logic       select = 0;
       `FAIL_IF_EQUAL(data_a, select ? data_a : data_b);
     `SVTEST_END
 
     // verify FAIL_IF_EQUAL works with ternary operator (should pass)
     `SVTEST(ninth_test)
-      static logic [3:0] data_a = 4'h7;
-      static logic [3:0] data_b = 4'hf;
-      static logic       select = 1;
+      logic [3:0] data_a = 4'h7;
+      logic [3:0] data_b = 4'hf;
+      logic       select = 1;
       `FAIL_IF_EQUAL(select ? data_a : data_b, data_b);
     `SVTEST_END
 
     // verify FAIL_UNLESS_EQUAL works with ternary operator (should pass)
     `SVTEST(tenth_test)
-      static logic [3:0] data_a = 4'h7;
-      static logic [3:0] data_b = 4'hf;
-      static logic       select = 0;
+      logic [3:0] data_a = 4'h7;
+      logic [3:0] data_b = 4'hf;
+      logic       select = 0;
       `FAIL_UNLESS_EQUAL(data_b, select ? data_a : data_b);
     `SVTEST_END
 
     // verify FAIL_UNLESS_EQUAL works with ternary operator (should pass)
     `SVTEST(eleventh_test)
-      static logic [3:0] data_a = 4'h7;
-      static logic [3:0] data_b = 4'hf;
-      static logic       select = 1;
+      logic [3:0] data_a = 4'h7;
+      logic [3:0] data_b = 4'hf;
+      logic       select = 1;
       `FAIL_UNLESS_EQUAL(select ? data_a : data_b, data_a);
     `SVTEST_END
 
       // verify FAIL_IF works with 'x as expression (test should fail)
     `SVTEST(x_as_fail_if_expression)
-      static logic foo = 'x;
+      logic foo = 'x;
       `FAIL_IF(foo != 1);
     `SVTEST_END
 
     `SVTEST(fail_if_equal_works_with_expression_with_side_effects)
-      static int i = 0;
+      int i = 0;
       `FAIL_IF_EQUAL(i++, 0)  // `i` should still be `0` in the comparison, test should fail
     `SVTEST_END
 
     `SVTEST(fail_unless_equal_works_with_expression_with_side_effects)
-      static int i = 0;
+      int i = 0;
       `FAIL_UNLESS_EQUAL(i++, 0)  // `i` should still be `0` in the comparison, test should pass
     `SVTEST_END
 
