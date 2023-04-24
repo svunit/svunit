@@ -218,3 +218,6 @@ end \
                 wait( svunit_ut.is_running() ); \
         end \
     end
+
+
+`define __svunit_stringify(s) `"s`"

@@ -126,7 +126,7 @@ my $VERSION = IO::File->new();
 $VERSION->open("$ENV{SVUNIT_INSTALL}/VERSION.txt") || die;
 my $version = $VERSION->getline;
 chomp $version;
-push @defines, qq!SVUNIT_VERSION='"$version"'!;
+push @defines, qq!SVUNIT_VERSION='$version'!;
 
 # Extract simulator from PATH if nothing passed as argument
 if ($simulator eq "") {
