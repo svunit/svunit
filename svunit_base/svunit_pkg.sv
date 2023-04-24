@@ -21,7 +21,7 @@
 package svunit_pkg;
 
 `ifdef SVUNIT_VERSION
-  const string svunit_version = `__svunit_stringify(`SVUNIT_VERSION);
+  const string svunit_version = { "SVUnit ", `__svunit_stringify(`SVUNIT_VERSION) };
 `else
   const string svunit_version = "For SVUnit Version info, see: $SVUNIT_INSTALL/VERSION.txt";
 `endif
