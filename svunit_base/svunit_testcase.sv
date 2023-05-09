@@ -119,8 +119,13 @@ endfunction
   Blocks indefinitely (Should only be called by `FAIL_IF)
 */
 task svunit_testcase::give_up();
+`ifndef VERILATOR
   event never;
   @(never);
+`else
+  bit never_true = 0;
+  wait (never_true);
+`endif
 endtask
 
 

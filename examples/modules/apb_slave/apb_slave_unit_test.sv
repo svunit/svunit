@@ -12,7 +12,7 @@ module apb_slave_unit_test;
 
 
   //===================================
-  // This is the UUT that we're 
+  // This is the UUT that we're
   // running the Unit Tests on
   //===================================
   reg         clk;
@@ -64,7 +64,7 @@ module apb_slave_unit_test;
 
 
   //===================================
-  // Here we deconstruct anything we 
+  // Here we deconstruct anything we
   // need after running the Unit Tests
   //===================================
   task teardown();
@@ -178,7 +178,7 @@ module apb_slave_unit_test;
   // writes and protocol errors on the psel and pwrite.
   //
   //-------------------------------------------------------------------------------
-  task write(logic [7:0] addr,
+  task automatic write(logic [7:0] addr,
              logic [31:0] data,
              logic back2back = 0,
              logic setup_psel = 1,
@@ -220,7 +220,7 @@ module apb_slave_unit_test;
   // reads.
   //
   //-------------------------------------------------------------------------------
-  task read(logic [7:0] addr, output logic [31:0] data, input logic back2back = 0);
+  task automatic read(logic [7:0] addr, output logic [31:0] data, input logic back2back = 0);
 
     // if !back2back, insert an idle cycle before the read
     if (!back2back) begin

@@ -1,6 +1,6 @@
 //###########################################################################
 //
-//  Copyright 2011-2022 The SVUnit Authors.
+//  Copyright 2011-2023 The SVUnit Authors.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -21,11 +21,11 @@
     Enum: results_t
     enumerated type containing PASS/FAIL
   */
-  typedef enum {PASS=1, FAIL=0}  results_t;
+  typedef enum bit {PASS=1, FAIL=0}  results_t;
 
 
   /*
     Enum: boolean_t
     enumerated type containing TRUE/FALSE
   */
-  typedef enum {TRUE=1, FALSE=0} boolean_t;
+  typedef enum bit {TRUE=1, FALSE=0} boolean_t;

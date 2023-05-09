@@ -1,6 +1,6 @@
 //###########################################################################
 //
-//  Copyright 2011 The SVUnit Authors.
+//  Copyright 2011-2023 The SVUnit Authors.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -36,6 +36,15 @@ class svunit_testrunner extends svunit_base;
   extern function void add_testsuite(svunit_testsuite suite);
 
   extern function void report();
+
+
+  local function int unsigned get_num_passing_testsuites();
+    int unsigned result;
+    foreach (list_of_suites[i])
+      if (list_of_suites[i].get_results() == PASS)
+        result++;
+    return result;
+  endfunction
 
 
   local function void write_xml();
@@ -84,10 +93,7 @@ function void svunit_testrunner::report();
   int     pass_cnt;
   string  success_str;
 
-  begin
-    svunit_testsuite match[$] = list_of_suites.find() with (item.get_results() == PASS);
-    pass_cnt = match.size();
-  end
+  pass_cnt = get_num_passing_testsuites();
 
   if (pass_cnt == list_of_suites.size()) begin
     success_str = "PASSED";

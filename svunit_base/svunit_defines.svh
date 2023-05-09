@@ -180,8 +180,10 @@
           end \
           `SVUNIT_FUSE \
         join_any \
+`ifndef VERILATOR \
         #0; \
         disable fork; \
+`endif \
       end \
     join \
     svunit_ut.stop(); \

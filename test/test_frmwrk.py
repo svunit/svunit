@@ -10,7 +10,7 @@ from utils import *
 # Need a possibility to remove tools from PATH, otherwise we can't test
 def get_path_without_sims():
     paths = os.environ['PATH'].split(os.path.pathsep)
-    for sim_name in ['xrun', 'dsim', 'vsim', "qrun"]:
+    for sim_name in ['xrun', 'dsim', 'vsim', "qrun", "verilator"]:
         sim = shutil.which(sim_name)
         if sim:
             paths = list(filter(lambda p: p != os.path.dirname(sim), paths))
@@ -416,7 +416,7 @@ def test_frmwrk_32(tmpdir):
         assert return_code == 255
 
 
-@pytest.mark.parametrize("sim", ["xrun", "irun", "vsim", "vcs", "qrun"])
+@pytest.mark.parametrize("sim", ["xrun", "irun", "vsim", "vcs", "qrun", "verilator"])
 def test_called_without_simulator__extract_sim_if_on_path(sim, tmpdir, monkeypatch):
     with tmpdir.as_cwd():
         fake_tool(sim)

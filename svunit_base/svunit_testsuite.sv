@@ -1,6 +1,6 @@
 //###########################################################################
 //
-//  Copyright 2011 The SVUnit Authors.
+//  Copyright 2011-2023 The SVUnit Authors.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -37,6 +37,15 @@ class svunit_testsuite extends svunit_base;
   extern task run();
 
   extern function void report();
+
+
+  local function int unsigned get_num_passing_testcases();
+    int unsigned result;
+    foreach (list_of_testcases[i])
+      if (list_of_testcases[i].get_results() == PASS)
+        result++;
+    return result;
+  endfunction
 
 
   function junit_xml::TestSuite as_junit_test_suite();
@@ -97,10 +106,7 @@ function void svunit_testsuite::report();
   foreach(list_of_testcases[i])
     list_of_testcases[i].report();
 
-  begin
-    svunit_testcase match[$] = list_of_testcases.find() with (item.get_results() == PASS);
-    pass_cnt = match.size();
-  end
+  pass_cnt = get_num_passing_testcases();
 
   if (pass_cnt == list_of_testcases.size()) begin
     success_str = "PASSED";
