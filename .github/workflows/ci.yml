@@ -23,6 +23,12 @@ jobs:
       - name: Clone Verilator
         run: git clone https://github.com/verilator/verilator $HOME/verilator
 
+      - name: Build Verilator
+        run: cd $HOME/verilator
+            && autoconf
+            && ./configure
+            && make -j `nproc`
+
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
