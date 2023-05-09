@@ -26,8 +26,12 @@ jobs:
       - name: Build Verilator
         run: cd $HOME/verilator
             && autoconf
-            && ./configure
+            && ./configure --prefix /opt/verilator
             && make -j `nproc`
+
+      - name: Install Verilator
+        run: cd $HOME/verilator
+            && sudo make install
 
       - name: Set up Python
         uses: actions/setup-python@v2
