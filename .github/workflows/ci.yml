@@ -20,6 +20,9 @@ jobs:
                 zlibc zlib1g zlib1g-dev \
                 git autoconf flex bison
 
+      - name: Clone Verilator
+        run: git clone https://github.com/verilator/verilator $HOME/verilator
+
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
