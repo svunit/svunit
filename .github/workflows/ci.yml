@@ -32,6 +32,7 @@ jobs:
       - name: Install Verilator
         run: cd $HOME/verilator
             && sudo make install
+            && echo "/opt/verilator/bin" >> $GITHUB_PATH
 
       - name: Set up Python
         uses: actions/setup-python@v2
