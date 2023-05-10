@@ -25,6 +25,8 @@ jobs:
 
       - name: Clone Verilator
         run: git clone https://github.com/verilator/verilator $HOME/verilator
+            && cd $HOME/verilator
+            && git checkout 444020f
 
       - name: Build Verilator
         run: cd $HOME/verilator
