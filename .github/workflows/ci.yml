@@ -23,21 +23,33 @@ jobs:
                 zlibc zlib1g zlib1g-dev \
                 git autoconf flex bison
 
+      - name: Cache Verilator
+        id: cache-verilator
+        uses: actions/cache@v3
+        with:
+          path: /opt/verilator
+          key: verilator-444020f-${{ runner.os }}
+
       - name: Clone Verilator
+        if: steps.cache-verilator.outputs.cache-hit != 'true'
         run: git clone https://github.com/verilator/verilator $HOME/verilator
             && cd $HOME/verilator
             && git checkout 444020f
 
       - name: Build Verilator
+        if: steps.cache-verilator.outputs.cache-hit != 'true'
         run: cd $HOME/verilator
             && autoconf
             && ./configure --prefix /opt/verilator
             && make -j `nproc`
 
       - name: Install Verilator
+        if: steps.cache-verilator.outputs.cache-hit != 'true'
         run: cd $HOME/verilator
             && sudo make install
-            && echo "/opt/verilator/bin" >> $GITHUB_PATH
+
+      - name: Add Verilator to $PATH
+        run: echo "/opt/verilator/bin" >> $GITHUB_PATH
 
       - name: Set up Python
         uses: actions/setup-python@v2
