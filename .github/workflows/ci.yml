@@ -2,6 +2,9 @@ name: CI
 
 on: [push, pull_request]
 
+env:
+  VERILATOR_VERSION: 444020f
+
 jobs:
   build:
     runs-on: ubuntu-20.04
@@ -28,13 +31,13 @@ jobs:
         uses: actions/cache@v3
         with:
           path: /opt/verilator
-          key: verilator-444020f-${{ runner.os }}
+          key: verilator-${{ env.VERILATOR_VERSION }}-${{ runner.os }}
 
       - name: Clone Verilator
         if: steps.cache-verilator.outputs.cache-hit != 'true'
         run: git clone https://github.com/verilator/verilator $HOME/verilator
             && cd $HOME/verilator
-            && git checkout 444020f
+            && git checkout $VERILATOR_VERSION
 
       - name: Build Verilator
         if: steps.cache-verilator.outputs.cache-hit != 'true'
