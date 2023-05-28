@@ -19,4 +19,32 @@
 ############################################################################
 
 
-print("Running SVUnit")
+import argparse
+
+
+def main():
+    parser = get_parser()
+    args = parser.parse_args()
+    print(args)
+
+
+def get_parser():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-s", "--sim", metavar="<simulator>", help="simulator is either of questa, modelsim, riviera, ius, xcelium, vcs, dsim, verilator")
+    parser.add_argument("-l", "--log", metavar="<log>", help="simulation log file (default: run.log)")
+    parser.add_argument("-d", "--define", metavar="<macro>", action="append", help="appended to the command line as +define+<macro>")
+    parser.add_argument("-f", "--filelist", metavar="<file>", help="some verilog file list")
+    parser.add_argument("-r", "--r_arg", metavar="<option>", action="append", help="specify additional runtime options")
+    parser.add_argument("-c", "--c_arg", metavar="<option>", action="append", help="specify additional compile options")
+    parser.add_argument("-U", "--uvm", action="store_true", help="run SVUnit with UVM")
+    parser.add_argument("-o", "--out", metavar="<dir>", help="output directory for tmp and simulation files")
+    parser.add_argument("-t", "--test", metavar="<test>", action="append", help="specifies a unit test to run (multiple can be given)")
+    parser.add_argument("-m", "--mixedsim", metavar="<vhdlfile>", help="consolidated file list with VHDL files and command line switches")
+    parser.add_argument("-w", "--wavedrom", action="store_true", help="process json files as wavedrom output")
+    parser.add_argument("--filter", metavar="<filter>", help="specify which tests to run, as <test_module>.<test_name>")
+    parser.add_argument("--directory", metavar="<dir>", action="append", help="only run svunit discovery on selected directories")
+    parser.add_argument("--enable-experimental", action="store_true", help="enable experimental features")
+    return parser
+
+
+main()
