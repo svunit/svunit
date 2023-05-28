@@ -20,12 +20,15 @@
 
 
 import argparse
+import pathlib
+import subprocess
+import sys
 
 
 def main():
     parser = get_parser()
     args = parser.parse_args()
-    print(args)
+    execute_legacy_script()
 
 
 def get_parser():
@@ -45,6 +48,12 @@ def get_parser():
     parser.add_argument("--directory", metavar="<dir>", action="append", help="only run svunit discovery on selected directories")
     parser.add_argument("--enable-experimental", action="store_true", help="enable experimental features")
     return parser
+
+
+def execute_legacy_script():
+    this_script = pathlib.Path(__file__).resolve()
+    legacy_script = this_script.parent.joinpath("runSVUnit.pl")
+    subprocess.run([legacy_script] + sys.argv[1:], check=True)
 
 
 main()
