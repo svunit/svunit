@@ -28,9 +28,13 @@ import sys
 SIMULATORS = [
         "questa",
         "modelsim",
+        "vsim",
+        "qrun",
         "riviera",
         "ius",
+        "irun",
         "xcelium",
+        "xrun",
         "vcs",
         "dsim",
         "verilator",
