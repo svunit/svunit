@@ -45,7 +45,7 @@ def main():
 
 def get_parser():
     parser = argparse.ArgumentParser()
-    parser.add_argument("-s", "--sim", metavar="<simulator>", choices=SIMULATORS, help="simulator is either of %s"%", ".join(SIMULATORS))
+    parser.add_argument("-s", "--sim", metavar="<simulator>", choices=SIMULATORS, type=str.lower, help="simulator is either of %s"%", ".join(SIMULATORS))
     parser.add_argument("-l", "--log", metavar="<log>", help="simulation log file (default: run.log)")
     parser.add_argument("-d", "--define", metavar="<macro>", action="append", help="appended to the command line as +define+<macro>")
     parser.add_argument("-f", "--filelist", metavar="<file>", help="some verilog file list")
