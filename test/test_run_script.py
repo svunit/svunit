@@ -454,6 +454,14 @@ endmodule
     assert 'some_passing_test' in log.read_text()
 
 
+def test_unknown_option_exits_with_desired_exit_code(tmp_path):
+    cmdline_usage_error = 4
+    returncode = subprocess.call(
+            ['runSVUnit', '--some-bogus-option-that-we-will-never-want-to-add'],
+            cwd=tmp_path)
+    assert returncode == cmdline_usage_error
+
+
 def test_verilator_does_not_accept_uvm(tmp_path):
     cmdline_usage_error = 4
     returncode = subprocess.call(
