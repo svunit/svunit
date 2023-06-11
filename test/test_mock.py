@@ -7,7 +7,7 @@ from utils import *
 @pytest.mark.skip(reason="'uvm_report_mock' seems to be busted for UVM 1.2")
 def test_mock_uvm_report(datafiles, simulator):
     with datafiles.as_cwd():
-        subprocess.check_call(['runSVUnit', '-sim', simulator, '-uvm', '-define', 'UVM_NO_DEPRECATED', '-define', 'RUN_SVUNIT_WITH_UVM_REPORT_MOCK'])
+        subprocess.check_call(['runSVUnit', '--sim', simulator, '--uvm', '--define', 'UVM_NO_DEPRECATED', '--define', 'RUN_SVUNIT_WITH_UVM_REPORT_MOCK'])
         expect_testrunner_pass('run.log')
 
 
@@ -17,7 +17,7 @@ def test_mock_uvm_report(datafiles, simulator):
 def test_mock_uvm_report_ius(datafiles, simulator):
     with datafiles.as_cwd():
         if simulator == 'irun':
-            subprocess.check_call(['runSVUnit', '-sim', simulator, '-uvm', '-define', 'UVM_NO_DEPRECATED', '-define', 'RUN_SVUNIT_WITH_UVM_REPORT_MOCK'])
+            subprocess.check_call(['runSVUnit', '--sim', simulator, '--uvm', '--define', 'UVM_NO_DEPRECATED', '--define', 'RUN_SVUNIT_WITH_UVM_REPORT_MOCK'])
             expect_testrunner_pass('run.log')
 
 
@@ -27,5 +27,5 @@ def test_mock_uvm_report_ius(datafiles, simulator):
 def test_mock_uvm_report_ius_uvm1_2(datafiles, simulator):
     with datafiles.as_cwd():
         if simulator == 'irun':
-            subprocess.check_call(['runSVUnit', '-sim', simulator, '-uvm', '-define', 'UVM_NO_DEPRECATED', '-c_arg', '-uvmhome $INCISIV_HOME/tools/methodology/UVM/CDNS-1.2/sv', '-define', 'RUN_SVUNIT_WITH_UVM_REPORT_MOCK'])
+            subprocess.check_call(['runSVUnit', '--sim', simulator, '--uvm', '--define', 'UVM_NO_DEPRECATED', '--c_arg', '-uvmhome $INCISIV_HOME/tools/methodology/UVM/CDNS-1.2/sv', '--define', 'RUN_SVUNIT_WITH_UVM_REPORT_MOCK'])
             expect_testrunner_pass('run.log')
