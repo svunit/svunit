@@ -73,9 +73,16 @@ def get_parser():
     parser.add_argument("-m", "--mixedsim", metavar="<vhdlfile>", help="consolidated file list with VHDL files and command line switches")
     parser.add_argument("-w", "--wavedrom", action="store_true", help="process json files as wavedrom output")
     parser.add_argument("--filter", metavar="<filter>", help="specify which tests to run, as <test_module>.<test_name>")
-    parser.add_argument("--directory", metavar="<dir>", action="append", help="only run svunit discovery on selected directories")
+    parser.add_argument("--directory", metavar="<dir>", type=relative_path, action="append", help="only run svunit discovery on selected directories")
     parser.add_argument("--enable-experimental", action="store_true", help="enable experimental features")
     return parser
+
+
+def relative_path(string):
+    path = pathlib.Path(string)
+    if path.is_absolute():
+        raise argparse.ArgumentTypeError("absolute paths are not yet supported")
+    return path
 
 
 def execute_legacy_script():
