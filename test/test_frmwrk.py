@@ -583,11 +583,11 @@ def test_absolute_path_for_directory_option_issues_error(tmp_path):
     tmp_path.joinpath('test_dir1').mkdir()
 
     with working_directory(tmp_path/'run_dir'):
-        run_result = subprocess.run(['runSVUnit', '-s', 'questa', '--directory', tmp_path.joinpath('test_dir1').resolve()], stdout=subprocess.PIPE)
+        run_result = subprocess.run(['runSVUnit', '-s', 'questa', '--directory', tmp_path.joinpath('test_dir1').resolve()], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
         assert run_result.returncode == 4
-        assert b'absolute paths' in run_result.stdout
-        assert b'not yet supported' in run_result.stdout
+        assert b'absolute paths' in run_result.stderr
+        assert b'not yet supported' in run_result.stderr
 
 
 def test_called_without_filter_option__no_plusarg_passed(tmpdir, monkeypatch):
