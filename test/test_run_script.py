@@ -361,7 +361,7 @@ endmodule
     subprocess.check_call(
             ['runSVUnit',
                     '-s', simulator,
-                    '--filter', '-some_ut.some_failing_test:some_ut.some_other_failing_test',
+                    '--filter=-some_ut.some_failing_test:some_ut.some_other_failing_test',
                     ],
             cwd=tmp_path)
     assert 'FAILED' not in log.read_text()
