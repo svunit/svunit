@@ -22,7 +22,9 @@
  */
 class filter;
 
+`ifndef XILINX_SIMULATOR
   /* local */ typedef class filter_for_single_pattern;
+`endif
 
   /* local */ typedef filter_for_single_pattern array_of_filters[];
   /* local */ typedef string array_of_string[];
