@@ -1,17 +1,61 @@
 Writing Unit Tests
 ==================
 
-The unit test template includes embedded instructions on structure and position of unit tests:
+The unit test template includes embedded instructions on structure and position of unit tests::
+
+    //===================================
+    // All tests are defined between the
+    // SVUNIT_TESTS_BEGIN/END macros
+    //
+    // Each individual test must be
+    // defined between `SVTEST(_NAME_)
+    // `SVTEST_END
+    //
+    // i.e.
+    //   `SVTEST(mytest)
+    //     <test code>
+    //   `SVTEST_END
+    //===================================
+    `SVUNIT_TESTS_BEGIN
+
+    
+    
+    `SVUNIT_TESTS_END
+
 
 .. image:: ../user_guide_files/Screen-Shot-2015-07-03-at-4.41.54-PM.png
     :width: 276
 
-Multiple unit tests can be defined in a unit test template. All must be defined between the \`SVUNIT_TESTS_BEGIN and \`SVUNIT_TESTS_END macros. Individual unit tests are defined using the \`SVTEST(<name>) and \`SVTEST_END macros. The test <name> must be a valid verilog code block label (i.e. any alphanumeric starting with [_a-zA-Z]). For example, a template with 2 tests called test0 and test1 would be declared as:
+Multiple unit tests can be defined in a unit test template. All must be defined between the \`SVUNIT_TESTS_BEGIN and \`SVUNIT_TESTS_END macros. Individual unit tests are defined using the \`SVTEST(<name>) and \`SVTEST_END macros. The test <name> must be a valid verilog code block label (i.e. any alphanumeric starting with [_a-zA-Z]). For example, a template with 2 tests called test0 and test1 would be declared as::
+
+    `SVUNIT_TESTS_BEGIN
+
+    `SVTEST(test0)
+    `SVTEST_END
+
+    `SVTEST(test1)
+    `SVTEST_END
+
+    `SVUNIT_TESTS_END
 
 .. image:: ../user_guide_files/Screen-Shot-2015-07-03-at-4.44.52-PM.png
     :width: 170
 
-The macros expand to a Verilog code block so any code that is legal within a code block can be used within a unit test. Other required variables, declarations, functions, tasks, etc must be defined outside the BEGIN/END macros. For example, the function helper() can be defined and used within a unit test as:
+The macros expand to a Verilog code block so any code that is legal within a code block can be used within a unit test. Other required variables, declarations, functions, tasks, etc must be defined outside the BEGIN/END macros. For example, the function helper() can be defined and used within a unit test as::
+
+    `SVUNIT_TESTS_BEGIN
+
+    `SVTEST(test0)
+    `SVTEST_END
+
+    `SVTEST(test1)
+      helper();
+    `SVTEST_END
+
+    `SVUNIT_TESTS_END
+
+    function helper();
+    endfunction
 
 .. image:: ../user_guide_files/Screen-Shot-2015-07-03-at-4.50.11-PM.png
     :width: 162
