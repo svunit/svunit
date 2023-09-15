@@ -217,7 +217,7 @@ end \
             if( svunit_ut.is_running() ) \
                 #_half_period _clk_variable = !_clk_variable; \
             else \
-                wait( svunit_ut.is_running() ); \
+                svunit_ut.wait_for_running(); \
         end \
     end
 
