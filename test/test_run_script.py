@@ -477,18 +477,7 @@ def test_non_zero_exit_code_from_executed_command_signals_internal_execution_err
         some_unit_test_that_gets_us_over_test_collection = pathlib.Path.cwd().joinpath('some_unit_test.sv')
         some_unit_test_that_gets_us_over_test_collection.write_text("dummy content")
 
-        def fake_tool_that_fails(name):
-            executable = pathlib.Path(name)
-            log_file = 'fake_tool.log'
-            script = [
-                    'echo "{} called" > {}'.format(name, log_file),
-                    'exit 1'.format(log_file),
-                    ]
-            executable.write_text('\n'.join(script))
-            executable.chmod(0o700)
-            return executable
-
-        fake_tool_that_fails('xrun')
+        FakeTool.that_fails('xrun')
         monkeypatch.setenv('PATH', '.', prepend=os.pathsep)
 
         returncode = subprocess.call(['runSVUnit', '--sim', 'xcelium'])
@@ -503,31 +492,9 @@ def test_non_zero_exit_code_from_vlog_signals_internal_execution_error(tmpdir, m
         some_unit_test_that_gets_us_over_test_collection = pathlib.Path.cwd().joinpath('some_unit_test.sv')
         some_unit_test_that_gets_us_over_test_collection.write_text("dummy content")
 
-        def fake_tool_that_succeeds(name):
-            executable = pathlib.Path(name)
-            log_file = 'fake_tool.log'
-            script = [
-                    'echo "{} called" > {}'.format(name, log_file),
-                    'exit 0'.format(log_file),
-                    ]
-            executable.write_text('\n'.join(script))
-            executable.chmod(0o700)
-            return executable
-
-        def fake_tool_that_fails(name):
-            executable = pathlib.Path(name)
-            log_file = 'fake_tool.log'
-            script = [
-                    'echo "{} called" > {}'.format(name, log_file),
-                    'exit 1'.format(log_file),
-                    ]
-            executable.write_text('\n'.join(script))
-            executable.chmod(0o700)
-            return executable
-
-        fake_tool_that_succeeds('vlib')
-        fake_tool_that_fails('vlog')
-        fake_tool_that_succeeds('vsim')
+        FakeTool.that_succeeds('vlib')
+        FakeTool.that_fails('vlog')
+        FakeTool.that_succeeds('vsim')
         monkeypatch.setenv('PATH', '.', prepend=os.pathsep)
 
         returncode = subprocess.call(['runSVUnit', '--sim', 'questa'])
@@ -542,31 +509,9 @@ def test_non_zero_exit_code_from_vlib_signals_internal_execution_error(tmpdir, m
         some_unit_test_that_gets_us_over_test_collection = pathlib.Path.cwd().joinpath('some_unit_test.sv')
         some_unit_test_that_gets_us_over_test_collection.write_text("dummy content")
 
-        def fake_tool_that_succeeds(name):
-            executable = pathlib.Path(name)
-            log_file = 'fake_tool.log'
-            script = [
-                    'echo "{} called" > {}'.format(name, log_file),
-                    'exit 0'.format(log_file),
-                    ]
-            executable.write_text('\n'.join(script))
-            executable.chmod(0o700)
-            return executable
-
-        def fake_tool_that_fails(name):
-            executable = pathlib.Path(name)
-            log_file = 'fake_tool.log'
-            script = [
-                    'echo "{} called" > {}'.format(name, log_file),
-                    'exit 1'.format(log_file),
-                    ]
-            executable.write_text('\n'.join(script))
-            executable.chmod(0o700)
-            return executable
-
-        fake_tool_that_fails('vlib')
-        fake_tool_that_succeeds('vlog')
-        fake_tool_that_succeeds('vsim')
+        FakeTool.that_fails('vlib')
+        FakeTool.that_succeeds('vlog')
+        FakeTool.that_succeeds('vsim')
         monkeypatch.setenv('PATH', '.', prepend=os.pathsep)
 
         returncode = subprocess.call(['runSVUnit', '--sim', 'questa'])

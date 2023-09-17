@@ -173,3 +173,31 @@ def expect_passing_example(dir, sim, args=[]):
 def contains_pattern(pattern, logfile_path):
     with open(logfile_path) as file, mmap.mmap(file.fileno(), 0, access=mmap.ACCESS_READ) as log:
         return bool(re.search(pattern, log))
+
+
+class FakeTool:
+
+    @classmethod
+    def that_fails(cls, name):
+        executable = pathlib.Path(name)
+        log_file = 'fake_tool.log'
+        script = [
+                'echo "{} called" > {}'.format(name, log_file),
+                'exit 1'.format(log_file),
+                ]
+        executable.write_text('\n'.join(script))
+        executable.chmod(0o700)
+        return executable
+
+
+    @classmethod
+    def that_succeeds(cls, name):
+        executable = pathlib.Path(name)
+        log_file = 'fake_tool.log'
+        script = [
+                'echo "{} called" > {}'.format(name, log_file),
+                'exit 0'.format(log_file),
+                ]
+        executable.write_text('\n'.join(script))
+        executable.chmod(0o700)
+        return executable
