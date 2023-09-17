@@ -468,3 +468,29 @@ def test_verilator_does_not_accept_mixedsim(tmp_path):
             ['runSVUnit', '--sim', 'verilator', '--mixedsim', 'dummy'],
             cwd=tmp_path)
     assert returncode == cmdline_usage_error
+
+
+def test_non_zero_exit_code_from_executed_command_signals_internal_execution_error(tmpdir, monkeypatch):
+    internal_execution_error = 3
+
+    with tmpdir.as_cwd():
+        some_unit_test_that_gets_us_over_test_collection = pathlib.Path.cwd().joinpath('some_unit_test.sv')
+        some_unit_test_that_gets_us_over_test_collection.write_text("dummy content")
+
+        def fake_tool_that_fails(name):
+            executable = pathlib.Path(name)
+            log_file = 'fake_tool.log'
+            script = [
+                    'echo "{} called" > {}'.format(name, log_file),
+                    'exit 1'.format(log_file),
+                    ]
+            executable.write_text('\n'.join(script))
+            executable.chmod(0o700)
+            return executable
+
+        fake_tool_that_fails('xrun')
+        monkeypatch.setenv('PATH', '.', prepend=os.pathsep)
+
+        returncode = subprocess.call(['runSVUnit', '--sim', 'xcelium'])
+
+    assert returncode == internal_execution_error
