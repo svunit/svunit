@@ -429,6 +429,9 @@ def test_frmwrk_32(tmpdir):
 def test_called_without_simulator__extract_sim_if_on_path(sim, tmpdir, monkeypatch):
     with tmpdir.as_cwd():
         fake_tool(sim)
+        if (sim == 'vsim'):
+            fake_tool('vlib')
+            fake_tool('vlog')
         monkeypatch.setenv('PATH', get_path_without_sims())
         monkeypatch.setenv('PATH', '.', prepend=os.pathsep)
 
