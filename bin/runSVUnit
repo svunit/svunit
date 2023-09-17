@@ -132,13 +132,6 @@ if ($simulator eq "verilator" && defined $vhdlfile) {
 
 clean();
 
-# version
-my $VERSION = IO::File->new();
-$VERSION->open("$ENV{SVUNIT_INSTALL}/VERSION.txt") || die;
-my $version = $VERSION->getline;
-chomp $version;
-push @defines, "SVUNIT_VERSION=$version";
-
 # Extract simulator from PATH if nothing passed as argument
 if ($simulator eq "") {
   my @sims = qw(xrun irun qrun vsim vcs dsim verilator);
