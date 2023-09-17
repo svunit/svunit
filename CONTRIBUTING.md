@@ -12,3 +12,4 @@ Steps:
 
 - Ensure that the tests pass
   * See [test/README](test/README) for details on how to run the tests
+- Determine the new `$VERSION` number based on semantic versioning and the information in [CHANGELOG.md](CHANGELOG.md)
