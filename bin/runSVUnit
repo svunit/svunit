@@ -168,8 +168,8 @@ if (not grep { $_ eq $simulator } qw(xrun irun modelsim riviera vcs dsim qrun ve
 $cmd = "cd $outdir; ";
 # add the vdhl switches if necessary
 if ($simulator eq "modelsim" or $simulator eq "riviera") {
-  $cmd .= "vlib work; ";
-  $cmd .= "vcom -work work -f $vhdlfile ; " if $vhdlfile;
+  $cmd .= "vlib work && ";
+  $cmd .= "vcom -work work -f $vhdlfile && " if $vhdlfile;
   $cmd .= "vlog -l $vlogfile ";
 } elsif ($simulator eq "vcs") {
   $cmd .= "$simulator -R -sverilog -l $logfile";
@@ -204,14 +204,14 @@ if ($simulator eq "modelsim" or $simulator eq "riviera") {
   if (!grep(/(^| )(-gui|-c|-i)( |$)/, @simargs)) {
     push @simargs, "-c";
   }
-  $cmd .= qq! @compileargs; vsim @simargs -lib work -do "run -all; quit" -l $logfile testrunner!;
+  $cmd .= qq! @compileargs && vsim @simargs -lib work -do "run -all; quit" -l $logfile testrunner!;
 } elsif ($simulator eq "verilator") {
   my $verilator_simargs = "";
   $verilator_simargs .= " @simargs";
   if (defined $filter) {
     $verilator_simargs .= " +SVUNIT_FILTER=$filter";
   }
-  $cmd .= qq! ; obj_dir/Vtestrunner $verilator_simargs 2>&1 | tee $logfile !;
+  $cmd .= qq! && obj_dir/Vtestrunner $verilator_simargs 2>&1 | tee $logfile !;
 } else {
   $cmd .= " @compileargs @simargs -top testrunner";
 }
