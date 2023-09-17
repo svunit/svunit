@@ -18,3 +18,5 @@ Steps:
 - Update the version in [CHANGELOG.md](CHANGELOG.md)
   * Update the version and the date in the list
   * Update the link at the bottom, which points to the diff with the previous version
+- Create a pull request on GitHub and merge it
+- Pull the master branch: `git checkout master && git pull`
