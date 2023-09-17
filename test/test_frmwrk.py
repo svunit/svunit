@@ -359,10 +359,13 @@ def test_frmwrk_27(datafiles):
 
 
 @all_files_in_dir('frmwrk_28')
-def test_frmwrk_28(datafiles):
+def test_frmwrk_28(datafiles, monkeypatch):
     '''Test that the 'runSVUnit' script passes a '-t' argument to 'buildSVUnit.'''
     with datafiles.as_cwd():
-        subprocess.check_call(['runSVUnit', '-s', 'questa', '-t', 'test_unit_test.sv'])
+        fake_tool('xrun')
+        monkeypatch.setenv('PATH', '.', prepend=os.pathsep)
+
+        subprocess.check_call(['runSVUnit', '-s', 'xrun', '-t', 'test_unit_test.sv'])
 
         golden_testsuite_with_1_unittest('test')
         golden_testrunner_with_1_testsuite()
@@ -372,10 +375,13 @@ def test_frmwrk_28(datafiles):
 
 
 @all_files_in_dir('frmwrk_29')
-def test_frmwrk_29(datafiles):
+def test_frmwrk_29(datafiles, monkeypatch):
     '''Test that the 'runSVUnit' script passes all '-t' arguments to 'buildSVUnit.'''
     with datafiles.as_cwd():
-        subprocess.check_call(['runSVUnit', '-s', 'questa', '-t', 'test_unit_test.sv', '-t', 'test2_unit_test.sv'])
+        fake_tool('xrun')
+        monkeypatch.setenv('PATH', '.', prepend=os.pathsep)
+
+        subprocess.check_call(['runSVUnit', '-s', 'xrun', '-t', 'test_unit_test.sv', '-t', 'test2_unit_test.sv'])
 
         golden_testsuite_with_2_unittests('test', 'test2')
         golden_testrunner_with_1_testsuite()
@@ -398,10 +404,13 @@ def test_frmwrk_30(datafiles):
 
 # TODO Remove as this is the same as 'frmwrk_29'. Left in to make review easier
 @all_files_in_dir('frmwrk_31')
-def test_frmwrk_31(datafiles):
+def test_frmwrk_31(datafiles, monkeypatch):
     '''Test that the 'runSVUnit' script passes all '-t' arguments to 'buildSVUnit.'''
     with datafiles.as_cwd():
-        subprocess.check_call(['runSVUnit', '-s', 'questa', '-t', 'test_unit_test.sv', '-t', 'test2_unit_test.sv'])
+        fake_tool('xrun')
+        monkeypatch.setenv('PATH', '.', prepend=os.pathsep)
+
+        subprocess.check_call(['runSVUnit', '-s', 'xrun', '-t', 'test_unit_test.sv', '-t', 'test2_unit_test.sv'])
 
         golden_testsuite_with_2_unittests('test', 'test2')
         golden_testrunner_with_1_testsuite()
@@ -524,7 +533,7 @@ def test_uut_name_contains_automatic(tmpdir):
         verify_testsuite('testsuite.gold')
 
 
-def test_collects_test_from_dir_passed_with_directory_option(tmp_path):
+def test_collects_test_from_dir_passed_with_directory_option(tmp_path, monkeypatch):
     tmp_path.joinpath('run_dir').mkdir()
     tmp_path.joinpath('test_dir1').mkdir()
     tmp_path.joinpath('test_dir1/test_in_dir1_unit_test.sv').write_text('module test_in_dir1_unit_test;\nendmodule')
@@ -532,7 +541,10 @@ def test_collects_test_from_dir_passed_with_directory_option(tmp_path):
     tmp_path.joinpath('test_dir2/test_in_dir2_unit_test.sv').write_text('module test_in_dir2_unit_test;\nendmodule')
 
     with working_directory(tmp_path/'run_dir'):
-        subprocess.check_call(['runSVUnit', '-s', 'questa', '--directory', '../test_dir1'])
+        fake_tool('xrun')
+        monkeypatch.setenv('PATH', '.', prepend=os.pathsep)
+
+        subprocess.check_call(['runSVUnit', '-s', 'xrun', '--directory', '../test_dir1'])
 
         golden_testsuite_with_1_unittest('test_in_dir1')
         verify_testsuite('testsuite.gold', '__test_dir1')
@@ -541,7 +553,7 @@ def test_collects_test_from_dir_passed_with_directory_option(tmp_path):
         verify_testrunner('testrunner.gold', '___test_dir1')
 
 
-def test_collects_test_from_dirs_passed_with_directory_option(tmp_path):
+def test_collects_test_from_dirs_passed_with_directory_option(tmp_path, monkeypatch):
     tmp_path.joinpath('run_dir').mkdir()
     tmp_path.joinpath('test_dir1').mkdir()
     tmp_path.joinpath('test_dir1/test_in_dir1_unit_test.sv').write_text('module test_in_dir1_unit_test;\nendmodule')
@@ -551,7 +563,10 @@ def test_collects_test_from_dirs_passed_with_directory_option(tmp_path):
     tmp_path.joinpath('test_dir3/test_in_dir3_unit_test.sv').write_text('module test_in_dir3_unit_test;\nendmodule')
 
     with working_directory(tmp_path/'run_dir'):
-        subprocess.check_call(['runSVUnit', '-s', 'questa', '--directory', '../test_dir1', '--directory', '../test_dir2'])
+        fake_tool('xrun')
+        monkeypatch.setenv('PATH', '.', prepend=os.pathsep)
+
+        subprocess.check_call(['runSVUnit', '-s', 'xrun', '--directory', '../test_dir1', '--directory', '../test_dir2'])
 
         golden_testsuite_with_1_unittest('test_in_dir1')
         verify_testsuite('testsuite.gold', '__test_dir1')
@@ -562,14 +577,17 @@ def test_collects_test_from_dirs_passed_with_directory_option(tmp_path):
         verify_testrunner('testrunner.gold', '___test_dir1', '___test_dir2')
 
 
-def test_does_not_collect_test_from_cwd_passed_with_directory_option(tmp_path):
+def test_does_not_collect_test_from_cwd_passed_with_directory_option(tmp_path, monkeypatch):
     tmp_path.joinpath('run_dir').mkdir()
     tmp_path.joinpath('run_dir/test_in_run_dir_unit_test.sv').write_text('module test_in_run_dir_unit_test;\nendmodule')
     tmp_path.joinpath('test_dir1').mkdir()
     tmp_path.joinpath('test_dir1/test_in_dir1_unit_test.sv').write_text('module test_in_dir1_unit_test;\nendmodule')
 
     with working_directory(tmp_path/'run_dir'):
-        subprocess.check_call(['runSVUnit', '-s', 'questa', '--directory', '../test_dir1'])
+        fake_tool('xrun')
+        monkeypatch.setenv('PATH', '.', prepend=os.pathsep)
+
+        subprocess.check_call(['runSVUnit', '-s', 'xrun', '--directory', '../test_dir1'])
 
         golden_testsuite_with_1_unittest('test_in_dir1')
         verify_testsuite('testsuite.gold', '__test_dir1')
