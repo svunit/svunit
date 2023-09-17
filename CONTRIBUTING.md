@@ -20,3 +20,6 @@ Steps:
   * Update the link at the bottom, which points to the diff with the previous version
 - Create a pull request on GitHub and merge it
 - Pull the master branch: `git checkout master && git pull`
+- Tag the version using an annotated tag: `git tag -a v${VERSION} -m "SVUnit ${VERSION}"`
+- Push the tag: `git push origin ${VERSION}`
+- Create a release on GitHub from the new tag
