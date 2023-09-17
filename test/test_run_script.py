@@ -517,3 +517,21 @@ def test_non_zero_exit_code_from_vlib_signals_internal_execution_error(tmpdir, m
         returncode = subprocess.call(['runSVUnit', '--sim', 'questa'])
 
     assert returncode == internal_execution_error
+
+
+def test_non_zero_exit_code_from_vcom_signals_internal_execution_error(tmpdir, monkeypatch):
+    internal_execution_error = 3
+
+    with tmpdir.as_cwd():
+        some_unit_test_that_gets_us_over_test_collection = pathlib.Path.cwd().joinpath('some_unit_test.sv')
+        some_unit_test_that_gets_us_over_test_collection.write_text("dummy content")
+
+        FakeTool.that_succeeds('vlib')
+        FakeTool.that_fails('vcom')
+        FakeTool.that_succeeds('vlog')
+        FakeTool.that_succeeds('vsim')
+        monkeypatch.setenv('PATH', '.', prepend=os.pathsep)
+
+        returncode = subprocess.call(['runSVUnit', '--sim', 'questa', '-mixedsim', 'dummy'])
+
+    assert returncode == internal_execution_error

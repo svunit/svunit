@@ -169,7 +169,7 @@ $cmd = "cd $outdir; ";
 # add the vdhl switches if necessary
 if ($simulator eq "modelsim" or $simulator eq "riviera") {
   $cmd .= "vlib work && ";
-  $cmd .= "vcom -work work -f $vhdlfile ; " if $vhdlfile;
+  $cmd .= "vcom -work work -f $vhdlfile && " if $vhdlfile;
   $cmd .= "vlog -l $vlogfile ";
 } elsif ($simulator eq "vcs") {
   $cmd .= "$simulator -R -sverilog -l $logfile";
