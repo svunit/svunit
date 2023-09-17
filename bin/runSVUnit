@@ -28,6 +28,7 @@ use Cwd 'abs_path';
 use vars qw/ %opt /;
 
 use constant {
+    INTERNAL_EXECUTION_ERROR => 3,
     CMDLINE_USAGE_ERROR => 4,
     # TODO Add other error codes
 };
