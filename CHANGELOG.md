@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Fix csh setup script to work with directory paths containing spaces
 - Fix compile error in Vivado (and maybe others) caused by `typedef` in class
+- Signal internal execution error when command started by `runSVUnit` fails
 
 
 ## [3.36.1] - 2022-09-10
