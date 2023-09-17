@@ -77,3 +77,15 @@ runSVUnit -s <simulator> # simulator is ius, questa, modelsim, riviera or vcs
 ### 6. Repeat steps 4 and 5 until done
 
 ### 7. Pat self on back
+
+
+## Feedback
+
+Tell us about what you like,
+what you don't like,
+new features you'd like to see...
+basically anything
+you think would make SVUnit more valuable to you.
+
+The best place for feedback is https://github.com/svunit/svunit/discussions.
+If you don't have a GitHub account, you can send an email to *contact[at]svunit[dot]org*.
