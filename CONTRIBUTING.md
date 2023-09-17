@@ -10,4 +10,5 @@ and try to access the `SVUNIT_INSTALL` variable.
 
 Steps:
 
-- Ensure that the tests pass. See
+- Ensure that the tests pass
+  * See [test/README](test/README) for details on how to run the tests
