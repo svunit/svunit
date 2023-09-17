@@ -1,6 +1,6 @@
 //###########################################################################
 //
-//  Copyright 2011-2021 The SVUnit Authors.
+//  Copyright 2023 The SVUnit Authors.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -16,25 +16,5 @@
 //
 //###########################################################################
 
-`include "svunit_defines.svh"
-`include "svunit_version_defines.svh"
-`include "svunit_internal_defines.svh"
 
-package svunit_pkg;
-
-`ifdef SVUNIT_VERSION
-  const string svunit_version = { "SVUnit ", `__svunit_stringify(`SVUNIT_VERSION) };
-`else
-  const string svunit_version = "For SVUnit Version info, see: $SVUNIT_INSTALL/VERSION.txt";
-`endif
-
-  `include "svunit_types.svh"
-  `include "svunit_string_utils.svh"
-  `include "svunit_base.sv"
-  `include "svunit_testcase.sv"
-  `include "svunit_testsuite.sv"
-  `include "svunit_testrunner.sv"
-  `include "svunit_filter_for_single_pattern.svh"
-  `include "svunit_filter.svh"
-  `include "svunit_globals.svh"
-endpackage
+`define SVUNIT_VERSION Unreleased
