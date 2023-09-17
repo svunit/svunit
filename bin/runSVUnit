@@ -246,5 +246,7 @@ if (system("$build_cmd")) {
   exit -1;
 }
 print $cmd . "\n";
-system("$cmd");
+if (system("$cmd")) {
+  exit INTERNAL_EXECUTION_ERROR;
+}
 system("svunit_user_feedback.pl")
