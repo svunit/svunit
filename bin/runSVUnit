@@ -204,7 +204,7 @@ if ($simulator eq "modelsim" or $simulator eq "riviera") {
   if (!grep(/(^| )(-gui|-c|-i)( |$)/, @simargs)) {
     push @simargs, "-c";
   }
-  $cmd .= qq! @compileargs; vsim @simargs -lib work -do "run -all; quit" -l $logfile testrunner!;
+  $cmd .= qq! @compileargs && vsim @simargs -lib work -do "run -all; quit" -l $logfile testrunner!;
 } elsif ($simulator eq "verilator") {
   my $verilator_simargs = "";
   $verilator_simargs .= " @simargs";

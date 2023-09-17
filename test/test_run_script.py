@@ -494,3 +494,42 @@ def test_non_zero_exit_code_from_executed_command_signals_internal_execution_err
         returncode = subprocess.call(['runSVUnit', '--sim', 'xcelium'])
 
     assert returncode == internal_execution_error
+
+
+def test_non_zero_exit_code_from_vlog_signals_internal_execution_error(tmpdir, monkeypatch):
+    internal_execution_error = 3
+
+    with tmpdir.as_cwd():
+        some_unit_test_that_gets_us_over_test_collection = pathlib.Path.cwd().joinpath('some_unit_test.sv')
+        some_unit_test_that_gets_us_over_test_collection.write_text("dummy content")
+
+        def fake_tool_that_succeeds(name):
+            executable = pathlib.Path(name)
+            log_file = 'fake_tool.log'
+            script = [
+                    'echo "{} called" > {}'.format(name, log_file),
+                    'exit 0'.format(log_file),
+                    ]
+            executable.write_text('\n'.join(script))
+            executable.chmod(0o700)
+            return executable
+
+        def fake_tool_that_fails(name):
+            executable = pathlib.Path(name)
+            log_file = 'fake_tool.log'
+            script = [
+                    'echo "{} called" > {}'.format(name, log_file),
+                    'exit 1'.format(log_file),
+                    ]
+            executable.write_text('\n'.join(script))
+            executable.chmod(0o700)
+            return executable
+
+        fake_tool_that_succeeds('vlib')
+        fake_tool_that_fails('vlog')
+        fake_tool_that_succeeds('vsim')
+        monkeypatch.setenv('PATH', '.', prepend=os.pathsep)
+
+        returncode = subprocess.call(['runSVUnit', '--sim', 'questa'])
+
+    assert returncode == internal_execution_error
