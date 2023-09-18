@@ -17,4 +17,4 @@
 //###########################################################################
 
 
-`define SVUNIT_VERSION Unreleased
+`define SVUNIT_VERSION 3.37.0
