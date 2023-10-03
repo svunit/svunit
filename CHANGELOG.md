@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- Fix warning in VCS when using `SVUNIT_CLK_GEN
 
 ## [3.37.0] - 2023-09-18
 

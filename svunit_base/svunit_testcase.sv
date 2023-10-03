@@ -60,6 +60,7 @@ class svunit_testcase extends svunit_base;
   extern function void start();
   extern function void stop();
   extern function bit  is_running();
+  extern task __wait_until_started();
 
   extern function void update_exit_status();
   extern function void report();
@@ -188,6 +189,13 @@ function bit svunit_testcase::is_running();
   return running;
 endfunction
 
+/*
+  Method: __wait_until_started
+  Returns when this test is running
+*/
+task svunit_testcase::__wait_until_started();
+  wait(running);
+endtask
 
 /*
   Methos: update_exit_status
