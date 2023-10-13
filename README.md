@@ -71,7 +71,7 @@ create_unit_test.pl bogus.sv
 ### 5. Run the unit tests
 
 ```shell
-runSVUnit -s <simulator> # simulator is ius, questa, modelsim, riviera or vcs
+runSVUnit -s <simulator> # simulator is ius, questa, modelsim, riviera, vcs or verilator
 ```
 
 ### 6. Repeat steps 4 and 5 until done
