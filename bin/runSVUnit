@@ -242,6 +242,12 @@ if (defined $uvm) {
 if (system("$build_cmd")) {
   exit -1;
 }
+if ($simulator eq "xsim") {
+    if (system("sed -i 's/\+incdir+/--include /g' $outdir/.svunit.f")) {
+        exit -1;
+    }
+}
+
 print $cmd . "\n";
 if (system("$cmd")) {
   exit INTERNAL_EXECUTION_ERROR;
