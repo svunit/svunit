@@ -170,6 +170,8 @@ if ($simulator eq "modelsim" or $simulator eq "riviera") {
 } elsif ($simulator eq "verilator") {
   $cmd .= "verilator --binary --top-module testrunner";
   $cmd .= qq! @compileargs!;
+} elsif ($simulator eq "xsim") {
+  $cmd .= "xvlog --sv --log $vlogfile ";
 } else {
   $cmd .= "$simulator -l $logfile ";
   $cmd .= "-f $vhdlfile " if $vhdlfile;
@@ -205,6 +207,8 @@ if ($simulator eq "modelsim" or $simulator eq "riviera") {
     $verilator_simargs .= " +SVUNIT_FILTER=$filter";
   }
   $cmd .= qq! && obj_dir/Vtestrunner $verilator_simargs 2>&1 | tee $logfile !;
+} elsif ($simulator eq "xsim") {
+  $cmd .= qq! @compileargs && xelab testrunner && xsim @simargs --R --log $logfile testrunner!;
 } else {
   $cmd .= " @compileargs @simargs -top testrunner";
 }
