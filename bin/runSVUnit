@@ -193,7 +193,14 @@ foreach (@filelists) {
 $cmd .= " -f .svunit.f";
 
 # defines
-$cmd .= " +define+" . join " +define+", @defines if (@defines > 0);
+if ($simulator ne "xsim") {
+    $cmd .= " +define+" . join " +define+", @defines if (@defines > 0);
+}
+else {
+    if (@defines > 0) {
+        $cmd .= ' ' . join(' ', map { "--define $_" } @defines);
+    }
+}
 
 if ($simulator eq "modelsim" or $simulator eq "riviera") {
   if (!grep(/(^| )(-gui|-c|-i)( |$)/, @simargs)) {
