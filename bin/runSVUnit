@@ -171,6 +171,7 @@ if ($simulator eq "modelsim" or $simulator eq "riviera") {
   $cmd .= "verilator --binary --top-module testrunner";
   $cmd .= qq! @compileargs!;
 } elsif ($simulator eq "xsim") {
+  $cmd .= "xvhdl -f $vhdlfile && " if $vhdlfile;
   $cmd .= "xvlog --sv --log $vlogfile ";
 } else {
   $cmd .= "$simulator -l $logfile ";
