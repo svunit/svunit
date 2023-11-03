@@ -221,7 +221,12 @@ if ($simulator eq "modelsim" or $simulator eq "riviera") {
 }
 
 if (defined $filter && $simulator ne "verilator") {
-  $cmd .= " +SVUNIT_FILTER=$filter";
+  if ($simulator eq "xsim") {
+    $cmd .= " --testplusarg SVUNIT_FILTER=$filter";
+  }
+  else {
+    $cmd .= " +SVUNIT_FILTER=$filter";
+  }
 }
 
 my $build_cmd = "buildSVUnit -o $outdir";
