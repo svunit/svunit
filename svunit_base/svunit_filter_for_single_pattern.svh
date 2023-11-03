@@ -47,43 +47,27 @@ class filter_for_single_pattern;
     for (int i = 0; i < pattern.len(); i++)
       if (pattern[i] == ".")
         return i;
-`ifndef XILINX_SIMULATOR
-    $fatal(0, error_msg);
-`else
-    $fatal(error_msg);
-`endif
+    `__svunit_fatal(error_msg);
   endfunction
 
 
   local function void ensure_no_more_dots(string pattern, int unsigned first_dot_idx);
     for (int i = first_dot_idx+1; i < pattern.len(); i++)
       if (pattern[i] == ".")
-`ifndef XILINX_SIMULATOR
-        $fatal(0, error_msg);
-`else
-        $fatal(error_msg);
-`endif
+        `__svunit_fatal(error_msg);
   endfunction
 
 
   local function void disallow_partial_wildcards(string field_name, string field_value);
     if (field_value != "*")
       if (str_contains_char(field_value, "*"))
-`ifndef XILINX_SIMULATOR
-        $fatal(0, $sformatf("Partial wildcards in %s names aren't currently supported", field_name));
-`else
-        $fatal($sformatf("Partial wildcards in %s names aren't currently supported", field_name));
-`endif
+        `__svunit_fatal($sformatf("Partial wildcards in %s names aren't currently supported", field_name));
   endfunction
 
 
   local static function bit str_contains_char(string s, string c);
     if (c.len() != 1)
-`ifndef XILINX_SIMULATOR
-      $fatal(0, "Expected a single character");
-`else
-      $fatal("Expected a single character");
-`endif
+      `__svunit_fatal("Expected a single character");
     foreach (s[i])
       if (s[i] == c[0])
         return 1;
