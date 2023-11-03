@@ -13,7 +13,7 @@ def get_path_without_sims():
     for sim_name in ['xrun', 'dsim', 'vsim', "qrun", "verilator"]:
         sim = shutil.which(sim_name)
         if sim:
-            paths = list(filter(lambda p: p != os.path.dirname(sim), paths))
+            paths = list(filter(lambda p: pathlib.Path(p) != pathlib.Path(sim).parent, paths))
     return os.path.pathsep.join(paths)
 
 
