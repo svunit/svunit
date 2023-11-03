@@ -18,6 +18,8 @@ def test_wavedrom_0(datafiles):
 def test_wavedrom_1(datafiles, simulator):
     if simulator == 'verilator':
         pytest.skip(f"'Generated code has mismatching lengths and other lint warnings")
+    if simulator == 'xsim':
+        pytest.skip(f"'Wavedrom code isn't handled by `buildSVUnit`, but by `svunit.f` incompatible with `xvlog`")
     with datafiles.as_cwd():
         subprocess.check_call(['runSVUnit', '-s', simulator, '-w'])
         expect_testrunner_pass('run.log')
