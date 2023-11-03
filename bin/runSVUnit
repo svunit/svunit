@@ -134,7 +134,7 @@ clean();
 
 # Extract simulator from PATH if nothing passed as argument
 if ($simulator eq "") {
-  my @sims = qw(xrun irun qrun vsim vcs dsim verilator);
+  my @sims = qw(xrun irun qrun vsim vcs dsim verilator xsim);
   foreach my $sim (@sims) {
     if (system("which $sim > /dev/null 2>&1") == 0) {
       $simulator = $sim;
@@ -152,7 +152,7 @@ $simulator =~ s/questa/modelsim/;
 $simulator =~ s/ius/irun/;
 $simulator =~ s/xcelium/xrun/;
 
-if (not grep { $_ eq $simulator } qw(xrun irun modelsim riviera vcs dsim qrun verilator)) {
+if (not grep { $_ eq $simulator } qw(xrun irun modelsim riviera vcs dsim qrun verilator xsim)) {
   print("Could not determine simulator. None found on 'PATH' and none specified via command line\n");
   usage()
 }
@@ -170,6 +170,9 @@ if ($simulator eq "modelsim" or $simulator eq "riviera") {
 } elsif ($simulator eq "verilator") {
   $cmd .= "verilator --binary --top-module testrunner";
   $cmd .= qq! @compileargs!;
+} elsif ($simulator eq "xsim") {
+  $cmd .= "xvhdl -f $vhdlfile && " if $vhdlfile;
+  $cmd .= "xvlog --sv --log $vlogfile ";
 } else {
   $cmd .= "$simulator -l $logfile ";
   $cmd .= "-f $vhdlfile " if $vhdlfile;
@@ -180,6 +183,7 @@ if (defined $uvm) {
   $cmd .= " -uvm" if ($simulator eq "xrun" or $simulator eq "irun");
   $cmd .= " -ntb_opts uvm" if $simulator eq "vcs";
   $cmd .= ' +incdir+$UVM_HOME/src $UVM_HOME/src/uvm.sv -sv_lib $UVM_HOME/src/dpi/libuvm_dpi.so' if $simulator eq "dsim";
+  $cmd .= " --lib uvm" if $simulator eq "xsim";
   push @defines, "RUN_SVUNIT_WITH_UVM";
 }
 
@@ -191,7 +195,14 @@ foreach (@filelists) {
 $cmd .= " -f .svunit.f";
 
 # defines
-$cmd .= " +define+" . join " +define+", @defines if (@defines > 0);
+if ($simulator ne "xsim") {
+    $cmd .= " +define+" . join " +define+", @defines if (@defines > 0);
+}
+else {
+    if (@defines > 0) {
+        $cmd .= ' ' . join(' ', map { "--define $_" } @defines);
+    }
+}
 
 if ($simulator eq "modelsim" or $simulator eq "riviera") {
   if (!grep(/(^| )(-gui|-c|-i)( |$)/, @simargs)) {
@@ -205,12 +216,19 @@ if ($simulator eq "modelsim" or $simulator eq "riviera") {
     $verilator_simargs .= " +SVUNIT_FILTER=$filter";
   }
   $cmd .= qq! && obj_dir/Vtestrunner $verilator_simargs 2>&1 | tee $logfile !;
+} elsif ($simulator eq "xsim") {
+  $cmd .= qq! @compileargs && xelab testrunner && xsim @simargs --R --log $logfile testrunner!;
 } else {
   $cmd .= " @compileargs @simargs -top testrunner";
 }
 
 if (defined $filter && $simulator ne "verilator") {
-  $cmd .= " +SVUNIT_FILTER=$filter";
+  if ($simulator eq "xsim") {
+    $cmd .= " --testplusarg SVUNIT_FILTER=$filter";
+  }
+  else {
+    $cmd .= " +SVUNIT_FILTER=$filter";
+  }
 }
 
 my $build_cmd = "buildSVUnit -o $outdir";
@@ -238,6 +256,12 @@ if (defined $uvm) {
 if (system("$build_cmd")) {
   exit -1;
 }
+if ($simulator eq "xsim") {
+    if (system("sed -i 's/\+incdir+/--include /g' $outdir/.svunit.f")) {
+        exit -1;
+    }
+}
+
 print $cmd . "\n";
 if (system("$cmd")) {
   exit INTERNAL_EXECUTION_ERROR;

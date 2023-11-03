@@ -18,3 +18,10 @@
 
 
 `define __svunit_stringify(s) `"s`"
+
+`define __svunit_fatal(s) \
+  `ifndef XILINX_SIMULATOR \
+    $fatal(0, s); \
+  `else \
+    $fatal(s); \
+  `endif
