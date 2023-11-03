@@ -192,6 +192,8 @@ def test_sim_12(datafiles, simulator):
 @all_files_in_dir('sim_13')
 @all_available_simulators()
 def test_sim_13(datafiles, simulator):
+    if simulator == 'xsim':
+        pytest.skip(f"'Timeout set in `svunit.f` by `+define+` incompatible with `xvlog`")
     with datafiles.as_cwd():
         subprocess.check_call(['runSVUnit', '-s', simulator])
 
