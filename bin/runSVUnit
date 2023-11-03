@@ -134,7 +134,7 @@ clean();
 
 # Extract simulator from PATH if nothing passed as argument
 if ($simulator eq "") {
-  my @sims = qw(xrun irun qrun vsim vcs dsim verilator);
+  my @sims = qw(xrun irun qrun vsim vcs dsim verilator xsim);
   foreach my $sim (@sims) {
     if (system("which $sim > /dev/null 2>&1") == 0) {
       $simulator = $sim;
