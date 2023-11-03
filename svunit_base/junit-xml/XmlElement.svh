@@ -59,6 +59,11 @@ class XmlElement;
 
   local function string get_start_tag_contents();
     string result = tag;
+`ifdef XILINX_SIMULATOR
+    // XXX WORKAROUND Vivado somehow manages to overwrite `tag` if we assign it to `result`.
+    // It probably does some dumb referencing, instead of allocating a new string variable.
+    result = { tag };
+`endif
     foreach (attributes[i])
       result = { result, " ", $sformatf("%s=\"%s\"", i, attributes[i])};
     return result;
