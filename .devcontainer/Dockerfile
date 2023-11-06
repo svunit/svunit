@@ -18,6 +18,11 @@ RUN groupadd --gid $USER_GID $USERNAME \
 # ********************************************************
 # * Anything else you want to do like clean up goes here *
 # ********************************************************
+RUN apt-get update \
+    && DEBIAN_FRONTEND=noninteractive \
+    && apt-get install --no-install-recommends -y \
+                        python3.10-venv \
+    && apt-get clean
 
 # [Optional] Set the default user. Omit if you want to keep the default as root.
 USER $USERNAME
