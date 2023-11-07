@@ -10,6 +10,8 @@ NOTE: for instructions on how to get going with SVUnit, go to
 
 NOTE: Refer also to the FAQ at: www.agilesoc.com/svunit/svunit-FAQ
 
+NOTE: Refer the wiki page for detailed step-by-step learning!
+https://github.com/mbits-mirafra/svunit/wiki
 
 ## Release Notes
 
