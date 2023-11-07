@@ -94,7 +94,10 @@ def test_sim_4(datafiles, simulator):
 @all_available_simulators()
 def test_sim_5(datafiles, simulator):
     with datafiles.as_cwd():
-        subprocess.check_call(['runSVUnit', '-s', simulator, '-r', '+JOKES +DUD=4', '--r_arg', '+BOZO'])
+        if simulator != 'xsim':
+            subprocess.check_call(['runSVUnit', '-s', simulator, '-r', '+JOKES +DUD=4', '--r_arg', '+BOZO'])
+        else:
+            subprocess.check_call(['runSVUnit', '-s', simulator, '-r', '--testplusarg JOKES --testplusarg DUD=4', '--r_arg', '--testplusarg BOZO'])
 
         expect_testrunner_pass('run.log')
 
@@ -103,7 +106,10 @@ def test_sim_5(datafiles, simulator):
 @all_available_simulators()
 def test_sim_6(datafiles, simulator):
     with datafiles.as_cwd():
-        subprocess.check_call(['runSVUnit', '-s', simulator, '-c', '+define+JOKES +define+DUD=4', '--c_arg', '+define+BOZO'])
+        if simulator != 'xsim':
+            subprocess.check_call(['runSVUnit', '-s', simulator, '-c', '+define+JOKES +define+DUD=4', '--c_arg', '+define+BOZO'])
+        else:
+            subprocess.check_call(['runSVUnit', '-s', simulator, '-c', '--define JOKES --define DUD=4', '--c_arg', '--define BOZO'])
 
         expect_testrunner_pass('run.log')
 
@@ -186,6 +192,8 @@ def test_sim_12(datafiles, simulator):
 @all_files_in_dir('sim_13')
 @all_available_simulators()
 def test_sim_13(datafiles, simulator):
+    if simulator == 'xsim':
+        pytest.skip(f"'Timeout set in `svunit.f` by `+define+` incompatible with `xvlog`")
     with datafiles.as_cwd():
         subprocess.check_call(['runSVUnit', '-s', simulator])
 

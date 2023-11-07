@@ -37,3 +37,9 @@ qrun.out/
 
 # Verilator
 obj_dir/
+
+# Vivado Simulator
+xsim.dir/
+xvlog.pb
+xelab.pb
+xsim*.jou

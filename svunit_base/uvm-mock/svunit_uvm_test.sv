@@ -41,6 +41,10 @@ class svunit_uvm_test extends uvm_test;
   static local bit   m_finish_e;
 
   static local bit   m_in_pre_reset;
+`ifdef XILINX_SIMULATOR
+  local static event pre_reset_phase_started;
+`endif
+
   static local bit   m_in_main;
 
   function new(string name = "", uvm_component parent = null);
@@ -66,7 +70,11 @@ class svunit_uvm_test extends uvm_test;
   endfunction
 
   static task wait_for_ready();
+`ifndef XILINX_SIMULATOR
     @(posedge m_in_pre_reset);
+`else
+    @(pre_reset_phase_started);
+`endif
   endtask
 
   static function bit is_running();
@@ -80,6 +88,9 @@ class svunit_uvm_test extends uvm_test;
   task pre_reset_phase(uvm_phase phase);
     phase.raise_objection(null);
     m_in_pre_reset = 1;
+`ifdef XILINX_SIMULATOR
+    -> pre_reset_phase_started;
+`endif
     if (!m_start_e) @m_start;
     m_start_e = 0;
     phase.drop_objection(null);
