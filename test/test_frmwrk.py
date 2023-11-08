@@ -640,3 +640,18 @@ def test_called_with_filter_option__plusarg_passed(tmpdir, monkeypatch):
         subprocess.check_call(['runSVUnit', '--filter', 'foo.bar'])
 
         assert '+SVUNIT_FILTER=foo.bar' in pathlib.Path('fake_tool.log').read_text()
+
+
+def test_vivado_can_take_elab_args(tmpdir, monkeypatch):
+    with tmpdir.as_cwd():
+        fake_tool('xsim', log_name_is_tool_name=True)
+        fake_tool('xvlog', log_name_is_tool_name=True)
+        fake_tool('xelab',log_name_is_tool_name=True)
+
+        monkeypatch.setenv('PATH', get_path_without_sims())
+        monkeypatch.setenv('PATH', '.', prepend=os.pathsep)
+
+        pathlib.Path('dummy_unit_test.sv').write_text('dummy')
+        subprocess.check_call(['runSVUnit', '-e_arg', 'some-arg'])
+
+        assert 'some-arg' in pathlib.Path('fake_xelab.log').read_text()
