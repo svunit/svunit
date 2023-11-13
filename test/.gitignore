@@ -3,6 +3,9 @@ __pycache__
 .venv
 /.pytest_cache/
 
+# direnv
+.direnv/
+
 # pytest-html
 *.html
 assets/

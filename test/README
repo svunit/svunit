@@ -2,7 +2,10 @@
 Setup
 =================
 
-The test suite uses 'pytest'. It requires at least Python 3.6. To set up call:
+The test suite uses 'pytest'. It requires at least Python 3.6.
+When using *direnv*, everything should be automatically set up.
+
+To set up manually, call:
 
     python3 -m venv .venv
     source .venv/bin/activate
