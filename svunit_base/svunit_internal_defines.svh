@@ -23,5 +23,5 @@
   `ifndef XILINX_SIMULATOR \
     $fatal(0, s); \
   `else \
-    $fatal(s); \
+    $fatal(1, s); \
   `endif
