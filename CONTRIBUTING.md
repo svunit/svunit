@@ -1,3 +1,8 @@
+## Environment management
+
+This project uses [direnv](https://direnv.net/) to manage its development environment.
+
+
 ## Development using VS Code
 
 Currently, VS Code has to be started from a shell
