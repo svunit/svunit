@@ -11,6 +11,7 @@ SVUnit unit tests are run using runSVUnit. Usage of runSVUnit is as follows::
     -f|--filelist <file>     : some verilog file list
     -r|--r_arg <option>      : specify additional runtime options
     -c|--c_arg <option>      : specify additional compile options
+    -e|--e_arg <option>      : specify additional elaboration options
     -U|--uvm                 : run SVUnit with UVM
     -o|--out                 : output directory for tmp and simulation files
     -t|--test                : specifies a unit test to run (multiple can be given)
@@ -46,10 +47,10 @@ Through the use of \`include directives, both the unit test template and corresp
     The file svunit.f is automatically included for compilation provided it exists. Thus, files can be added to svunit.f without having to specify '-f svunit.f' on the command line.
 
 
-Adding Run Time and/or Compile Time Options
--------------------------------------------
+Adding Run Time and/or Compile and/or Elaboration Options
+---------------------------------------------------------
 
-It is possible to specified compile and run time options using the '-c_arg' and '-r_arg' switches respectively. All compile and run time arguments are passed directly to the simulator command line.
+It is possible to specify compile and run time options using the '-c_arg', '-e_arg' and '-r_arg' switches respectively. All compile, elaboration and run time arguments are passed directly to the simulator command line.
 
 
 Enable UVM Component Unit Testing

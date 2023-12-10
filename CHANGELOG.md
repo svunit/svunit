@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Add support for Xilinx Vivado (TM) Simulator
+- Add possibility to specify elaboration options
 
 ### Fixed
 - Fix warning in VCS when using `SVUNIT_CLK_GEN
