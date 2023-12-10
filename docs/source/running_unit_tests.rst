@@ -49,7 +49,7 @@ Through the use of \`include directives, both the unit test template and corresp
 Adding Run Time and/or Compile Time Options
 -------------------------------------------
 
-It is possible to specified compile and run time options using the '-c_arg' and '-r_arg' switches respectively. All compile and run time arguments are passed directly to the simulator command line.
+It is possible to specify compile and run time options using the '-c_arg' and '-r_arg' switches respectively. All compile and run time arguments are passed directly to the simulator command line.
 
 
 Enable UVM Component Unit Testing
