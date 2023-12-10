@@ -17,9 +17,9 @@ def get_path_without_sims():
     return os.path.pathsep.join(paths)
 
 
-def fake_tool(name):
+def fake_tool(name, log_name_is_tool_name=False):
     executable = pathlib.Path(name)
-    log_file = 'fake_tool.log'
+    log_file = 'fake_tool.log' if not log_name_is_tool_name else f'fake_{name}.log'
     script = [
             'echo "{} called" > {}'.format(name, log_file),
             'echo "args:" >> {}'.format(log_file),
