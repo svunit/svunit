@@ -655,3 +655,16 @@ def test_vivado_can_take_elab_args(tmpdir, monkeypatch):
         subprocess.check_call(['runSVUnit', '-e_arg', 'some-arg'])
 
         assert 'some-arg' in pathlib.Path('fake_xelab.log').read_text()
+
+
+def test_xcelium_can_take_elab_args(tmpdir, monkeypatch):
+    with tmpdir.as_cwd():
+        fake_tool('xrun', log_name_is_tool_name=True)
+
+        monkeypatch.setenv('PATH', get_path_without_sims())
+        monkeypatch.setenv('PATH', '.', prepend=os.pathsep)
+
+        pathlib.Path('dummy_unit_test.sv').write_text('dummy')
+        subprocess.check_call(['runSVUnit', '-e_arg', 'some-arg'])
+
+        assert 'some-arg' in pathlib.Path('fake_xrun.log').read_text()

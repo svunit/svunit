@@ -222,7 +222,7 @@ if ($simulator eq "modelsim" or $simulator eq "riviera") {
 } elsif ($simulator eq "xsim") {
   $cmd .= qq! @compileargs && xelab testrunner @elabargs && xsim @simargs --R --log $logfile testrunner!;
 } else {
-  $cmd .= " @compileargs @simargs -top testrunner";
+  $cmd .= " @compileargs @elabargs @simargs -top testrunner";
 }
 
 if (defined $filter && $simulator ne "verilator") {
