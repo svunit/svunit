@@ -668,3 +668,33 @@ def test_xcelium_can_take_elab_args(tmpdir, monkeypatch):
         subprocess.check_call(['runSVUnit', '-e_arg', 'some-arg'])
 
         assert 'some-arg' in pathlib.Path('fake_xrun.log').read_text()
+
+
+def test_questasim_can_take_elab_args(tmpdir, monkeypatch):
+    with tmpdir.as_cwd():
+        fake_tool('vsim', log_name_is_tool_name=True)
+        fake_tool('vlib', log_name_is_tool_name=True)
+        fake_tool('vlog', log_name_is_tool_name=True)
+
+        monkeypatch.setenv('PATH', get_path_without_sims())
+        monkeypatch.setenv('PATH', '.', prepend=os.pathsep)
+
+        pathlib.Path('dummy_unit_test.sv').write_text('dummy')
+        subprocess.check_call(['runSVUnit', '-e_arg', 'some-arg'])
+
+        assert '-voptargs=some-arg' in pathlib.Path('fake_vsim.log').read_text()
+
+
+def test_questasim_can_handle_no_elab_args(tmpdir, monkeypatch):
+    with tmpdir.as_cwd():
+        fake_tool('vsim', log_name_is_tool_name=True)
+        fake_tool('vlib', log_name_is_tool_name=True)
+        fake_tool('vlog', log_name_is_tool_name=True)
+
+        monkeypatch.setenv('PATH', get_path_without_sims())
+        monkeypatch.setenv('PATH', '.', prepend=os.pathsep)
+
+        pathlib.Path('dummy_unit_test.sv').write_text('dummy')
+        subprocess.check_call(['runSVUnit'])
+
+        assert '-voptargs' not in pathlib.Path('fake_vsim.log').read_text()
