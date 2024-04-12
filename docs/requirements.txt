@@ -3,7 +3,7 @@ Babel==2.11.0
 certifi==2023.7.22
 charset-normalizer==2.0.12
 docutils==0.18.1
-idna==3.4
+idna==3.7
 imagesize==1.4.1
 importlib-metadata==4.8.3
 Jinja2==3.1.3
