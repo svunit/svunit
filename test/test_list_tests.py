@@ -175,3 +175,43 @@ endmodule
     subprocess.check_call(['runSVUnit', '-s', simulator, '--list-tests'], cwd=tmp_path)
     log = tmp_path.joinpath('run.log')
     assert 'RUNNING' not in log.read_text()
+
+
+@all_available_simulators()
+def test_that_status_is_not_reported_when_option_used(simulator, tmp_path):
+    some_unit_test = tmp_path.joinpath('some_unit_test.sv')
+    some_unit_test.write_text('''
+module some_unit_test;
+
+  import svunit_pkg::*;
+  `include "svunit_defines.svh"
+
+  string name = "some_ut";
+  svunit_testcase svunit_ut;
+
+  function void build();
+    svunit_ut = new(name);
+  endfunction
+
+  task setup();
+    svunit_ut.setup();
+  endtask
+
+  task teardown();
+    svunit_ut.teardown();
+  endtask
+
+  `SVUNIT_TESTS_BEGIN
+
+    `SVTEST(some_test)
+      `FAIL_IF(1)
+    `SVTEST_END
+
+  `SVUNIT_TESTS_END
+
+endmodule
+    ''')
+
+    subprocess.check_call(['runSVUnit', '-s', simulator, '--list-tests'], cwd=tmp_path)
+    log = tmp_path.joinpath('run.log')
+    assert 'PASSED' not in log.read_text()

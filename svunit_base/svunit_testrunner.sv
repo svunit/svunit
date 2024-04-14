@@ -93,6 +93,9 @@ function void svunit_testrunner::report();
   int     pass_cnt;
   string  success_str;
 
+  if ($test$plusargs("SVUNIT_LIST_TESTS"))
+    return;
+
   pass_cnt = get_num_passing_testsuites();
 
   if (pass_cnt == list_of_suites.size()) begin
