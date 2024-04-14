@@ -91,6 +91,9 @@ endfunction
   Main Run Task of the Test Suite
 */
 task svunit_testsuite::run();
+  if ($test$plusargs("SVUNIT_LIST_TESTS"))
+    return;
+
   `INFO("RUNNING");
 endtask
 
