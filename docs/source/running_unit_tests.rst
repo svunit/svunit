@@ -98,3 +98,10 @@ Both options are useful, as they serve different purposes.
 The '-t' option is helpful when API changes would require modifications to many unit test files, but you would like to update them one after the other.
 It is also a very blunt tool, as compilation can only be handled at the file level.
 The '--filter' option can be used to focus on finer subsets of tests.
+
+Listing Test Names
+------------------
+
+It is possible to list available tests without actually running them::
+
+    runSVUnit --list-tests
