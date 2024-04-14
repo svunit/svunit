@@ -135,7 +135,9 @@
 */
 `define SVUNIT_TESTS_BEGIN \
   task automatic run(); \
-    if (!$test$plusargs("SVUNIT_LIST_TESTS")) \
+    if ($test$plusargs("SVUNIT_LIST_TESTS")) \
+      $display(name); \
+    else \
       `INFO("RUNNING");
 
 /*
