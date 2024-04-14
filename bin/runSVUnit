@@ -222,6 +222,9 @@ if ($simulator eq "modelsim" or $simulator eq "riviera") {
   if (defined $filter) {
     $verilator_simargs .= " +SVUNIT_FILTER=$filter";
   }
+  if (defined $list_tests) {
+    $verilator_simargs .= " +SVUNIT_LIST_TESTS";
+  }
   $cmd .= qq! && obj_dir/Vtestrunner $verilator_simargs 2>&1 | tee $logfile !;
 } elsif ($simulator eq "xsim") {
   $cmd .= qq! @compileargs && xelab testrunner @elabargs && xsim @simargs --R --log $logfile testrunner!;
@@ -236,6 +239,15 @@ if (defined $filter && $simulator ne "verilator") {
   else {
     $cmd .= " +SVUNIT_FILTER=$filter";
   }
+}
+
+if (defined $list_tests) {
+    if ($simulator eq "xsim") {
+        $cmd .= " --testplusarg SVUNIT_LIST_TESTS";
+    }
+    else {
+        $cmd .= " +SVUNIT_LIST_TESTS";
+    }
 }
 
 my $build_cmd = "buildSVUnit -o $outdir";
