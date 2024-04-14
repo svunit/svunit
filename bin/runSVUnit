@@ -55,6 +55,7 @@ my $vhdlfile;
 my @tests;
 my $filter;
 my $enable_experimental;
+my $list_tests;
 my $help;
 
 sub usage () {
@@ -75,6 +76,7 @@ sub usage () {
   print "     --filter <filter>     : specify which tests to run, as <test_module>.<test_name>\n";
   print "     --directory           : only run svunit discovery on selected directories\n";
   print "     --enable-experimental : enable experimental features\n";
+  print "     --list-tests          : lists available tests without actually running them\n";
   print "  -h|--help                : prints this help screen\n";
   print "\n";
   exit 1;
@@ -111,6 +113,7 @@ GetOptions("l|log=s" => \$logfile,
            "w|wavedrom" => \$wavedrom,
            "directory=s" => \@directory,
            "enable-experimental" => \$enable_experimental,
+           "list-tests" => \$list_tests,
            "h|help" => \$help
            ) or usage();
 
