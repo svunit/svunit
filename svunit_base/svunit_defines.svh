@@ -135,6 +135,9 @@
 */
 `define SVUNIT_TESTS_BEGIN \
   task automatic run(); \
+    if ($test$plusargs("SVUNIT_LIST_TESTS")) \
+      return; \
+    \
     `INFO("RUNNING");
 
 /*
@@ -151,7 +154,7 @@
   REQUIRES ACCESS TO error_count
 */
 `define SVTEST(_NAME_) \
-  if (svunit_pkg::_filter.is_selected(svunit_ut, `"_NAME_`") && !$test$plusargs("SVUNIT_LIST_TESTS")) begin : _NAME_ \
+  if (svunit_pkg::_filter.is_selected(svunit_ut, `"_NAME_`")) begin : _NAME_ \
     string _testName = `"_NAME_`"; \
     integer local_error_count = svunit_ut.get_error_count(); \
     string fileName; \
