@@ -13,7 +13,7 @@ def test_list_tests_option_exists(tmp_path):
 
 
 @all_available_simulators()
-def test_that_core_informed_when_option_used(simulator, tmp_path):
+def test_that_tests_are_not_run_when_option_used(simulator, tmp_path):
     some_unit_test = tmp_path.joinpath('some_unit_test.sv')
     some_unit_test.write_text('''
 module some_unit_test;
@@ -39,8 +39,7 @@ module some_unit_test;
   `SVUNIT_TESTS_BEGIN
 
     `SVTEST(some_test)
-      string list_tests_plusarg = "SVUNIT_LIST_TESTS";
-      `FAIL_UNLESS($test$plusargs(list_tests_plusarg))
+      `FAIL_IF(1)
     `SVTEST_END
 
   `SVUNIT_TESTS_END
