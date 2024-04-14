@@ -1,4 +1,6 @@
 *.log
+*.bak
+*.bak.*
 
 # DVT
 .dvt/build.config.xml
