@@ -94,11 +94,17 @@ def test_that_status_is_not_reported_when_option_used(simulator, setup_with_one_
 def test_that_test_from_test_case_is_printed_when_option_used(simulator, setup_with_one_test_case):
     subprocess.check_call(['runSVUnit', '-s', simulator, '--list-tests'])
     with open(pathlib.Path('run.log'), 'r') as log:
-        assert sum(1 for line in log if line == "    some_test\n") == 1
+        if simulator not in ['modelsim', 'qrun']:
+            assert sum(1 for line in log if line == "    some_test\n") == 1
+        else:
+            assert sum(1 for line in log if line == "#     some_test\n") == 1
 
 
 @all_available_simulators()
 def test_that_test_case_is_printed_when_option_used(simulator, setup_with_one_test_case):
     subprocess.check_call(['runSVUnit', '-s', simulator, '--list-tests'])
     log = pathlib.Path('run.log')
-    assert "some_ut\n    some_test\n" in log.read_text()
+    if simulator not in ['modelsim', 'qrun']:
+        assert "some_ut\n    some_test\n" in log.read_text()
+    else:
+        assert "# some_ut\n#     some_test\n" in log.read_text()
