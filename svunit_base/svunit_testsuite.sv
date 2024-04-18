@@ -91,6 +91,9 @@ endfunction
   Main Run Task of the Test Suite
 */
 task svunit_testsuite::run();
+  if ($test$plusargs("SVUNIT_LIST_TESTS"))
+    return;
+
   `INFO("RUNNING");
 endtask
 
@@ -102,6 +105,9 @@ endtask
 function void svunit_testsuite::report();
   int     pass_cnt;
   string  success_str;
+
+  if ($test$plusargs("SVUNIT_LIST_TESTS"))
+    return;
 
   foreach(list_of_testcases[i])
     list_of_testcases[i].report();

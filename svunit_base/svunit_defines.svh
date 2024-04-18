@@ -135,7 +135,10 @@
 */
 `define SVUNIT_TESTS_BEGIN \
   task automatic run(); \
-    `INFO("RUNNING");
+    if ($test$plusargs("SVUNIT_LIST_TESTS")) \
+      $display(name); \
+    else \
+      `INFO("RUNNING");
 
 /*
   Macro: `SVUNIT_TESTS_END
@@ -151,7 +154,11 @@
   REQUIRES ACCESS TO error_count
 */
 `define SVTEST(_NAME_) \
-  if (svunit_pkg::_filter.is_selected(svunit_ut, `"_NAME_`")) begin : _NAME_ \
+  if ($test$plusargs("SVUNIT_LIST_TESTS")) begin \
+    string test_name = `"_NAME_`"; \
+    $display({ "    ", test_name }); /* XXX WORKAROUND Verilator doesn't like it when we stringify the macro argument in the concatenation */ \
+  end \
+  else if (svunit_pkg::_filter.is_selected(svunit_ut, `"_NAME_`")) begin : _NAME_ \
     string _testName = `"_NAME_`"; \
     integer local_error_count = svunit_ut.get_error_count(); \
     string fileName; \
