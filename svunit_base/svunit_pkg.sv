@@ -23,6 +23,7 @@
 package svunit_pkg;
 
   const string svunit_version = { "SVUnit ", `__svunit_stringify(`SVUNIT_VERSION) };
+  `include "svunit_globals.svh"
 
   `include "svunit_types.svh"
   `include "svunit_string_utils.svh"
@@ -33,5 +34,5 @@ package svunit_pkg;
   `include "svunit_testrunner.sv"
   `include "svunit_filter_for_single_pattern.svh"
   `include "svunit_filter.svh"
-  `include "svunit_globals.svh"
+
 endpackage

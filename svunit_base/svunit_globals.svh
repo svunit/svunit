@@ -16,6 +16,10 @@
 //
 //###########################################################################
 
+typedef class svunit_testcase;
+typedef class filter;
+
+
 // The current testcase that is being executed.
 svunit_testcase current_tc;
 
