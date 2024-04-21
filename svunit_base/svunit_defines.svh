@@ -168,7 +168,6 @@
                   svunit_ut.wait_for_error(); \
                 end \
               end \
-              `SVUNIT_FUSE \
             join_any \
 `ifndef VERILATOR \
             #0; \
@@ -223,13 +222,20 @@
       super.new(`__svunit_stringify(_NAME_)); \
     endfunction \
     \
-    virtual task run();
+    local task __run();
 
 /*
   Macro: `SVTEST_END
   END an svunit test within an SVUNIT_TEST_BEGIN/END block
 */
 `define SVTEST_END \
+    endtask \
+    \
+    virtual task run(); \
+      fork \
+        __run(); \
+        `SVUNIT_FUSE \
+      join_any \
     endtask \
   endclass
 
