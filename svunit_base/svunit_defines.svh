@@ -150,22 +150,7 @@
         svunit_ut.add_junit_test_case(_testName); \
         svunit_ut.start(); \
         setup(); \
-        fork \
-          begin \
-            fork \
-              test.run(); \
-              begin \
-                if (svunit_ut.get_error_count() == local_error_count) begin \
-                  svunit_ut.wait_for_error(); \
-                end \
-              end \
-            join_any \
-`ifndef VERILATOR \
-            #0; \
-            disable fork; \
-`endif \
-          end \
-        join \
+        svunit_ut.__run_test(test); \
         svunit_ut.stop(); \
         teardown(); \
         if (svunit_ut.get_error_count() == local_error_count) \

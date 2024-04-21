@@ -94,6 +94,28 @@ class svunit_testcase extends svunit_base;
     return junit_test_cases;
   endfunction
 
+
+  task __run_test(svunit_test test);
+    integer local_error_count = get_error_count();
+
+    fork
+      begin
+        fork
+          test.run();
+          begin
+            if (get_error_count() == local_error_count) begin
+              wait_for_error();
+            end
+          end
+        join_any
+`ifndef VERILATOR
+        #0;
+        disable fork;
+`endif
+      end
+    join
+  endtask
+
 endclass
 
 
