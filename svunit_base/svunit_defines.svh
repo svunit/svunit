@@ -178,7 +178,7 @@
     \
     virtual task run(); \
       fork \
-        run_``_NAME_``(); \
+        SVTEST_``_NAME_``(); \
         `SVUNIT_FUSE \
       join_any \
     endtask \
@@ -195,7 +195,7 @@
   \
   /* Need to define test body in a separate task due to Verilator issue when module variables are used in class methods. */ \
   /* See https://github.com/verilator/verilator/issues/5060 */ \
-  task automatic run_``_NAME_``();
+  task automatic SVTEST_``_NAME_``();
 
 
 /*
