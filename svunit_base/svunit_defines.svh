@@ -176,18 +176,9 @@
       super.new(`__svunit_stringify(_NAME_)); \
     endfunction \
     \
-    local task __run();
-
-/*
-  Macro: `SVTEST_END
-  END an svunit test within an SVUNIT_TEST_BEGIN/END block
-*/
-`define SVTEST_END \
-    endtask \
-    \
     virtual task run(); \
       fork \
-        __run(); \
+        run_``_NAME_``(); \
         `SVUNIT_FUSE \
       join_any \
     endtask \
@@ -200,7 +191,19 @@
       teardown(); \
     endtask \
     \
-  endclass
+  endclass \
+  \
+  /* Need to define test body in a separate task due to Verilator issue when module variables are used in class methods. */ \
+  /* See https://github.com/verilator/verilator/issues/5060 */ \
+  task automatic run_``_NAME_``();
+
+
+/*
+  Macro: `SVTEST_END
+  END an svunit test within an SVUNIT_TEST_BEGIN/END block
+*/
+`define SVTEST_END \
+  endtask
 
 `define SVUNIT_FUSE \
 `ifdef SVUNIT_TIMEOUT \
