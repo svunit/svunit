@@ -95,25 +95,58 @@ class svunit_testcase extends svunit_base;
   endfunction
 
 
-  task __run_test(svunit_test test);
-    integer local_error_count = get_error_count();
+  task automatic run();
+    if ($test$plusargs("SVUNIT_LIST_TESTS"))
+      $display(name);
+    else
+      `INFO("RUNNING");
 
-    fork
-      begin
-        fork
-          test.run();
-          begin
-            if (get_error_count() == local_error_count) begin
-              wait_for_error();
+    foreach (tests[i]) begin
+      run_test(tests[i]);
+    end
+  endtask
+
+
+  local task run_test(svunit_pkg::svunit_test test);
+    if ($test$plusargs("SVUNIT_LIST_TESTS")) begin
+      string test_name = test.get_name();
+      $display({ "    ", test_name }); /* XXX WORKAROUND Verilator doesn't like it when we stringify the macro argument in the concatenation */
+    end
+    else if (svunit_pkg::_filter.is_selected(this, test.get_name())) begin
+      string _testName = test.get_name();
+      integer local_error_count = get_error_count();
+      string fileName;
+      int lineNumber;
+
+      `INFO($sformatf("%s::RUNNING", _testName));
+      svunit_pkg::current_tc = this;
+      add_junit_test_case(_testName);
+      start();
+      test.unit_test_setup();
+      fork
+        begin
+          fork
+            test.run();
+            begin
+              if (get_error_count() == local_error_count) begin
+                wait_for_error();
+              end
             end
-          end
-        join_any
+          join_any
 `ifndef VERILATOR
-        #0;
-        disable fork;
+          #0;
+          disable fork;
 `endif
-      end
-    join
+        end
+      join
+      stop();
+      test.unit_test_teardown();
+      if (get_error_count() == local_error_count)
+        `INFO($sformatf("%s::PASSED", _testName));
+      else
+        `INFO($sformatf("%s::FAILED", _testName));
+      update_exit_status();
+    end
   endtask
 
 endclass
