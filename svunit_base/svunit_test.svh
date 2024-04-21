@@ -26,6 +26,8 @@ virtual class svunit_test extends svunit_base;
   endfunction
 
 
+  pure virtual task unit_test_setup();
   pure virtual task run();
+  pure virtual task unit_test_teardown();
 
 endclass

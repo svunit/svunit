@@ -149,10 +149,10 @@
         svunit_pkg::current_tc = svunit_ut; \
         svunit_ut.add_junit_test_case(_testName); \
         svunit_ut.start(); \
-        setup(); \
+        test.unit_test_setup(); \
         svunit_ut.__run_test(test); \
         svunit_ut.stop(); \
-        teardown(); \
+        test.unit_test_teardown(); \
         if (svunit_ut.get_error_count() == local_error_count) \
           `INFO($sformatf(`"%s::PASSED`", _testName)); \
         else \
@@ -229,6 +229,15 @@
         `SVUNIT_FUSE \
       join_any \
     endtask \
+    \
+    virtual task unit_test_setup(); \
+      setup(); \
+    endtask \
+    \
+    virtual task unit_test_teardown(); \
+      teardown(); \
+    endtask \
+    \
   endclass
 
 `define SVUNIT_FUSE \
