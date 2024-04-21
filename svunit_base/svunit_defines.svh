@@ -135,16 +135,23 @@
 */
 `define SVUNIT_TESTS_BEGIN \
   task automatic run(); \
-    if ($test$plusargs("SVUNIT_LIST_TESTS")) \
-      $display(name); \
-    else \
-      `INFO("RUNNING");
+    svunit_ut.run(); \
+  endtask \
+  \
+  svunit_pkg::svunit_test __tests[$]; \
+
+
 
 /*
   Macro: `SVUNIT_TESTS_END
   END a block of unit tests
 */
-`define SVUNIT_TESTS_END endtask
+`define SVUNIT_TESTS_END \
+  function void __register_tests(); \
+    foreach (__tests[i]) \
+      svunit_ut.add_test(__tests[i]); \
+  endfunction
+
 
 
 /*
@@ -154,53 +161,49 @@
   REQUIRES ACCESS TO error_count
 */
 `define SVTEST(_NAME_) \
-  if ($test$plusargs("SVUNIT_LIST_TESTS")) begin \
-    string test_name = `"_NAME_`"; \
-    $display({ "    ", test_name }); /* XXX WORKAROUND Verilator doesn't like it when we stringify the macro argument in the concatenation */ \
-  end \
-  else if (svunit_pkg::_filter.is_selected(svunit_ut, `"_NAME_`")) begin : _NAME_ \
-    string _testName = `"_NAME_`"; \
-    integer local_error_count = svunit_ut.get_error_count(); \
-    string fileName; \
-    int lineNumber; \
-\
-    `INFO($sformatf(`"%s::RUNNING`", _testName)); \
-    svunit_pkg::current_tc = svunit_ut; \
-    svunit_ut.add_junit_test_case(_testName); \
-    svunit_ut.start(); \
-    setup(); \
-    fork \
-      begin \
-        fork \
-          begin
+  typedef class _NAME_; \
+  \
+  bit __is_``_NAME_``_registered = __register_``_NAME_``(); \
+  function automatic bit __register_``_NAME_``(); \
+    _NAME_ test = new(); \
+    __tests.push_back(test); \
+    return 1; \
+  endfunction \
+  \
+  class _NAME_ extends svunit_pkg::svunit_test; \
+    \
+    function new(); \
+      super.new(`__svunit_stringify(_NAME_)); \
+    endfunction \
+    \
+    virtual task run(); \
+      fork \
+        SVTEST_``_NAME_``(); \
+        `SVUNIT_FUSE \
+      join_any \
+    endtask \
+    \
+    virtual task unit_test_setup(); \
+      setup(); \
+    endtask \
+    \
+    virtual task unit_test_teardown(); \
+      teardown(); \
+    endtask \
+    \
+  endclass \
+  \
+  /* Need to define test body in a separate task due to Verilator issue when module variables are used in class methods. */ \
+  /* See https://github.com/verilator/verilator/issues/5060 */ \
+  task automatic SVTEST_``_NAME_``();
+
 
 /*
   Macro: `SVTEST_END
   END an svunit test within an SVUNIT_TEST_BEGIN/END block
 */
 `define SVTEST_END \
-          end \
-          begin \
-            if (svunit_ut.get_error_count() == local_error_count) begin \
-              svunit_ut.wait_for_error(); \
-            end \
-          end \
-          `SVUNIT_FUSE \
-        join_any \
-`ifndef VERILATOR \
-        #0; \
-        disable fork; \
-`endif \
-      end \
-    join \
-    svunit_ut.stop(); \
-    teardown(); \
-    if (svunit_ut.get_error_count() == local_error_count) \
-      `INFO($sformatf(`"%s::PASSED`", _testName)); \
-    else \
-      `INFO($sformatf(`"%s::FAILED`", _testName)); \
-    svunit_ut.update_exit_status(); \
-  end
+  endtask
 
 `define SVUNIT_FUSE \
 `ifdef SVUNIT_TIMEOUT \

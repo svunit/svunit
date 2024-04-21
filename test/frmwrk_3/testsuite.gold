@@ -3,8 +3,8 @@ module PWD_testsuite;
 
   string name = "PWD_ts";
   svunit_testsuite svunit_ts;
-  
-  
+
+
   //===================================
   // These are the unit tests that we
   // want included in this testsuite
@@ -18,7 +18,9 @@ module PWD_testsuite;
   //===================================
   function void build();
     test0_ut.build();
+    test0_ut.__register_tests();
     test1_ut.build();
+    test1_ut.__register_tests();
     svunit_ts = new(name);
     svunit_ts.add_testcase(test0_ut.svunit_ut);
     svunit_ts.add_testcase(test1_ut.svunit_ut);

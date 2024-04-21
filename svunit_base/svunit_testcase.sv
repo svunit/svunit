@@ -1,6 +1,6 @@
 //###########################################################################
 //
-//  Copyright 2011 The SVUnit Authors.
+//  Copyright 2011-2024 The SVUnit Authors.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -42,6 +42,7 @@ class svunit_testcase extends svunit_base;
   */
   local bit running = 0;
 
+  local svunit_test tests[$];
   local junit_xml::TestCase current_junit_test_case;
   local junit_xml::TestCase junit_test_cases[$];
 
@@ -69,6 +70,18 @@ class svunit_testcase extends svunit_base;
   extern virtual task teardown();
 
 
+  function void add_test(svunit_test test);
+    tests.push_back(test);
+  endfunction
+
+
+  /* local */ typedef svunit_test array_of_tests[];
+
+  function array_of_tests get_tests();
+    return tests;
+  endfunction
+
+
   function void add_junit_test_case(string name);
     current_junit_test_case = new(name, get_name());
     junit_test_cases.push_back(current_junit_test_case);
@@ -80,6 +93,61 @@ class svunit_testcase extends svunit_base;
   function array_of_junit_test_cases as_junit_test_cases();
     return junit_test_cases;
   endfunction
+
+
+  task automatic run();
+    if ($test$plusargs("SVUNIT_LIST_TESTS"))
+      $display(name);
+    else
+      `INFO("RUNNING");
+
+    foreach (tests[i]) begin
+      run_test(tests[i]);
+    end
+  endtask
+
+
+  local task run_test(svunit_pkg::svunit_test test);
+    if ($test$plusargs("SVUNIT_LIST_TESTS")) begin
+      string test_name = test.get_name();
+      $display({ "    ", test_name }); /* XXX WORKAROUND Verilator doesn't like it when we stringify the macro argument in the concatenation */
+    end
+    else if (svunit_pkg::_filter.is_selected(this, test.get_name())) begin
+      string _testName = test.get_name();
+      integer local_error_count = get_error_count();
+      string fileName;
+      int lineNumber;
+
+      `INFO($sformatf("%s::RUNNING", _testName));
+      svunit_pkg::current_tc = this;
+      add_junit_test_case(_testName);
+      start();
+      test.unit_test_setup();
+      fork
+        begin
+          fork
+            test.run();
+            begin
+              if (get_error_count() == local_error_count) begin
+                wait_for_error();
+              end
+            end
+          join_any
+`ifndef VERILATOR
+          #0;
+          disable fork;
+`endif
+        end
+      join
+      stop();
+      test.unit_test_teardown();
+      if (get_error_count() == local_error_count)
+        `INFO($sformatf("%s::PASSED", _testName));
+      else
+        `INFO($sformatf("%s::FAILED", _testName));
+      update_exit_status();
+    end
+  endtask
 
 endclass
 

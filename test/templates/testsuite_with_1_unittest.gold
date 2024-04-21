@@ -17,6 +17,7 @@ module PWD_testsuite;
   //===================================
   function void build();
     MYNAME_ut.build();
+    MYNAME_ut.__register_tests();
     svunit_ts = new(name);
     svunit_ts.add_testcase(MYNAME_ut.svunit_ut);
   endfunction

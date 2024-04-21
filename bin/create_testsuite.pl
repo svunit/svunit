@@ -226,6 +226,7 @@ sub CreateTestSuite() {
   print OUTFILE "  function void build();\n";
   foreach $item ( @instance_names ) {
     print OUTFILE "    $item.build();\n";
+    print OUTFILE "    $item.__register_tests();\n";
     $cnt++;
   }
 
