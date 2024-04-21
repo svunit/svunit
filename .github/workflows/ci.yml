@@ -3,7 +3,7 @@ name: CI
 on: [push, pull_request]
 
 env:
-  VERILATOR_VERSION: v5.012
+  VERILATOR_VERSION: v5.024
 
 jobs:
   build:
