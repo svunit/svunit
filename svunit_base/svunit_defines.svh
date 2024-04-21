@@ -134,22 +134,13 @@
   START a block of unit tests
 */
 `define SVUNIT_TESTS_BEGIN \
-  task automatic run(); \
-    svunit_pkg::svunit_test tests[]; \
-    \
-    if ($test$plusargs("SVUNIT_LIST_TESTS")) \
-      $display(name); \
-    else \
-      `INFO("RUNNING"); \
-    \
-    tests = svunit_ut.get_tests(); \
-    foreach (tests[i]) begin \
+  task automatic __run_test(svunit_pkg::svunit_test test); \
       if ($test$plusargs("SVUNIT_LIST_TESTS")) begin \
-        string test_name = tests[i].get_name(); \
+        string test_name = test.get_name(); \
         $display({ "    ", test_name }); /* XXX WORKAROUND Verilator doesn't like it when we stringify the macro argument in the concatenation */ \
       end \
-      else if (svunit_pkg::_filter.is_selected(svunit_ut, tests[i].get_name())) begin \
-        string _testName = tests[i].get_name(); \
+      else if (svunit_pkg::_filter.is_selected(svunit_ut, test.get_name())) begin \
+        string _testName = test.get_name(); \
         integer local_error_count = svunit_ut.get_error_count(); \
         string fileName; \
         int lineNumber; \
@@ -162,7 +153,7 @@
         fork \
           begin \
             fork \
-              tests[i].run(); \
+              test.run(); \
               begin \
                 if (svunit_ut.get_error_count() == local_error_count) begin \
                   svunit_ut.wait_for_error(); \
@@ -183,6 +174,20 @@
           `INFO($sformatf(`"%s::FAILED`", _testName)); \
         svunit_ut.update_exit_status(); \
       end \
+  endtask \
+  \
+  \
+  task automatic run(); \
+    svunit_pkg::svunit_test tests[]; \
+    \
+    if ($test$plusargs("SVUNIT_LIST_TESTS")) \
+      $display(name); \
+    else \
+      `INFO("RUNNING"); \
+    \
+    tests = svunit_ut.get_tests(); \
+    foreach (tests[i]) begin \
+      __run_test(tests[i]); \
     end \
   endtask \
   \
