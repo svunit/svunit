@@ -216,10 +216,12 @@
 `define SVTEST(_NAME_) \
   typedef class _NAME_; \
   \
-  initial begin \
-    static _NAME_ test = new(); \
+  bit __is_``_NAME_``_registered = __register_``_NAME_``(); \
+  function automatic bit __register_``_NAME_``(); \
+    _NAME_ test = new(); \
     __tests.push_back(test); \
-  end \
+    return 1; \
+  endfunction \
   \
   class _NAME_ extends svunit_pkg::svunit_test; \
     \
