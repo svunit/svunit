@@ -1,6 +1,6 @@
 //###########################################################################
 //
-//  Copyright 2011 The SVUnit Authors.
+//  Copyright 2011-2024 The SVUnit Authors.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -42,6 +42,7 @@ class svunit_testcase extends svunit_base;
   */
   local bit running = 0;
 
+  local svunit_test tests[$];
   local junit_xml::TestCase current_junit_test_case;
   local junit_xml::TestCase junit_test_cases[$];
 
@@ -67,6 +68,18 @@ class svunit_testcase extends svunit_base;
 
   extern virtual task setup();
   extern virtual task teardown();
+
+
+  function void add_test(svunit_test test);
+    tests.push_back(test);
+  endfunction
+
+
+  /* local */ typedef svunit_test array_of_tests[];
+
+  function array_of_tests get_tests();
+    return tests;
+  endfunction
 
 
   function void add_junit_test_case(string name);
