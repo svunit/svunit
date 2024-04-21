@@ -135,16 +135,72 @@
 */
 `define SVUNIT_TESTS_BEGIN \
   task automatic run(); \
+    svunit_pkg::svunit_test tests[]; \
+    \
     if ($test$plusargs("SVUNIT_LIST_TESTS")) \
       $display(name); \
     else \
-      `INFO("RUNNING");
+      `INFO("RUNNING"); \
+    \
+    tests = svunit_ut.get_tests(); \
+    foreach (tests[i]) begin \
+      if ($test$plusargs("SVUNIT_LIST_TESTS")) begin \
+        string test_name = tests[i].get_name(); \
+        $display({ "    ", test_name }); /* XXX WORKAROUND Verilator doesn't like it when we stringify the macro argument in the concatenation */ \
+      end \
+      else if (svunit_pkg::_filter.is_selected(svunit_ut, tests[i].get_name())) begin \
+        string _testName = tests[i].get_name(); \
+        integer local_error_count = svunit_ut.get_error_count(); \
+        string fileName; \
+        int lineNumber; \
+        \
+        `INFO($sformatf(`"%s::RUNNING`", _testName)); \
+        svunit_pkg::current_tc = svunit_ut; \
+        svunit_ut.add_junit_test_case(_testName); \
+        svunit_ut.start(); \
+        setup(); \
+        fork \
+          begin \
+            fork \
+              tests[i].run(); \
+              begin \
+                if (svunit_ut.get_error_count() == local_error_count) begin \
+                  svunit_ut.wait_for_error(); \
+                end \
+              end \
+              `SVUNIT_FUSE \
+            join_any \
+`ifndef VERILATOR \
+            #0; \
+            disable fork; \
+`endif \
+          end \
+        join \
+        svunit_ut.stop(); \
+        teardown(); \
+        if (svunit_ut.get_error_count() == local_error_count) \
+          `INFO($sformatf(`"%s::PASSED`", _testName)); \
+        else \
+          `INFO($sformatf(`"%s::FAILED`", _testName)); \
+        svunit_ut.update_exit_status(); \
+      end \
+    end \
+  endtask \
+  \
+  svunit_pkg::svunit_test __tests[$]; \
+
+
 
 /*
   Macro: `SVUNIT_TESTS_END
   END a block of unit tests
 */
-`define SVUNIT_TESTS_END endtask
+`define SVUNIT_TESTS_END \
+  function void __register_tests(); \
+    foreach (__tests[i]) \
+      svunit_ut.add_test(__tests[i]); \
+  endfunction
+
 
 
 /*
@@ -154,53 +210,28 @@
   REQUIRES ACCESS TO error_count
 */
 `define SVTEST(_NAME_) \
-  if ($test$plusargs("SVUNIT_LIST_TESTS")) begin \
-    string test_name = `"_NAME_`"; \
-    $display({ "    ", test_name }); /* XXX WORKAROUND Verilator doesn't like it when we stringify the macro argument in the concatenation */ \
+  typedef class _NAME_; \
+  \
+  initial begin \
+    static _NAME_ test = new(); \
+    __tests.push_back(test); \
   end \
-  else if (svunit_pkg::_filter.is_selected(svunit_ut, `"_NAME_`")) begin : _NAME_ \
-    string _testName = `"_NAME_`"; \
-    integer local_error_count = svunit_ut.get_error_count(); \
-    string fileName; \
-    int lineNumber; \
-\
-    `INFO($sformatf(`"%s::RUNNING`", _testName)); \
-    svunit_pkg::current_tc = svunit_ut; \
-    svunit_ut.add_junit_test_case(_testName); \
-    svunit_ut.start(); \
-    setup(); \
-    fork \
-      begin \
-        fork \
-          begin
+  \
+  class _NAME_ extends svunit_pkg::svunit_test; \
+    \
+    function new(); \
+      super.new(`__svunit_stringify(_NAME_)); \
+    endfunction \
+    \
+    virtual task run();
 
 /*
   Macro: `SVTEST_END
   END an svunit test within an SVUNIT_TEST_BEGIN/END block
 */
 `define SVTEST_END \
-          end \
-          begin \
-            if (svunit_ut.get_error_count() == local_error_count) begin \
-              svunit_ut.wait_for_error(); \
-            end \
-          end \
-          `SVUNIT_FUSE \
-        join_any \
-`ifndef VERILATOR \
-        #0; \
-        disable fork; \
-`endif \
-      end \
-    join \
-    svunit_ut.stop(); \
-    teardown(); \
-    if (svunit_ut.get_error_count() == local_error_count) \
-      `INFO($sformatf(`"%s::PASSED`", _testName)); \
-    else \
-      `INFO($sformatf(`"%s::FAILED`", _testName)); \
-    svunit_ut.update_exit_status(); \
-  end
+    endtask \
+  endclass
 
 `define SVUNIT_FUSE \
 `ifdef SVUNIT_TIMEOUT \
