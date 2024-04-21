@@ -9,7 +9,7 @@ module dut_unit_test;
 
 
   //===================================
-  // This is the UUT that we're 
+  // This is the UUT that we're
   // running the Unit Tests on
   //===================================
   dut my_dut();
@@ -34,7 +34,7 @@ module dut_unit_test;
 
 
   //===================================
-  // Here we deconstruct anything we 
+  // Here we deconstruct anything we
   // need after running the Unit Tests
   //===================================
   task teardown();
@@ -59,7 +59,9 @@ module dut_unit_test;
   //===================================
   `SVUNIT_TESTS_BEGIN
 
+  `SVTEST(dummy)
     #(1);
+  `SVTEST_END
 
   `SVUNIT_TESTS_END
 
