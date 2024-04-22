@@ -96,17 +96,16 @@ class svunit_testcase extends svunit_base;
 
 
   task automatic run();
-    if ($test$plusargs("SVUNIT_LIST_TESTS"))
+    if ($test$plusargs("SVUNIT_LIST_TESTS")) begin
       $display(name);
-    else
-      `INFO("RUNNING");
-
-    if ($test$plusargs("SVUNIT_LIST_TESTS"))
       foreach (tests[i])
         $display({ "    ", tests[i].get_name() });
-    else
+    end
+    else begin
+      `INFO("RUNNING");
       foreach (tests[i])
         run_test(tests[i]);
+    end
   endtask
 
 
