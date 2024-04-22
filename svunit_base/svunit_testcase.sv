@@ -118,6 +118,9 @@ class svunit_testcase extends svunit_base;
       if (svunit_pkg::_filter.is_selected(this, tests[i].get_name()))
         selected_tests.push_back(tests[i]);
 
+    if (selected_tests.size() == 0)
+      return;
+
     `INFO("RUNNING");
     foreach (selected_tests[i])
       run_test(selected_tests[i]);
