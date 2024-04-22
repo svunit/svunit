@@ -115,46 +115,45 @@ class svunit_testcase extends svunit_base;
   local task run_tests();
     `INFO("RUNNING");
     foreach (tests[i])
-      run_test(tests[i]);
+      if (svunit_pkg::_filter.is_selected(this, tests[i].get_name()))
+        run_test(tests[i]);
   endtask
 
 
   local task run_test(svunit_pkg::svunit_test test);
-    if (svunit_pkg::_filter.is_selected(this, test.get_name())) begin
-      string _testName = test.get_name();
-      integer local_error_count = get_error_count();
-      string fileName;
-      int lineNumber;
+    string _testName = test.get_name();
+    integer local_error_count = get_error_count();
+    string fileName;
+    int lineNumber;
 
-      `INFO($sformatf("%s::RUNNING", _testName));
-      svunit_pkg::current_tc = this;
-      add_junit_test_case(_testName);
-      start();
-      test.unit_test_setup();
-      fork
-        begin
-          fork
-            test.run();
-            begin
-              if (get_error_count() == local_error_count) begin
-                wait_for_error();
-              end
+    `INFO($sformatf("%s::RUNNING", _testName));
+    svunit_pkg::current_tc = this;
+    add_junit_test_case(_testName);
+    start();
+    test.unit_test_setup();
+    fork
+      begin
+        fork
+          test.run();
+          begin
+            if (get_error_count() == local_error_count) begin
+              wait_for_error();
             end
-          join_any
+          end
+        join_any
 `ifndef VERILATOR
-          #0;
-          disable fork;
+        #0;
+        disable fork;
 `endif
-        end
-      join
-      stop();
-      test.unit_test_teardown();
-      if (get_error_count() == local_error_count)
-        `INFO($sformatf("%s::PASSED", _testName));
-      else
-        `INFO($sformatf("%s::FAILED", _testName));
-      update_exit_status();
-    end
+      end
+    join
+    stop();
+    test.unit_test_teardown();
+    if (get_error_count() == local_error_count)
+      `INFO($sformatf("%s::PASSED", _testName));
+    else
+      `INFO($sformatf("%s::FAILED", _testName));
+    update_exit_status();
   endtask
 
 endclass
