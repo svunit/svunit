@@ -102,16 +102,17 @@ class svunit_testcase extends svunit_base;
       `INFO("RUNNING");
 
     foreach (tests[i]) begin
-      run_test(tests[i]);
+      if ($test$plusargs("SVUNIT_LIST_TESTS")) begin
+        $display({ "    ", tests[i].get_name() });
+      end
+      else
+        run_test(tests[i]);
     end
   endtask
 
 
   local task run_test(svunit_pkg::svunit_test test);
-    if ($test$plusargs("SVUNIT_LIST_TESTS")) begin
-      $display({ "    ", test.get_name() });
-    end
-    else if (svunit_pkg::_filter.is_selected(this, test.get_name())) begin
+    if (svunit_pkg::_filter.is_selected(this, test.get_name())) begin
       string _testName = test.get_name();
       integer local_error_count = get_error_count();
       string fileName;
