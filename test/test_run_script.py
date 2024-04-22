@@ -532,6 +532,10 @@ endmodule
         test_case_running = re.compile("some_ut.*RUNNING")
         assert not any(test_case_running.search(line) for line in log)
 
+    with open(pathlib.Path(tmp_path.joinpath('run.log')), 'r') as log:
+        test_case_running = re.compile("some_ut.*PASSED")
+        assert not any(test_case_running.search(line) for line in log)
+
 
 def test_verilator_does_not_accept_uvm(tmp_path):
     cmdline_usage_error = 4

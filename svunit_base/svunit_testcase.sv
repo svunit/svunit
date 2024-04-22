@@ -42,6 +42,8 @@ class svunit_testcase extends svunit_base;
   */
   local bit running = 0;
 
+  local bit actually_ran_tests = 0;
+
   local svunit_test tests[$];
   local junit_xml::TestCase current_junit_test_case;
   local junit_xml::TestCase junit_test_cases[$];
@@ -120,6 +122,8 @@ class svunit_testcase extends svunit_base;
     `INFO("RUNNING");
     foreach (selected_tests[i])
       run_test(selected_tests[i]);
+
+    actually_ran_tests = 1;
   endtask
 
 
@@ -302,6 +306,9 @@ endfunction
 */
 function void svunit_testcase::report();
   string success_str = (success)? "PASSED":"FAILED";
+
+  if (!actually_ran_tests)
+    return;
 
   `INFO($sformatf("%0s (%0d of %0d tests passing)",
     success_str,
