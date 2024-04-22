@@ -113,11 +113,7 @@ class svunit_testcase extends svunit_base;
 
 
   local task run_tests();
-    svunit_test selected_tests[$];
-    foreach (tests[i])
-      if (svunit_pkg::_filter.is_selected(this, tests[i].get_name()))
-        selected_tests.push_back(tests[i]);
-
+    svunit_test selected_tests[] = get_selected_tests();
     if (selected_tests.size() == 0)
       return;
 
@@ -125,6 +121,15 @@ class svunit_testcase extends svunit_base;
     foreach (selected_tests[i])
       run_test(selected_tests[i]);
   endtask
+
+
+  local function array_of_tests get_selected_tests();
+    svunit_test selected_tests[$];
+    foreach (tests[i])
+      if (svunit_pkg::_filter.is_selected(this, tests[i].get_name()))
+        selected_tests.push_back(tests[i]);
+    return selected_tests;
+  endfunction
 
 
   local task run_test(svunit_pkg::svunit_test test);
