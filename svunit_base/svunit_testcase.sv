@@ -101,9 +101,7 @@ class svunit_testcase extends svunit_base;
       return;
     end
 
-    `INFO("RUNNING");
-    foreach (tests[i])
-      run_test(tests[i]);
+    run_tests();
   endtask
 
 
@@ -112,6 +110,13 @@ class svunit_testcase extends svunit_base;
     foreach (tests[i])
       $display({ "    ", tests[i].get_name() });
   endfunction
+
+
+  local task run_tests();
+    `INFO("RUNNING");
+    foreach (tests[i])
+      run_test(tests[i]);
+  endtask
 
 
   local task run_test(svunit_pkg::svunit_test test);
