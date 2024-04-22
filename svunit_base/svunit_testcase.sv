@@ -97,10 +97,7 @@ class svunit_testcase extends svunit_base;
 
   task automatic run();
     if ($test$plusargs("SVUNIT_LIST_TESTS")) begin
-      $display(name);
-      foreach (tests[i])
-        $display({ "    ", tests[i].get_name() });
-
+      list_tests();
       return;
     end
 
@@ -108,6 +105,13 @@ class svunit_testcase extends svunit_base;
     foreach (tests[i])
       run_test(tests[i]);
   endtask
+
+
+  local function void list_tests();
+    $display(name);
+    foreach (tests[i])
+      $display({ "    ", tests[i].get_name() });
+  endfunction
 
 
   local task run_test(svunit_pkg::svunit_test test);
