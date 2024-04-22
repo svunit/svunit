@@ -100,12 +100,13 @@ class svunit_testcase extends svunit_base;
       $display(name);
       foreach (tests[i])
         $display({ "    ", tests[i].get_name() });
+
+      return;
     end
-    else begin
-      `INFO("RUNNING");
-      foreach (tests[i])
-        run_test(tests[i]);
-    end
+
+    `INFO("RUNNING");
+    foreach (tests[i])
+      run_test(tests[i]);
   endtask
 
 
