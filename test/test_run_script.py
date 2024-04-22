@@ -454,6 +454,89 @@ endmodule
     assert 'some_passing_test' in log.read_text()
 
 
+@all_available_simulators()
+def test_nothing_printed_for_module_where_no_tests_selected(tmp_path, simulator):
+    unit_test = tmp_path.joinpath('some_unit_test.sv')
+    unit_test.write_text('''
+module some_unit_test;
+
+  import svunit_pkg::*;
+  `include "svunit_defines.svh"
+
+  string name = "some_ut";
+  svunit_testcase svunit_ut;
+
+  function void build();
+    svunit_ut = new(name);
+  endfunction
+
+  task setup();
+    svunit_ut.setup();
+  endtask
+
+  task teardown();
+    svunit_ut.teardown();
+  endtask
+
+  `SVUNIT_TESTS_BEGIN
+
+    `SVTEST(some_test)
+    `SVTEST_END
+
+  `SVUNIT_TESTS_END
+
+endmodule
+    ''')
+
+    other_unit_test = tmp_path.joinpath('some_other_unit_test.sv')
+    other_unit_test.write_text('''
+module some_other_unit_test;
+
+  import svunit_pkg::*;
+  `include "svunit_defines.svh"
+
+  string name = "some_other_ut";
+  svunit_testcase svunit_ut;
+
+  function void build();
+    svunit_ut = new(name);
+  endfunction
+
+  task setup();
+    svunit_ut.setup();
+  endtask
+
+  task teardown();
+    svunit_ut.teardown();
+  endtask
+
+  `SVUNIT_TESTS_BEGIN
+
+    `SVTEST(some_other_test)
+    `SVTEST_END
+
+  `SVUNIT_TESTS_END
+
+endmodule
+    ''')
+
+    print('Nothing should be printed for some_ut')
+    subprocess.check_call(
+            ['runSVUnit',
+                    '-s', simulator,
+                    '--filter', 'some_other_ut.*',
+                    ],
+            cwd=tmp_path)
+
+    with open(pathlib.Path(tmp_path.joinpath('run.log')), 'r') as log:
+        test_case_running = re.compile("some_ut.*RUNNING")
+        assert not any(test_case_running.search(line) for line in log)
+
+    with open(pathlib.Path(tmp_path.joinpath('run.log')), 'r') as log:
+        test_case_running = re.compile("some_ut.*PASSED")
+        assert not any(test_case_running.search(line) for line in log)
+
+
 def test_verilator_does_not_accept_uvm(tmp_path):
     cmdline_usage_error = 4
     returncode = subprocess.call(

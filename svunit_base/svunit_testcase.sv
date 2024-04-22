@@ -42,6 +42,8 @@ class svunit_testcase extends svunit_base;
   */
   local bit running = 0;
 
+  local bit actually_ran_tests = 0;
+
   local svunit_test tests[$];
   local junit_xml::TestCase current_junit_test_case;
   local junit_xml::TestCase junit_test_cases[$];
@@ -113,48 +115,61 @@ class svunit_testcase extends svunit_base;
 
 
   local task run_tests();
+    svunit_test selected_tests[] = get_selected_tests();
+    if (selected_tests.size() == 0)
+      return;
+
     `INFO("RUNNING");
-    foreach (tests[i])
-      run_test(tests[i]);
+    foreach (selected_tests[i])
+      run_test(selected_tests[i]);
+
+    actually_ran_tests = 1;
   endtask
 
 
-  local task run_test(svunit_pkg::svunit_test test);
-    if (svunit_pkg::_filter.is_selected(this, test.get_name())) begin
-      string _testName = test.get_name();
-      integer local_error_count = get_error_count();
-      string fileName;
-      int lineNumber;
+  local function array_of_tests get_selected_tests();
+    svunit_test selected_tests[$];
+    foreach (tests[i])
+      if (svunit_pkg::_filter.is_selected(this, tests[i].get_name()))
+        selected_tests.push_back(tests[i]);
+    return selected_tests;
+  endfunction
 
-      `INFO($sformatf("%s::RUNNING", _testName));
-      svunit_pkg::current_tc = this;
-      add_junit_test_case(_testName);
-      start();
-      test.unit_test_setup();
-      fork
-        begin
-          fork
-            test.run();
-            begin
-              if (get_error_count() == local_error_count) begin
-                wait_for_error();
-              end
+
+  local task run_test(svunit_pkg::svunit_test test);
+    string _testName = test.get_name();
+    integer local_error_count = get_error_count();
+    string fileName;
+    int lineNumber;
+
+    `INFO($sformatf("%s::RUNNING", _testName));
+    svunit_pkg::current_tc = this;
+    add_junit_test_case(_testName);
+    start();
+    test.unit_test_setup();
+    fork
+      begin
+        fork
+          test.run();
+          begin
+            if (get_error_count() == local_error_count) begin
+              wait_for_error();
             end
-          join_any
+          end
+        join_any
 `ifndef VERILATOR
-          #0;
-          disable fork;
+        #0;
+        disable fork;
 `endif
-        end
-      join
-      stop();
-      test.unit_test_teardown();
-      if (get_error_count() == local_error_count)
-        `INFO($sformatf("%s::PASSED", _testName));
-      else
-        `INFO($sformatf("%s::FAILED", _testName));
-      update_exit_status();
-    end
+      end
+    join
+    stop();
+    test.unit_test_teardown();
+    if (get_error_count() == local_error_count)
+      `INFO($sformatf("%s::PASSED", _testName));
+    else
+      `INFO($sformatf("%s::FAILED", _testName));
+    update_exit_status();
   endtask
 
 endclass
@@ -291,6 +306,9 @@ endfunction
 */
 function void svunit_testcase::report();
   string success_str = (success)? "PASSED":"FAILED";
+
+  if (!actually_ran_tests)
+    return;
 
   `INFO($sformatf("%0s (%0d of %0d tests passing)",
     success_str,
