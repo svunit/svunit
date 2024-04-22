@@ -102,9 +102,8 @@ class svunit_testcase extends svunit_base;
       `INFO("RUNNING");
 
     foreach (tests[i]) begin
-      if ($test$plusargs("SVUNIT_LIST_TESTS")) begin
+      if ($test$plusargs("SVUNIT_LIST_TESTS"))
         $display({ "    ", tests[i].get_name() });
-      end
       else
         run_test(tests[i]);
     end
