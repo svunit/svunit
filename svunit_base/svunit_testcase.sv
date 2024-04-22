@@ -109,8 +109,7 @@ class svunit_testcase extends svunit_base;
 
   local task run_test(svunit_pkg::svunit_test test);
     if ($test$plusargs("SVUNIT_LIST_TESTS")) begin
-      string test_name = test.get_name();
-      $display({ "    ", test_name });
+      $display({ "    ", test.get_name() });
     end
     else if (svunit_pkg::_filter.is_selected(this, test.get_name())) begin
       string _testName = test.get_name();
