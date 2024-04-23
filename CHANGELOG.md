@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Fix warning in VCS when using `SVUNIT_CLK_GEN
+- Stop printing "RUNNING" messages for test cases where all tests are filtered out ([#207](https://github.com/svunit/svunit/issues/207))
 
 
 ## [3.37.0] - 2023-09-18
