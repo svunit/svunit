@@ -1,4 +1,11 @@
-Tested with:
+#### Checklist:
+
+- [ ] tests updated
+- [ ] documentation updated
+- [ ] CHANGELOG updated
+
+
+#### Tested with:
 
 - [ ] DSim
 - [ ] QuestaSim
