@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- Fix compile performance in Xcelium (and probably other tools) when running with UVM
+
 
 ## [3.38.0] - 2024-05-02
 
