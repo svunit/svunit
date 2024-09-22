@@ -203,6 +203,7 @@
   /* */ \
   /* Need to emulate a task due to Xcelium issue when trying to use `expect` statement. */ \
   initial begin: SVTEST_``_NAME_`` \
+    /* Need to introduce some space, otherwise Verilator preprocessor goes nuts */ \
     bit trigger; \
     bit finished; \
     @(posedge trigger); \
