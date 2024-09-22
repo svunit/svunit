@@ -178,9 +178,14 @@
     \
     virtual task run(); \
       fork \
-        SVTEST_``_NAME_``(); \
+        execute_test(); \
         `SVUNIT_FUSE \
       join_any \
+    endtask \
+    \
+    local task execute_test(); \
+      SVTEST_``_NAME_``.trigger = 1; \
+      @(posedge SVTEST_``_NAME_``.finished); \
     endtask \
     \
     virtual task unit_test_setup(); \
@@ -195,7 +200,13 @@
   \
   /* Need to define test body in a separate task due to Verilator issue when module variables are used in class methods. */ \
   /* See https://github.com/verilator/verilator/issues/5060 */ \
-  task automatic SVTEST_``_NAME_``();
+  /* */ \
+  /* Need to emulate a task due to Xcelium issue when trying to use `expect` statement. */ \
+  initial begin: SVTEST_``_NAME_`` \
+    bit trigger; \
+    bit finished; \
+    @(posedge trigger); \
+    begin
 
 
 /*
@@ -203,7 +214,9 @@
   END an svunit test within an SVUNIT_TEST_BEGIN/END block
 */
 `define SVTEST_END \
-  endtask
+    end \
+    finished = 1; \
+  end
 
 `define SVUNIT_FUSE \
 `ifdef SVUNIT_TIMEOUT \
