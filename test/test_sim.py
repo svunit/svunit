@@ -208,3 +208,12 @@ def test_fail_macros(datafiles, simulator):
         subprocess.check_call(['runSVUnit', '-s', simulator])
 
         assert not contains_pattern(br"went into 'else' block", 'run.log')
+
+
+@all_files_in_dir('sim-expect-statement')
+@all_available_simulators()
+def test_expect_statement(datafiles, simulator):
+    with datafiles.as_cwd():
+        subprocess.check_call(['runSVUnit', '-s', simulator])
+
+        assert contains_pattern(br"As expected", 'run.log')
