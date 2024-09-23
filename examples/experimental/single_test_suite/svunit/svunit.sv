@@ -3,8 +3,8 @@ package svunit;
   import svunit_pkg::*;
   `include "svunit_defines.svh"
 
-  `include "test.svh"
-  `include "testcase_for_all_registered_tests.svh"
+  `include "svunit/test.svh"
+  `include "svunit/testcase_for_all_registered_tests.svh"
 
 
   task automatic run_all_tests();
