@@ -27,5 +27,6 @@ Contents
     special_considerations_for_unit_testing_uvm_components
     running_unit_tests
     simulator_output
+    experimental_features
     support_and_more_information
     user_guide_feedback
