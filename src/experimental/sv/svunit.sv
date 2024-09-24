@@ -3,13 +3,13 @@ package svunit;
   import svunit_pkg::*;
   `include "svunit_defines.svh"
 
-  `include "full_name_extraction.svh"
-  `include "test.svh"
+  `include "svunit/full_name_extraction.svh"
+  `include "svunit/test.svh"
 
-  `include "testcase.svh"
-  `include "testsuite.svh"
-  `include "test_registry.svh"
-  `include "global_test_registry.svh"
+  `include "svunit/testcase.svh"
+  `include "svunit/testsuite.svh"
+  `include "svunit/test_registry.svh"
+  `include "svunit/global_test_registry.svh"
 
 
   task automatic run_all_tests();
