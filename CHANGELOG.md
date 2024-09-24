@@ -28,6 +28,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Add support for Verilator
+- Add `--enable-experimental` option for `runSVUnit` which activates incubating features.
+  Currently, this includes a more streamlined way of defining tests.
 
 ### Fixed
 - Fix csh setup script to work with directory paths containing spaces
