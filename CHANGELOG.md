@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Fix compile performance in Xcelium (and probably other tools) when running with UVM
+- Fixed experimental code to work after internal refactoring of test execution classes
 
 
 ## [3.38.0] - 2024-05-02

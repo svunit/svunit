@@ -4,6 +4,10 @@ typedef class global_test_registry;
 virtual class test;
 
   typedef class builder;
+  typedef class adapter;
+
+
+  local const adapter a = new(this);
 
 
   protected static function bit register_test_builder(builder b, string typename);
@@ -36,6 +40,11 @@ virtual class test;
   endtask
 
 
+  /* package */ function svunit_test get_adapter();
+    return a;
+  endfunction
+
+
   virtual class builder;
     pure virtual function test create();
   endclass
@@ -54,6 +63,30 @@ virtual class test;
       T result = new();
       return result;
     endfunction
+  endclass
+
+
+  class adapter extends svunit_test;
+
+    local const test parent;
+
+    function new(test parent);
+      super.new(parent.name());
+      this.parent = parent;
+    endfunction
+
+    virtual task unit_test_setup();
+      // Empty because `test::run()` already calls `test::set_up()`
+    endtask
+
+    virtual task run();
+      parent.run();
+    endtask
+
+    virtual task unit_test_teardown();
+      // Empty because `test::run()` already calls `test::tear_down()`
+    endtask
+
   endclass
 
 endclass
