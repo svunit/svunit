@@ -13,6 +13,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed experimental code to work after internal refactoring of test execution classes
 
 
+## [3.37.1] - 2024-11-08
+
+### Fixed
+
+- Fix experimental code to avoid clash with included files
+
+
 ## [3.38.0] - 2024-05-02
 
 ### Added
@@ -398,6 +405,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 [Unreleased]: https://github.com/svunit/svunit/compare/v3.38.0...HEAD
+[3.37.1]: https://github.com/svunit/svunit/compare/v3.37.0...v3.37.1
 [3.38.0]: https://github.com/svunit/svunit/compare/v3.37.0...v3.38.0
 [3.37.0]: https://github.com/svunit/svunit/compare/v3.36.1...v3.37.0
 [3.36.1]: https://github.com/svunit/svunit/compare/v3.36.0...v3.36.1
