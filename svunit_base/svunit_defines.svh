@@ -118,9 +118,10 @@
   Parameters:
     msg - string to display
 */
+`ifndef ERROR
 `define ERROR(msg) \
   $display("ERROR: [%0t][%0s]: %s", $time, name, msg)
-
+`endif
 
 /*
   Macro: `LF
