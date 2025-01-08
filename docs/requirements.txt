@@ -6,7 +6,7 @@ docutils==0.18.1
 idna==3.7
 imagesize==1.4.1
 importlib-metadata==4.8.3
-Jinja2==3.1.4
+Jinja2==3.1.5
 MarkupSafe==2.0.1
 packaging==21.3
 Pygments==2.15.0
