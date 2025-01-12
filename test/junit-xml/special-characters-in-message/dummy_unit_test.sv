@@ -45,7 +45,7 @@ module dummy_unit_test;
     `SVTEST_END
 
 
-    `SVTEST(fail_with_greather_than_sign_in_message)
+    `SVTEST(fail_with_greater_than_sign_in_message)
       `FAIL_IF_LOG(1, "Message with >")
     `SVTEST_END
 

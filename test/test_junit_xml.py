@@ -124,5 +124,9 @@ def test_special_characters_in_message(datafiles, simulator):
         subprocess.check_call(['runSVUnit', '-s', simulator])
         root = ET.parse('tests.xml').getroot()
         test_suite = root[0]
+
         test0 = next(tc for tc in list(test_suite) if 'less_than' in tc.attrib['name'])
         assert '<' in test0[0].attrib['message']
+
+        test1 = next(tc for tc in list(test_suite) if 'greater_than' in tc.attrib['name'])
+        assert '>' in test1[0].attrib['message']
