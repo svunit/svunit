@@ -122,4 +122,7 @@ def test_multiple_failing_tests(datafiles, simulator):
 def test_special_characters_in_message(datafiles, simulator):
     with datafiles.as_cwd():
         subprocess.check_call(['runSVUnit', '-s', simulator])
-        ET.parse('tests.xml')
+        root = ET.parse('tests.xml').getroot()
+        test_suite = root[0]
+        test0 = next(tc for tc in list(test_suite) if 'less_than' in tc.attrib['name'])
+        assert '<' in test0[0].attrib['message']
