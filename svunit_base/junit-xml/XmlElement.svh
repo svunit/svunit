@@ -76,6 +76,8 @@ class XmlElement;
     foreach (s[i])
       if (s[i] == "<")
         result = { result, "&lt;" };
+      else if (s[i] == "<")
+        result = { result, "&gt;" };
       else
         result = { result, s[i] };
 
