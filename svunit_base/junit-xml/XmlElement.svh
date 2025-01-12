@@ -1,6 +1,6 @@
 //###########################################################################
 //
-//  Copyright 2021 The SVUnit Authors.
+//  Copyright 2021-2025 The SVUnit Authors.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -65,7 +65,20 @@ class XmlElement;
     result = { tag };
 `endif
     foreach (attributes[i])
-      result = { result, " ", $sformatf("%s=\"%s\"", i, attributes[i])};
+      result = { result, " ", $sformatf("%s=\"%s\"", i, escaped(attributes[i]))};
+    return result;
+  endfunction
+
+
+  local function string escaped(string s);
+    string result;
+
+    foreach (s[i])
+      if (s[i] == "<")
+        result = { result, "&lt;" };
+      else
+        result = { result, s[i] };
+
     return result;
   endfunction
 
