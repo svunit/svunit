@@ -130,3 +130,6 @@ def test_special_characters_in_message(datafiles, simulator):
 
         test1 = next(tc for tc in list(test_suite) if 'greater_than' in tc.attrib['name'])
         assert '>' in test1[0].attrib['message']
+
+        test = next(tc for tc in list(test_suite) if 'ampersand' in tc.attrib['name'])
+        assert '&' in test[0].attrib['message']

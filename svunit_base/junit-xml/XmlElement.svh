@@ -78,6 +78,8 @@ class XmlElement;
         result = { result, "&lt;" };
       else if (s[i] == "<")
         result = { result, "&gt;" };
+      else if (s[i] == "&")
+        result = { result, "&amp;" };
       else
         result = { result, s[i] };
 
