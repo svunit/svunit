@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix compile performance in Xcelium (and probably other tools) when running with UVM
 - Fixed experimental code to work after internal refactoring of test execution classes
 - Fix experimental code to avoid clash with included files
+- Fixed not being able to source the `Setup.*` scripts from any location
 
 
 ## [3.37.1] - 2024-11-08

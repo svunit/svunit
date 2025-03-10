@@ -18,7 +18,7 @@
 #
 ############################################################################
 
-export SVUNIT_INSTALL=`pwd`
+export SVUNIT_INSTALL="$(cd "$(dirname "${0}")" && pwd)"
 
 case ":$PATH:" in
 	*":$SVUNIT_INSTALL:"*) :;; 

@@ -1,4 +1,4 @@
-#/usr/bin/csh
+#!/usr/bin/csh
 
 ############################################################################
 #
@@ -18,7 +18,7 @@
 #
 ############################################################################
 
-setenv SVUNIT_INSTALL `pwd`
+setenv SVUNIT_INSTALL `ls -l /proc/$$/fd | sed -e 's/^[^/]*//' | grep "/Setup.csh" | sed 's/\/Setup\.csh$//'`
 if ( "$PATH" =~ "*$SVUNIT_INSTALL*" ) then
 else
   setenv PATH "${PATH}:$SVUNIT_INSTALL/bin"
