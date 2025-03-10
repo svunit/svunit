@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed experimental code to work after internal refactoring of test execution classes
 - Fix experimental code to avoid clash with included files
 
+### Added
+- Add printout on `FAIL_UNLESS_EQUAL` and `FAIL_UNLESS_STR_EQUAL` test failures to make it easier to debug why these tests failes
 
 ## [3.37.1] - 2024-11-08
 
