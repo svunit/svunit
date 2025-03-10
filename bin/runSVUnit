@@ -228,7 +228,6 @@ if ($simulator eq "modelsim" or $simulator eq "riviera") {
   $cmd .= qq! && obj_dir/Vtestrunner $verilator_simargs 2>&1 | tee $logfile !;
 } elsif ($simulator eq "xsim") {
   my $xilVersion .= qx(xelab -version);
-  print $xilVersion;
   if (index($xilVersion, "2023.2") != -1 || index($xilVersion, "2024.1") != -1 || index($xilVersion, "2024.2") != -1) {
     $cmd .= qq! @compileargs && xelab testrunner --debug typical @elabargs && xsim @simargs --R --log $logfile testrunner!;
   } else {
