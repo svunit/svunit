@@ -230,7 +230,6 @@ if ($simulator eq "modelsim" or $simulator eq "riviera") {
   my $xilVersion .= qx(xelab -version);
   print $xilVersion;
   if (index($xilVersion, "2023.2") != -1 || index($xilVersion, "2024.1") != -1 || index($xilVersion, "2024.2") != -1) {
-    print "==============Using xelab segfault fix==============";
     $cmd .= qq! @compileargs && xelab testrunner --debug typical @elabargs && xsim @simargs --R --log $logfile testrunner!;
   } else {
     $cmd .= qq! @compileargs && xelab testrunner @elabargs && xsim @simargs --R --log $logfile testrunner!;
