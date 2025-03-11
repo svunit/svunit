@@ -24,20 +24,26 @@ Read the [latest documentation](https://docs.svunit.org/en/latest/)
 ### 1. Set up the `SVUNIT_INSTALL` and `PATH` environment variables
 
 ```shell
-export SVUNIT_INSTALL=`pwd`
+export SVUNIT_INSTALL=`/path/to/svunit`
 export PATH=$PATH:$SVUNIT_INSTALL"/bin"
 ```
 
 You can source `Setup.bsh` if you use the bash shell.
 
 ```shell
-source Setup.bsh
+source /path/to/svunit/Setup.bsh
 ```
 
 You can source `Setup.csh` if you use the csh shell.
 
 ```shell
-source Setup.csh
+source /path/to/svunit/Setup.csh
+```
+
+You can source `Setup.zsh` if you use the zsh shell.
+
+```shell
+source /path/to/svunit/Setup.zsh
 ```
 
 ### 2. Go somewhere outside `SVUNIT_INSTALL` (i.e. where you are right now)
