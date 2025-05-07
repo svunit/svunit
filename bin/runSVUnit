@@ -211,7 +211,7 @@ else {
 }
 
 if ($simulator eq "modelsim" or $simulator eq "riviera") {
-  if (!grep(/(^| )(-gui|-c|-i)( |$)/, @simargs)) {
+  if (!grep(/(^| )(-visualizer|-gui|-c|-i)( |$)/, @simargs)) {
     push @simargs, "-c";
   }
   my $vopt_elabargs = @elabargs ? qq!-voptargs="@elabargs"! : "";
