@@ -18,7 +18,7 @@
 #
 ############################################################################
 
-export SVUNIT_INSTALL=`pwd`
+export SVUNIT_INSTALL=`pwd`/bin
 
 case ":$PATH:" in
 	*":$SVUNIT_INSTALL:"*) :;; 
