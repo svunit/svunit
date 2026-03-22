@@ -425,6 +425,15 @@ def test_frmwrk_32(tmpdir):
         assert return_code == 255
 
 
+def test_create_unit_test_help(tmpdir):
+    with tmpdir.as_cwd():
+        result = subprocess.run(['create_unit_test.pl', '-help'],
+                                capture_output=True, text=True)
+        assert result.returncode == 0
+        assert 'Usage' in result.stdout
+        assert 'ERROR' not in result.stdout
+
+
 @pytest.mark.parametrize("sim", ["xrun", "irun", "vsim", "vcs", "qrun", "verilator", "xsim"])
 def test_called_without_simulator__extract_sim_if_on_path(sim, tmpdir, monkeypatch):
     with tmpdir.as_cwd():
