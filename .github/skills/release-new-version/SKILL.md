@@ -8,10 +8,13 @@ argument-hint: 'Version number to release, e.g. 3.39.0'
 
 ## Overview
 
-A release involves three phases:
+A release involves the following phases:
 1. **Pre-release PR** (local) — update version numbers and CHANGELOG
-2. **GitHub Web UI** — merge the PR and create the GitHub release (with tag)
-3. **Post-release PR** (local) — reset to `Unreleased` state for continued development
+2. **Merge pre-release PR** (web UI) — create and merge the PR
+3. **Create annotated tag** (local) - create annotated tag and push it
+4. **Create the GitHub release** (web UI) — draft and publish the release on GitHub
+5. **Post-release PR** (local) — reset to `Unreleased` state for continued development
+6. **Merge post-release PR** (web UI) — create and merge the PR
 
 Determine the new version number using [Semantic Versioning](https://semver.org/spec/v2.0.0.html) based on what changed since the last release. Check the current `## [Unreleased]` section in `CHANGELOG.md` to decide: breaking changes → major, new features → minor, bug fixes only → patch.
 
@@ -75,14 +78,34 @@ Open a pull request on GitHub with:
 
 ---
 
-## Phase 2 — GitHub Web UI
-
-### 2.1 Merge the pre-release PR
+## Phase 2 — Merge pre-release PR (web UI)
 
 On GitHub, merge the pull request created in Phase 1.
 Do not continue until the merge commit is on `master` and the PR is fully merged.
 
-### 2.2 Create the GitHub release
+## Phase 3 — Create annotated tag (local)
+
+> Note: this repository requires an *annotated* tag. GitHub's web UI may create a lightweight tag when drafting a release; create and push an annotated tag from your local machine before publishing the release to ensure the tag is annotated.
+
+1. Update local `master` to the merge commit and tag `HEAD`.
+
+```bash
+# ensure master is up to date and points at the merge commit
+git checkout master
+git pull
+```
+
+The annotated tag should be created on `master`'s `HEAD` (the merge commit). If you prefer tagging before the PR is merged, create the tag on the release branch tip instead.
+
+2. Create an annotated tag and push it:
+
+```bash
+# create an annotated tag pointing at the desired commit (use the commit hash or HEAD)
+git tag -a v<NEW_VERSION> -m "Release v<NEW_VERSION>" <COMMIT>
+git push origin v<NEW_VERSION>
+```
+
+## Phase 4 — Create the GitHub release (web UI)
 
 1. Go to **Releases** → **Draft a new release**
 2. **Tag**: `v<NEW_VERSION>` — set it to target `master` (the merge commit)
@@ -92,9 +115,9 @@ Do not continue until the merge commit is on `master` and the PR is fully merged
 
 ---
 
-## Phase 3 — Post-release PR (local)
+## Phase 5 — Post-release PR (local)
 
-### 3.1 Create the post-release branch
+### 5.1 Create the post-release branch
 
 ```bash
 git checkout master
@@ -102,14 +125,14 @@ git pull
 git checkout -b continue-development-after-releasing-version-<NEW_VERSION>
 ```
 
-### 3.2 Edit `svunit_base/svunit_version_defines.svh`
+### 5.2 Edit `svunit_base/svunit_version_defines.svh`
 
 ```diff
 -`define SVUNIT_VERSION <NEW_VERSION>
 +`define SVUNIT_VERSION Unreleased
 ```
 
-### 3.3 Edit `CHANGELOG.md`
+### 5.3 Edit `CHANGELOG.md`
 
 Two changes are needed:
 
@@ -119,7 +142,7 @@ Two changes are needed:
 +## [Unreleased]
 +
 +
- ## [<NEW_VERSION>] - <YYYY-MM-DD>
++## [<NEW_VERSION>] - <YYYY-MM-DD>
 ```
 
 **b) Add the `[Unreleased]` comparison link** at the top of the links section at the bottom of the file:
@@ -129,7 +152,7 @@ Two changes are needed:
  [<NEW_VERSION>]: https://github.com/svunit/svunit/compare/v<PREV>...v<NEW_VERSION>
 ```
 
-### 3.4 Commit and push
+### 5.4 Commit and push
 
 ```bash
 git add svunit_base/svunit_version_defines.svh
@@ -139,13 +162,13 @@ git commit -m "Add entry for unreleased version to CHANGELOG"
 git push -u origin continue-development-after-releasing-version-<NEW_VERSION>
 ```
 
-### 3.5 Open the PR
+### 5.5 Open the PR
 
 Open a pull request on GitHub with:
 - **Base branch**: `master`
 - **Head branch**: `continue-development-after-releasing-version-<NEW_VERSION>`
 - **Title**: `Continue development after releasing version <NEW_VERSION>`
 
-### 3.6 Merge the post-release PR
+## Phase 6 — Merge post-release PR (web UI)
 
-On GitHub, merge the pull request created in step 3.5.
+On GitHub, merge the pull request created in Phase 5.
