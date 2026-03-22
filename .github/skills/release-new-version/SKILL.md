@@ -109,7 +109,7 @@ git push origin v<NEW_VERSION>
 
 1. Go to **Releases** → **Draft a new release**
 2. **Tag**: `v<NEW_VERSION>` — set it to target `master` (the merge commit)
-3. **Release title**: `v<NEW_VERSION>`
+3. **Release title**: `<NEW_VERSION>`
 4. **Description**: paste the content of the `## [<NEW_VERSION>]` section from `CHANGELOG.md`
 5. Publish the release
 
