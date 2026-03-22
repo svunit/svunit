@@ -113,6 +113,8 @@ git push origin v<NEW_VERSION>
 4. **Description**: paste the content of the `## [<NEW_VERSION>]` section from `CHANGELOG.md`
 5. Publish the release
 
+Help the user by printing the content of the release's properties for easy copy-pasting into the release form.
+
 ---
 
 ## Phase 5 — Post-release PR (local)
