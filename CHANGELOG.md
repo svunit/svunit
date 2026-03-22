@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix experimental code to avoid clash with included files
 - Fix misleading error message from `runSVUnit` when unknown simulator specified via `--sim` option ([#153](https://github.com/svunit/svunit/issues/153))
 - Fix `create_unit_test.pl -help` printing error and usage twice instead of exiting cleanly ([#326](https://github.com/svunit/svunit/issues/326))
+- Fix invalid JUnit XML when failure messages contain XML special characters (see pull request [#364](https://github.com/svunit/svunit/issues/239))
 
 
 ## [3.37.1] - 2024-11-08
