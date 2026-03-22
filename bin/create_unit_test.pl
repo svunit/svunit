@@ -63,6 +63,7 @@ sub CheckArgs() {
     else {
       if ( @ARGV[$i] =~ /-help/ ) {
         PrintHelp();
+        exit 0;
       }
       elsif ( @ARGV[$i] =~ /-uvm/ ) {
         $i++;
