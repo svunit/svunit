@@ -71,4 +71,4 @@ jobs:
         run: |
           cd test
           direnv allow
-          direnv exec . pytest
+          direnv exec . pytest -n auto
