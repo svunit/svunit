@@ -80,6 +80,7 @@ Open a pull request on GitHub with:
 ### 2.1 Merge the pre-release PR
 
 On GitHub, merge the pull request created in Phase 1.
+Do not continue until the merge commit is on `master` and the PR is fully merged.
 
 ### 2.2 Create the GitHub release
 
