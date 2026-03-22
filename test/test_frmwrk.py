@@ -506,6 +506,16 @@ def test_called_without_simulator__nothing_on_path(tmpdir, monkeypatch):
         assert "Could not determine simulator" in proc.stdout
 
 
+def test_called_with_unknown_simulator(tmpdir):
+    with tmpdir.as_cwd():
+        pathlib.Path('dummy_unit_test.sv').write_text('dummy')
+
+        proc = subprocess.run(['runSVUnit', '--sim', 'bogus'], stdout=subprocess.PIPE, universal_newlines=True)
+
+        assert proc.returncode != 0
+        assert "Unknown simulator 'bogus'" in proc.stdout
+
+
 def test_uut_name_contains_static(tmpdir):
     with tmpdir.as_cwd():
         with open('something_with_static_in_name.sv',  'w+') as f:
