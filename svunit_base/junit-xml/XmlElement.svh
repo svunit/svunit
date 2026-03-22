@@ -65,7 +65,27 @@ class XmlElement;
     result = { tag };
 `endif
     foreach (attributes[i])
-      result = { result, " ", $sformatf("%s=\"%s\"", i, attributes[i])};
+      result = { result, " ", $sformatf("%s=\"%s\"", i, xml_encode(attributes[i]))};
+    return result;
+  endfunction
+
+
+  local function string xml_encode(string s);
+    string result = "";
+    for (int i = 0; i < s.len(); i++) begin
+      string c;
+      c = string'(s[i]);
+      if (c == "&")
+        result = { result, "&amp;" };
+      else if (c == "<")
+        result = { result, "&lt;" };
+      else if (c == ">")
+        result = { result, "&gt;" };
+      else if (c == "\"")
+        result = { result, "&quot;" };
+      else
+        result = { result, c };
+    end
     return result;
   endfunction
 

@@ -115,3 +115,17 @@ def test_multiple_failing_tests(datafiles, simulator):
         assert 'fail_if' in failing_test0[0].attrib['message']
         failing_test1 = next(tc for tc in list(test_suite) if tc.attrib['name'] == 'failing_test1')
         assert 'fail_unless' in failing_test1[0].attrib['message']
+
+
+@all_files_in_dir('junit-xml/xml-special-chars-in-message')
+@all_available_simulators()
+def test_xml_special_chars_in_message(datafiles, simulator):
+    with datafiles.as_cwd():
+        subprocess.check_call(['runSVUnit', '-s', simulator])
+        root = ET.parse('tests.xml').getroot()
+        test_suite = root[0]
+        test_case = test_suite[0]
+
+        assert len(list(test_case)) == 1
+        assert test_case[0].tag == 'failure'
+        assert '<' in test_case[0].attrib['message']

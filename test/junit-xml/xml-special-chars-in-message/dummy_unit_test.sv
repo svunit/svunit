@@ -1,6 +1,6 @@
 //###########################################################################
 //
-//  Copyright 2026 The SVUnit Authors.
+//  Copyright 2021 The SVUnit Authors.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -40,8 +40,8 @@ module dummy_unit_test;
 
   `SVUNIT_TESTS_BEGIN
 
-    `SVTEST(passing_test)
-      `FAIL_UNLESS(1)
+    `SVTEST(failing_test)
+      `FAIL_IF(1 < 2)
     `SVTEST_END
 
   `SVUNIT_TESTS_END
