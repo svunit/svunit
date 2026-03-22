@@ -20,6 +20,10 @@ To run, call:
 
     pytest --html=report.html
 
+To run tests in parallel, call:
+
+    pytest --html=report.html -n auto
+
 
 =================
 Test descriptions
