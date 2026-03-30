@@ -40,7 +40,7 @@ def prepare_svunit_for_testing():
 
 def clone_stable_version_of_svunit():
     subprocess.check_call(['git', 'clone', 'https://github.com/svunit/svunit.git'])
-    subprocess.check_call(['git', 'checkout', 'v3.36.0'], cwd='svunit')
+    subprocess.check_call(['git', 'checkout', 'v3.38.1'], cwd='svunit')
 
 
 def delete_problematic_directories_that_interfere_with_build():
