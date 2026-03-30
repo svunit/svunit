@@ -1,1 +1,1 @@
-This could should be come part of the library.
+This code should become part of the library.
