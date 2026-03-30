@@ -117,14 +117,28 @@ module test_registry_unit_test;
 
   class fake_test_builder extends test::builder;
 
+    typedef class fake_test;
+
+
     static function fake_test_builder new_instance();
       new_instance = new();
     endfunction
 
 
     virtual function test create();
-      // Intentionally empty
+      fake_test t = new();
+      return t;
     endfunction
+
+
+    class fake_test extends test;
+      function string name();
+        return "fake_test";
+      endfunction
+
+      protected virtual task test_body();
+      endtask
+    endclass
 
   endclass
 
