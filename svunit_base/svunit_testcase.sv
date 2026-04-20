@@ -59,6 +59,7 @@ class svunit_testcase extends svunit_base;
   extern task give_up();
 
   extern function bit fail(string c, logic b, string s, string f, int l, string d = "");
+  extern function void print_comparison_info(string c, int a, int b, string f, int l);
 
   extern function void start();
   extern function void stop();
@@ -243,13 +244,18 @@ function bit svunit_testcase::fail(string c, logic b, string s, string f, int l,
     if (d != "") begin
       $sformat(_d, "[ %s ] ", d);
     end
-    current_junit_test_case.add_failure($sformatf("%s: %s %s(at %s line:%0d)",c,s,_d,f,l));
-    `ERROR($sformatf("%s: %s %s(at %s line:%0d)",c,s,_d,f,l));
+    current_junit_test_case.add_failure($sformatf("%s: %s %s(at %s:%0d)",c,s,_d,f,l));
+    `ERROR($sformatf("%s: %s %s(at %s:%0d)",c,s,_d,f,l));
     return 1;
   end
   else begin
     return 0;
   end
+endfunction
+
+function void svunit_testcase::print_comparison_info(string c, int a, int b, string f, int l);
+  current_junit_test_case.add_failure($sformatf("%s: Expected: %h, Actual: %h (at %s:%0d)",c, b, a, f, l));
+  `ERROR($sformatf("%s: Expected: 0x%0h, Actual: 0x%0h (at %s:%0d)", c, b, a, f, l));
 endfunction
 
 

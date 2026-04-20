@@ -19,6 +19,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix `create_unit_test.pl -help` printing error and usage twice instead of exiting cleanly ([#326](https://github.com/svunit/svunit/issues/326))
 - Fix invalid JUnit XML when failure messages contain XML special characters (see pull request [#364](https://github.com/svunit/svunit/issues/239))
 
+### Added
+- Add printout on `FAIL_UNLESS_EQUAL` and `FAIL_UNLESS_STR_EQUAL` test failures to make it easier to debug why these tests failes
+- Error printouts now display the file and line number in a way that makes it easier for vscode and other IDEs to link to from the terminal
 
 ## [3.37.1] - 2024-11-08
 

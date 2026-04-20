@@ -69,6 +69,8 @@ SVUnit includes an integrated reporting mechanism such that the exit PASS/FAIL s
 
 The most commonly used macros are \`FAIL_IF and \`FAIL_UNLESS that take a single boolean expression as input. The \`FAIL_IF_EQUAL and \`FAIL_UNLESS_EQUAL macros exit based on an '===' comparison of boolean inputs a and b. Likewise, \`FAIL_IF_STR_EQUAL and \`FAIL_UNLESS_STR_EQUAL do a string comparison between inputs a and b.
 
+The \`FAIL_UNLESS_EQUAL and \`FAIL_UNLESS_STR_EQUAL mechanisms will report the expected value (b) and actual value (a) to the terminal.
+
 
 Setting Test Exit Status
 ------------------------

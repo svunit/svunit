@@ -68,7 +68,10 @@
 `define FAIL_UNLESS_EQUAL(a,b) \
   begin \
     if (svunit_pkg::current_tc.fail(`"fail_unless_equal`", ((a)!==(b)), `"(a) !== (b)`", `__FILE__, `__LINE__)) begin \
-      if (svunit_pkg::current_tc.is_running()) svunit_pkg::current_tc.give_up(); \
+      if (svunit_pkg::current_tc.is_running()) begin \
+        svunit_pkg::current_tc.print_comparison_info(`"fail_unless_equal`", a, b, `__FILE__, `__LINE__); \
+        svunit_pkg::current_tc.give_up(); \
+      end \
     end \
   end
 `endif
@@ -94,7 +97,10 @@
     stra = a; \
     strb = b; \
     if (svunit_pkg::current_tc.fail(`"fail_unless_str_equal`", stra.compare(strb)!=0, $sformatf(`"\"%s\" != \"%s\"`",stra,strb), `__FILE__, `__LINE__)) begin \
-      if (svunit_pkg::current_tc.is_running()) svunit_pkg::current_tc.give_up(); \
+      if (svunit_pkg::current_tc.is_running()) begin \
+        svunit_pkg::current_tc.print_comparison_info(`"fail_unless_equal`", a, b, `__FILE__, `__LINE__); \
+        svunit_pkg::current_tc.give_up(); \
+      end \
     end \
   end
 `endif
