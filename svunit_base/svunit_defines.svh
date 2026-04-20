@@ -16,85 +16,89 @@
 //
 //###########################################################################
 
+`ifndef __FAIL_FREEZE
+`define __FAIL_FREEZE svunit_pkg::current_tc.give_up();
+`endif
+
 /*
   Assertion Macros
 */
 `ifndef FAIL_IF
-`define FAIL_IF(exp) \
+`define FAIL_IF(exp,cmd=`__FAIL_FREEZE) \
   begin \
     if (svunit_pkg::current_tc.fail(`"fail_if`", (exp), `"exp`", `__FILE__, `__LINE__)) begin \
-      if (svunit_pkg::current_tc.is_running()) svunit_pkg::current_tc.give_up(); \
+      if (svunit_pkg::current_tc.is_running()) begin cmd end \
     end \
   end
 `endif
 
 `ifndef FAIL_IF_LOG
-`define FAIL_IF_LOG(exp,msg) \
+`define FAIL_IF_LOG(exp,msg,cmd=`__FAIL_FREEZE) \
   begin \
     if (svunit_pkg::current_tc.fail(`"fail_if`", (exp), `"exp`", `__FILE__, `__LINE__, msg)) begin \
-      if (svunit_pkg::current_tc.is_running()) svunit_pkg::current_tc.give_up(); \
+      if (svunit_pkg::current_tc.is_running()) begin cmd end \
     end \
   end
 `endif
 
 `ifndef FAIL_IF_EQUAL
-`define FAIL_IF_EQUAL(a,b) \
+`define FAIL_IF_EQUAL(a,b,cmd=`__FAIL_FREEZE) \
   begin \
     if (svunit_pkg::current_tc.fail(`"fail_if_equal`", ((a)===(b)), `"(a) === (b)`", `__FILE__, `__LINE__)) begin \
-      if (svunit_pkg::current_tc.is_running()) svunit_pkg::current_tc.give_up(); \
+      if (svunit_pkg::current_tc.is_running()) begin cmd end \
     end \
   end
 `endif
 
 `ifndef FAIL_UNLESS
-`define FAIL_UNLESS(exp) \
+`define FAIL_UNLESS(exp,cmd=`__FAIL_FREEZE) \
   begin \
     if (svunit_pkg::current_tc.fail(`"fail_unless`", !(exp), `"exp`", `__FILE__, `__LINE__)) begin \
-      if (svunit_pkg::current_tc.is_running()) svunit_pkg::current_tc.give_up(); \
+      if (svunit_pkg::current_tc.is_running()) begin cmd end \
     end \
   end
 `endif
 
 `ifndef FAIL_UNLESS_LOG
-`define FAIL_UNLESS_LOG(exp,msg) \
+`define FAIL_UNLESS_LOG(exp,msg,cmd=`__FAIL_FREEZE) \
   begin \
     if (svunit_pkg::current_tc.fail(`"fail_unless`", !(exp), `"exp`", `__FILE__, `__LINE__, msg)) begin \
-      if (svunit_pkg::current_tc.is_running()) svunit_pkg::current_tc.give_up(); \
+      if (svunit_pkg::current_tc.is_running()) begin cmd end \
     end \
   end
 `endif
 
 `ifndef FAIL_UNLESS_EQUAL
-`define FAIL_UNLESS_EQUAL(a,b) \
+`define FAIL_UNLESS_EQUAL(a,b,cmd=`__FAIL_FREEZE) \
   begin \
     if (svunit_pkg::current_tc.fail(`"fail_unless_equal`", ((a)!==(b)), `"(a) !== (b)`", `__FILE__, `__LINE__)) begin \
-      if (svunit_pkg::current_tc.is_running()) svunit_pkg::current_tc.give_up(); \
+      if (svunit_pkg::current_tc.is_running()) begin cmd end \
     end \
   end
 `endif
 
 `ifndef FAIL_IF_STR_EQUAL
-`define FAIL_IF_STR_EQUAL(a,b) \
+`define FAIL_IF_STR_EQUAL(a,b,cmd=`__FAIL_FREEZE) \
   begin \
     string stra; \
     string strb; \
     stra = a; \
     strb = b; \
     if (svunit_pkg::current_tc.fail(`"fail_if_str_equal`", stra.compare(strb)==0, $sformatf(`"\"%s\" == \"%s\"`",stra,strb), `__FILE__, `__LINE__)) begin \
-      if (svunit_pkg::current_tc.is_running()) svunit_pkg::current_tc.give_up(); \
+      if (svunit_pkg::current_tc.is_running()) begin cmd end \
     end \
   end
 `endif
 
 `ifndef FAIL_UNLESS_STR_EQUAL
-`define FAIL_UNLESS_STR_EQUAL(a,b) \
+`define FAIL_UNLESS_STR_EQUAL(a,b,cmd=`__FAIL_FREEZE) \
   begin \
     string stra; \
     string strb; \
     stra = a; \
     strb = b; \
     if (svunit_pkg::current_tc.fail(`"fail_unless_str_equal`", stra.compare(strb)!=0, $sformatf(`"\"%s\" != \"%s\"`",stra,strb), `__FILE__, `__LINE__)) begin \
-      if (svunit_pkg::current_tc.is_running()) svunit_pkg::current_tc.give_up(); \
+      if (svunit_pkg::current_tc.is_running()) begin cmd end \
     end \
   end
 `endif
