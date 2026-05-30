@@ -36,6 +36,7 @@ jobs:
       - name: Download Verilator
         if: steps.cache-verilator.outputs.cache-hit != 'true'
         run: |
+            set -euo pipefail
             curl -fL "${VERILATOR_URL}" -o /tmp/verilator.tar.gz
             echo "${VERILATOR_SHA256}  /tmp/verilator.tar.gz" | sha256sum -c
             sudo rm -rf /opt/verilator
