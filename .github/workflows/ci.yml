@@ -3,9 +3,7 @@ name: CI
 on: [push, pull_request]
 
 env:
-  VERILATOR_TAG: v5.049.26417585458
-  VERILATOR_ARCHIVE: verilator-manylinux_2_34_x86_64-master.26417585458.tar.gz
-  VERILATOR_SHA256: 80e9712b05d58e3c46510c850206345b078700ed4c3283f944f64013fca37318
+  VERILATOR_VERSION: v5.024
 
 jobs:
   build:
@@ -24,26 +22,36 @@ jobs:
       - name: Install Verilator dependencies
         run: |
             sudo apt-get install -y \
-                curl
+                git help2man perl python3 make \
+                libfl2 \
+                libfl-dev \
+                zlib1g zlib1g-dev \
+                git autoconf flex bison
 
       - name: Cache Verilator
         id: cache-verilator
         uses: actions/cache@v3
         with:
           path: /opt/verilator
-          key: verilator-${{ env.VERILATOR_TAG }}-${{ env.VERILATOR_SHA256 }}-${{ runner.os }}
+          key: verilator-${{ env.VERILATOR_VERSION }}-${{ runner.os }}
 
-      - name: Download Verilator
+      - name: Clone Verilator
         if: steps.cache-verilator.outputs.cache-hit != 'true'
-        run: |
-            set -euo pipefail
-            VERILATOR_URL="https://github.com/EDAPack/verilator-bin/releases/download/${VERILATOR_TAG}/${VERILATOR_ARCHIVE}"
-            curl -fL "${VERILATOR_URL}" -o /tmp/verilator.tar.gz
-            echo "${VERILATOR_SHA256}  /tmp/verilator.tar.gz" | sha256sum -c
-            sudo rm -rf /opt/verilator
-            sudo mkdir -p /opt/verilator
-            sudo tar -xzf /tmp/verilator.tar.gz --strip-components=1 -C /opt/verilator
-            rm -f /tmp/verilator.tar.gz
+        run: git clone https://github.com/verilator/verilator $HOME/verilator
+            && cd $HOME/verilator
+            && git checkout $VERILATOR_VERSION
+
+      - name: Build Verilator
+        if: steps.cache-verilator.outputs.cache-hit != 'true'
+        run: cd $HOME/verilator
+            && autoconf
+            && ./configure --prefix /opt/verilator
+            && make -j `nproc`
+
+      - name: Install Verilator
+        if: steps.cache-verilator.outputs.cache-hit != 'true'
+        run: cd $HOME/verilator
+            && sudo make install
 
       - name: Add Verilator to $PATH
         run: echo "/opt/verilator/bin" >> $GITHUB_PATH
