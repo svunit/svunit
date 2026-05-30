@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 env:
   VERILATOR_TAG: v5.049.26417585458
-  VERILATOR_URL: https://github.com/EDAPack/verilator-bin/releases/download/v5.049.26417585458/verilator-manylinux_2_34_x86_64-master.26417585458.tar.gz
+  VERILATOR_ARCHIVE: verilator-manylinux_2_34_x86_64-master.26417585458.tar.gz
   VERILATOR_SHA256: 80e9712b05d58e3c46510c850206345b078700ed4c3283f944f64013fca37318
 
 jobs:
@@ -37,11 +37,13 @@ jobs:
         if: steps.cache-verilator.outputs.cache-hit != 'true'
         run: |
             set -euo pipefail
+            VERILATOR_URL="https://github.com/EDAPack/verilator-bin/releases/download/${VERILATOR_TAG}/${VERILATOR_ARCHIVE}"
             curl -fL "${VERILATOR_URL}" -o /tmp/verilator.tar.gz
             echo "${VERILATOR_SHA256}  /tmp/verilator.tar.gz" | sha256sum -c
             sudo rm -rf /opt/verilator
             sudo mkdir -p /opt/verilator
             sudo tar -xzf /tmp/verilator.tar.gz --strip-components=1 -C /opt/verilator
+            rm -f /tmp/verilator.tar.gz
 
       - name: Add Verilator to $PATH
         run: echo "/opt/verilator/bin" >> $GITHUB_PATH
