@@ -3,7 +3,8 @@ name: CI
 on: [push, pull_request]
 
 env:
-  VERILATOR_VERSION: v5.024
+  VERILATOR_VERSION: v5.049.26417585458
+  VERILATOR_ARCHIVE: verilator-manylinux_2_34_x86_64-master.26417585458.tar.gz
 
 jobs:
   build:
@@ -22,11 +23,7 @@ jobs:
       - name: Install Verilator dependencies
         run: |
             sudo apt-get install -y \
-                git help2man perl python3 make \
-                libfl2 \
-                libfl-dev \
-                zlib1g zlib1g-dev \
-                git autoconf flex bison
+                curl
 
       - name: Cache Verilator
         id: cache-verilator
@@ -35,23 +32,13 @@ jobs:
           path: /opt/verilator
           key: verilator-${{ env.VERILATOR_VERSION }}-${{ runner.os }}
 
-      - name: Clone Verilator
+      - name: Download Verilator
         if: steps.cache-verilator.outputs.cache-hit != 'true'
-        run: git clone https://github.com/verilator/verilator $HOME/verilator
-            && cd $HOME/verilator
-            && git checkout $VERILATOR_VERSION
-
-      - name: Build Verilator
-        if: steps.cache-verilator.outputs.cache-hit != 'true'
-        run: cd $HOME/verilator
-            && autoconf
-            && ./configure --prefix /opt/verilator
-            && make -j `nproc`
-
-      - name: Install Verilator
-        if: steps.cache-verilator.outputs.cache-hit != 'true'
-        run: cd $HOME/verilator
-            && sudo make install
+        run: |
+            curl -fL "https://github.com/EDAPack/verilator-bin/releases/download/${VERILATOR_VERSION}/${VERILATOR_ARCHIVE}" -o /tmp/verilator.tar.gz
+            sudo rm -rf /opt/verilator
+            sudo mkdir -p /opt/verilator
+            sudo tar -xzf /tmp/verilator.tar.gz --strip-components=1 -C /opt/verilator
 
       - name: Add Verilator to $PATH
         run: echo "/opt/verilator/bin" >> $GITHUB_PATH
