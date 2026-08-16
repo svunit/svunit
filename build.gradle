@@ -1,0 +1,3 @@
+plugins {
+    id 'com.verificationgentleman.gradle.hdvl.svunit-build' version '0.2.7'
+}

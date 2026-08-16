@@ -46,3 +46,7 @@ xsim.dir/
 xvlog.pb
 xelab.pb
 xsim*.jou
+
+# Gradle
+.gradle
+**/build/
