@@ -1,6 +1,6 @@
 //###########################################################################
 //
-//  Copyright 2011 The SVUnit Authors.
+//  Copyright 2011-2026 The SVUnit Authors.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -25,10 +25,10 @@ package svunit_uvm_mock_pkg;
 
   `include "uvm_macros.svh"
 
-  `include "svunit_idle_uvm_domain.sv"
+  `include "svunit_idle_uvm_domain.svh"
   `include "svunit_uvm_report_mock_types.svh"
-  `include "svunit_uvm_report_mock.sv"
-  `include "svunit_uvm_test.sv"
+  `include "svunit_uvm_report_mock.svh"
+  `include "svunit_uvm_test.svh"
 endpackage
 
 `endif
