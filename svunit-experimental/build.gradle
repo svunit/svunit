@@ -1,0 +1,13 @@
+plugins {
+    id 'com.verificationgentleman.gradle.hdvl.systemverilog'
+}
+
+group 'org.svunit'
+
+sourceSets {
+    main {
+        sv {
+            srcDirs '../src/experimental/sv'
+        }
+    }
+}

@@ -1,0 +1,16 @@
+plugins {
+    id 'com.verificationgentleman.gradle.hdvl.systemverilog' version '0.2.7'
+    id 'com.verificationgentleman.gradle.hdvl.svunit' version '0.2.7'
+}
+
+dependencies {
+    testCompile 'org.svunit:svunit'
+    testCompile 'org.svunit:svunit-experimental'
+}
+
+toolChains {
+    runSVUnit {
+        args '--enable-experimental'
+        args '-c_arg', '"-top fibonacci_test"'
+    }
+}

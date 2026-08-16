@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Add support for running through Gradle (via `gradle-hdvl` plugins) ([#383](https://github.com/svunit/svunit/pull/383))
+- Add support for running through Gradle (via `gradle-hdvl` plugins) ([#383](https://github.com/svunit/svunit/pull/383), [#384](https://github.com/svunit/svunit/pull/384))
 
 
 ## [3.38.1] - 2026-03-22
