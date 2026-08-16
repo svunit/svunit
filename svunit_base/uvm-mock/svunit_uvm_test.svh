@@ -20,7 +20,7 @@
 `define __SVUNIT_UVM_TEST_SV__
 
 //`include "uvm_macros.svh"
-`include "svunit_idle_uvm_domain.sv"
+`include "svunit_idle_uvm_domain.svh"
 
 
 import uvm_pkg::*;
